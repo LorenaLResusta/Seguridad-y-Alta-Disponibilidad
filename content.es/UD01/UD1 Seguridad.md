@@ -1,5 +1,5 @@
 ---
-title: "1. Introducción. Prácticas"
+title: "1. Introducción."
 weight: 1
 ---
 

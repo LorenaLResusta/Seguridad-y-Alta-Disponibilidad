@@ -284,3 +284,4 @@ jobs:
 # **Despliegue**:
    - Haz `git add .`, `git commit -m "Mensaje descriptivo"` y `git push` para actualizar el repositorio.
    - GitLab CI/CD o Github Actions (según cual se use) se encargará de generar el sitio y desplegarlo en GitLab Pages / Github Pages.
+# BBDD

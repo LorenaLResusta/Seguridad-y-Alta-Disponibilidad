@@ -1,8 +1,8 @@
 ---
-title: "3. Prácticas Criptografía"
+title: "3. Criptografía. Prácticas"
 weight: 2
 ---
-# UD3 - Prácticas: criptografía
+# UD3 - Criptografía. Prácticas
 
 > Hashes, cifrado, firmas, certificados y PKI en un entorno Linux de pruebas.
 

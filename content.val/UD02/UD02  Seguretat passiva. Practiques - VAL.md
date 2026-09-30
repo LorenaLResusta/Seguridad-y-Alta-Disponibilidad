@@ -1,5 +1,5 @@
 ---
-title: "2.Seguretat passiva: emmagatzematge. Prac"
+title: "2.Seguretat passiva: emmagatzematge. Pràctiques"
 weight: 2
 ---
 # UD2 - Pràctiques: seguretat passiva i emmagatzematge

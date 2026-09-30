@@ -1,5 +1,5 @@
 ---
-title: "5.  Alta disponibilidad."
+title: "5.  Alta disponibilidad. Prácticas"
 weight: 2
 ---
 

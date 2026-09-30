@@ -1,5 +1,5 @@
 ---
-title: "7. Seguretat perimetral. Pràctiques"
+title: "7. Seguretat perimetral."
 weight: 1
 ---
 

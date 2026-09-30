@@ -1,5 +1,5 @@
 ---
-title: "3. Pràctiques de Criptografia"
+title: "3. Criptografia. Pràctiques"
 weight: 2
 ---
 

@@ -1,5 +1,7 @@
-º
-
+---
+title: "2. Seguridad pasiva."
+weight: 1
+---
 # UD2 - Seguridad pasiva: almacenamiento
 
 > Protección de la información, redundancia, copias de seguridad y recuperación.

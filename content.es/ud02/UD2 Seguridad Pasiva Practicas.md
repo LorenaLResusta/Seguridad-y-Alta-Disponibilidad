@@ -1,6 +1,6 @@
 ---
 title: "2. Seguridad pasiva. Prácticas"
-weight: 1
+weight: 2
 ---
 
 # UD2 - Prácticas: seguridad pasiva y almacenamiento

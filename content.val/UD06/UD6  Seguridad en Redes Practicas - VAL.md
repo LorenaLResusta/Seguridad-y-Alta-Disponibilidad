@@ -1,167 +1,205 @@
 ---
-title: "6 - Seguretat en xarxes"
-weight: 1
+title: "6 - Seguretat en xarxes. Pràctiques"
+weight: 2
 ---
 
-# UD6 - Seguretat en xarxes
+# UD6 - Pràctiques: seguretat en xarxes
 
-> Protecció de les comunicacions, l'accés i els serveis de xarxa mitjançant segmentació, xifratge, detecció i controls perimetrals.
+> Segmentació, perímetre, WLAN, VPN i detecció en entorns de proves controlats.
 
-| Dades de la unitat | Informació |
+| Dades de les pràctiques | Informació |
 | --- | --- |
 | Mòdul | Seguretat i Alta Disponibilitat |
 | Curs | 2n ASIR |
 | Modalitat | Semipresencial |
-| Duració | 14 hores |
+| Duració estimada | 8 hores |
+| Entorn | Màquines virtuals, simulador i equips autoritzats |
 
-## Índex
+## 1. Objectius
 
-1. #1-fonaments-i-amenaces-de-xarxa
-2. #2-control-daccés-i-segmentació-lanwlan
-3. #3-comunicacions-remotes-i-vpn
-4. #4-seguretat-perimetral-firewalls-i-dmz
-5. #5-detecció-monitorització-i-resposta
-6. #6-proxies-waf-ddos-i-zero-trust
-7. #7-resum
-8. #8-recursos
-9. #9-relació-amb-els-resultats-daprenentatge
+- Dissenyar xarxes segmentades amb VLAN, DMZ i regles de mínim privilegi.
+- Configurar i comprovar un firewall perimetral en un entorn virtual.
+- Avaluar una WLAN i aplicar autenticació empresarial quan l'entorn ho permeta.
+- Desplegar VPN d'accés remot i site-to-site amb rutes i regles limitades.
+- Capturar trànsit propi i analitzar alertes d'un IDS/IPS.
+- Configurar un proxy i documentar evidències de proves de seguretat.
 
----
+## 2. Abast i preparació
 
-## 1. Fonaments i amenaces de xarxa
+Estes pràctiques es realitzen només en màquines virtuals, xarxes internes, switches, punts d'accés i firewalls autoritzats. No escaneges, captures trànsit, proves credencials, modifiques punts d'accés ni generes trànsit de denegació de servei fora de l'entorn de proves.
 
-### 1.1. Introducció
+Es recomana crear una *snapshot* abans de cada pràctica. Per als escenaris perimetrals s'utilitzaran un firewall pfSense o OPNsense, una VM client i una VM servidor. Per a les VPN site-to-site es necessitaran dos firewalls i un client en cada LAN. Registra les IP, xarxes, interfícies i canvis realitzats en una taula de treball.
 
-Les xarxes connecten usuaris, sistemes, serveis i seus, però també amplien la superfície d'atac. Els protocols fundacionals d'Internet i moltes tecnologies LAN es van dissenyar per a entorns reduïts i relativament confiables, sense incorporar autenticació o xifratge de manera generalitzada. La seguretat de xarxa aplica controls per a preservar la confidencialitat, integritat, disponibilitat, autenticitat i traçabilitat.
+## 3. Pràctica 1 - Firewall perimetral, VLAN i DMZ
 
-La protecció ha de plantejar-se en capes: infraestructura física, enllaç, xarxa, transport, hosts i aplicacions. Un control aïllat no és suficient; per exemple, un firewall no evita una contrasenya robada, i el xifratge no corregix una autorització excessiva.
+### 3.1. Escenari
 
-### 1.2. Amenaces habituals
+En VirtualBox, crea un firewall amb tres interfícies i dos VM Linux:
 
-Entre les amenaces més comunes es troben l'escolta de trànsit, l'escaneig de ports, la suplantació d'adreces, el malware, l'accés no autoritzat, la denegació de servei i els errors de configuració. Un atacant pot obtindre informació durant la fase de reconeixement i aprofitar serveis exposats, credencials dèbils, equips sense actualitzar o xarxes insuficientment segmentades.
+| Interfície o VM | Xarxa | Funció |
+| --- | --- | --- |
+| WAN | NAT o pont d'entorn de proves | Eixida a Internet simulada. |
+| LAN | Només-amfitrió o xarxa interna | Client corporatiu. |
+| DMZ | Xarxa interna independent | Servidor web. |
+| Client | LAN | Comprovació de polítiques. |
+| Servidor | DMZ | Servei HTTP/HTTPS i SSH d'entorn de proves. |
 
-Els atacs d'intermediari, o MITM, busquen situar-se entre dos participants per a observar, modificar o interrompre la comunicació. En una LAN IPv4, l'enverinament ARP pot associar una IP legítima a la MAC de l'atacant. Les contramesures inclouen segmentació, inspecció ARP dinàmica en switches compatibles, entrades estàtiques en casos concrets, xifratge d'extrem a extrem i monitorització.
+Instal·la pfSense o OPNsense, assigna correctament les interfícies i configura subxarxes diferents per a LAN i DMZ. L'accés a la interfície d'administració s'ha de realitzar des de la LAN o xarxa de gestió, mai des de WAN.
 
-DNS i DHCP són serveis crítics. La manipulació de respostes DNS pot redirigir cap a serveis fraudulents; DNSSEC firma dades DNS per a protegir-ne l'autenticitat, encara que requerix una cadena de validació correcta. Un DHCP no autoritzat pot proporcionar passarel·les o DNS maliciosos; les funcions DHCP snooping i port security en switches gestionables ajuden a limitar este risc.
+### 3.2. Serveis i regles
 
-### 1.3. Principis de protecció
+En el servidor de la DMZ instal·la Apache o Nginx i permet només els ports necessaris en el seu firewall local. Crea en el firewall perimetral una política de denegació per defecte i regles que complisquen la següent matriu:
 
-El mínim privilegi, la defensa en profunditat, la segmentació i l'actualització són principis centrals. S'ha d'inventariar quins sistemes, ports, protocols i fluxos són necessaris, permetre només eixos fluxos i registrar els esdeveniments rellevants. Les anàlisis, captures i proves es realitzen exclusivament sobre xarxes pròpies o expressament autoritzades.
+| Origen | Destinació | Servicis permesos |
+| --- | --- | --- |
+| LAN | DMZ | ICMP, HTTP, HTTPS i SSH |
+| WAN | DMZ | HTTPS publicat mitjançant NAT/port forwarding |
+| DMZ | LAN | Cap |
+| LAN | WAN | DNS, HTTP i HTTPS necessaris |
 
-## 2. Control d'accés i segmentació LAN/WLAN
+Comprova els fluxos permesos amb `ping`, `curl` i SSH des de les teues VM. Comprova també que un servici no autoritzat de LAN a DMZ i qualsevol connexió iniciada des de DMZ a LAN queden bloquejats. Inclou captures de les interfícies, regles, NAT i resultats de cada prova.
 
-### 2.1. Protecció de la LAN
+### 3.3. Extensió de VLAN
 
-La seguretat cablejada comença amb el control físic d'armaris, panells de connexió, switches i ports. L'etiquetatge, la documentació, la desactivació de ports no utilitzats i el control d'accés a les sales reduïxen connexions i manipulacions no autoritzades.
+Dissenya VLAN d'administració, usuaris, servidors, convidats, DMZ i gestió. Indica ports d'accés, troncals 802.1Q i regles inter-VLAN. Si disposes de switch gestionable o simulador, implementa almenys dos VLAN i comprova l'aïllament entre elles. No habilites VLAN en un troncal si no és necessària.
 
-L'autenticació 802.1X controla l'accés a un port abans de permetre el trànsit. El client s'autentica davant un servidor RADIUS, que pot assignar una VLAN o aplicar una política. El filtratge MAC i port security poden complementar el control, però una MAC es pot suplantar i no constituïx una autenticació suficient per si sola. Les solucions NAC amplien esta validació comprovant la identitat i, segons el cas, l'estat de seguretat del dispositiu.
+## 4. Pràctica 2 - WLAN segura i autenticació RADIUS
 
-### 2.2. VLAN, ACL i segmentació
+### 4.1. Auditoria de WLAN
 
-Una VLAN crea un domini de capa 2 lògic independent sobre infraestructura compartida. IEEE 802.1Q etiqueta les trames que travessen enllaços troncals; els ports d'accés connecten normalment equips finals a una única VLAN. La comunicació entre VLAN requerix encaminament mitjançant un router o switch de capa 3.
+Revisa un AP propi, autoritzat o simulat. Completa una fitxa que indique estàndard WPA configurat, autenticació, WPS, actualització de firmware, compte d'administració, SSID de convidats, VLAN assignada, aïllament de clients i cobertura. Justifica per què WEP, WPA i TKIP no s'han d'utilitzar.
 
-La segmentació reduïx dominis de difusió i limita el moviment lateral. Una organització pot separar usuaris, servidors, gestió, convidats, IoT i DMZ. Les ACL i les regles de firewall definixen explícitament quines comunicacions entre zones estan permeses. Un troncal ha de transportar únicament les VLAN necessàries, i la xarxa de gestió ha d'estar separada i restringida.
+Compara WPA2/WPA3-Personal amb WPA2/WPA3-Enterprise. Explica com es revoca l'accés d'una persona en cada cas i per què una clau PSK compartida no escala bé en una organització.
 
-### 2.3. Seguretat WLAN
+### 4.2. FreeRADIUS opcional
 
-Una WLAN utilitza un medi radioelèctric compartit i pot ser accessible des de fora de l'edifici, per la qual cosa requerix controls específics. WEP i WPA amb TKIP estan obsolets. WPA2 amb AES/CCMP continua present quan es configura correctament, mentre que WPA3 introduïx millores, com SAE en mode personal i una major protecció davant atacs de diccionari fora de línia.
+En una VM Debian o Ubuntu d'entorn de proves, instal·la FreeRADIUS i les seues utilitats:
 
-Les xarxes empresarials han de prioritzar WPA2-Enterprise o WPA3-Enterprise amb 802.1X i RADIUS, que permeten credencials o certificats individuals i revocació per usuari. Un SSID de convidats ha d'aïllar-se de les xarxes internes. També són rellevants l'actualització dels punts d'accés, la detecció d'AP no autoritzats, la desactivació de WPS, l'aïllament de clients i la planificació de cobertura i potència.
+```bash
+sudo apt update
+sudo apt install -y freeradius freeradius-utils
+sudo systemctl enable --now freeradius
 
-## 3. Comunicacions remotes i VPN
 
-### 3.1. Administració i xifratge de comunicacions
+Revisa la configuració de clients RADIUS i autoritza únicament la IP de l'AP d'entorn de proves amb un secret compartit de pràctiques. Crea un usuari temporal en el fitxer d'usuaris de FreeRADIUS o mitjançant el mètode indicat pel professorat. Executa el servici en mode de depuració només durant la prova:
 
-Els serveis d'administració i transferència han d'utilitzar protocols autenticats i xifrats. SSH substituïx Telnet per a l'administració remota; HTTPS i TLS protegixen aplicacions web; SFTP i SCP permeten transferències segures. La protecció criptogràfica, certificats i claus s'estudien en la UD3, i l'enduriment d'SSH en la UD4.
+sudo systemctl stop freeradius
+sudo freeradius -X
 
-### 3.2. Concepte i tipus de VPN
 
-Una VPN crea un túnel protegit sobre una xarxa no confiable. Pot proporcionar confidencialitat, integritat i autenticació, però no concedix accés il·limitat per defecte. Les VPN d'accés remot connecten usuaris individuals amb una xarxa o aplicació; les VPN site-to-site interconnecten seus o xarxes completes.
+Configura l'AP per a WPA2/WPA3-Enterprise i prova la connexió amb un client autoritzat. No inclogues contrasenyes ni secrets RADIUS en la memòria. Si no es disposa d'un AP compatible, documenta el flux d'autenticació 802.1X entre suplicant, AP i servidor RADIUS.
 
-IPsec treballa en la capa de xarxa i és habitual en connexions entre seus. Les VPN basades en TLS, com OpenVPN, solen travessar NAT amb facilitat i són pràctiques per a l'accés remot. WireGuard oferix una arquitectura més compacta i moderna. L2TP no aporta xifratge per si mateix i normalment es combina amb IPsec. PPTP no s'ha d'utilitzar en dissenys nous a causa de les seues debilitats conegudes.
+5. Pràctica 3 - VPN d'accés remot i site-to-site
+5.1. Accés remot amb WireGuard
 
-### 3.3. Disseny segur d'accés remot
+Configura una VPN entre vpn01 i cliente01 en VM pròpies. Utilitza una subxarxa de túnel, per exemple 10.20.30.0/24, i claus generades localment:
 
-Una VPN segura aplica autenticació robusta, preferiblement MFA, identitats individuals, xifratges actuals, revocació d'accessos i registre de connexions. El *split tunneling* envia pel túnel només el trànsit corporatiu; el *full tunneling* dirigix tot el trànsit del client a través de l'organització. L'elecció depén del risc, la privacitat, la capacitat i les necessitats d'inspecció.
+sudo dnf install -y wireguard-tools
+umask 077
+wg genkey | tee privatekey | wg pubkey > publickey
 
-També s'han de controlar les fugues de DNS, les rutes distribuïdes al client, els permisos sobre recursos interns i l'estat dels dispositius. L'accés remot ha de limitar-se als serveis necessaris i revisar-se periòdicament.
 
-## 4. Seguretat perimetral, firewalls i DMZ
+En Debian o Ubuntu, instal·la wireguard mitjançant apt. En vpn01 crea /etc/wireguard/wg0.conf amb una adreça 10.20.30.1/24, port UDP 51820, la seua clau privada i un parell autoritzat amb AllowedIPs = 10.20.30.2/32. Configura el client amb 10.20.30.2/24, la clau pública de vpn01, l'endpoint d'entorn de proves i només les xarxes internes necessàries en AllowedIPs.
 
-### 4.1. Firewalls i polítiques de filtratge
+Permet UDP 51820 en el firewall únicament des de l'entorn de proves i activa els dos extrems amb sudo systemctl enable --now wg-quick@wg0. Comprova l'estat amb sudo wg show, verifica la connectivitat i documenta si utilitzes split tunneling o full tunneling. Les claus privades s'han d'ocultar en qualsevol evidència entregada.
 
-Un firewall filtra trànsit entre zones segons l'adreça, el port, el protocol, l'estat de la connexió i, en solucions avançades, l'aplicació o la identitat. Els firewalls de filtratge de paquets són simples i ràpids; els *stateful* mantenen l'estat de les connexions; els de nova generació poden incorporar control d'aplicacions, IDS/IPS, filtratge web i altres capacitats.
+5.2. Site-to-site amb pfSense
 
-Una política segura partix de denegar per defecte i permetre de manera explícita només els fluxos necessaris. Les regles han de documentar origen, destinació, servei, propòsit, responsable i data de revisió. Les configuracions, el firmware i les còpies de seguretat del firewall requerixen control de canvis i protecció.
+Construïx dos seus en VirtualBox amb dos pfSense, una WAN compartida d'entorn de proves, dos LAN diferents i una VM client en cada LAN:
 
-Netfilter és el marc de filtratge integrat en Linux, gestionable mitjançant nftables, iptables o firewalld. PF és un firewall utilitzat en sistemes BSD i constituïx la base de solucions com pfSense i OPNsense. La ferramenta no substituïx el disseny d'una política clara ni la revisió de registres.
+Seu	LAN d'exemple	Túnel WireGuard d'exemplePrincipal	192.168.23.0/24	10.69.69.1/30
+Secundària	192.168.17.0/24	10.69.69.2/30
 
-### 4.2. DMZ i zones de seguretat
+En cada pfSense crea un túnel WireGuard, genera les seues claus i crea el parell amb la clau pública de l'extrem oposat. Configura com a xarxes permeses la xarxa del túnel i la LAN remota; assigna la interfície del túnel i crea regles que permeten exclusivament els servicis requerits entre les dos LAN. En WAN, permet UDP al port del túnel només des de l'adreça WAN del parell quan siga possible.
 
-Una DMZ allotja serveis exposats, com servidors web o de correu, en una zona separada de la LAN interna. El firewall perimetral controla el trànsit des d'Internet cap a la DMZ, i regles addicionals limiten estrictament les comunicacions des de la DMZ cap a la xarxa interna. Un servidor web no ha d'accedir sense restriccions a una base de dades o a tots els sistemes corporatius.
-
-Les VLAN, subxarxes, interfícies separades i controls entre zones permeten contindre incidents. La segmentació ha d'acompanyar-se d'actualitzacions, hardening, monitorització i proves de les regles, perquè una DMZ mal configurada pot convertir-se en una ruta directa cap a la xarxa interna.
-
-## 5. Detecció, monitorització i resposta
-
-### 5.1. IDS i IPS
-
-Un IDS detecta activitat sospitosa i genera alertes; un IPS, a més, pot bloquejar o modificar el trànsit. Els NIDS/NIPS inspeccionen trànsit en punts de xarxa, mentre que els HIDS/HIPS analitzen successos d'un host. Els sensors poden rebre una còpia del trànsit mitjançant un port SPAN o TAP; un IPS sol situar-se en línia, per la qual cosa una política incorrecta pot afectar trànsit legítim.
-
-Els mecanismes de detecció es basen en signatures, anomalies, polítiques o combinacions d'estes. Les signatures són eficaces davant amenaces conegudes; les anomalies poden trobar comportaments nous, però produïxen més falsos positius si no existix una línia base adequada. Suricata i Snort són eines conegudes per a anàlisi i detecció en xarxa.
-
-### 5.2. Anàlisi de trànsit i registres
-
-Wireshark i tcpdump ajuden a analitzar protocols, adreces, ports, sessions i errors en un entorn autoritzat. L'anàlisi permet diagnosticar problemes, verificar el xifratge, identificar configuracions insegures i estudiar una alerta. Capturar trànsit pot incloure dades personals o credencials, per la qual cosa les evidències han de protegir-se i conservar-se només el temps necessari.
-
-Els registres de switches, routers, firewalls, VPN, IDS/IPS, proxies i servidors han de sincronitzar l'hora, centralitzar-se quan siga possible i protegir-se davant alteracions. Un SIEM correlaciona esdeveniments de diverses fonts i facilita alertes i investigació. La resposta davant un incident seguix un cicle de detecció, anàlisi, contenció, erradicació, recuperació i millora.
-
-### 5.3. Límits i millora contínua
-
-Un IDS/IPS necessita ajust continu de regles, actualització de signatures i revisió de falsos positius i negatius. El xifratge pot impedir inspeccionar el contingut si no es finalitza o inspecciona de manera controlada; això planteja requisits tècnics, legals i de privacitat. Les proves de detecció es planifiquen i executen només sobre entorns autoritzats.
-
-## 6. Proxies, WAF, DDoS i Zero Trust
-
-### 6.1. Proxies i WAF
-
-Un proxy directe representa els clients davant Internet i pot aplicar filtratge, autenticació, registre i memòria cau. Un proxy invers se situa davant dels servidors, oculta la infraestructura interna, finalitza TLS, distribuïx càrrega i centralitza registres. Cap dels dos ha de convertir-se en un punt únic de fallada sense una estratègia de disponibilitat, com s'estudia en la UD5.
-
-Un WAF inspecciona sol·licituds HTTP per a detectar o bloquejar patrons d'atacs contra aplicacions web, com injeccions SQL o XSS. Complementa les validacions de l'aplicació, actualitzacions, autenticació i configuració TLS; no corregix per si mateix una aplicació vulnerable. Les regles han d'ajustar-se per a reduir bloquejos de trànsit legítim i evitar una falsa sensació de seguretat.
-
-### 6.2. Mitigació de DDoS
-
-Els atacs DDoS busquen esgotar ample de banda, capacitat de xarxa o recursos de l'aplicació. Poden ser volumètrics, d'amplificació o de capa 7. La mitigació combina limitació de taxa, filtratge, monitorització de pics, capacitat d'escalat, CDN i serveis especialitzats de neteja de trànsit.
-
-Una organització ha de disposar de contactes, llindars d'alerta, procediments d'escalada i comunicació amb proveïdors. Les proves de resiliència no consistixen a generar trànsit contra sistemes aliens: es realitzen amb abast aprovat, eines controlades i mesures d'aturada.
-
-### 6.3. Zero Trust
-
-Zero Trust partix de la idea que cap xarxa, usuari o dispositiu és confiable per defecte. Verifica explícitament la identitat i el context de cada accés, aplica mínim privilegi i reduïx l'impacte d'un compromís mitjançant microsegmentació. MFA, NAC, gestió de dispositius, polítiques per identitat i monitorització contínua són elements habituals.
-
-La implantació és gradual: inventari d'actius i fluxos, classificació de recursos, definició de polítiques, desplegament per fases i revisió de resultats. No equival a adquirir un únic producte; exigix processos, arquitectura i formació.
-
-## 7. Resum
-
-La seguretat de xarxa combina la protecció de l'accés LAN i WLAN, la segmentació, les comunicacions xifrades, el control perimetral, la detecció i la resposta. Els controls han de ser coherents amb els actius i fluxos que protegixen, i aplicar el mínim privilegi en cada capa.
-
-VPN, firewalls, IDS/IPS, proxies, WAF i Zero Trust resolen problemes diferents i complementaris. La seua eficàcia depén d'una configuració mantinguda, monitorització, evidències protegides i proves realitzades de manera autoritzada.
-
-## 8. Recursos
-
-- NIST Cybersecurity Framework
-- Wi‑Fi Alliance: WPA3
-- WireGuard
-- OpenVPN
-- Suricata
-- Snort
-- Wireshark
-- Netfilter
-- OWASP: Web Application Firewall
-
-## 9. Relació amb els resultats d'aprenentatge
-
-Esta unitat contribuïx principalment al **RA2**, mitjançant la identificació d'amenaces, la configuració de controls de xarxa, la segmentació, la monitorització i la detecció d'intrusions.
-
-També es relaciona amb el **RA3**, pel disseny de VPN i accés remot segur, i amb el **RA4**, per les polítiques de firewall, DMZ, proxies i protecció de serveis perimetrals.
-
-<br aria-hidden="true">
+Comprova des dels clients de les dos seus que el trànsit autoritzat travessa el túnel i que el no autoritzat queda bloquejat. Com a alternativa documentada, implementa el mateix escenari amb OpenVPN o IPsec IKEv2 des dels assistents de pfSense, utilitzant xifratges actuals i regles equivalents. No utilitzes PPTP en cap cas.
+
+6. Pràctica 4 - Captura de trànsit i IDS/IPS
+6.1. Captura autoritzada
+
+Captura trànsit generat per les teues pròpies VM mentre realitzes una consulta DNS i connexions HTTP i HTTPS a servicis de prova:
+
+sudo tcpdump -i INTERFAZ -nn -w ud6-pruebas.pcapng
+
+
+Amb Wireshark, identifica IP i port origen/destinació, protocol, establiment TCP i consulta/resposta DNS. Compara quin contingut pot observar-se en HTTP davant HTTPS. Les captures poden contindre dades sensibles; no compartisques cookies, credencials, claus ni trànsit d'altres persones.
+
+6.2. Suricata o Snort en pfSense
+
+En el firewall de la pràctica 1, instal·la Suricata o Snort des de System > Package Manager. Deshabilita les opcions de hardware offloading de la VM si el producte ho requerix. Activa inicialment el mode IDS, instal·la un conjunt gratuït de regles, selecciona una interfície d'entorn de proves i actualitza les regles.
+
+Genera únicament trànsit benigne i autoritzat entre les teues VM, com peticions HTTP a la DMZ o connexions repetides a un servici de prova. Revisa alertes i registra data, origen, destinació, regla, classificació, gravetat i possible fals positiu. Després de validar el mode IDS, valora de manera raonada quines regles podrien bloquejar-se en mode IPS i durant quant de temps. No actives bloqueig generalitzat sense una reversió preparada.
+
+Explica la diferència entre un sensor connectat a SPAN/TAP i un IPS en línia. Com a ampliació, investiga com Security Onion centralitza Suricata, Zeek i registres de xarxa per a investigació, sense desplegar-lo si els recursos de l'equip no són suficients.
+
+7. Pràctica 5 - Proxy directe i invers
+7.1. Proxy directe amb Squid
+
+En una VM AlmaLinux 9 instal·la Squid i permet el port només des de la subxarxa d'entorn de proves:
+
+sudo dnf install -y squid
+sudo cp /etc/squid/squid.conf /etc/squid/squid.conf.bak
+
+
+Definix una ACL per a la xarxa de pràctiques i revisa que les regles s'avaluen en orde. La configuració ha de permetre només els clients autoritzats i acabar amb una denegació general. Configura el navegador d'una VM client perquè utilitze el proxy i revisa /var/log/squid/access.log.
+
+Implementa una llista de bloqueig exclusivament amb dominis de prova o ficticis. Documenta per què el filtratge HTTPS sense una arquitectura d'inspecció i certificats gestionats té limitacions de privacitat i compatibilitat.
+
+7.2. Proxy invers amb Nginx
+
+En una VM Linux crea dos servicis HTTP de prova en ports diferents i configura Nginx com a proxy invers. Verifica que s'accedix a cada servici mitjançant rutes distintes, sense exposar directament els ports interns. Com a ampliació, utilitza un bloc upstream per a repartir sol·licituds entre dos backends propis i comprova el comportament quan un deixa de respondre.
+
+Explica quina protecció afig un WAF davant d'una aplicació i quins controls continuen sent responsabilitat de la pròpia aplicació: validació d'entrades, autenticació, actualitzacions i registres.
+
+8. Activitats
+Dissenya una taula de VLAN i una matriu de fluxos per a usuaris, administració, convidats, IoT, servidors i DMZ.
+Explica quins controls limiten ARP spoofing, DHCP no autoritzat i DNS manipulable.
+Compara una VPN d'accés remot amb una VPN site-to-site, incloent identitat, rutes i regles.
+Proposa una política de regles de firewall amb denegació per defecte per a una aplicació web en DMZ.
+Diferencia IDS, IPS, NIDS i HIDS, i explica l'impacte dels falsos positius.
+Identifica quins registres s'haurien d'enviar a un SIEM des de firewall, VPN, proxy i IDS/IPS.
+Dissenya mesures proporcionades per a respondre a un increment anòmal de peticions HTTP sense bloquejar usuaris legítims.
+9. Autoavaluació
+Què és una DMZ?
+Quina diferència existix entre VLAN i subxarxa?
+Què controla 802.1X?
+Per què WEP i TKIP són insegurs?
+Quina diferència existix entre una VPN site-to-site i una d'accés remot?
+Quina funció té AllowedIPs en WireGuard?
+Què és una política de denegació per defecte?
+Quina diferència hi ha entre un IDS i un IPS?
+Què pot revelar una captura HTTP que HTTPS ben configurat no mostra?
+Quina funció té un proxy invers?
+Quins riscos de disponibilitat o privacitat planteja un proxy?
+Quins principis aplica Zero Trust?
+10. Tasca avaluable única - Disseny d'una xarxa segura
+
+Entrega una memòria en PDF o Markdown per a una empresa de 50 usuaris, una seu secundària, teletreball, servicis web publicats i WLAN per a convidats. Inclou:
+
+Diagrama lògic amb VLAN, subxarxes, DMZ, WLAN, seus, VPN i controls.
+Inventari d'actius, amenaces i punts de control.
+Taula de VLAN, direccionament i regles de firewall amb denegació per defecte.
+Disseny WLAN amb autenticació, convidats i control d'accés.
+Proposta de VPN d'accés remot o site-to-site amb rutes, DNS, MFA i revocació.
+Ubicació i funció de firewall, IDS/IPS, proxy, WAF, registres i monitorització.
+Mesures de mitigació DDoS i aplicació gradual de Zero Trust.
+Pla de proves amb evidències esperades, reversió i justificació tècnica.
+Criteri	PesAmenaces, actius i segmentació	20 %
+Firewall, DMZ i regles de mínim privilegi	20 %
+Seguretat WLAN i control d'accés	15 %
+VPN i accés remot segur	15 %
+Detecció, registres i resposta	15 %
+Proxy, WAF, DDoS i Zero Trust	5 %
+Diagrama, evidències i justificació	10 %
+Total	100 %
+11. Recursos
+Documentació de pfSense
+OPNsense
+WireGuard
+OpenVPN
+FreeRADIUS
+Suricata
+Snort
+Squid
+Security Onion
+NIST: Zero Trust Architecture
