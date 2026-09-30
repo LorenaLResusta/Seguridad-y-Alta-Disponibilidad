@@ -1,156 +1,314 @@
 ---
-title: "5.  Alta disponibilidad."
+title: "5. Alta disponibilitat"
 weight: 1
 ---
 
-# UD5 - Alta disponibilidad
+# UD5 - Alta disponibilitat
 
-> Diseño de servicios redundantes, tolerantes a fallos y recuperables.
+> Disseny de serveis redundants, tolerants a fallades i recuperables.
 
-| Datos de la unidad | Información |
+| Dades de la unitat | Informació |
 | --- | --- |
-| Módulo | Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Modalidad | Semipresencial |
-| Duración | 14 horas |
+| Mòdul | Seguretat i Alta Disponibilitat |
+| Curs | 2n ASIR |
+| Modalitat | Semipresencial |
+| Duració | 14 hores |
 
-## Índice
+## Índex
 
-1. [Fundamentos de alta disponibilidad](#1-fundamentos-de-alta-disponibilidad)
-2. [Redundancia de infraestructura y red](#2-redundancia-de-infraestructura-y-red)
-3. [Clústeres y failover en Linux](#3-clústeres-y-failover-en-linux)
-4. [Balanceo, IP virtual y continuidad de red](#4-balanceo-ip-virtual-y-continuidad-de-red)
-5. [Virtualización, contenedores y diseño HA](#5-virtualización-contenedores-y-diseño-ha)
-6. [Resumen](#6-resumen)
-7. [Recursos](#7-recursos)
-8. [Relación con los resultados de aprendizaje](#8-relación-con-los-resultados-de-aprendizaje)
+1. #1-fonaments-dalta-disponibilitat
+2. #2-redundància-dinfraestructura-i-xarxa
+3. #3-clústers-i-failover-en-linux
+4. #4-balanceig-ip-virtual-i-continuitat-de-xarxa
+5. #5-virtualització-contenidors-i-disseny-ha
+6. #6-resum
+7. #7-recursos
+8. #8-relació-amb-els-resultats-daprenentatge
 
 ---
 
-## 1. Fundamentos de alta disponibilidad
+## 1. Fonaments d'alta disponibilitat
 
-### 1.1. Introducción
+### 1.1. Introducció
 
-La alta disponibilidad, o HA, busca que un servicio permanezca operativo y accesible el mayor tiempo posible, reduciendo las interrupciones no planificadas. Es necesaria cuando una caída afecta de forma relevante a usuarios, ingresos, seguridad, obligaciones legales o continuidad de una organización.
+L'alta disponibilitat, o HA, busca que un servei romanga operatiu i accessible el màxim temps possible, reduint les interrupcions no planificades. És necessària quan una caiguda afecta de manera rellevant usuaris, ingressos, seguretat, obligacions legals o la continuïtat d'una organització.
 
-HA no equivale a eliminar todos los fallos. Combina prevención, detección, redundancia, conmutación automática y recuperación para reducir el tiempo de indisponibilidad. También se relaciona con continuidad de negocio y recuperación ante desastres: la primera mantiene las operaciones y la segunda permite recuperarlas tras un incidente grave.
+HA no equival a eliminar totes les fallades. Combina prevenció, detecció, redundància, commutació automàtica i recuperació per a reduir el temps d'indisponibilitat. També es relaciona amb la continuïtat de negoci i la recuperació davant desastres: la primera manté les operacions i la segona permet recuperar-les després d'un incident greu.
 
-### 1.2. Objetivos
+### 1.2. Objectius
 
-Al finalizar la unidad, el alumnado será capaz de:
+En finalitzar la unitat, l'alumnat serà capaç de:
 
-- Diferenciar disponibilidad, redundancia, tolerancia a fallos y continuidad.
-- Identificar puntos únicos de fallo en una infraestructura.
-- Interpretar MTBF, MTTR, RPO y RTO en un diseño HA.
-- Seleccionar mecanismos de redundancia de hardware, almacenamiento y red.
-- Explicar el funcionamiento de clústeres, quórum, *fencing* y *failover*.
-- Diseñar servicios con balanceo de carga, IP virtual y comprobaciones de salud.
-- Valorar el papel de la virtualización, los contenedores y la automatización.
+- Diferenciar disponibilitat, redundància, tolerància a fallades i continuïtat.
+- Identificar punts únics de fallada en una infraestructura.
+- Interpretar MTBF, MTTR, RPO i RTO en un disseny HA.
+- Seleccionar mecanismes de redundància de maquinari, emmagatzematge i xarxa.
+- Explicar el funcionament de clústers, quòrum, *fencing* i *failover*.
+- Dissenyar serveis amb balanceig de càrrega, IP virtual i comprovacions de salut.
+- Valorar el paper de la virtualització, els contenidors i l'automatització.
 
-### 1.3. Disponibilidad y puntos únicos de fallo
+### 1.3. Disponibilitat i punts únics de fallada
 
-La disponibilidad expresa la proporción de tiempo en que un servicio funciona correctamente:
+La disponibilitat expressa la proporció de temps en què un servei funciona correctament:
 
 $$
 D = \frac{MTBF}{MTBF + MTTR}
 $$
 
-El MTBF es el tiempo medio entre fallos y el MTTR el tiempo medio de reparación. Los llamados "nueves" traducen un porcentaje anual en tiempo de caída aproximado: $99.9\%$ permite unas $8.76$ horas, $99.99\%$ unos $52.56$ minutos y $99.999\%$ unos $5.26$ minutos.
+El MTBF és el temps mitjà entre fallades i el MTTR el temps mitjà de reparació. Els anomenats "nous" traduïxen un percentatge anual en temps de caiguda aproximat: $99.9\%$ permet unes $8.76$ hores, $99.99\%$ uns $52.56$ minuts i $99.999\%$ uns $5.26$ minuts.
 
-Un punto único de fallo, o SPOF, es un componente cuya caída interrumpe un servicio. Puede ser un firewall, un switch, una fuente de alimentación, un host de virtualización, un enlace o una base de datos. El primer paso de un diseño HA es identificarlos y decidir cuáles deben eliminarse según el impacto y el coste.
+Un punt únic de fallada, o SPOF, és un component la caiguda del qual interromp un servei. Pot ser un firewall, un switch, una font d'alimentació, un host de virtualització, un enllaç o una base de dades. El primer pas d'un disseny HA és identificar-los i decidir quins s'han d'eliminar segons l'impacte i el cost.
 
-### 1.4. Redundancia, tolerancia y objetivos de recuperación
+### 1.4. Redundància, tolerància i objectius de recuperació
 
-La redundancia incorpora componentes adicionales; la tolerancia a fallos permite mantener el servicio cuando uno falla; el *failover* traslada un recurso a un componente disponible. Los modelos activo-pasivo mantienen un nodo de reserva, mientras que los activo-activo reparten la carga entre varios nodos.
+La redundància incorpora components addicionals; la tolerància a fallades permet mantindre el servei quan un element falla; el *failover* trasllada un recurs a un component disponible. Els models actiu-passiu mantenen un node de reserva, mentre que els actiu-actiu repartixen la càrrega entre diversos nodes.
 
-RPO establece la pérdida máxima de datos aceptable y RTO el tiempo objetivo de recuperación. Por ejemplo, un RPO de 15 minutos puede exigir copias o replicación frecuentes, mientras que un RTO de una hora requiere procedimientos ensayados y recursos listos para recuperar. RAID y copias de seguridad se estudian en UD2: RAID mejora la disponibilidad frente a fallos de disco, pero no sustituye las copias ni la recuperación ante borrados o ransomware.
+L'RPO establix la pèrdua màxima de dades acceptable i l'RTO el temps objectiu de recuperació. Per exemple, un RPO de 15 minuts pot exigir còpies o replicació freqüents, mentre que un RTO d'una hora requerix procediments assajats i recursos preparats per a recuperar el servei. RAID i les còpies de seguretat s'estudien en la UD2: RAID millora la disponibilitat davant fallades de disc, però no substituïx les còpies ni la recuperació davant esborrats o ransomware.
 
-## 2. Redundancia de infraestructura y red
+## 2. Redundància d'infraestructura i xarxa
 
-### 2.1. Hardware, alimentación y almacenamiento
+### 2.1. Maquinari, alimentació i emmagatzematge
 
-La redundancia puede aplicarse a servidores, fuentes de alimentación, ventiladores, controladoras, interfaces de red y almacenamiento. Los componentes redundantes deben conectarse, cuando sea posible, a rutas eléctricas y de red diferentes; duplicar un equipo que depende del mismo switch o SAI no elimina todos los riesgos.
+La redundància pot aplicar-se a servidors, fonts d'alimentació, ventiladors, controladores, interfícies de xarxa i emmagatzematge. Els components redundants han de connectar-se, quan siga possible, a rutes elèctriques i de xarxa diferents; duplicar un equip que depén del mateix switch o SAI no elimina tots els riscos.
 
-Un SAI proporciona autonomía limitada y tiempo para un apagado controlado; un generador puede sostener cortes prolongados. La potencia, autonomía, prioridades y procedimiento de apagado deben dimensionarse y probarse. NAS, SAN, replicación y sistemas distribuidos permiten reducir riesgos de almacenamiento, pero exigen diseñar coherencia de datos y recuperación.
+Un SAI proporciona autonomia limitada i temps per a un apagat controlat; un generador pot mantindre el servei durant talls prolongats. La potència, autonomia, prioritats i procediment d'apagat han de dimensionar-se i provar-se. NAS, SAN, replicació i sistemes distribuïts permeten reduir riscos d'emmagatzematge, però exigixen dissenyar la coherència de les dades i la recuperació.
 
-### 2.2. Redundancia de red y agregación de enlaces
+### 2.2. Redundància de xarxa i agregació d'enllaços
 
-Una red resiliente incorpora rutas y equipos alternativos para evitar que un único enlace, switch, router o firewall interrumpa el servicio. Las topologías de malla, anillo o núcleo-distribución-acceso pueden ofrecer varios caminos si se diseñan y supervisan correctamente.
+Una xarxa resilient incorpora rutes i equips alternatius per a evitar que un únic enllaç, switch, router o firewall interrompa el servei. Les topologies de malla, anell o nucli-distribució-accés poden oferir diversos camins si es dissenyen i supervisen correctament.
 
-La agregación de enlaces combina varias interfaces físicas en un canal lógico. LACP, normalizado en IEEE 802.3ad, permite aumentar la capacidad agregada y mantener conectividad si falla uno de los enlaces. Debe configurarse de forma compatible en ambos extremos y no garantiza que una única conexión individual use todo el ancho de banda del grupo.
+L'agregació d'enllaços combina diverses interfícies físiques en un canal lògic. LACP, normalitzat en IEEE 802.3ad, permet augmentar la capacitat agregada i mantindre la connectivitat si falla un dels enllaços. Ha de configurar-se de manera compatible en tots dos extrems i no garantix que una única connexió utilitze tot l'ample de banda del grup.
 
-Los enlaces redundantes pueden crear bucles. STP y sus variantes RSTP o MSTP bloquean rutas según la topología y habilitan alternativas cuando detectan un fallo. La segmentación, los protocolos de enrutamiento y la monitorización completan el diseño de una red disponible.
+Els enllaços redundants poden crear bucles. STP i les seues variants RSTP o MSTP bloquegen rutes segons la topologia i habiliten alternatives quan detecten una fallada. La segmentació, els protocols d'encaminament i la monitorització completen el disseny d'una xarxa disponible.
 
-## 3. Clústeres y failover en Linux
+## 3. Clústers i failover en Linux
 
-### 3.1. Componentes y modelos de clúster
+### 3.1. Components i models de clúster
 
-Un clúster HA reúne varios nodos para ofrecer un servicio de forma coordinada. Sus componentes habituales son nodos, red de comunicación, almacenamiento compartido o replicado, recursos gestionados, comprobaciones de salud y mecanismos para evitar operaciones simultáneas no seguras.
+Un clúster HA reunix diversos nodes per a oferir un servei de manera coordinada. Els seus components habituals són nodes, xarxa de comunicació, emmagatzematge compartit o replicat, recursos gestionats, comprovacions de salut i mecanismes per a evitar operacions simultànies no segures.
 
-En un diseño activo-pasivo, un nodo ejecuta el servicio y otro está preparado para asumirlo. En activo-activo, varios nodos atienden peticiones y normalmente se utiliza balanceo. La elección depende de si la aplicación permite ejecutarse de forma concurrente, cómo mantiene el estado y qué consistencia requieren sus datos.
+En un disseny actiu-passiu, un node executa el servei i un altre està preparat per a assumir-lo. En actiu-actiu, diversos nodes atenen peticions i normalment s'utilitza balanceig. L'elecció depén de si l'aplicació permet executar-se de forma concurrent, de com manté l'estat i de quina consistència requerixen les dades.
 
-### 3.2. Corosync, Pacemaker, quórum y fencing
+### 3.2. Corosync, Pacemaker, quòrum i fencing
 
-Corosync proporciona comunicación entre nodos, detección de pertenencia y quórum. Pacemaker utiliza esa información para gestionar recursos como servicios, sistemas de archivos o direcciones IP, y decide dónde deben ejecutarse según las restricciones definidas.
+Corosync proporciona comunicació entre nodes, detecció de pertinença i quòrum. Pacemaker utilitza esta informació per a gestionar recursos com serveis, sistemes de fitxers o adreces IP, i decidix on s'han d'executar segons les restriccions definides.
 
-El quórum evita que una parte aislada del clúster tome decisiones críticas sin mayoría suficiente. El *split-brain* ocurre cuando nodos o grupos aislados creen poder gestionar el mismo recurso, con riesgo de corrupción de datos. El *fencing* aísla de forma fiable un nodo que no responde, por ejemplo apagándolo o bloqueando su acceso al almacenamiento, antes de mover un recurso crítico a otro nodo.
+El quòrum evita que una part aïllada del clúster prenga decisions crítiques sense majoria suficient. El *split-brain* es produïx quan nodes o grups aïllats creuen poder gestionar el mateix recurs, amb risc de corrupció de dades. El *fencing* aïlla de manera fiable un node que no respon, per exemple apagant-lo o bloquejant-li l'accés a l'emmagatzematge, abans de moure un recurs crític a un altre node.
 
-### 3.3. Datos, comprobaciones y conmutación
+### 3.3. Dades, comprovacions i commutació
 
-Un clúster necesita decidir dónde están los datos y cómo preservar su consistencia. Puede usar almacenamiento compartido, replicación de bloque como DRBD, sistemas distribuidos como GlusterFS o mecanismos propios de una base de datos. No existe una solución universal: se debe valorar latencia, integridad, comportamiento ante particiones y recuperación.
+Un clúster necessita decidir on estan les dades i com preservar-ne la consistència. Pot utilitzar emmagatzematge compartit, replicació de bloc com DRBD, sistemes distribuïts com GlusterFS o mecanismes propis d'una base de dades. No existix una solució universal: cal valorar latència, integritat, comportament davant particions i recuperació.
 
-Las comprobaciones de salud deben verificar tanto que el proceso está activo como que el servicio responde correctamente. Cuando se detecta un fallo, el clúster aplica el procedimiento de *failover*: detiene o aísla el recurso si es necesario, activa el destino y confirma que el servicio funciona antes de anunciarlo a clientes.
+Les comprovacions de salut han de verificar tant que el procés està actiu com que el servei respon correctament. Quan es detecta una fallada, el clúster aplica el procediment de *failover*: deté o aïlla el recurs si és necessari, activa el destí i confirma que el servei funciona abans d'anunciar-lo als clients.
 
-## 4. Balanceo, IP virtual y continuidad de red
+## 4. Balanceig, IP virtual i continuïtat de xarxa
 
-### 4.1. Balanceadores y proxy inverso
+### 4.1. Balancejadors i proxy invers
 
-Un balanceador de carga distribuye peticiones entre varios servidores disponibles para mejorar disponibilidad, rendimiento y escalabilidad. Los algoritmos habituales incluyen *round-robin*, menor número de conexiones, reparto ponderado y hash de IP. Este último puede aportar afinidad de sesión, pero reduce flexibilidad si la distribución de clientes es desigual.
+Un balancejador de càrrega distribuïx peticions entre diversos servidors disponibles per a millorar la disponibilitat, el rendiment i l'escalabilitat. Els algoritmes habituals inclouen *round-robin*, menor nombre de connexions, repartiment ponderat i hash d'IP. Este últim pot aportar afinitat de sessió, però reduïx la flexibilitat si la distribució de clients és desigual.
 
-HAProxy y Nginx pueden actuar como balanceadores y proxy inverso. El proxy inverso oculta los servidores internos, puede terminar TLS, aplicar filtrado y almacenar contenido en caché. El propio balanceador también puede ser un SPOF, por lo que los servicios críticos suelen desplegarlo de forma redundante.
+HAProxy i Nginx poden actuar com a balancejadors i proxy invers. El proxy invers oculta els servidors interns, pot finalitzar TLS, aplicar filtratge i emmagatzemar contingut en memòria cau. El mateix balancejador també pot ser un SPOF, per la qual cosa els serveis crítics solen desplegar-lo de manera redundant.
 
-### 4.2. IP virtual y VRRP
+### 4.2. IP virtual i VRRP
 
-VRRP ofrece una puerta de enlace o dirección IP virtual compartida por varios routers o servidores. Un miembro actúa como *master* y los demás como *backup*; si los respaldos dejan de recibir anuncios, uno asume la IP virtual. Los clientes mantienen la misma puerta de enlace y no necesitan reconfigurarse.
+VRRP oferix una passarel·la o adreça IP virtual compartida per diversos routers o servidors. Un membre actua com a *master* i els altres com a *backup*; si els nodes de reserva deixen de rebre anuncis, un d'ells assumix la IP virtual. Els clients mantenen la mateixa passarel·la i no necessiten reconfigurar-se.
 
-Keepalived implementa VRRP en Linux y puede asociar la IP virtual a comprobaciones de salud. Se utiliza tanto para redundancia de gateways como para mantener disponible una IP de balanceo. HSRP y GLBP son alternativas propietarias habituales en dispositivos Cisco.
+Keepalived implementa VRRP en Linux i pot associar la IP virtual a comprovacions de salut. S'utilitza tant per a redundància de gateways com per a mantindre disponible una IP de balanceig. HSRP i GLBP són alternatives propietàries habituals en dispositius Cisco.
 
-### 4.3. Diseño y pruebas
+### 4.3. Disseny i proves
 
-La disponibilidad real se valida mediante pruebas controladas: caída de un nodo, fallo de un enlace, indisponibilidad de un backend, reinicio planificado y restauración de datos. Las pruebas deben tener alcance, horario, criterios de parada y plan de reversión. Una solución HA no está completa hasta que se comprueban sus alertas, tiempos de conmutación y comportamiento en recuperación.
+La disponibilitat real es valida mitjançant proves controlades: caiguda d'un node, fallada d'un enllaç, indisponibilitat d'un backend, reinici planificat i restauració de dades. Les proves han de tindre abast, horari, criteris d'aturada i pla de reversió. Una solució HA no està completa fins que es comproven les seues alertes, temps de commutació i comportament durant la recuperació.
 
-## 5. Virtualización, contenedores y diseño HA
+## 5. Virtualització, contenidors i disseny HA
 
-### 5.1. Virtualización y contenedores
+### 5.1. Virtualització i contenidors
 
-La virtualización facilita aislar servicios, crear recursos rápidamente, migrar máquinas y reiniciar cargas en otros hosts. Plataformas como Proxmox, VMware o Hyper-V pueden incorporar clústeres y automatización de recuperación. Para que una máquina virtual sea realmente disponible, deben considerarse también los hosts, redes y almacenamiento de los que depende.
+La virtualització facilita aïllar serveis, crear recursos ràpidament, migrar màquines i reiniciar càrregues en altres hosts. Plataformes com Proxmox, VMware o Hyper-V poden incorporar clústers i automatització de recuperació. Perquè una màquina virtual siga realment disponible, també s'han de considerar els hosts, les xarxes i l'emmagatzematge dels quals depén.
 
-Los contenedores reducen la sobrecarga al compartir el sistema operativo del host. Orquestadores como Kubernetes gestionan réplicas, comprobaciones de salud, despliegues y reprogramación de cargas. Aun así, la disponibilidad de una aplicación depende de sus datos, configuración, secretos, red y diseño de estado, no solo del número de réplicas.
+Els contenidors reduïxen la sobrecàrrega compartint el sistema operatiu de l'host. Orquestradors com Kubernetes gestionen rèpliques, comprovacions de salut, desplegaments i reprogramació de càrregues. Tot i això, la disponibilitat d'una aplicació depén de les seues dades, configuració, secrets, xarxa i disseny d'estat, no sols del nombre de rèpliques.
 
-### 5.2. Planificación de una arquitectura HA
+### 5.2. Planificació d'una arquitectura HA
 
-Una propuesta HA parte de servicios críticos, objetivos RPO/RTO, dependencias y presupuesto. Debe identificar SPOF, elegir controles proporcionados y definir quién responde a alertas. Añadir tecnología sin conocer el servicio puede incrementar el riesgo operativo.
+Una proposta HA partix dels serveis crítics, els objectius RPO/RTO, les dependències i el pressupost. Ha d'identificar SPOF, triar controls proporcionats i definir qui respon a les alertes. Afegir tecnologia sense conéixer el servei pot incrementar el risc operatiu.
 
-Un servicio web de ejemplo puede usar dos servidores detrás de un proxy inverso, dos balanceadores con una IP virtual, almacenamiento o base de datos replicados, copias de seguridad independientes, monitorización centralizada y procedimientos de recuperación documentados. La arquitectura debe poder crecer, mantenerse y probarse sin interrumpir innecesariamente el servicio.
+Un servei web d'exemple pot utilitzar dos servidors darrere d'un proxy invers, dos balancejadors amb una IP virtual, emmagatzematge o base de dades replicats, còpies de seguretat independents, monitorització centralitzada i procediments de recuperació documentats. L'arquitectura ha de poder créixer, mantindre's i provar-se sense interrompre innecessàriament el servei.
 
-## 6. Resumen
+## 6. Resum
 
-La alta disponibilidad combina redundancia, detección, automatización y procedimientos de recuperación para reducir indisponibilidades. El diseño debe eliminar SPOF relevantes, mantener la consistencia de los datos y validar el comportamiento ante fallos reales o simulados.
+L'alta disponibilitat combina redundància, detecció, automatització i procediments de recuperació per a reduir indisponibilitats. El disseny ha d'eliminar SPOF rellevants, mantindre la consistència de les dades i validar el comportament davant fallades reals o simulades.
 
-Clústeres, balanceadores, VRRP, LACP, virtualización y almacenamiento replicado son herramientas, no objetivos por sí mismos. Su valor depende de que respondan a requisitos medibles de disponibilidad, RPO y RTO.
+Clústers, balancejadors, VRRP, LACP, virtualització i emmagatzematge replicat són ferramentes, no objectius per si mateixos. El seu valor depén que responguen a requisits mesurables de disponibilitat, RPO i RTO.
 
 ## 7. Recursos
 
-- [Pacemaker](https://clusterlabs.org/pacemaker/)
-- [Corosync](https://corosync.github.io/corosync/)
-- [Keepalived](https://www.keepalived.org/)
-- [HAProxy](https://www.haproxy.org/)
-- [Documentación de LACP](https://www.ieee802.org/3/ad/)
-- [Proxmox VE](https://www.proxmox.com/en/proxmox-ve)
-- [Kubernetes: high availability](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)
+- Pacemaker
+- Corosync
+- Keepalived
+- HAProxy
+- Documentació de LACP
+- Proxmox VE
+- Kubernetes: high availability
 
-## 8. Relación con los resultados de aprendizaje
+## 8. Relació amb els resultats d'aprenentatge
 
-Esta unidad contribuye principalmente al **RA6**, mediante el diseño e implantación de soluciones de alta disponibilidad con redundancia, virtualización, almacenamiento, clústeres, balanceo y recuperación.
+Esta unitat contribuïx principalment al **RA6**, mitjançant el disseny i la implantació de solucions d'alta disponibilitat amb redundància, virtualització, emmagatzematge, clústers, balanceig i recuperació.
 
-También se relaciona con el **RA2**, por la monitorización y detección de fallos, y con el **RA4**, cuando las soluciones HA se integran con dispositivos y controles perimetrales.
+També es relaciona amb el **RA2**, per la monitorització i detecció de fallades, i amb el **RA4**, quan les solucions HA s'integren amb dispositius i controls perimetrals.
+
+<br aria-hidden="true">---
+title: "5. Alta disponibilitat"
+weight: 1
+---
+
+# UD5 - Alta disponibilitat
+
+> Disseny de serveis redundants, tolerants a fallades i recuperables.
+
+| Dades de la unitat | Informació |
+| --- | --- |
+| Mòdul | Seguretat i Alta Disponibilitat |
+| Curs | 2n ASIR |
+| Modalitat | Semipresencial |
+| Duració | 14 hores |
+
+## Índex
+
+1. #1-fonaments-dalta-disponibilitat
+2. #2-redundància-dinfraestructura-i-xarxa
+3. #3-clústers-i-failover-en-linux
+4. #4-balanceig-ip-virtual-i-continuitat-de-xarxa
+5. #5-virtualització-contenidors-i-disseny-ha
+6. #6-resum
+7. #7-recursos
+8. #8-relació-amb-els-resultats-daprenentatge
+
+---
+
+## 1. Fonaments d'alta disponibilitat
+
+### 1.1. Introducció
+
+L'alta disponibilitat, o HA, busca que un servei romanga operatiu i accessible el màxim temps possible, reduint les interrupcions no planificades. És necessària quan una caiguda afecta de manera rellevant usuaris, ingressos, seguretat, obligacions legals o la continuïtat d'una organització.
+
+HA no equival a eliminar totes les fallades. Combina prevenció, detecció, redundància, commutació automàtica i recuperació per a reduir el temps d'indisponibilitat. També es relaciona amb la continuïtat de negoci i la recuperació davant desastres: la primera manté les operacions i la segona permet recuperar-les després d'un incident greu.
+
+### 1.2. Objectius
+
+En finalitzar la unitat, l'alumnat serà capaç de:
+
+- Diferenciar disponibilitat, redundància, tolerància a fallades i continuïtat.
+- Identificar punts únics de fallada en una infraestructura.
+- Interpretar MTBF, MTTR, RPO i RTO en un disseny HA.
+- Seleccionar mecanismes de redundància de maquinari, emmagatzematge i xarxa.
+- Explicar el funcionament de clústers, quòrum, *fencing* i *failover*.
+- Dissenyar serveis amb balanceig de càrrega, IP virtual i comprovacions de salut.
+- Valorar el paper de la virtualització, els contenidors i l'automatització.
+
+### 1.3. Disponibilitat i punts únics de fallada
+
+La disponibilitat expressa la proporció de temps en què un servei funciona correctament:
+
+$$
+D = \frac{MTBF}{MTBF + MTTR}
+$$
+
+El MTBF és el temps mitjà entre fallades i el MTTR el temps mitjà de reparació. Els anomenats "nous" traduïxen un percentatge anual en temps de caiguda aproximat: $99.9\%$ permet unes $8.76$ hores, $99.99\%$ uns $52.56$ minuts i $99.999\%$ uns $5.26$ minuts.
+
+Un punt únic de fallada, o SPOF, és un component la caiguda del qual interromp un servei. Pot ser un firewall, un switch, una font d'alimentació, un host de virtualització, un enllaç o una base de dades. El primer pas d'un disseny HA és identificar-los i decidir quins s'han d'eliminar segons l'impacte i el cost.
+
+### 1.4. Redundància, tolerància i objectius de recuperació
+
+La redundància incorpora components addicionals; la tolerància a fallades permet mantindre el servei quan un element falla; el *failover* trasllada un recurs a un component disponible. Els models actiu-passiu mantenen un node de reserva, mentre que els actiu-actiu repartixen la càrrega entre diversos nodes.
+
+L'RPO establix la pèrdua màxima de dades acceptable i l'RTO el temps objectiu de recuperació. Per exemple, un RPO de 15 minuts pot exigir còpies o replicació freqüents, mentre que un RTO d'una hora requerix procediments assajats i recursos preparats per a recuperar el servei. RAID i les còpies de seguretat s'estudien en la UD2: RAID millora la disponibilitat davant fallades de disc, però no substituïx les còpies ni la recuperació davant esborrats o ransomware.
+
+## 2. Redundància d'infraestructura i xarxa
+
+### 2.1. Maquinari, alimentació i emmagatzematge
+
+La redundància pot aplicar-se a servidors, fonts d'alimentació, ventiladors, controladores, interfícies de xarxa i emmagatzematge. Els components redundants han de connectar-se, quan siga possible, a rutes elèctriques i de xarxa diferents; duplicar un equip que depén del mateix switch o SAI no elimina tots els riscos.
+
+Un SAI proporciona autonomia limitada i temps per a un apagat controlat; un generador pot mantindre el servei durant talls prolongats. La potència, autonomia, prioritats i procediment d'apagat han de dimensionar-se i provar-se. NAS, SAN, replicació i sistemes distribuïts permeten reduir riscos d'emmagatzematge, però exigixen dissenyar la coherència de les dades i la recuperació.
+
+### 2.2. Redundància de xarxa i agregació d'enllaços
+
+Una xarxa resilient incorpora rutes i equips alternatius per a evitar que un únic enllaç, switch, router o firewall interrompa el servei. Les topologies de malla, anell o nucli-distribució-accés poden oferir diversos camins si es dissenyen i supervisen correctament.
+
+L'agregació d'enllaços combina diverses interfícies físiques en un canal lògic. LACP, normalitzat en IEEE 802.3ad, permet augmentar la capacitat agregada i mantindre la connectivitat si falla un dels enllaços. Ha de configurar-se de manera compatible en tots dos extrems i no garantix que una única connexió utilitze tot l'ample de banda del grup.
+
+Els enllaços redundants poden crear bucles. STP i les seues variants RSTP o MSTP bloquegen rutes segons la topologia i habiliten alternatives quan detecten una fallada. La segmentació, els protocols d'encaminament i la monitorització completen el disseny d'una xarxa disponible.
+
+## 3. Clústers i failover en Linux
+
+### 3.1. Components i models de clúster
+
+Un clúster HA reunix diversos nodes per a oferir un servei de manera coordinada. Els seus components habituals són nodes, xarxa de comunicació, emmagatzematge compartit o replicat, recursos gestionats, comprovacions de salut i mecanismes per a evitar operacions simultànies no segures.
+
+En un disseny actiu-passiu, un node executa el servei i un altre està preparat per a assumir-lo. En actiu-actiu, diversos nodes atenen peticions i normalment s'utilitza balanceig. L'elecció depén de si l'aplicació permet executar-se de forma concurrent, de com manté l'estat i de quina consistència requerixen les dades.
+
+### 3.2. Corosync, Pacemaker, quòrum i fencing
+
+Corosync proporciona comunicació entre nodes, detecció de pertinença i quòrum. Pacemaker utilitza esta informació per a gestionar recursos com serveis, sistemes de fitxers o adreces IP, i decidix on s'han d'executar segons les restriccions definides.
+
+El quòrum evita que una part aïllada del clúster prenga decisions crítiques sense majoria suficient. El *split-brain* es produïx quan nodes o grups aïllats creuen poder gestionar el mateix recurs, amb risc de corrupció de dades. El *fencing* aïlla de manera fiable un node que no respon, per exemple apagant-lo o bloquejant-li l'accés a l'emmagatzematge, abans de moure un recurs crític a un altre node.
+
+### 3.3. Dades, comprovacions i commutació
+
+Un clúster necessita decidir on estan les dades i com preservar-ne la consistència. Pot utilitzar emmagatzematge compartit, replicació de bloc com DRBD, sistemes distribuïts com GlusterFS o mecanismes propis d'una base de dades. No existix una solució universal: cal valorar latència, integritat, comportament davant particions i recuperació.
+
+Les comprovacions de salut han de verificar tant que el procés està actiu com que el servei respon correctament. Quan es detecta una fallada, el clúster aplica el procediment de *failover*: deté o aïlla el recurs si és necessari, activa el destí i confirma que el servei funciona abans d'anunciar-lo als clients.
+
+## 4. Balanceig, IP virtual i continuïtat de xarxa
+
+### 4.1. Balancejadors i proxy invers
+
+Un balancejador de càrrega distribuïx peticions entre diversos servidors disponibles per a millorar la disponibilitat, el rendiment i l'escalabilitat. Els algoritmes habituals inclouen *round-robin*, menor nombre de connexions, repartiment ponderat i hash d'IP. Este últim pot aportar afinitat de sessió, però reduïx la flexibilitat si la distribució de clients és desigual.
+
+HAProxy i Nginx poden actuar com a balancejadors i proxy invers. El proxy invers oculta els servidors interns, pot finalitzar TLS, aplicar filtratge i emmagatzemar contingut en memòria cau. El mateix balancejador també pot ser un SPOF, per la qual cosa els serveis crítics solen desplegar-lo de manera redundant.
+
+### 4.2. IP virtual i VRRP
+
+VRRP oferix una passarel·la o adreça IP virtual compartida per diversos routers o servidors. Un membre actua com a *master* i els altres com a *backup*; si els nodes de reserva deixen de rebre anuncis, un d'ells assumix la IP virtual. Els clients mantenen la mateixa passarel·la i no necessiten reconfigurar-se.
+
+Keepalived implementa VRRP en Linux i pot associar la IP virtual a comprovacions de salut. S'utilitza tant per a redundància de gateways com per a mantindre disponible una IP de balanceig. HSRP i GLBP són alternatives propietàries habituals en dispositius Cisco.
+
+### 4.3. Disseny i proves
+
+La disponibilitat real es valida mitjançant proves controlades: caiguda d'un node, fallada d'un enllaç, indisponibilitat d'un backend, reinici planificat i restauració de dades. Les proves han de tindre abast, horari, criteris d'aturada i pla de reversió. Una solució HA no està completa fins que es comproven les seues alertes, temps de commutació i comportament durant la recuperació.
+
+## 5. Virtualització, contenidors i disseny HA
+
+### 5.1. Virtualització i contenidors
+
+La virtualització facilita aïllar serveis, crear recursos ràpidament, migrar màquines i reiniciar càrregues en altres hosts. Plataformes com Proxmox, VMware o Hyper-V poden incorporar clústers i automatització de recuperació. Perquè una màquina virtual siga realment disponible, també s'han de considerar els hosts, les xarxes i l'emmagatzematge dels quals depén.
+
+Els contenidors reduïxen la sobrecàrrega compartint el sistema operatiu de l'host. Orquestradors com Kubernetes gestionen rèpliques, comprovacions de salut, desplegaments i reprogramació de càrregues. Tot i això, la disponibilitat d'una aplicació depén de les seues dades, configuració, secrets, xarxa i disseny d'estat, no sols del nombre de rèpliques.
+
+### 5.2. Planificació d'una arquitectura HA
+
+Una proposta HA partix dels serveis crítics, els objectius RPO/RTO, les dependències i el pressupost. Ha d'identificar SPOF, triar controls proporcionats i definir qui respon a les alertes. Afegir tecnologia sense conéixer el servei pot incrementar el risc operatiu.
+
+Un servei web d'exemple pot utilitzar dos servidors darrere d'un proxy invers, dos balancejadors amb una IP virtual, emmagatzematge o base de dades replicats, còpies de seguretat independents, monitorització centralitzada i procediments de recuperació documentats. L'arquitectura ha de poder créixer, mantindre's i provar-se sense interrompre innecessàriament el servei.
+
+## 6. Resum
+
+L'alta disponibilitat combina redundància, detecció, automatització i procediments de recuperació per a reduir indisponibilitats. El disseny ha d'eliminar SPOF rellevants, mantindre la consistència de les dades i validar el comportament davant fallades reals o simulades.
+
+Clústers, balancejadors, VRRP, LACP, virtualització i emmagatzematge replicat són ferramentes, no objectius per si mateixos. El seu valor depén que responguen a requisits mesurables de disponibilitat, RPO i RTO.
+
+## 7. Recursos
+
+- Pacemaker
+- Corosync
+- Keepalived
+- HAProxy
+- Documentació de LACP
+- Proxmox VE
+- Kubernetes: high availability
+
+## 8. Relació amb els resultats d'aprenentatge
+
+Esta unitat contribuïx principalment al **RA6**, mitjançant el disseny i la implantació de solucions d'alta disponibilitat amb redundància, virtualització, emmagatzematge, clústers, balanceig i recuperació.
+
+També es relaciona amb el **RA2**, per la monitorització i detecció de fallades, i amb el **RA4**, quan les solucions HA s'integren amb dispositius i controls perimetrals.
+

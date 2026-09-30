@@ -1,165 +1,167 @@
 ---
-title: "6 - Seguridad en redes."
+title: "6 - Seguretat en xarxes"
 weight: 1
 ---
 
-# UD6 - Seguridad en redes
+# UD6 - Seguretat en xarxes
 
-> Protección de las comunicaciones, el acceso y los servicios de red mediante segmentación, cifrado, detección y controles perimetrales.
+> Protecció de les comunicacions, l'accés i els serveis de xarxa mitjançant segmentació, xifratge, detecció i controls perimetrals.
 
-| Datos de la unidad | Información |
+| Dades de la unitat | Informació |
 | --- | --- |
-| Módulo | Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Modalidad | Semipresencial |
-| Duración | 14 horas |
+| Mòdul | Seguretat i Alta Disponibilitat |
+| Curs | 2n ASIR |
+| Modalitat | Semipresencial |
+| Duració | 14 hores |
 
-## Índice
+## Índex
 
-1. [Fundamentos y amenazas de red](#1-fundamentos-y-amenazas-de-red)
-2. [Control de acceso y segmentación LAN/WLAN](#2-control-de-acceso-y-segmentación-lanwlan)
-3. [Comunicaciones remotas y VPN](#3-comunicaciones-remotas-y-vpn)
-4. [Seguridad perimetral, firewalls y DMZ](#4-seguridad-perimetral-firewalls-y-dmz)
-5. [Detección, monitorización y respuesta](#5-detección-monitorización-y-respuesta)
-6. [Proxies, WAF, DDoS y Zero Trust](#6-proxies-waf-ddos-y-zero-trust)
-7. [Resumen](#7-resumen)
-8. [Recursos](#8-recursos)
-9. [Relación con los resultados de aprendizaje](#9-relación-con-los-resultados-de-aprendizaje)
+1. #1-fonaments-i-amenaces-de-xarxa
+2. #2-control-daccés-i-segmentació-lanwlan
+3. #3-comunicacions-remotes-i-vpn
+4. #4-seguretat-perimetral-firewalls-i-dmz
+5. #5-detecció-monitorització-i-resposta
+6. #6-proxies-waf-ddos-i-zero-trust
+7. #7-resum
+8. #8-recursos
+9. #9-relació-amb-els-resultats-daprenentatge
 
 ---
 
-## 1. Fundamentos y amenazas de red
+## 1. Fonaments i amenaces de xarxa
 
-### 1.1. Introducción
+### 1.1. Introducció
 
-Las redes conectan usuarios, sistemas, servicios y sedes, pero también amplían la superficie de ataque. Los protocolos fundacionales de Internet y muchas tecnologías LAN se diseñaron para entornos reducidos y relativamente confiables, sin incorporar autenticación o cifrado de forma generalizada. La seguridad de red aplica controles para preservar confidencialidad, integridad, disponibilidad, autenticidad y trazabilidad.
+Les xarxes connecten usuaris, sistemes, serveis i seus, però també amplien la superfície d'atac. Els protocols fundacionals d'Internet i moltes tecnologies LAN es van dissenyar per a entorns reduïts i relativament confiables, sense incorporar autenticació o xifratge de manera generalitzada. La seguretat de xarxa aplica controls per a preservar la confidencialitat, integritat, disponibilitat, autenticitat i traçabilitat.
 
-La protección debe plantearse en capas: infraestructura física, enlace, red, transporte, hosts y aplicaciones. Un control aislado no es suficiente; por ejemplo, un firewall no evita una contraseña robada, y el cifrado no corrige una autorización excesiva.
+La protecció ha de plantejar-se en capes: infraestructura física, enllaç, xarxa, transport, hosts i aplicacions. Un control aïllat no és suficient; per exemple, un firewall no evita una contrasenya robada, i el xifratge no corregix una autorització excessiva.
 
-### 1.2. Amenazas habituales
+### 1.2. Amenaces habituals
 
-Entre las amenazas más comunes se encuentran la escucha de tráfico, escaneo de puertos, suplantación de direcciones, malware, acceso no autorizado, denegación de servicio y errores de configuración. Un atacante puede obtener información durante la fase de reconocimiento y aprovechar servicios expuestos, credenciales débiles, equipos sin parchear o redes insuficientemente segmentadas.
+Entre les amenaces més comunes es troben l'escolta de trànsit, l'escaneig de ports, la suplantació d'adreces, el malware, l'accés no autoritzat, la denegació de servei i els errors de configuració. Un atacant pot obtindre informació durant la fase de reconeixement i aprofitar serveis exposats, credencials dèbils, equips sense actualitzar o xarxes insuficientment segmentades.
 
-Los ataques de intermediario, o MITM, buscan colocarse entre dos participantes para observar, modificar o interrumpir la comunicación. En una LAN IPv4, el envenenamiento ARP puede asociar una IP legítima a la MAC del atacante. Las contramedidas incluyen segmentación, inspección ARP dinámica en switches compatibles, entradas estáticas en casos concretos, cifrado de extremo a extremo y monitorización.
+Els atacs d'intermediari, o MITM, busquen situar-se entre dos participants per a observar, modificar o interrompre la comunicació. En una LAN IPv4, l'enverinament ARP pot associar una IP legítima a la MAC de l'atacant. Les contramesures inclouen segmentació, inspecció ARP dinàmica en switches compatibles, entrades estàtiques en casos concrets, xifratge d'extrem a extrem i monitorització.
 
-DNS y DHCP son servicios críticos. La manipulación de respuestas DNS puede redirigir a servicios fraudulentos; DNSSEC firma datos DNS para proteger su autenticidad, aunque requiere una cadena de validación correcta. Un DHCP no autorizado puede entregar puertas de enlace o DNS maliciosos; las funciones DHCP snooping y port security en switches gestionables ayudan a limitar este riesgo.
+DNS i DHCP són serveis crítics. La manipulació de respostes DNS pot redirigir cap a serveis fraudulents; DNSSEC firma dades DNS per a protegir-ne l'autenticitat, encara que requerix una cadena de validació correcta. Un DHCP no autoritzat pot proporcionar passarel·les o DNS maliciosos; les funcions DHCP snooping i port security en switches gestionables ajuden a limitar este risc.
 
-### 1.3. Principios de protección
+### 1.3. Principis de protecció
 
-El mínimo privilegio, la defensa en profundidad, la segmentación y la actualización son principios centrales. Se debe inventariar qué sistemas, puertos, protocolos y flujos son necesarios, permitir solo esos flujos y registrar los eventos relevantes. Los análisis, capturas y pruebas se realizan exclusivamente sobre redes propias o expresamente autorizadas.
+El mínim privilegi, la defensa en profunditat, la segmentació i l'actualització són principis centrals. S'ha d'inventariar quins sistemes, ports, protocols i fluxos són necessaris, permetre només eixos fluxos i registrar els esdeveniments rellevants. Les anàlisis, captures i proves es realitzen exclusivament sobre xarxes pròpies o expressament autoritzades.
 
-## 2. Control de acceso y segmentación LAN/WLAN
+## 2. Control d'accés i segmentació LAN/WLAN
 
-### 2.1. Protección de la LAN
+### 2.1. Protecció de la LAN
 
-La seguridad cableada comienza con el control físico de armarios, paneles de parcheo, switches y puertos. El etiquetado, la documentación, la desactivación de puertos no utilizados y el control de acceso a las salas reducen conexiones y manipulaciones no autorizadas.
+La seguretat cablejada comença amb el control físic d'armaris, panells de connexió, switches i ports. L'etiquetatge, la documentació, la desactivació de ports no utilitzats i el control d'accés a les sales reduïxen connexions i manipulacions no autoritzades.
 
-La autenticación 802.1X controla el acceso a un puerto antes de permitir el tráfico. El cliente se autentica ante un servidor RADIUS, que puede asignar una VLAN o aplicar una política. El filtrado MAC y port security pueden complementar el control, pero una MAC se puede suplantar y no constituyen una autenticación suficiente por sí solos. Las soluciones NAC amplían esta validación comprobando identidad y, según el caso, postura de seguridad del dispositivo.
+L'autenticació 802.1X controla l'accés a un port abans de permetre el trànsit. El client s'autentica davant un servidor RADIUS, que pot assignar una VLAN o aplicar una política. El filtratge MAC i port security poden complementar el control, però una MAC es pot suplantar i no constituïx una autenticació suficient per si sola. Les solucions NAC amplien esta validació comprovant la identitat i, segons el cas, l'estat de seguretat del dispositiu.
 
-### 2.2. VLAN, ACL y segmentación
+### 2.2. VLAN, ACL i segmentació
 
-Una VLAN crea un dominio de capa 2 lógico independiente sobre infraestructura compartida. IEEE 802.1Q etiqueta las tramas que atraviesan enlaces troncales; los puertos de acceso conectan normalmente equipos finales a una única VLAN. La comunicación entre VLAN requiere enrutamiento mediante un router o switch de capa 3.
+Una VLAN crea un domini de capa 2 lògic independent sobre infraestructura compartida. IEEE 802.1Q etiqueta les trames que travessen enllaços troncals; els ports d'accés connecten normalment equips finals a una única VLAN. La comunicació entre VLAN requerix encaminament mitjançant un router o switch de capa 3.
 
-La segmentación reduce dominios de difusión y limita el movimiento lateral. Una organización puede separar usuarios, servidores, gestión, invitados, IoT y DMZ. Las ACL y reglas de firewall definen explícitamente qué comunicaciones entre zonas están permitidas. Un troncal debe transportar únicamente las VLAN necesarias, y la red de gestión debe estar separada y restringida.
+La segmentació reduïx dominis de difusió i limita el moviment lateral. Una organització pot separar usuaris, servidors, gestió, convidats, IoT i DMZ. Les ACL i les regles de firewall definixen explícitament quines comunicacions entre zones estan permeses. Un troncal ha de transportar únicament les VLAN necessàries, i la xarxa de gestió ha d'estar separada i restringida.
 
-### 2.3. Seguridad WLAN
+### 2.3. Seguretat WLAN
 
-Una WLAN utiliza un medio radioeléctrico compartido y puede ser alcanzada fuera del edificio, por lo que requiere controles específicos. WEP y WPA con TKIP están obsoletos. WPA2 con AES/CCMP sigue presente cuando se configura correctamente, mientras que WPA3 introduce mejoras, como SAE en modo personal y mayor protección frente a ataques de diccionario sin conexión.
+Una WLAN utilitza un medi radioelèctric compartit i pot ser accessible des de fora de l'edifici, per la qual cosa requerix controls específics. WEP i WPA amb TKIP estan obsolets. WPA2 amb AES/CCMP continua present quan es configura correctament, mentre que WPA3 introduïx millores, com SAE en mode personal i una major protecció davant atacs de diccionari fora de línia.
 
-Las redes empresariales deben priorizar WPA2-Enterprise o WPA3-Enterprise con 802.1X y RADIUS, que permiten credenciales o certificados individuales y revocación por usuario. Un SSID de invitados debe aislarse de redes internas. También son relevantes la actualización de puntos de acceso, la detección de AP no autorizados, la desactivación de WPS, el aislamiento de clientes y la planificación de cobertura y potencia.
+Les xarxes empresarials han de prioritzar WPA2-Enterprise o WPA3-Enterprise amb 802.1X i RADIUS, que permeten credencials o certificats individuals i revocació per usuari. Un SSID de convidats ha d'aïllar-se de les xarxes internes. També són rellevants l'actualització dels punts d'accés, la detecció d'AP no autoritzats, la desactivació de WPS, l'aïllament de clients i la planificació de cobertura i potència.
 
-## 3. Comunicaciones remotas y VPN
+## 3. Comunicacions remotes i VPN
 
-### 3.1. Administración y cifrado de comunicaciones
+### 3.1. Administració i xifratge de comunicacions
 
-Los servicios de administración y transferencia deben utilizar protocolos autenticados y cifrados. SSH reemplaza a Telnet para la administración remota; HTTPS y TLS protegen aplicaciones web; SFTP y SCP permiten transferencias seguras. La protección criptográfica, certificados y claves se estudian en UD3, y el endurecimiento de SSH en UD4.
+Els serveis d'administració i transferència han d'utilitzar protocols autenticats i xifrats. SSH substituïx Telnet per a l'administració remota; HTTPS i TLS protegixen aplicacions web; SFTP i SCP permeten transferències segures. La protecció criptogràfica, certificats i claus s'estudien en la UD3, i l'enduriment d'SSH en la UD4.
 
-### 3.2. Concepto y tipos de VPN
+### 3.2. Concepte i tipus de VPN
 
-Una VPN crea un túnel protegido sobre una red no confiable. Puede proporcionar confidencialidad, integridad y autenticación, pero no concede acceso ilimitado por defecto. Las VPN de acceso remoto conectan usuarios individuales con una red o aplicación; las VPN site-to-site interconectan sedes o redes completas.
+Una VPN crea un túnel protegit sobre una xarxa no confiable. Pot proporcionar confidencialitat, integritat i autenticació, però no concedix accés il·limitat per defecte. Les VPN d'accés remot connecten usuaris individuals amb una xarxa o aplicació; les VPN site-to-site interconnecten seus o xarxes completes.
 
-IPsec trabaja en la capa de red y es habitual en conexiones entre sedes. Las VPN basadas en TLS, como OpenVPN, suelen atravesar NAT con facilidad y son prácticas para acceso remoto. WireGuard ofrece una arquitectura más compacta y moderna. L2TP no aporta cifrado por sí solo y normalmente se combina con IPsec. PPTP no debe emplearse en diseños nuevos por sus debilidades conocidas.
+IPsec treballa en la capa de xarxa i és habitual en connexions entre seus. Les VPN basades en TLS, com OpenVPN, solen travessar NAT amb facilitat i són pràctiques per a l'accés remot. WireGuard oferix una arquitectura més compacta i moderna. L2TP no aporta xifratge per si mateix i normalment es combina amb IPsec. PPTP no s'ha d'utilitzar en dissenys nous a causa de les seues debilitats conegudes.
 
-### 3.3. Diseño seguro de acceso remoto
+### 3.3. Disseny segur d'accés remot
 
-Una VPN segura aplica autenticación robusta, preferiblemente MFA, identidades individuales, cifrados actuales, revocación de accesos y registro de conexiones. El *split tunneling* envía por el túnel solo el tráfico corporativo; el *full tunneling* dirige todo el tráfico del cliente por la organización. La elección depende del riesgo, privacidad, capacidad y necesidades de inspección.
+Una VPN segura aplica autenticació robusta, preferiblement MFA, identitats individuals, xifratges actuals, revocació d'accessos i registre de connexions. El *split tunneling* envia pel túnel només el trànsit corporatiu; el *full tunneling* dirigix tot el trànsit del client a través de l'organització. L'elecció depén del risc, la privacitat, la capacitat i les necessitats d'inspecció.
 
-También se deben controlar las fugas de DNS, las rutas distribuidas al cliente, los permisos sobre recursos internos y el estado de los dispositivos. El acceso remoto debe limitarse a los servicios necesarios y revisarse de forma periódica.
+També s'han de controlar les fugues de DNS, les rutes distribuïdes al client, els permisos sobre recursos interns i l'estat dels dispositius. L'accés remot ha de limitar-se als serveis necessaris i revisar-se periòdicament.
 
-## 4. Seguridad perimetral, firewalls y DMZ
+## 4. Seguretat perimetral, firewalls i DMZ
 
-### 4.1. Firewalls y políticas de filtrado
+### 4.1. Firewalls i polítiques de filtratge
 
-Un firewall filtra tráfico entre zonas según dirección, puerto, protocolo, estado de la conexión y, en soluciones avanzadas, aplicación o identidad. Los firewalls de filtrado de paquetes son simples y rápidos; los *stateful* mantienen el estado de las conexiones; los de nueva generación pueden incorporar control de aplicaciones, IDS/IPS, filtrado web y otras capacidades.
+Un firewall filtra trànsit entre zones segons l'adreça, el port, el protocol, l'estat de la connexió i, en solucions avançades, l'aplicació o la identitat. Els firewalls de filtratge de paquets són simples i ràpids; els *stateful* mantenen l'estat de les connexions; els de nova generació poden incorporar control d'aplicacions, IDS/IPS, filtratge web i altres capacitats.
 
-Una política segura parte de denegar por defecto y permitir de forma explícita solo los flujos necesarios. Las reglas deben documentar origen, destino, servicio, propósito, responsable y fecha de revisión. Las configuraciones, firmware y copias de seguridad del firewall requieren control de cambios y protección.
+Una política segura partix de denegar per defecte i permetre de manera explícita només els fluxos necessaris. Les regles han de documentar origen, destinació, servei, propòsit, responsable i data de revisió. Les configuracions, el firmware i les còpies de seguretat del firewall requerixen control de canvis i protecció.
 
-Netfilter es el marco de filtrado integrado en Linux, gestionable mediante nftables, iptables o firewalld. PF es un firewall usado en sistemas BSD y constituye la base de soluciones como pfSense y OPNsense. La herramienta no sustituye el diseño de una política clara ni la revisión de registros.
+Netfilter és el marc de filtratge integrat en Linux, gestionable mitjançant nftables, iptables o firewalld. PF és un firewall utilitzat en sistemes BSD i constituïx la base de solucions com pfSense i OPNsense. La ferramenta no substituïx el disseny d'una política clara ni la revisió de registres.
 
-### 4.2. DMZ y zonas de seguridad
+### 4.2. DMZ i zones de seguretat
 
-Una DMZ aloja servicios expuestos, como servidores web o de correo, en una zona separada de la LAN interna. El firewall perimetral controla el tráfico desde Internet hacia la DMZ, y reglas adicionales limitan estrictamente las comunicaciones desde la DMZ a la red interna. Un servidor web no debe acceder sin restricciones a una base de datos o a todos los sistemas corporativos.
+Una DMZ allotja serveis exposats, com servidors web o de correu, en una zona separada de la LAN interna. El firewall perimetral controla el trànsit des d'Internet cap a la DMZ, i regles addicionals limiten estrictament les comunicacions des de la DMZ cap a la xarxa interna. Un servidor web no ha d'accedir sense restriccions a una base de dades o a tots els sistemes corporatius.
 
-Las VLAN, subredes, interfaces separadas y controles entre zonas permiten contener incidentes. La segmentación debe acompañarse de actualizaciones, hardening, monitorización y pruebas de las reglas, porque una DMZ mal configurada puede convertirse en una ruta directa hacia la red interna.
+Les VLAN, subxarxes, interfícies separades i controls entre zones permeten contindre incidents. La segmentació ha d'acompanyar-se d'actualitzacions, hardening, monitorització i proves de les regles, perquè una DMZ mal configurada pot convertir-se en una ruta directa cap a la xarxa interna.
 
-## 5. Detección, monitorización y respuesta
+## 5. Detecció, monitorització i resposta
 
-### 5.1. IDS e IPS
+### 5.1. IDS i IPS
 
-Un IDS detecta actividad sospechosa y genera alertas; un IPS además puede bloquear o modificar el tráfico. Los NIDS/NIPS inspeccionan tráfico en puntos de red, mientras que los HIDS/HIPS analizan sucesos de un host. Los sensores pueden recibir una copia de tráfico mediante un puerto SPAN o TAP; un IPS suele situarse en línea, por lo que una política incorrecta puede afectar a tráfico legítimo.
+Un IDS detecta activitat sospitosa i genera alertes; un IPS, a més, pot bloquejar o modificar el trànsit. Els NIDS/NIPS inspeccionen trànsit en punts de xarxa, mentre que els HIDS/HIPS analitzen successos d'un host. Els sensors poden rebre una còpia del trànsit mitjançant un port SPAN o TAP; un IPS sol situar-se en línia, per la qual cosa una política incorrecta pot afectar trànsit legítim.
 
-Los mecanismos de detección se basan en firmas, anomalías, políticas o combinaciones de ellos. Las firmas son eficaces frente a amenazas conocidas; las anomalías pueden encontrar comportamientos nuevos, pero producen más falsos positivos si no existe una línea base adecuada. Suricata y Snort son herramientas conocidas para análisis y detección en red.
+Els mecanismes de detecció es basen en signatures, anomalies, polítiques o combinacions d'estes. Les signatures són eficaces davant amenaces conegudes; les anomalies poden trobar comportaments nous, però produïxen més falsos positius si no existix una línia base adequada. Suricata i Snort són eines conegudes per a anàlisi i detecció en xarxa.
 
-### 5.2. Análisis de tráfico y registros
+### 5.2. Anàlisi de trànsit i registres
 
-Wireshark y tcpdump ayudan a analizar protocolos, direcciones, puertos, sesiones y errores en un entorno autorizado. El análisis permite diagnosticar problemas, verificar cifrado, identificar configuraciones inseguras y estudiar una alerta. Capturar tráfico puede incluir datos personales o credenciales, por lo que las evidencias deben protegerse y conservarse solo el tiempo necesario.
+Wireshark i tcpdump ajuden a analitzar protocols, adreces, ports, sessions i errors en un entorn autoritzat. L'anàlisi permet diagnosticar problemes, verificar el xifratge, identificar configuracions insegures i estudiar una alerta. Capturar trànsit pot incloure dades personals o credencials, per la qual cosa les evidències han de protegir-se i conservar-se només el temps necessari.
 
-Los registros de switches, routers, firewalls, VPN, IDS/IPS, proxies y servidores deben sincronizar su hora, centralizarse cuando sea posible y protegerse frente a alteración. Un SIEM correlaciona eventos de varias fuentes y facilita alertas e investigación. La respuesta ante un incidente sigue un ciclo de detección, análisis, contención, erradicación, recuperación y mejora.
+Els registres de switches, routers, firewalls, VPN, IDS/IPS, proxies i servidors han de sincronitzar l'hora, centralitzar-se quan siga possible i protegir-se davant alteracions. Un SIEM correlaciona esdeveniments de diverses fonts i facilita alertes i investigació. La resposta davant un incident seguix un cicle de detecció, anàlisi, contenció, erradicació, recuperació i millora.
 
-### 5.3. Límites y mejora continua
+### 5.3. Límits i millora contínua
 
-Un IDS/IPS necesita ajuste continuo de reglas, actualización de firmas y revisión de falsos positivos y negativos. El cifrado puede impedir inspeccionar el contenido si no se termina o inspecciona de forma controlada; ello plantea requisitos técnicos, legales y de privacidad. Las pruebas de detección se planifican y ejecutan solo sobre entornos autorizados.
+Un IDS/IPS necessita ajust continu de regles, actualització de signatures i revisió de falsos positius i negatius. El xifratge pot impedir inspeccionar el contingut si no es finalitza o inspecciona de manera controlada; això planteja requisits tècnics, legals i de privacitat. Les proves de detecció es planifiquen i executen només sobre entorns autoritzats.
 
-## 6. Proxies, WAF, DDoS y Zero Trust
+## 6. Proxies, WAF, DDoS i Zero Trust
 
-### 6.1. Proxies y WAF
+### 6.1. Proxies i WAF
 
-Un proxy directo representa a los clientes ante Internet y puede aplicar filtrado, autenticación, registro y caché. Un proxy inverso se sitúa delante de los servidores, oculta la infraestructura interna, termina TLS, distribuye carga y centraliza registros. Ninguno debe convertirse en un punto único de fallo sin una estrategia de disponibilidad, como se estudia en UD5.
+Un proxy directe representa els clients davant Internet i pot aplicar filtratge, autenticació, registre i memòria cau. Un proxy invers se situa davant dels servidors, oculta la infraestructura interna, finalitza TLS, distribuïx càrrega i centralitza registres. Cap dels dos ha de convertir-se en un punt únic de fallada sense una estratègia de disponibilitat, com s'estudia en la UD5.
 
-Un WAF inspecciona solicitudes HTTP para detectar o bloquear patrones de ataques contra aplicaciones web, como inyecciones SQL o XSS. Complementa las validaciones de la aplicación, actualizaciones, autenticación y configuración TLS; no corrige por sí solo una aplicación vulnerable. Las reglas deben ajustarse para reducir bloqueos de tráfico legítimo y evitar una falsa sensación de seguridad.
+Un WAF inspecciona sol·licituds HTTP per a detectar o bloquejar patrons d'atacs contra aplicacions web, com injeccions SQL o XSS. Complementa les validacions de l'aplicació, actualitzacions, autenticació i configuració TLS; no corregix per si mateix una aplicació vulnerable. Les regles han d'ajustar-se per a reduir bloquejos de trànsit legítim i evitar una falsa sensació de seguretat.
 
-### 6.2. Mitigación de DDoS
+### 6.2. Mitigació de DDoS
 
-Los ataques DDoS buscan agotar ancho de banda, capacidad de red o recursos de aplicación. Pueden ser volumétricos, de amplificación o de capa 7. La mitigación combina limitación de tasa, filtrado, monitorización de picos, capacidad de escalado, CDN y servicios especializados de limpieza de tráfico.
+Els atacs DDoS busquen esgotar ample de banda, capacitat de xarxa o recursos de l'aplicació. Poden ser volumètrics, d'amplificació o de capa 7. La mitigació combina limitació de taxa, filtratge, monitorització de pics, capacitat d'escalat, CDN i serveis especialitzats de neteja de trànsit.
 
-Una organización debe disponer de contactos, umbrales de alerta, procedimientos de escalado y comunicación con proveedores. Las pruebas de resiliencia no consisten en generar tráfico contra sistemas ajenos: se realizan con alcance aprobado, herramientas controladas y medidas de parada.
+Una organització ha de disposar de contactes, llindars d'alerta, procediments d'escalada i comunicació amb proveïdors. Les proves de resiliència no consistixen a generar trànsit contra sistemes aliens: es realitzen amb abast aprovat, eines controlades i mesures d'aturada.
 
 ### 6.3. Zero Trust
 
-Zero Trust parte de que ninguna red, usuario o dispositivo es confiable por defecto. Verifica explícitamente la identidad y contexto de cada acceso, aplica mínimo privilegio y reduce el impacto de un compromiso mediante microsegmentación. MFA, NAC, gestión de dispositivos, políticas por identidad y monitorización continua son elementos habituales.
+Zero Trust partix de la idea que cap xarxa, usuari o dispositiu és confiable per defecte. Verifica explícitament la identitat i el context de cada accés, aplica mínim privilegi i reduïx l'impacte d'un compromís mitjançant microsegmentació. MFA, NAC, gestió de dispositius, polítiques per identitat i monitorització contínua són elements habituals.
 
-La implantación es gradual: inventario de activos y flujos, clasificación de recursos, definición de políticas, despliegue por fases y revisión de resultados. No equivale a adquirir un único producto; exige procesos, arquitectura y formación.
+La implantació és gradual: inventari d'actius i fluxos, classificació de recursos, definició de polítiques, desplegament per fases i revisió de resultats. No equival a adquirir un únic producte; exigix processos, arquitectura i formació.
 
-## 7. Resumen
+## 7. Resum
 
-La seguridad de red combina protección del acceso LAN y WLAN, segmentación, comunicaciones cifradas, control perimetral, detección y respuesta. Los controles deben ser coherentes con los activos y flujos que protegen, y aplicar el mínimo privilegio en cada capa.
+La seguretat de xarxa combina la protecció de l'accés LAN i WLAN, la segmentació, les comunicacions xifrades, el control perimetral, la detecció i la resposta. Els controls han de ser coherents amb els actius i fluxos que protegixen, i aplicar el mínim privilegi en cada capa.
 
-VPN, firewalls, IDS/IPS, proxies, WAF y Zero Trust resuelven problemas distintos y complementarios. Su eficacia depende de una configuración mantenida, monitorización, evidencias protegidas y pruebas realizadas de forma autorizada.
+VPN, firewalls, IDS/IPS, proxies, WAF i Zero Trust resolen problemes diferents i complementaris. La seua eficàcia depén d'una configuració mantinguda, monitorització, evidències protegides i proves realitzades de manera autoritzada.
 
 ## 8. Recursos
 
-- [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
-- [Wi-Fi Alliance: WPA3](https://www.wi-fi.org/discover-wi-fi/security)
-- [WireGuard](https://www.wireguard.com/)
-- [OpenVPN](https://openvpn.net/community-resources/)
-- [Suricata](https://suricata.io/)
-- [Snort](https://www.snort.org/)
-- [Wireshark](https://www.wireshark.org/docs/)
-- [Netfilter](https://www.netfilter.org/)
-- [OWASP: Web Application Firewall](https://owasp.org/www-community/Web_Application_Firewall)
+- NIST Cybersecurity Framework
+- Wi‑Fi Alliance: WPA3
+- WireGuard
+- OpenVPN
+- Suricata
+- Snort
+- Wireshark
+- Netfilter
+- OWASP: Web Application Firewall
 
-## 9. Relación con los resultados de aprendizaje
+## 9. Relació amb els resultats d'aprenentatge
 
-Esta unidad contribuye principalmente al **RA2**, mediante la identificación de amenazas, la configuración de controles de red, la segmentación, la monitorización y la detección de intrusiones.
+Esta unitat contribuïx principalment al **RA2**, mitjançant la identificació d'amenaces, la configuració de controls de xarxa, la segmentació, la monitorització i la detecció d'intrusions.
 
-También se relaciona con el **RA3**, por el diseño de VPN y acceso remoto seguro, y con el **RA4**, por las políticas de firewall, DMZ, proxies y protección de servicios perimetrales.
+També es relaciona amb el **RA3**, pel disseny de VPN i accés remot segur, i amb el **RA4**, per les polítiques de firewall, DMZ, proxies i protecció de serveis perimetrals.
+
+<br aria-hidden="true">

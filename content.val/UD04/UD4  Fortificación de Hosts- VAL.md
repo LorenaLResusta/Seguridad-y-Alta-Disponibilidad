@@ -1,123 +1,125 @@
 ---
-title: "4. Fortificación de Hosts."
+title: "4. Fortificació de Hosts"
 weight: 1
 ---
 
-# UD4 - Fortificación de Hosts
+# UD4 - Fortificació de Hosts
 
-> Medidas para reducir la superficie de ataque, proteger sistemas operativos y detectar incidentes.
+> Mesures per a reduir la superfície d'atac, protegir sistemes operatius i detectar incidents.
 
-| Datos de la unidad | Información |
+| Dades de la unitat | Informació |
 | --- | --- |
-| Módulo | Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Modalidad | Semipresencial |
-| Duración | 14 horas |
+| Mòdul | Seguretat i Alta Disponibilitat |
+| Curs | 2n ASIR |
+| Modalitat | Semipresencial |
+| Duració | 14 hores |
 
-## Índice
+## Índex
 
-1. [Fundamentos del hardening](#1-fundamentos-del-hardening)
-2. [Identidades, permisos y acceso remoto](#2-identidades-permisos-y-acceso-remoto)
-3. [Arranque seguro y protección de datos](#3-arranque-seguro-y-protección-de-datos)
-4. [Protección frente al malware](#4-protección-frente-al-malware)
-5. [Actualizaciones, auditoría y vulnerabilidades](#5-actualizaciones-auditoría-y-vulnerabilidades)
-6. [Monitorización, registros y respuesta](#6-monitorización-registros-y-respuesta)
-7. [Resumen](#7-resumen)
-8. [Recursos](#8-recursos)
-9. [Relación con los resultados de aprendizaje](#9-relación-con-los-resultados-de-aprendizaje)
+1. #1-fonaments-del-hardening
+2. #2-identitats-permisos-i-accés-remot
+3. #3-arrancada-segura-i-protecció-de-dades
+4. #4-protecció-davant-del-malware
+5. #5-actualitzacions-auditoria-i-vulnerabilitats
+6. #6-monitorització-registres-i-resposta
+7. #7-resum
+8. #8-recursos
+9. #9-relació-amb-els-resultats-daprenentatge
 
 ---
 
-## 1. Fundamentos del hardening
+## 1. Fonaments del hardening
 
-### 1.1. Introducción
+### 1.1. Introducció
 
-La fortificación, o *hardening*, es el conjunto de medidas que reduce la superficie de ataque de un host y limita el impacto de un posible compromiso. Afecta a servidores, equipos cliente, máquinas virtuales y dispositivos conectados. No consiste en una configuración única: requiere inventario, aplicación de controles, revisión y mejora continua.
+La fortificació, o *hardening*, és el conjunt de mesures que reduïx la superfície d'atac d'un host i limita l'impacte d'un possible compromís. Afecta servidors, equips client, màquines virtuals i dispositius connectats. No consistix en una configuració única: requerix inventari, aplicació de controls, revisió i millora contínua.
 
-Antes de modificar un sistema se debe identificar qué está expuesto: usuarios y grupos, servicios activos, puertos abiertos, aplicaciones instaladas, tareas programadas, interfaces de red, directorios compartidos y versiones de software. El objetivo es eliminar o deshabilitar lo que no aporta una función necesaria.
+Abans de modificar un sistema s'ha d'identificar què està exposat: usuaris i grups, serveis actius, ports oberts, aplicacions instal·lades, tasques programades, interfícies de xarxa, directoris compartits i versions de programari. L'objectiu és eliminar o deshabilitar allò que no aporta una funció necessària.
 
-### 1.2. Objetivos
+### 1.2. Objectius
 
-Al finalizar la unidad, el alumnado será capaz de:
+En finalitzar la unitat, l'alumnat serà capaç de:
 
-- Identificar la superficie de ataque de un host.
-- Aplicar controles de acceso, permisos y autenticación robusta.
-- Proteger el arranque, el almacenamiento y los datos.
-- Reconocer medidas de prevención frente al malware.
-- Gestionar actualizaciones, auditorías y vulnerabilidades.
-- Interpretar registros, alertas y mecanismos de monitorización.
+- Identificar la superfície d'atac d'un host.
+- Aplicar controls d'accés, permisos i autenticació robusta.
+- Protegir l'arrancada, l'emmagatzematge i les dades.
+- Reconéixer mesures de prevenció davant del malware.
+- Gestionar actualitzacions, auditories i vulnerabilitats.
+- Interpretar registres, alertes i mecanismes de monitorització.
 
-### 1.3. Principios de fortificación
+### 1.3. Principis de fortificació
 
-El principio de mínimo privilegio guía todas las decisiones: cada usuario, servicio y proceso debe disponer solo de los permisos estrictamente necesarios. Ejecutar servicios con privilegios administrativos, compartir cuentas o mantener servicios innecesarios amplía el riesgo y dificulta la investigación posterior.
+El principi de mínim privilegi guia totes les decisions: cada usuari, servici i procés ha de disposar únicament dels permisos estrictament necessaris. Executar servicis amb privilegis administratius, compartir comptes o mantindre servicis innecessaris amplia el risc i dificulta la investigació posterior.
 
-Una fortificación eficaz combina controles técnicos, políticas documentadas y formación. Las medidas deben ser proporcionadas al riesgo, verificables y compatibles con la continuidad del servicio.
+Una fortificació eficaç combina controls tècnics, polítiques documentades i formació. Les mesures han de ser proporcionades al risc, verificables i compatibles amb la continuïtat del servici.
 
-## 2. Identidades, permisos y acceso remoto
+## 2. Identitats, permisos i accés remot
 
-La gestión de identidades determina quién puede acceder a un sistema y a qué recursos. Las cuentas deben ser individuales, tener un responsable y revisarse periódicamente. Las cuentas abandonadas, compartidas o con privilegios excesivos son un riesgo frecuente.
+La gestió d'identitats determina qui pot accedir a un sistema i a quins recursos. Els comptes han de ser individuals, tindre un responsable i revisar-se periòdicament. Els comptes abandonats, compartits o amb privilegis excessius són un risc freqüent.
 
-En Linux, los permisos distinguen propietario, grupo y resto de usuarios, con lectura, escritura y ejecución. La asignación de grupos facilita aplicar permisos coherentes a varios usuarios. Configuraciones amplias como permisos universales de escritura o ejecución deben evitarse salvo una necesidad concreta, documentada y controlada.
+En Linux, els permisos distingixen propietari, grup i resta d'usuaris, amb lectura, escriptura i execució. L'assignació de grups facilita aplicar permisos coherents a diversos usuaris. Configuracions àmplies com permisos universals d'escriptura o execució han d'evitar-se excepte per una necessitat concreta, documentada i controlada.
 
-Las contraseñas deben ser largas, únicas y difíciles de predecir. Una política razonable contempla longitud mínima, protección frente a intentos repetidos, historial cuando sea necesario y un procedimiento seguro de recuperación. Forzar cambios periódicos sin indicios de compromiso puede fomentar patrones predecibles; es preferible exigir el cambio tras sospecha de exposición, recuperación de cuenta o cambio de riesgo. Los gestores de contraseñas y la autenticación multifactor reducen la dependencia de una única contraseña.
+Les contrasenyes han de ser llargues, úniques i difícils de predir. Una política raonable contempla longitud mínima, protecció davant intents repetits, historial quan siga necessari i un procediment segur de recuperació. Forçar canvis periòdics sense indicis de compromís pot fomentar patrons predictibles; és preferible exigir el canvi davant la sospita d'exposició, recuperació del compte o canvi de risc. Els gestors de contrasenyes i l'autenticació multifactor reduïxen la dependència d'una única contrasenya.
 
-La autenticación multifactor combina factores de conocimiento, posesión o inherencia. Un código temporal, una llave de seguridad o un token complementan la contraseña y reducen el impacto de su robo. Los mecanismos de recuperación del segundo factor también deben estar protegidos.
+L'autenticació multifactor combina factors de coneixement, possessió o inherència. Un codi temporal, una clau de seguretat o un token complementen la contrasenya i reduïxen l'impacte del seu robatori. Els mecanismes de recuperació del segon factor també han d'estar protegits.
 
-SSH permite administrar hosts Linux de forma remota. Una configuración segura utiliza claves en lugar de depender solo de contraseñas, restringe los usuarios autorizados, limita los privilegios, mantiene el servicio actualizado y registra los accesos. La clave privada nunca se comparte; la pública puede instalarse en el servidor. Antes de aplicar cambios se debe prever una vía de recuperación para no perder el acceso legítimo.
+SSH permet administrar hosts Linux de forma remota. Una configuració segura utilitza claus en lloc de dependre només de contrasenyes, restringix els usuaris autoritzats, limita els privilegis, manté el servici actualitzat i registra els accessos. La clau privada mai es compartix; la pública pot instal·lar-se en el servidor. Abans d'aplicar canvis s'ha de preveure una via de recuperació per a no perdre l'accés legítim.
 
-## 3. Arranque seguro y protección de datos
+## 3. Arrancada segura i protecció de dades
 
-La protección comienza antes de que arranque el sistema operativo. UEFI, las contraseñas de firmware, la restricción del arranque externo y las actualizaciones de firmware reducen el riesgo de manipulación física. Secure Boot verifica que los componentes de arranque estén firmados por una entidad de confianza. TPM puede medir elementos del arranque y colaborar con mecanismos de protección como BitLocker.
+La protecció comença abans que arranque el sistema operatiu. UEFI, les contrasenyes del firmware, la restricció de l'arrancada externa i les actualitzacions del firmware reduïxen el risc de manipulació física. Secure Boot verifica que els components d'arrancada estiguen signats per una entitat de confiança. TPM pot mesurar elements de l'arrancada i col·laborar amb mecanismes de protecció com BitLocker.
 
-El cifrado de disco protege la confidencialidad de los datos en reposo cuando se pierde, roba o retira un dispositivo. BitLocker se integra en Windows, FileVault en macOS y LUKS es el estándar habitual en Linux. El cifrado no reemplaza los permisos, las copias de seguridad ni la gestión de claves: si la clave de recuperación se pierde, los datos pueden quedar inaccesibles.
+El xifratge de disc protegix la confidencialitat de les dades en repòs quan es perd, es roba o es retira un dispositiu. BitLocker s'integra en Windows, FileVault en macOS i LUKS és l'estàndard habitual en Linux. El xifratge no substituïx els permisos, les còpies de seguretat ni la gestió de claus: si es perd la clau de recuperació, les dades poden quedar inaccessibles.
 
-También se puede cifrar de forma más granular mediante volúmenes o directorios, por ejemplo con VeraCrypt o EFS en Windows. La elección depende de qué datos se protegen, quién debe acceder a ellos, dónde se almacenan las claves y cómo se realizará la recuperación.
+També es pot xifrar de manera més granular mitjançant volums o directoris, per exemple amb VeraCrypt o EFS en Windows. L'elecció depén de quines dades es protegixen, qui ha d'accedir-hi, on s'emmagatzemen les claus i com es realitzarà la recuperació.
 
-Los datos en tránsito requieren protocolos autenticados y cifrados, como HTTPS, SSH, SFTP o una VPN. Los datos sensibles deben clasificarse, tener controles de acceso adecuados y contar con copias de seguridad cifradas y recuperables. La seguridad física, como control de acceso a instalaciones, anclajes, armarios cerrados o vigilancia, complementa estos controles.
+Les dades en trànsit requerixen protocols autenticats i xifrats, com HTTPS, SSH, SFTP o una VPN. Les dades sensibles han de classificar-se, disposar de controls d'accés adequats i comptar amb còpies de seguretat xifrades i recuperables. La seguretat física, com el control d'accés a instal·lacions, ancoratges, armaris tancats o vigilància, complementa estos controls.
 
-## 4. Protección frente al malware
+## 4. Protecció davant del malware
 
-El malware es software diseñado para dañar, espiar, interrumpir o acceder sin autorización a un sistema. Entre sus formas más comunes se encuentran virus, gusanos, troyanos, ransomware, spyware, adware, rootkits, *keyloggers*, malware sin archivo y botnets. Pueden entrar mediante phishing, aplicaciones maliciosas, vulnerabilidades sin parchear, redes inseguras o ataques a la cadena de suministro.
+El malware és programari dissenyat per a danyar, espiar, interrompre o accedir sense autorització a un sistema. Entre les seues formes més comunes es troben virus, cucs, troians, ransomware, spyware, adware, rootkits, *keyloggers*, malware sense arxiu i botnets. Poden entrar mitjançant phishing, aplicacions malicioses, vulnerabilitats sense corregir, xarxes insegures o atacs a la cadena de subministrament.
 
-La defensa se basa en capas: actualización de sistemas, mínimo privilegio, segmentación de red, filtrado de correo, copias de seguridad probadas, autenticación multifactor, control de aplicaciones y formación de usuarios. Un ransomware puede afectar también a recursos compartidos y copias conectadas, por lo que las copias deben estar separadas y contar con protección frente a modificación no autorizada.
+La defensa es basa en capes: actualització de sistemes, mínim privilegi, segmentació de xarxa, filtratge de correu, còpies de seguretat provades, autenticació multifactor, control d'aplicacions i formació d'usuaris. Un ransomware també pot afectar recursos compartits i còpies connectades, per la qual cosa les còpies han d'estar separades i comptar amb protecció davant modificacions no autoritzades.
 
-Las soluciones antimalware combinan firmas, heurística y análisis de comportamiento. Un antivirus protege principalmente frente a amenazas conocidas; las soluciones EDR recopilan y analizan actividad de los endpoints para detectar y responder; XDR correlaciona señales de endpoints, red, correo, nube y otros orígenes. Una *sandbox* permite analizar ficheros sospechosos en un entorno aislado, pero nunca justifica ejecutar muestras en un equipo de producción.
+Les solucions antimalware combinen signatures, heurística i anàlisi de comportament. Un antivirus protegix principalment davant amenaces conegudes; les solucions EDR recopilen i analitzen activitat dels endpoints per a detectar i respondre; XDR correlaciona senyals d'endpoints, xarxa, correu, núvol i altres orígens. Una *sandbox* permet analitzar fitxers sospitosos en un entorn aïllat, però mai justifica executar mostres en un equip de producció.
 
-Los servicios públicos de análisis pueden ofrecer indicadores útiles, pero subir un archivo revela su contenido a terceros. Los ficheros confidenciales, datos personales, claves o documentos internos no deben enviarse a servicios externos de análisis sin autorización expresa.
+Els servicis públics d'anàlisi poden oferir indicadors útils, però pujar un arxiu revela el seu contingut a tercers. Els fitxers confidencials, dades personals, claus o documents interns no han d'enviar-se a servicis externs d'anàlisi sense autorització expressa.
 
-## 5. Actualizaciones, auditoría y vulnerabilidades
+## 5. Actualitzacions, auditoria i vulnerabilitats
 
-Las actualizaciones corrigen vulnerabilidades, errores y problemas de estabilidad. Una política de parcheo debe inventariar activos y versiones, evaluar actualizaciones, probar cambios cuando su impacto sea relevante, desplegarlos de forma controlada y verificar el resultado. En entornos Windows, WSUS o Microsoft Endpoint Configuration Manager permiten centralizar el despliegue; en Linux, los gestores de paquetes y herramientas de automatización cumplen ese papel.
+Les actualitzacions corregixen vulnerabilitats, errors i problemes d'estabilitat. Una política de pegats ha d'inventariar actius i versions, avaluar actualitzacions, provar canvis quan el seu impacte siga rellevant, desplegar-los de manera controlada i verificar-ne el resultat. En entorns Windows, WSUS o Microsoft Endpoint Configuration Manager permeten centralitzar el desplegament; en Linux, els gestors de paquets i les eines d'automatització complixen esta funció.
 
-La integridad y procedencia del software deben comprobarse mediante repositorios oficiales, firmas digitales, hashes y control de versiones. Git registra cambios en el código, mientras que las firmas de paquetes o de código ayudan a verificar autoría e integridad. Estas verificaciones no sustituyen la aplicación oportuna de parches.
+La integritat i procedència del programari han de comprovar-se mitjançant repositoris oficials, signatures digitals, hashes i control de versions. Git registra canvis en el codi, mentre que les signatures de paquets o de codi ajuden a verificar autoria i integritat. Estes verificacions no substituïxen l'aplicació oportuna de pegats.
 
-La gestión de vulnerabilidades es un ciclo continuo: identificación, análisis, priorización, corrección, verificación y seguimiento. La prioridad no depende solo de una puntuación técnica: también importan la exposición del activo, su criticidad, la facilidad de explotación, el impacto y los controles compensatorios disponibles.
+La gestió de vulnerabilitats és un cicle continu: identificació, anàlisi, priorització, correcció, verificació i seguiment. La prioritat no depén només d'una puntuació tècnica: també importen l'exposició de l'actiu, la seua criticitat, la facilitat d'explotació, l'impacte i els controls compensatoris disponibles.
 
-Herramientas como Lynis, OpenSCAP y GVM/OpenVAS ayudan a descubrir configuraciones débiles, incumplimientos o vulnerabilidades conocidas. Nessus, Qualys, Rapid7 InsightVM y Tripwire son alternativas comerciales. Cualquier escaneo debe realizarse únicamente sobre activos propios o autorizados, con un alcance y horario definidos para evitar afectar a los servicios.
+Ferramentes com Lynis, OpenSCAP i GVM/OpenVAS ajuden a descobrir configuracions dèbils, incompliments o vulnerabilitats conegudes. Nessus, Qualys, Rapid7 InsightVM i Tripwire són alternatives comercials. Qualsevol escaneig s'ha de realitzar únicament sobre actius propis o autoritzats, amb un abast i horari definits per a evitar afectar els servicis.
 
-## 6. Monitorización, registros y respuesta
+## 6. Monitorització, registres i resposta
 
-Los registros documentan eventos de sistemas, aplicaciones y dispositivos. Permiten detectar actividad anómala, investigar incidentes, demostrar cumplimiento y aprender de los fallos. Una estrategia de registros útil define qué eventos se conservan, durante cuánto tiempo, quién puede consultarlos y cómo se protege su integridad.
+Els registres documenten esdeveniments de sistemes, aplicacions i dispositius. Permeten detectar activitat anòmala, investigar incidents, demostrar compliment normatiu i aprendre dels errors. Una estratègia de registres útil definix quins esdeveniments es conserven, durant quant de temps, qui pot consultar-los i com es protegix la seua integritat.
 
-En un host se deben vigilar, entre otros aspectos, autenticaciones, cambios de privilegio, inicios y paradas de servicios, errores, conexiones de red, consumo de recursos y cambios de configuración. La monitorización local aporta una primera visión, mientras que la centralización evita que la evidencia se pierda si un host es comprometido.
+En un host s'han de vigilar, entre altres aspectes, autenticacions, canvis de privilegis, inicis i aturades de servicis, errors, connexions de xarxa, consum de recursos i canvis de configuració. La monitorització local aporta una primera visió, mentre que la centralització evita que les evidències es perden si un host és compromés.
 
-Un IDS detecta indicios de intrusión; un IPS puede además bloquear tráfico o acciones según su configuración. Snort y Suricata son ejemplos de motores de detección en red. Un SIEM recopila y correlaciona eventos de múltiples fuentes para generar alertas, facilitar investigaciones y producir informes de cumplimiento. Wazuh combina agentes, análisis de logs, detección de cambios e integración con gestión de vulnerabilidades; Elastic Stack y Graylog se utilizan con frecuencia para centralizar y visualizar registros.
+Un IDS detecta indicis d'intrusió; un IPS pot, a més, bloquejar trànsit o accions segons la seua configuració. Snort i Suricata són exemples de motors de detecció en xarxa. Un SIEM recopila i correlaciona esdeveniments de múltiples fonts per a generar alertes, facilitar investigacions i produir informes de compliment. Wazuh combina agents, anàlisi de logs, detecció de canvis i integració amb gestió de vulnerabilitats; Elastic Stack i Graylog s'utilitzen amb freqüència per a centralitzar i visualitzar registres.
 
-Las alertas necesitan un procedimiento de respuesta: validar el evento, clasificar su gravedad, contener el impacto, preservar evidencias, erradicar la causa, recuperar el servicio y documentar las lecciones aprendidas. La revisión continua de reglas, umbrales y falsos positivos mantiene útil el sistema de monitorización.
+Les alertes necessiten un procediment de resposta: validar l'esdeveniment, classificar-ne la gravetat, contindre l'impacte, preservar evidències, erradicar la causa, recuperar el servici i documentar les lliçons apreses. La revisió contínua de regles, llindars i falsos positius manté útil el sistema de monitorització.
 
-## 7. Resumen
+## 7. Resum
 
-La fortificación de hosts reduce la superficie de ataque mediante inventario, mínimo privilegio, autenticación robusta, protección del arranque, cifrado, actualizaciones, defensa frente al malware y monitorización. La mejora continua requiere comprobar los cambios, priorizar vulnerabilidades y documentar las decisiones.
+La fortificació de hosts reduïx la superfície d'atac mitjançant inventari, mínim privilegi, autenticació robusta, protecció de l'arrancada, xifratge, actualitzacions, defensa davant del malware i monitorització. La millora contínua requerix comprovar els canvis, prioritzar vulnerabilitats i documentar les decisions.
 
 ## 8. Recursos
 
-- [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks)
-- [Lynis](https://cisofy.com/lynis/)
-- [Wazuh](https://wazuh.com/)
-- [OpenSCAP](https://www.open-scap.org/)
-- [CISA](https://www.cisa.gov/)
-- [CCN-CERT](https://www.ccn-cert.cni.es/)
+- CIS Benchmarks
+- Lynis
+- Wazuh
+- OpenSCAP
+- CISA
+- CCN-CERT
 
-## 9. Relación con los resultados de aprendizaje
+## 9. Relació amb els resultats d'aprenentatge
 
-La unidad desarrolla la adopción de prácticas seguras, la protección de hosts y datos, el control de acceso, la detección de amenazas, la actualización de sistemas y la monitorización de la seguridad.
+La unitat desenrotlla l'adopció de pràctiques segures, la protecció d'hosts i dades, el control d'accés, la detecció d'amenaces, l'actualització de sistemes i la monitorització de la seguretat.
+
+<br aria-hidden="true">

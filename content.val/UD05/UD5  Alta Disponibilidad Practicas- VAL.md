@@ -1,93 +1,82 @@
 ---
-title: "5.  Alta disponibilidad."
+title: "5. Alta disponibilitat. Pràctiques"
 weight: 2
 ---
 
-# UD5 - Prácticas: alta disponibilidad
+# UD5 - Pràctiques: alta disponibilitat
 
-> Diseño, despliegue y validación de servicios redundantes en entornos de pruebas virtualizados.
+> Disseny, desplegament i validació de serveis redundants en entorns de proves virtualitzats.
 
-| Datos de las prácticas | Información |
+| Dades de les pràctiques | Informació |
 | --- | --- |
-| Módulo | Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Modalidad | Semipresencial |
-| Duración estimada | 8 horas |
-| Entorno | Máquinas virtuales y redes de entorno de pruebas propias |
+| Mòdul | Seguretat i Alta Disponibilitat |
+| Curs | 2n ASIR |
+| Modalitat | Semipresencial |
+| Duració estimada | 8 hores |
+| Entorn | Màquines virtuals i xarxes d'entorn de proves pròpies |
 
-## 1. Objetivos
+## 1. Objectius
 
-- Identificar SPOF y definir objetivos de disponibilidad, RPO y RTO.
-- Desplegar WordPress en dos nodos web con una base de datos independiente.
-- Configurar HAProxy con comprobaciones de salud y balanceo de carga.
-- Configurar una IP virtual con VRRP y Keepalived en una red aislada.
-- Interpretar y validar recursos, quórum y *fencing* en Pacemaker y Corosync.
-- Diseñar una plataforma virtualizada disponible con Proxmox y almacenamiento distribuido.
+- Identificar SPOF i definir objectius de disponibilitat, RPO i RTO.
+- Desplegar WordPress en dos nodes web amb una base de dades independent.
+- Configurar HAProxy amb comprovacions de salut i balanceig de càrrega.
+- Configurar una IP virtual amb VRRP i Keepalived en una xarxa aïllada.
+- Interpretar i validar recursos, quòrum i *fencing* en Pacemaker i Corosync.
+- Dissenyar una plataforma virtualitzada disponible amb Proxmox i emmagatzematge distribuït.
 
-## 2. Alcance y preparación
+## 2. Abast i preparació
 
-Las prácticas se ejecutan exclusivamente en máquinas virtuales, redes internas y direcciones IP del entorno de pruebas. Antes de empezar, crea una *snapshot* de cada VM. No uses IP virtuales, rutas, reglas de NAT, configuraciones de clúster ni credenciales en redes ajenas o de producción.
+Les pràctiques s'executen exclusivament en màquines virtuals, xarxes internes i adreces IP de l'entorn de proves. Abans de començar, crea una *snapshot* de cada VM. No utilitzes IP virtuals, rutes, regles de NAT, configuracions de clúster ni credencials en xarxes alienes o de producció.
 
-El itinerario principal requiere cuatro VM AlmaLinux 9 conectadas a una red interna y con acceso temporal a Internet para instalar paquetes:
+L'itinerari principal requerix quatre VM AlmaLinux 9 connectades a una xarxa interna i amb accés temporal a Internet per a instal·lar paquets:
 
-| VM | Hostname | Recursos mínimos | Función |
+| VM | Hostname | Recursos mínims | Funció |
 | --- | --- | --- | --- |
-| Balanceador | `balancer01` | 1 vCPU, 1-2 GiB RAM | HAProxy. |
-| Web 1 | `web01` | 1 vCPU, 2 GiB RAM | Apache, PHP y WordPress. |
-| Web 2 | `web02` | 1 vCPU, 2 GiB RAM | Apache, PHP y WordPress. |
-| Base de datos | `db01` | 1 vCPU, 2 GiB RAM | MariaDB. |
+| Balancejador | `balancer01` | 1 vCPU, 1-2 GiB RAM | HAProxy. |
+| Web 1 | `web01` | 1 vCPU, 2 GiB RAM | Apache, PHP i WordPress. |
+| Web 2 | `web02` | 1 vCPU, 2 GiB RAM | Apache, PHP i WordPress. |
+| Base de dades | `db01` | 1 vCPU, 2 GiB RAM | MariaDB. |
 
-Asigna IP estáticas propias de tu red. En los ejemplos se usan `IP_BALANCER`, `IP_WEB1`, `IP_WEB2`, `IP_DB` e `IP_VIRTUAL`; sustitúyelas por valores reales. Añade las correspondencias de nombres e IP en `/etc/hosts` de las cuatro máquinas.
+Assigna IP estàtiques pròpies de la teua xarxa. En els exemples s'utilitzen `IP_BALANCER`, `IP_WEB1`, `IP_WEB2`, `IP_DB` i `IP_VIRTUAL`; substituïx-les per valors reals. Afig les correspondències de noms i IP en `/etc/hosts` de les quatre màquines.
 
 ```text
 IP_BALANCER balancer01
 IP_WEB1     web01
 IP_WEB2     web02
 IP_DB       db01
-```
 
-## 3. Práctica 1 - Diagnóstico de disponibilidad
+3. Pràctica 1 - Diagnòstic de disponibilitat
+Dibuixa les dependències d'una web amb un únic router, firewall, switch, servidor web, base de dades i emmagatzematge.
+Identifica almenys cinc SPOF i proposa per a cadascun una mesura proporcionada: segon enllaç, font redundant, SAI, RAID, rèplica, còpia de seguretat, balancejador o monitorització.
+Calcula la disponibilitat amb $MTBF = 8,760$ hores i $MTTR = 4$ hores:
+D=MTBFMTBF+MTTRD = \frac{MTBF}{MTBF + MTTR}
+Calcula el temps anual d'indisponibilitat de $99.9%$, $99.99%$ i $99.999%$. Indica quines mesures reduïxen MTTR i quines augmenten MTBF.
+Defineix un RPO i un RTO realistes per a la web i justifica la decisió.
+4. Pràctica 2 - WordPress balancejat amb HAProxy
+4.1. Preparar les màquines
 
-1. Dibuja las dependencias de una web con un único router, firewall, switch, servidor web, base de datos y almacenamiento.
-2. Identifica al menos cinco SPOF y propón para cada uno una medida proporcionada: segundo enlace, fuente redundante, SAI, RAID, réplica, backup, balanceador o monitorización.
-3. Calcula la disponibilidad con $MTBF = 8,760$ horas y $MTTR = 4$ horas:
+En totes les VM, actualitza el sistema, activa el firewall i configura el nom d'host corresponent:
 
-$$
-D = \frac{MTBF}{MTBF + MTTR}
-$$
-
-4. Calcula el tiempo anual de indisponibilidad de $99.9\%$, $99.99\%$ y $99.999\%$. Indica qué medidas reducen MTTR y cuáles aumentan MTBF.
-5. Define un RPO y un RTO realistas para la web y justifica la decisión.
-
-## 4. Práctica 2 - WordPress balanceado con HAProxy
-
-### 4.1. Preparar las máquinas
-
-En todas las VM, actualiza el sistema, activa el firewall y configura el nombre de host correspondiente:
-
-```bash
 sudo dnf update -y
 sudo dnf install -y vim curl wget firewalld
 sudo systemctl enable --now firewalld
 sudo hostnamectl set-hostname NOMBRE_DE_LA_VM
-```
 
-Comprueba conectividad entre las cuatro máquinas mediante `ping`, resolución de nombres mediante `getent hosts web01` y el estado de las interfaces mediante `ip -br a`.
 
-### 4.2. Configurar MariaDB en `db01`
+Comprova la connectivitat entre les quatre màquines mitjançant ping, la resolució de noms mitjançant getent hosts web01 i l'estat de les interfícies mitjançant ip -br a.
 
-Instala y habilita MariaDB:
+4.2. Configurar MariaDB en db01
 
-```bash
+Instal·la i habilita MariaDB:
+
 sudo dnf install -y mariadb-server
 sudo systemctl enable --now mariadb
 sudo firewall-cmd --permanent --add-service=mysql
 sudo firewall-cmd --reload
-```
 
-Ejecuta `sudo mysql_secure_installation` y aplica las medidas solicitadas. Después, crea una base de datos y un usuario exclusivos del entorno de pruebas. Sustituye `CLAVE_PRUEBAS` por una contraseña distinta de cualquier cuenta personal:
 
-```sql
+Executa sudo mysql_secure_installation i aplica les mesures sol·licitades. Després, crea una base de dades i un usuari exclusius de l'entorn de proves. Substituïx CLAVE_PRUEBAS per una contrasenya diferent de qualsevol compte personal:
+
 sudo mysql
 CREATE DATABASE wordpress CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'wpuser'@'IP_WEB1' IDENTIFIED BY 'CLAVE_PRUEBAS';
@@ -96,24 +85,22 @@ GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'IP_WEB1';
 GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'IP_WEB2';
 FLUSH PRIVILEGES;
 EXIT;
-```
 
-Comprueba que MariaDB escucha solo en la dirección interna necesaria. No habilites el acceso remoto de `root` ni expongas el puerto MySQL fuera de la red del entorno de pruebas.
 
-### 4.3. Configurar `web01` y `web02`
+Comprova que MariaDB escolta només en l'adreça interna necessària. No habilites l'accés remot de root ni exposes el port MySQL fora de la xarxa de l'entorn de proves.
 
-En ambos nodos instala Apache y PHP:
+4.3. Configurar web01 i web02
 
-```bash
+En tots dos nodes instal·la Apache i PHP:
+
 sudo dnf install -y httpd php php-mysqlnd php-fpm php-gd php-xml php-mbstring tar
 sudo systemctl enable --now httpd
 sudo firewall-cmd --permanent --add-service=http
 sudo firewall-cmd --reload
-```
 
-Descarga WordPress en ambos nodos y concede la propiedad al usuario de Apache:
 
-```bash
+Descarrega WordPress en tots dos nodes i concedix la propietat a l'usuari d'Apache:
+
 cd /tmp
 wget https://wordpress.org/latest.tar.gz
 tar xzf latest.tar.gz
@@ -121,25 +108,23 @@ sudo rm -rf /var/www/html/*
 sudo cp -a wordpress/. /var/www/html/
 sudo chown -R apache:apache /var/www/html
 sudo cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
-```
 
-Edita `wp-config.php` en cada nodo. Configura `DB_NAME`, `DB_USER`, `DB_PASSWORD` y `DB_HOST` con la información de `db01`. Completa la instalación inicial accediendo primero a uno de los nodos directamente.
 
-> Los dos nodos comparten la base de datos, pero las subidas y cambios de archivos siguen siendo un SPOF funcional si no se usa almacenamiento compartido o sincronización. No copies secretos ni archivos de producción en este entorno de pruebas.
+Edita wp-config.php en cada node. Configura DB_NAME, DB_USER, DB_PASSWORD i DB_HOST amb la informació de db01. Completa la instal·lació inicial accedint primer a un dels nodes directament.
 
-### 4.4. Configurar HAProxy en `balancer01`
+Els dos nodes compartixen la base de dades, però les pujades i els canvis d'arxius continuen sent un SPOF funcional si no s'utilitza emmagatzematge compartit o sincronització. No copies secrets ni arxius de producció en este entorn de proves.
 
-Instala HAProxy y permite HTTP:
+4.4. Configurar HAProxy en balancer01
 
-```bash
+Instal·la HAProxy i permet HTTP:
+
 sudo dnf install -y haproxy
 sudo firewall-cmd --permanent --add-service=http
 sudo firewall-cmd --reload
-```
 
-Guarda una copia de `/etc/haproxy/haproxy.cfg` y añade al final una configuración mínima. Sustituye las IP de ejemplo:
 
-```text
+Guarda una còpia de /etc/haproxy/haproxy.cfg i afig al final una configuració mínima. Substituïx les IP d'exemple:
+
 frontend wordpress_http
 	bind *:80
 	default_backend wordpress_nodes
@@ -155,63 +140,54 @@ listen stats
 	stats enable
 	stats uri /stats
 	stats refresh 10s
-```
 
-Valida y activa el servicio:
 
-```bash
+Valida i activa el servei:
+
 sudo haproxy -c -f /etc/haproxy/haproxy.cfg
 sudo systemctl enable --now haproxy
 curl -I http://localhost/
-```
-
-Accede a `http://IP_BALANCER/`, revisa el panel `http://IP_BALANCER:8080/stats` desde la red de entorno de pruebas y documenta qué nodos aparecen activos. Detén temporalmente `httpd` en un backend, comprueba que HAProxy lo retira y después restaura el servicio. No confundas balanceo con HA completa: el balanceador y la base de datos siguen siendo dependencias únicas.
 
 
-## 5. Práctica 3 - Gateway HA con VRRP y Keepalived
+Accedix a http://IP_BALANCER/, revisa el panell http://IP_BALANCER:8080/stats des de la xarxa d'entorn de proves i documenta quins nodes apareixen actius. Detén temporalment httpd en un backend, comprova que HAProxy el retira i després restaura el servei. No confongues balanceig amb alta disponibilitat completa: el balancejador i la base de dades continuen sent dependències úniques.
 
-Esta práctica requiere dos gateway Linux y una máquina cliente en una red interna aislada. Cada gateway necesita una interfaz WAN con acceso a Internet y otra interfaz LAN. Ejemplo de LAN:
+5. Pràctica 3 - Gateway HA amb VRRP i Keepalived
 
-| Equipo | IP LAN |
-| --- | --- |
-| `gateway1` | `192.168.100.2/24` |
-| `gateway2` | `192.168.100.3/24` |
-| IP virtual VRRP | `192.168.100.1/24` |
-| Cliente | `192.168.100.10/24`, gateway `192.168.100.1` |
+Esta pràctica requerix dos gateways Linux i una màquina client en una xarxa interna aïllada. Cada gateway necessita una interfície WAN amb accés a Internet i una altra interfície LAN. Exemple de LAN:
 
-### 5.1. Activar enrutamiento y NAT
+Equip	IP LANgateway1	192.168.100.2/24
+gateway2	192.168.100.3/24
+IP virtual VRRP	192.168.100.1/24
+Client	192.168.100.10/24, gateway 192.168.100.1
+5.1. Activar encaminament i NAT
 
-En ambos gateways, habilita temporalmente el reenvío IP y después persístelo en un fichero de `/etc/sysctl.d/`:
+En tots dos gateways, habilita temporalment el reenviament IP i després fes-lo persistent en un fitxer de /etc/sysctl.d/:
 
-```bash
 sudo sysctl -w net.ipv4.ip_forward=1
 echo 'net.ipv4.ip_forward = 1' | sudo tee /etc/sysctl.d/99-ha-routing.conf
 sudo sysctl --system
-```
 
-Asigna la interfaz WAN a la zona `public` y la LAN a `internal`, adaptando los nombres reales. Habilita NAT únicamente hacia la WAN:
 
-```bash
+Assigna la interfície WAN a la zona public i la LAN a internal, adaptant els noms reals. Habilita NAT únicament cap a la WAN:
+
 sudo firewall-cmd --permanent --zone=public --change-interface=INTERFAZ_WAN
 sudo firewall-cmd --permanent --zone=internal --change-interface=INTERFAZ_LAN
 sudo firewall-cmd --permanent --zone=public --add-masquerade
 sudo firewall-cmd --permanent --zone=internal --set-target=ACCEPT
 sudo firewall-cmd --reload
-```
 
-Desde el cliente, prueba primero la salida usando la IP real de cada gateway. Verifica las rutas con `ip route` y, si está disponible, `traceroute 8.8.8.8`.
 
-### 5.2. Configurar Keepalived
+Des del client, prova primer l'eixida utilitzant la IP real de cada gateway. Verifica les rutes amb ip route i, si està disponible, traceroute 8.8.8.8.
 
-Instala Keepalived en ambos gateways:
+5.2. Configurar Keepalived
 
-```bash
+Instal·la Keepalived en tots dos gateways:
+
 sudo dnf install -y keepalived
-```
 
-En `gateway1`, crea `/etc/keepalived/keepalived.conf`. Adapta la interfaz LAN y utiliza una clave de entorno de pruebas:
 
-```text
+En gateway1, crea /etc/keepalived/keepalived.conf. Adapta la interfície LAN i utilitza una clau d'entorn de proves:
+
 vrrp_instance VI_1 {
 	state MASTER
 	interface INTERFAZ_LAN
@@ -226,57 +202,45 @@ vrrp_instance VI_1 {
 		192.168.100.1/24
 	}
 }
-```
 
-En `gateway2`, usa el mismo `virtual_router_id`, interfaz y dirección virtual, pero configura `state BACKUP` y `priority 100`. Inicia el servicio en ambos nodos:
 
-```bash
+En gateway2, utilitza el mateix virtual_router_id, interfície i adreça virtual, però configura state BACKUP i priority 100. Inicia el servei en tots dos nodes:
+
 sudo systemctl enable --now keepalived
 ip -br address
-```
-
-Configura el cliente para usar `192.168.100.1` como gateway. Mantén un `ping 8.8.8.8` activo desde el cliente, desconecta únicamente la interfaz LAN del gateway principal en la configuración de la VM y verifica que la IP virtual aparece en el respaldo. Restaura la interfaz y anota el tiempo de conmutación y los paquetes perdidos.
 
 
+Configura el client perquè utilitze 192.168.100.1 com a gateway. Mantín un ping 8.8.8.8 actiu des del client, desconnecta únicament la interfície LAN del gateway principal en la configuració de la VM i verifica que la IP virtual apareix en el node de reserva. Restaura la interfície i anota el temps de commutació i els paquets perduts.
 
-## 7. Práctica 5  Evaluable - Máquinas virtuales con Proxmox
+7. Pràctica 5 Avaluable - Màquines virtuals amb Proxmox
 
-Esta práctica necesita tres nodos Proxmox dedicados. La virtualización anidada puede ser lenta y no sustituye la validación en hardware compatible.
+Esta pràctica necessita tres nodes Proxmox dedicats. La virtualització imbricada pot ser lenta i no substituïx la validació en maquinari compatible.
 
-1. Instala tres nodos Proxmox con IP estáticas, conectividad mutua y un segundo disco libre en cada nodo para Ceph. Cada nodo debe contar con al menos 2 GiB de RAM; aumenta los recursos cuando el equipo anfitrión lo permita.
-2. Crea el clúster desde el primer nodo mediante la interfaz web en `Datacenter > Cluster > Create Cluster` y une los demás con `Join Cluster`, o utiliza `pvecm create NOMBRE_CLUSTER` y `pvecm add IP_NODO_PRINCIPAL`.
-3. Verifica el estado con `pvecm status`. Explica por qué tres nodos facilitan mantener quórum frente a una caída.
-4. Instala Ceph en los nodos desde `Datacenter > Ceph`, crea un OSD con el disco secundario de cada nodo y un *pool* para las VM. Comprueba que el estado sea `HEALTH_OK` antes de continuar.
-5. Crea una VM Debian o Ubuntu Server con el disco en el *pool* Ceph. Instala SSH para comprobar conectividad y realiza una migración controlada desde la interfaz de Proxmox.
-6. Crea un grupo HA, añade los tres nodos y registra la VM como recurso HA. Simula la indisponibilidad de un nodo según el procedimiento del docente; mide la interrupción mediante `ping` y una sesión SSH desde otra máquina.
-
-
-
-
-## 9. Autoevaluación
-
-1. ¿Qué es un SPOF?
-2. ¿Qué representan MTBF y MTTR?
-3. ¿Qué diferencia hay entre RPO y RTO?
-4. ¿Por qué RAID no sustituye a una copia de seguridad?
-5. ¿Qué comprueba `option httpchk` en HAProxy?
-6. ¿Qué función tiene una IP virtual VRRP?
-7. ¿Qué diferencia existe entre un balanceador y un proxy inverso?
-8. ¿Qué funciones desempeñan Corosync y Pacemaker?
-9. ¿Qué riesgo evita el quórum?
-10. ¿Qué es *fencing*?
-11. ¿Por qué tres nodos son preferibles a dos para el quórum de Proxmox?
-12. ¿Qué dependencias se deben comprobar antes de afirmar que una VM está en alta disponibilidad?
-
-
-
-## 11. Recursos
-
-- [HAProxy](https://www.haproxy.org/)
-- [Keepalived](https://www.keepalived.org/)
-- [Pacemaker](https://clusterlabs.org/pacemaker/)
-- [Corosync](https://corosync.github.io/corosync/)
-- [Proxmox VE](https://www.proxmox.com/en/proxmox-ve)
-- [Ceph](https://ceph.io/)
-- [OpenStack](https://docs.openstack.org/2024.2/)
-- [WordPress con HAProxy](https://www.digitalocean.com/community/tutorial-series/load-balancing-wordpress-with-haproxy)
+Instal·la tres nodes Proxmox amb IP estàtiques, connectivitat mútua i un segon disc lliure en cada node per a Ceph. Cada node ha de comptar amb almenys 2 GiB de RAM; augmenta els recursos quan l'equip amfitrió ho permeta.
+Crea el clúster des del primer node mitjançant la interfície web en Datacenter > Cluster > Create Cluster i unix els altres mitjançant Join Cluster, o utilitza pvecm create NOMBRE_CLUSTER i pvecm add IP_NODO_PRINCIPAL.
+Verifica l'estat amb pvecm status. Explica per què tres nodes faciliten mantindre el quòrum davant una caiguda.
+Instal·la Ceph en els nodes des de Datacenter > Ceph, crea un OSD amb el disc secundari de cada node i un pool per a les VM. Comprova que l'estat siga HEALTH_OK abans de continuar.
+Crea una VM Debian o Ubuntu Server amb el disc en el pool Ceph. Instal·la SSH per a comprovar la connectivitat i realitza una migració controlada des de la interfície de Proxmox.
+Crea un grup HA, afig els tres nodes i registra la VM com a recurs HA. Simula la indisponibilitat d'un node segons el procediment del professorat; mesura la interrupció mitjançant ping i una sessió SSH des d'una altra màquina.
+9. Autoavaluació
+Què és un SPOF?
+Què representen MTBF i MTTR?
+Quina diferència hi ha entre RPO i RTO?
+Per què RAID no substituïx una còpia de seguretat?
+Què comprova option httpchk en HAProxy?
+Quina funció té una IP virtual VRRP?
+Quina diferència existix entre un balancejador i un proxy invers?
+Quines funcions exercixen Corosync i Pacemaker?
+Quin risc evita el quòrum?
+Què és fencing?
+Per què tres nodes són preferibles a dos per al quòrum de Proxmox?
+Quines dependències s'han de comprovar abans d'afirmar que una VM està en alta disponibilitat?
+11. Recursos
+HAProxy
+Keepalived
+Pacemaker
+Corosync
+Proxmox VE
+Ceph
+OpenStack
+WordPress amb HAProxy

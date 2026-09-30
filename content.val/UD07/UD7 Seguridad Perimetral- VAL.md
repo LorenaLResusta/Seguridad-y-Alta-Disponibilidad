@@ -1,169 +1,169 @@
 ---
-title: "7.  seguridad perimetral. Prácticas"
+title: "7. Seguretat perimetral. Pràctiques"
 weight: 1
 ---
-# UD7 - Seguridad perimetral
 
-> Protección de las fronteras de red mediante firewalls, segmentación, publicación segura y control del tráfico.
+# UD7 - Seguretat perimetral
 
-| Datos de la unidad | Información |
+> Protecció de les fronteres de xarxa mitjançant tallafocs, segmentació, publicació segura i control del trànsit.
+
+| Dades de la unitat | Informació |
 | --- | --- |
-| Módulo | Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Modalidad | Semipresencial |
-| Duración | 14 horas |
+| Mòdul | Seguretat i Alta Disponibilitat |
+| Curs | 2n ASIR |
+| Modalitat | Semipresencial |
+| Duració | 14 hores |
 
-## Índice
+## Índex
 
-- [UD7 - Seguridad perimetral](#ud7---seguridad-perimetral)
-  - [Índice](#índice)
-  - [1. Fundamentos de seguridad perimetral](#1-fundamentos-de-seguridad-perimetral)
-    - [1.1. Introducción](#11-introducción)
-    - [1.2. Objetivos](#12-objetivos)
-    - [1.3. Zonas y defensa en profundidad](#13-zonas-y-defensa-en-profundidad)
-  - [2. Firewalls y plataformas de filtrado](#2-firewalls-y-plataformas-de-filtrado)
-    - [2.1. Tipos de firewall](#21-tipos-de-firewall)
-    - [2.2. Netfilter, PF y soluciones de código abierto](#22-netfilter-pf-y-soluciones-de-código-abierto)
-  - [3. Políticas, reglas y registro](#3-políticas-reglas-y-registro)
-    - [3.1. Diseño de reglas](#31-diseño-de-reglas)
-    - [3.2. Registros y monitorización](#32-registros-y-monitorización)
-    - [3.3. Actualización y gestión de cambios](#33-actualización-y-gestión-de-cambios)
-  - [4. NAT, publicación de servicios y DMZ](#4-nat-publicación-de-servicios-y-dmz)
-    - [4.1. NAT y redirección de puertos](#41-nat-y-redirección-de-puertos)
-    - [4.2. DMZ y segmentación avanzada](#42-dmz-y-segmentación-avanzada)
-  - [5. Proxies, proxy inverso y WAF](#5-proxies-proxy-inverso-y-waf)
-    - [5.1. Proxy directo](#51-proxy-directo)
-    - [5.2. Proxy inverso y WAF](#52-proxy-inverso-y-waf)
-  - [6. Disponibilidad y operación del perímetro](#6-disponibilidad-y-operación-del-perímetro)
-    - [6.1. Alta disponibilidad del firewall](#61-alta-disponibilidad-del-firewall)
-    - [6.2. Operación y mejora continua](#62-operación-y-mejora-continua)
-  - [7. Resumen](#7-resumen)
-  - [8. Recursos](#8-recursos)
-  - [9. Relación con los resultados de aprendizaje](#9-relación-con-los-resultados-de-aprendizaje)
+- UD7 - Seguretat perimetral
+  - 1. Fonaments de seguretat perimetral
+    - 1.1. Introducció
+    - 1.2. Objectius
+    - 1.3. Zones i defensa en profunditat
+  - 2. Tallafocs i plataformes de filtratge
+    - 2.1. Tipus de tallafocs
+    - 2.2. Netfilter, PF i solucions de codi obert
+  - 3. Polítiques, regles i registre
+    - 3.1. Disseny de regles
+    - 3.2. Registres i monitorització
+    - 3.3. Actualització i gestió de canvis
+  - 4. NAT, publicació de serveis i DMZ
+    - 4.1. NAT i redirecció de ports
+    - 4.2. DMZ i segmentació avançada
+  - 5. Proxis, proxy invers i WAF
+    - 5.1. Proxy directe
+    - 5.2. Proxy invers i WAF
+  - 6. Disponibilitat i operació del perímetre
+    - 6.1. Alta disponibilitat del tallafocs
+    - 6.2. Operació i millora contínua
+  - 7. Resum
+  - 8. Recursos
+  - 9. Relació amb els resultats d'aprenentatge
 
 ---
 
-## 1. Fundamentos de seguridad perimetral
+## 1. Fonaments de seguretat perimetral
 
-### 1.1. Introducción
+### 1.1. Introducció
 
-La seguridad perimetral protege las zonas de conexión entre redes con distinto nivel de confianza, especialmente el límite entre Internet, las redes internas, los servicios publicados y el acceso remoto. Su objetivo es reducir accesos no autorizados, ataques, pérdida de datos y el impacto de una intrusión.
+La seguretat perimetral protegix les zones de connexió entre xarxes amb diferent nivell de confiança, especialment el límit entre Internet, les xarxes internes, els serveis publicats i l'accés remot. El seu objectiu és reduir accessos no autoritzats, atacs, pèrdua de dades i l'impacte d'una intrusió.
 
-Un firewall actúa como filtro entre redes: permite, bloquea, registra o redirige tráfico según reglas predefinidas. Evalúa criterios como interfaces, dirección IP, puertos, protocolos, estado de conexión y, en soluciones avanzadas, aplicación o identidad. Es un punto de control estratégico, pero no sustituye actualizaciones, autenticación robusta, segmentación ni hardening de los sistemas protegidos.
+Un tallafocs actua com a filtre entre xarxes: permet, bloqueja, registra o redirigix trànsit segons regles predefinides. Avalua criteris com ara interfícies, adreces IP, ports, protocols, estat de connexió i, en solucions avançades, aplicació o identitat. És un punt de control estratègic, però no substituïx les actualitzacions, l'autenticació robusta, la segmentació ni el *hardening* dels sistemes protegits.
 
-### 1.2. Objetivos
+### 1.2. Objectius
 
-Al finalizar la unidad, el alumnado será capaz de:
+En finalitzar la unitat, l'alumnat serà capaç de:
 
-- Explicar la función y limitaciones de la seguridad perimetral.
-- Diferenciar firewalls de paquetes, con estado, de aplicación y de nueva generación.
-- Diseñar políticas de filtrado basadas en denegación por defecto y mínimo privilegio.
-- Configurar y justificar NAT, redirección de puertos y una DMZ.
-- Interpretar registros y relacionarlos con la detección de incidentes.
-- Distinguir proxy directo, proxy inverso y WAF.
-- Valorar la disponibilidad, actualización y operación segura de los controles perimetrales.
+- Explicar la funció i les limitacions de la seguretat perimetral.
+- Diferenciar tallafocs de paquets, amb estat, d'aplicació i de nova generació.
+- Dissenyar polítiques de filtratge basades en denegació per defecte i mínim privilegi.
+- Configurar i justificar NAT, redirecció de ports i una DMZ.
+- Interpretar registres i relacionar-los amb la detecció d'incidents.
+- Distingir entre proxy directe, proxy invers i WAF.
+- Valorar la disponibilitat, actualització i operació segura dels controls perimetrals.
 
-### 1.3. Zonas y defensa en profundidad
+### 1.3. Zones i defensa en profunditat
 
-Una arquitectura sencilla separa Internet, LAN, DMZ, red de gestión y acceso VPN. Cada zona debe tener una finalidad definida y flujos documentados. La segmentación limita el movimiento lateral: comprometer un servidor publicado no debe dar acceso directo a todos los sistemas internos.
+Una arquitectura senzilla separa Internet, LAN, DMZ, xarxa de gestió i accés VPN. Cada zona ha de tindre una finalitat definida i fluxos documentats. La segmentació limita el moviment lateral: comprometre un servidor publicat no ha de donar accés directe a tots els sistemes interns.
 
-La defensa en profundidad combina controles: filtrado en el perímetro, reglas entre zonas, protección de hosts, autenticación, monitorización, copias de seguridad y respuesta ante incidentes. La seguridad perimetral se complementa con la segmentación LAN/WLAN y las VPN vistas en UD6.
+La defensa en profunditat combina controls: filtratge al perímetre, regles entre zones, protecció d'hosts, autenticació, monitorització, còpies de seguretat i resposta davant incidents. La seguretat perimetral es complementa amb la segmentació LAN/WLAN i les VPN vistes en la UD6.
 
-## 2. Firewalls y plataformas de filtrado
+## 2. Tallafocs i plataformes de filtratge
 
-### 2.1. Tipos de firewall
+### 2.1. Tipus de tallafocs
 
-Los firewalls de filtrado de paquetes inspeccionan principalmente direcciones IP, puertos y protocolos. Son rápidos y sencillos, pero no analizan en profundidad el contenido. Los firewalls *stateful* mantienen el estado de conexiones TCP y otros flujos, lo que permite diferenciar tráfico asociado a una sesión legítima de paquetes no solicitados.
+Els tallafocs de filtratge de paquets inspeccionen principalment adreces IP, ports i protocols. Són ràpids i senzills, però no analitzen en profunditat el contingut. Els tallafocs *stateful* mantenen l'estat de les connexions TCP i d'altres fluxos, cosa que permet diferenciar trànsit associat a una sessió legítima de paquets no sol·licitats.
 
-Los firewalls de aplicación o *next-generation firewall* pueden identificar protocolos y aplicaciones, aplicar filtrado web, control de contenidos, IDS/IPS o políticas basadas en identidad. Estas funciones amplían la visibilidad, pero requieren dimensionamiento, actualización y ajuste para no bloquear tráfico legítimo ni crear una falsa sensación de seguridad.
+Els tallafocs d'aplicació o *next-generation firewall* poden identificar protocols i aplicacions, aplicar filtratge web, control de continguts, IDS/IPS o polítiques basades en identitat. Estes funcions amplien la visibilitat, però requerixen dimensionament, actualització i ajust per a no bloquejar trànsit legítim ni crear una falsa sensació de seguretat.
 
-### 2.2. Netfilter, PF y soluciones de código abierto
+### 2.2. Netfilter, PF i solucions de codi obert
 
-Netfilter es el marco de filtrado y manipulación de tráfico integrado en el kernel Linux. Permite filtrado, NAT, redirección de puertos, registro y seguimiento de conexiones. nftables es la interfaz moderna para definir reglas; iptables continúa presente en muchos entornos, aunque ha sido sustituido progresivamente. firewalld ofrece una capa de gestión dinámica sobre estos mecanismos en varias distribuciones.
+Netfilter és el marc de filtratge i manipulació de trànsit integrat en el nucli Linux. Permet filtratge, NAT, redirecció de ports, registre i seguiment de connexions. *nftables* és la interfície moderna per a definir regles; *iptables* continua present en molts entorns, encara que ha sigut substituït progressivament. *firewalld* oferix una capa de gestió dinàmica sobre estos mecanismes en diverses distribucions.
 
-Packet Filter, o PF, es un sistema de filtrado y NAT usado en sistemas BSD. Ofrece reglas por interfaces, seguimiento de estado, NAT, tablas de direcciones y capacidades de alta disponibilidad como CARP. pfSense y OPNsense son plataformas basadas en FreeBSD y PF que integran firewall, NAT, VLAN, VPN, DHCP, DNS, monitorización y extensiones como IDS/IPS o proxy.
+Packet Filter, o PF, és un sistema de filtratge i NAT utilitzat en sistemes BSD. Oferix regles per interfícies, seguiment d'estat, NAT, taules d'adreces i capacitats d'alta disponibilitat com CARP. pfSense i OPNsense són plataformes basades en FreeBSD i PF que integren tallafocs, NAT, VLAN, VPN, DHCP, DNS, monitorització i extensions com IDS/IPS o proxy.
 
-La elección de plataforma debe considerar requisitos, conocimientos del equipo, soporte, actualizaciones, rendimiento, copias de configuración y capacidad de auditoría. Ninguna herramienta reemplaza una política clara y bien mantenida.
+L'elecció de la plataforma ha de considerar requisits, coneixements de l'equip, suport, actualitzacions, rendiment, còpies de configuració i capacitat d'auditoria. Cap eina reemplaça una política clara i ben mantinguda.
 
-## 3. Políticas, reglas y registro
+## 3. Polítiques, regles i registre
 
-### 3.1. Diseño de reglas
+### 3.1. Disseny de regles
 
-Una política segura comienza con denegación por defecto y añade únicamente excepciones justificadas. Cada regla debe definir interfaz, origen, destino, protocolo, puerto, acción, finalidad, responsable y fecha de revisión. El orden es importante: muchos firewalls procesan reglas de arriba abajo hasta encontrar una coincidencia.
+Una política segura comença amb denegació per defecte i afig únicament excepcions justificades. Cada regla ha de definir interfície, origen, destinació, protocol, port, acció, finalitat, responsable i data de revisió. L'orde és important: molts tallafocs processen les regles de dalt cap avall fins a trobar una coincidència.
 
-El mínimo privilegio implica limitar tanto el acceso entrante como el saliente. Por ejemplo, publicar HTTPS hacia un servidor web de la DMZ no implica permitir SSH desde Internet ni conceder a ese servidor acceso libre a la LAN. Las reglas temporales, demasiado amplias o sin responsable deben revisarse y retirarse.
+El mínim privilegi implica limitar tant l'accés entrant com l'eixint. Per exemple, publicar HTTPS cap a un servidor web de la DMZ no implica permetre SSH des d'Internet ni concedir a eixe servidor accés lliure a la LAN. Les regles temporals, massa àmplies o sense responsable han de revisar-se i eliminar-se.
 
-### 3.2. Registros y monitorización
+### 3.2. Registres i monitorització
 
-Los registros de firewall documentan conexiones permitidas y bloqueadas, con origen, destino, puerto, protocolo e interfaz. Permiten detectar escaneos, intentos repetidos, errores de reglas, tráfico inesperado y posibles incidentes. Los equipos deben sincronizar su hora y proteger los registros contra alteración.
+Els registres del tallafocs documenten connexions permeses i bloquejades, amb origen, destinació, port, protocol i interfície. Permeten detectar escanejos, intents repetits, errors de regles, trànsit inesperat i possibles incidents. Els equips han de sincronitzar la seua hora i protegir els registres contra alteracions.
 
-La centralización en un servidor de logs o SIEM facilita correlacionar eventos de firewalls, VPN, IDS/IPS, proxies y servidores. El volumen de logs requiere criterios de retención, acceso autorizado y alertas útiles. Registrar todo sin revisión no equivale a monitorizar.
+La centralització en un servidor de registres o SIEM facilita correlacionar esdeveniments de tallafocs, VPN, IDS/IPS, proxis i servidors. El volum de logs requerix criteris de retenció, accés autoritzat i alertes útils. Registrar-ho tot sense revisió no equival a monitoritzar.
 
-### 3.3. Actualización y gestión de cambios
+### 3.3. Actualització i gestió de canvis
 
-El firmware o software del firewall debe mantenerse actualizado y sus cambios deben probarse, documentarse y poder revertirse. Las copias de configuración deben almacenarse protegidas y comprobarse periódicamente. Antes de modificar una regla crítica se debe disponer de una vía de recuperación para evitar perder acceso administrativo legítimo.
+El firmware o programari del tallafocs ha de mantindre's actualitzat i els canvis han de provar-se, documentar-se i poder revertir-se. Les còpies de configuració han d'emmagatzemar-se protegides i comprovar-se periòdicament. Abans de modificar una regla crítica s'ha de disposar d'una via de recuperació per a evitar perdre l'accés administratiu legítim.
 
-## 4. NAT, publicación de servicios y DMZ
+## 4. NAT, publicació de serveis i DMZ
 
-### 4.1. NAT y redirección de puertos
+### 4.1. NAT i redirecció de ports
 
-NAT modifica direcciones y, en algunos casos, puertos durante el tránsito. Permite que redes privadas compartan una dirección pública y puede ocultar la estructura interna, pero no es un mecanismo de seguridad completo. La traducción de direcciones debe acompañarse de reglas de filtrado explícitas.
+NAT modifica adreces i, en alguns casos, ports durant el trànsit. Permet que xarxes privades compartisquen una adreça pública i pot ocultar l'estructura interna, però no és un mecanisme de seguretat complet. La traducció d'adreces ha d'acompanyar-se de regles de filtratge explícites.
 
-El *port forwarding* publica un servicio interno asociando un puerto o dirección externa con un destino concreto. Solo deben exponerse los servicios necesarios, preferiblemente en una DMZ, y protegerse con actualizaciones, TLS, autenticación y monitorización. Publicar un puerto de administración directamente en Internet aumenta considerablemente el riesgo.
+El *port forwarding* publica un servei intern associant un port o adreça externa amb una destinació concreta. Només han d'exposar-se els serveis necessaris, preferiblement en una DMZ, i protegir-se amb actualitzacions, TLS, autenticació i monitorització. Publicar un port d'administració directament a Internet augmenta considerablement el risc.
 
-### 4.2. DMZ y segmentación avanzada
+### 4.2. DMZ i segmentació avançada
 
-Una DMZ es una subred destinada a servicios publicados, como servidores web, correo, DNS público o proxy inverso. Se separa de la LAN mediante interfaces, VLAN o dispositivos distintos. El firewall controla Internet-DMZ, LAN-DMZ y, de forma especialmente restrictiva, DMZ-LAN.
+Una DMZ és una subxarxa destinada a serveis publicats, com ara servidors web, correu, DNS públic o proxy invers. Se separa de la LAN mitjançant interfícies, VLAN o dispositius diferents. El tallafocs controla Internet-DMZ, LAN-DMZ i, de manera especialment restrictiva, DMZ-LAN.
 
-Un servidor web de DMZ puede requerir acceso a un puerto concreto de base de datos, pero no a toda la red interna. Un servidor de correo expuesto puede necesitar entregar correo a un sistema interno, pero no acceso administrativo general. Minimizar servicios, limitar flujos, endurecer hosts y monitorizar accesos reducen el impacto de una intrusión.
+Un servidor web de DMZ pot requerir accés a un port concret de base de dades, però no a tota la xarxa interna. Un servidor de correu exposat pot necessitar entregar correu a un sistema intern, però no accés administratiu general. Minimitzar serveis, limitar fluxos, reforçar hosts i monitoritzar accessos reduïxen l'impacte d'una intrusió.
 
-## 5. Proxies, proxy inverso y WAF
+## 5. Proxis, proxy invers i WAF
 
-### 5.1. Proxy directo
+### 5.1. Proxy directe
 
-Un proxy directo representa a los clientes ante Internet. Puede aplicar autenticación, filtrado por políticas, control de dominios, caché y registro de navegación. Squid es un ejemplo habitual de proxy HTTP/HTTPS. Las reglas de acceso se evalúan en orden y deben terminar en una denegación general después de permitir los clientes y servicios necesarios.
+Un proxy directe representa els clients davant Internet. Pot aplicar autenticació, filtratge per polítiques, control de dominis, memòria cau i registre de navegació. Squid és un exemple habitual de proxy HTTP/HTTPS. Les regles d'accés s'avaluen en orde i han d'acabar en una denegació general després de permetre els clients i serveis necessaris.
 
-El filtrado de HTTPS tiene limitaciones: sin inspección TLS, el proxy no ve el contenido; con inspección se requieren certificados, información a los usuarios, controles de privacidad y una gestión rigurosa. Las políticas de navegación deben ser proporcionadas, transparentes y acordes con la normativa aplicable.
+El filtratge d'HTTPS té limitacions: sense inspecció TLS, el proxy no veu el contingut; amb inspecció es requerixen certificats, informació als usuaris, controls de privacitat i una gestió rigorosa. Les polítiques de navegació han de ser proporcionades, transparents i d'acord amb la normativa aplicable.
 
-### 5.2. Proxy inverso y WAF
+### 5.2. Proxy invers i WAF
 
-Un proxy inverso recibe peticiones externas y las reenvía a uno o varios servicios internos. Permite ocultar los backends, centralizar TLS, aplicar control de acceso, registrar solicitudes, ofrecer caché y distribuir carga. Nginx y HAProxy son herramientas habituales; su papel en el balanceo y la alta disponibilidad se relaciona con UD5.
+Un proxy invers rep peticions externes i les reenviа a un o diversos serveis interns. Permet ocultar els *backends*, centralitzar TLS, aplicar control d'accés, registrar sol·licituds, oferir memòria cau i distribuir càrrega. Nginx i HAProxy són eines habituals; el seu paper en el balanceig i l'alta disponibilitat es relaciona amb la UD5.
 
-Un WAF inspecciona peticiones web y puede detectar o bloquear patrones asociados a ataques como inyección SQL o XSS. Complementa, pero no sustituye, validación de entradas, autenticación, desarrollo seguro, actualizaciones y registros de la aplicación. Sus reglas requieren ajuste continuo para controlar falsos positivos y negativos.
+Un WAF inspecciona peticions web i pot detectar o bloquejar patrons associats a atacs com la injecció SQL o XSS. Complementa, però no substituïx, la validació d'entrades, l'autenticació, el desenvolupament segur, les actualitzacions i els registres de l'aplicació. Les seues regles requerixen ajust continu per a controlar falsos positius i negatius.
 
-## 6. Disponibilidad y operación del perímetro
+## 6. Disponibilitat i operació del perímetre
 
-### 6.1. Alta disponibilidad del firewall
+### 6.1. Alta disponibilitat del tallafocs
 
-Un firewall único puede ser un punto único de fallo. Los entornos con requisitos elevados pueden usar pares activo-pasivo o activo-activo, enlaces redundantes, fuentes de alimentación independientes y sincronización de estado. CARP permite compartir una dirección virtual en plataformas basadas en PF; las soluciones comerciales ofrecen mecanismos equivalentes.
+Un únic tallafocs pot representar un punt únic de fallada. Els entorns amb requisits elevats poden utilitzar parelles actiu-passiu o actiu-actiu, enllaços redundants, fonts d'alimentació independents i sincronització d'estat. CARP permet compartir una adreça virtual en plataformes basades en PF; les solucions comercials oferixen mecanismes equivalents.
 
-La redundancia debe incluir sus dependencias: alimentación, red, DNS, acceso de gestión, enlaces del proveedor y monitorización. Un diseño HA se valida con pruebas controladas de conmutación, restauración y comportamiento de sesiones, como se estudia en UD5.
+La redundància ha d'incloure les seues dependències: alimentació, xarxa, DNS, accés de gestió, enllaços del proveïdor i monitorització. Un disseny HA es valida amb proves controlades de commutació, restauració i comportament de sessions, com s'estudia en la UD5.
 
-### 6.2. Operación y mejora continua
+### 6.2. Operació i millora contínua
 
-La operación del perímetro comprende inventario de activos, revisión de reglas, parcheo, copias de seguridad, gestión de certificados, análisis de registros y respuesta a incidentes. Las pruebas deben definir alcance, responsables, ventana de mantenimiento, criterios de parada y reversión.
+L'operació del perímetre comprén inventari d'actius, revisió de regles, aplicació de pegats, còpies de seguretat, gestió de certificats, anàlisi de registres i resposta a incidents. Les proves han de definir abast, responsables, finestra de manteniment, criteris d'aturada i reversió.
 
-El cumplimiento normativo y la privacidad afectan a la conservación de logs, inspección de tráfico y control de navegación. Las decisiones deben documentarse y revisarse ante cambios de servicios, personal, amenazas o requisitos legales.
+El compliment normatiu i la privacitat afecten la conservació de logs, la inspecció de trànsit i el control de navegació. Les decisions han de documentar-se i revisar-se davant canvis de serveis, personal, amenaces o requisits legals.
 
-## 7. Resumen
+## 7. Resum
 
-La seguridad perimetral separa zonas de confianza y controla sus comunicaciones mediante firewalls, NAT, DMZ y proxies. Una política eficaz parte de denegar por defecto, permite solo flujos justificados y registra los eventos relevantes.
+La seguretat perimetral separa zones de confiança i controla les seues comunicacions mitjançant tallafocs, NAT, DMZ i proxis. Una política eficaç partix de denegar per defecte, permet només fluxos justificats i registra els esdeveniments rellevants.
 
-Netfilter, PF, pfSense, OPNsense, Squid, Nginx y WAF son herramientas que deben integrarse en una arquitectura mantenida, monitorizada y preparada para recuperarse de fallos. La segmentación, el hardening y las aplicaciones seguras siguen siendo necesarios incluso detrás de un firewall.
+Netfilter, PF, pfSense, OPNsense, Squid, Nginx i WAF són eines que han d'integrar-se en una arquitectura mantinguda, monitoritzada i preparada per a recuperar-se de fallades. La segmentació, el *hardening* i les aplicacions segures continuen sent necessaris fins i tot darrere d'un tallafocs.
 
 ## 8. Recursos
 
-- [Netfilter](https://www.netfilter.org/)
-- [nftables](https://wiki.nftables.org/)
-- [Packet Filter](https://www.openbsd.org/faq/pf/)
-- [pfSense](https://docs.netgate.com/pfsense/en/latest/)
-- [OPNsense](https://docs.opnsense.org/)
-- [Squid](https://www.squid-cache.org/Doc/)
-- [Nginx: reverse proxy](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
-- [OWASP: Web Application Firewall](https://owasp.org/www-community/Web_Application_Firewall)
+- Netfilter: https://www.netfilter.org/
+- nftables: https://wiki.nftables.org/
+- Packet Filter: https://www.openbsd.org/faq/pf/
+- pfSense: https://docs.netgate.com/pfsense/en/latest/
+- OPNsense: https://docs.opnsense.org/
+- Squid: https://www.squid-cache.org/Doc/
+- Nginx Reverse Proxy: https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
+- OWASP Web Application Firewall: https://owasp.org/www-community/Web_Application_Firewall
 
-## 9. Relación con los resultados de aprendizaje
+## 9. Relació amb els resultats d'aprenentatge
 
-Esta unidad contribuye principalmente al **RA4**, mediante la planificación, configuración y documentación de firewalls, filtrado, NAT, DMZ, registros y resolución de incidencias perimetrales.
+Esta unitat contribuïx principalment al **RA4**, mitjançant la planificació, configuració i documentació de tallafocs, filtratge, NAT, DMZ, registres i resolució d'incidències perimetrals.
 
-También se relaciona con el **RA5**, por la selección y configuración de proxies directos e inversos, y con el **RA3**, cuando el perímetro integra VPN y acceso remoto seguro.
+També es relaciona amb el **RA5**, per la selecció i configuració de proxis directes i inversos, i amb el **RA3**, quan el perímetre integra VPN i accés remot segur.

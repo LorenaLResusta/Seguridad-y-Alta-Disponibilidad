@@ -1,71 +1,71 @@
 ---
-title: "7.  seguridad perimetral. Prácticas"
+title: "7. Seguretat perimetral. Pràctiques"
 weight: 2
 ---
 
-# UD7 - Prácticas: seguridad perimetral
+# UD7 - Pràctiques: seguretat perimetral
 
-> Configuración y validación de controles perimetrales mediante evidencias técnicas reproducibles.
+> Configuració i validació de controls perimetrals mitjançant evidències tècniques reproduïbles.
 
-| Datos de las prácticas | Información |
+| Dades de les pràctiques | Informació |
 | --- | --- |
-| Módulo | Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Modalidad | Semipresencial |
-| Duración estimada | 8 horas |
-| Entorno | Máquinas virtuales, redes y servicios de entorno de pruebas |
+| Mòdul | Seguretat i Alta Disponibilitat |
+| Curs | 2n ASIR |
+| Modalitat | Semipresencial |
+| Duració estimada | 8 hores |
+| Entorn | Màquines virtuals, xarxes i serveis d'entorn de proves |
 
-## 1. Objetivos
+## 1. Objectius
 
-- Diseñar un perímetro con WAN, LAN, DMZ y red de gestión.
-- Aplicar políticas de firewall con denegación por defecto y mínimo privilegio.
-- Configurar NAT de salida y publicar servicios de forma controlada.
-- Analizar registros de firewall y comprobar reglas permitidas y denegadas.
-- Configurar proxy directo, proxy inverso y controles de aplicación.
-- Valorar la disponibilidad y la recuperación de los servicios perimetrales.
+- Dissenyar un perímetre amb WAN, LAN, DMZ i xarxa de gestió.
+- Aplicar polítiques de firewall amb denegació per defecte i mínim privilegi.
+- Configurar NAT d'eixida i publicar serveis de manera controlada.
+- Analitzar registres de firewall i comprovar regles permeses i denegades.
+- Configurar proxy directe, proxy invers i controls d'aplicació.
+- Valorar la disponibilitat i la recuperació dels serveis perimetrals.
 
-## 2. Alcance y preparación
+## 2. Abast i preparació
 
-Todas las acciones se realizan exclusivamente sobre VM, direcciones, redes y servicios autorizados. No publiques servicios de administración en Internet, no modifiques firewalls de producción y no generes tráfico de denegación de servicio.
+Totes les accions es realitzen exclusivament sobre VM, adreces, xarxes i serveis autoritzats. No publiques serveis d'administració a Internet, no modifiques firewalls de producció i no generes trànsit de denegació de servei.
 
-Antes de cada práctica, crea una *snapshot* de las máquinas afectadas. Mantén una tabla de trabajo con interfaces, direcciones, reglas, cambios y resultado de cada prueba. Las evidencias consistirán en exportaciones de configuración sin secretos, salidas de comandos, extractos anonimizados de logs y tablas de resultados.
+Abans de cada pràctica, crea una *snapshot* de les màquines afectades. Mantín una taula de treball amb interfícies, adreces, regles, canvis i resultat de cada prova. Les evidències consistiran en exportacions de configuració sense secrets, eixides de comandaments, extractes anonimitzats de logs i taules de resultats.
 
-El escenario base usa un firewall pfSense u OPNsense, una VM cliente en LAN y una VM servidor en DMZ. Para las prácticas de proxy y alta disponibilidad se puede añadir una o más VM Linux propias.
+L'escenari base utilitza un firewall pfSense o OPNsense, una VM client en LAN i una VM servidor en DMZ. Per a les pràctiques de proxy i alta disponibilitat es pot afegir una o més VM Linux pròpies.
 
-## 3. Práctica 1 - Perímetro, zonas y política base
+## 3. Pràctica 1 - Perímetre, zones i política base
 
-### 3.1. Topología y direccionamiento
+### 3.1. Topologia i direccionament
 
-Configura un firewall con las siguientes zonas:
+Configura un firewall amb les següents zones:
 
-| Zona | Red de ejemplo | Función |
+| Zona | Xarxa d'exemple | Funció |
 | --- | --- | --- |
-| WAN | NAT o puente de entorno de pruebas | Conexión externa simulada. |
-| LAN | `192.168.20.0/24` | Equipos corporativos. |
-| DMZ | `192.168.30.0/24` | Servicios publicados. |
-| Gestión | `192.168.99.0/24` | Administración restringida. |
+| WAN | NAT o pont d'entorn de proves | Connexió externa simulada. |
+| LAN | `192.168.20.0/24` | Equips corporatius. |
+| DMZ | `192.168.30.0/24` | Serveis publicats. |
+| Gestió | `192.168.99.0/24` | Administració restringida. |
 
-Asigna al firewall la primera dirección útil de cada subred. Configura cliente y servidor con direcciones coherentes, puerta de enlace y DNS de entorno de pruebas. Describe qué interfaces o VLAN representan cada zona y qué activos deben residir en ella.
+Assigna al firewall la primera adreça útil de cada subxarxa. Configura client i servidor amb adreces coherents, passarel·la i DNS d'entorn de proves. Descriu quines interfícies o VLAN representen cada zona i quins actius han de residir-hi.
 
-### 3.2. Política de mínimo privilegio
+### 3.2. Política de mínim privilegi
 
-Crea una matriz de filtrado inicial:
+Crea una matriu de filtratge inicial:
 
-| Origen | Destino | Servicio | Acción | Motivo |
+| Origen | Destinació | Servei | Acció | Motiu |
 | --- | --- | --- | --- | --- |
-| LAN | WAN | DNS, HTTP y HTTPS | Permitir | Acceso corporativo necesario. |
-| LAN | DMZ | ICMP, HTTP, HTTPS y SSH | Permitir | Uso y administración controlados. |
-| DMZ | LAN | Cualquiera | Denegar | Contención de un servidor publicado. |
-| Gestión | Firewall y equipos | HTTPS y SSH | Permitir | Administración restringida. |
-| Cualquier zona | Cualquier destino no definido | Cualquiera | Denegar | Política por defecto. |
+| LAN | WAN | DNS, HTTP i HTTPS | Permetre | Accés corporatiu necessari. |
+| LAN | DMZ | ICMP, HTTP, HTTPS i SSH | Permetre | Ús i administració controlats. |
+| DMZ | LAN | Qualsevol | Denegar | Contenció d'un servidor publicat. |
+| Gestió | Firewall i equips | HTTPS i SSH | Permetre | Administració restringida. |
+| Qualsevol zona | Qualsevol destinació no definida | Qualsevol | Denegar | Política per defecte. |
 
-Aplica las reglas en el orden adecuado y comprueba los flujos desde las VM. Entrega la tabla final de reglas y una tabla de resultados con origen, destino, servicio, resultado esperado y resultado obtenido.
+Aplica les regles en l'orde adequat i comprova els fluxos des de les VM. Entrega la taula final de regles i una taula de resultats amb origen, destinació, servei, resultat esperat i resultat obtingut.
 
-## 4. Práctica 2 - NAT y publicación segura en DMZ
+## 4. Pràctica 2 - NAT i publicació segura en DMZ
 
-### 4.1. Servidor web de entorno de pruebas
+### 4.1. Servidor web d'entorn de proves
 
-En la VM de DMZ instala un servidor web de prueba y limita su firewall local a los servicios necesarios:
+En la VM de DMZ instal·la un servidor web de prova i limita el seu firewall local als serveis necessaris:
 
 ```bash
 # AlmaLinux, Rocky Linux o Fedora
@@ -77,76 +77,70 @@ echo 'Servicio web de la DMZ' | sudo tee /var/www/html/index.html
 sudo apt update && sudo apt install -y apache2
 sudo systemctl enable --now apache2
 echo 'Servicio web de la DMZ' | sudo tee /var/www/html/index.html
-```
 
-Comprueba el servicio desde LAN mediante `curl` y conserva la salida como evidencia. El servidor de la DMZ no debe incluir servicios o cuentas que no sean necesarios para la práctica.
 
-### 4.2. NAT y reglas asociadas
+Comprova el servei des de LAN mitjançant curl i conserva l'eixida com a evidència. El servidor de la DMZ no ha d'incloure serveis o comptes que no siguen necessaris per a la pràctica.
 
-Configura NAT de salida para LAN y, solo si está justificado, para DMZ. Publica HTTPS desde una IP o puerto WAN de entorno de pruebas hacia el servidor de DMZ. Como ejercicio adicional, usa un puerto externo no estándar para una administración SSH temporal, limitada a una IP de origen de entorno de pruebas y documenta por qué esta medida no sustituye una VPN.
+4.2. NAT i regles associades
 
-Verifica que el servicio web publicado responde desde una VM externa de pruebas y que otros puertos no publicados permanecen inaccesibles. Revisa los registros del firewall y redacta una tabla con la traducción configurada, regla asociada y resultado de la prueba.
+Configura NAT d'eixida per a LAN i, només si està justificat, per a DMZ. Publica HTTPS des d'una IP o port WAN d'entorn de proves cap al servidor de DMZ. Com a exercici addicional, utilitza un port extern no estàndard per a una administració SSH temporal, limitada a una IP d'origen d'entorn de proves i documenta per què esta mesura no substituïx una VPN.
 
-## 5. Práctica 3 - Firewall Linux y fortificación TCP/IP
+Verifica que el servei web publicat respon des d'una VM externa de proves i que altres ports no publicats continuen sent inaccessibles. Revisa els registres del firewall i redacta una taula amb la traducció configurada, la regla associada i el resultat de la prova.
 
-En una VM Linux de entorno de pruebas, identifica el sistema de filtrado activo:
+5. Pràctica 3 - Firewall Linux i fortificació TCP/IP
 
-```bash
+En una VM Linux d'entorn de proves, identifica el sistema de filtratge actiu:
+
 sudo firewall-cmd --list-all
 sudo nft list ruleset
-```
 
-Crea reglas que permitan el servicio web solo desde la subred LAN de la práctica. Valida desde una VM permitida y otra ubicada en una red no autorizada. Antes de modificar parámetros del núcleo, revisa su valor actual:
 
-```bash
+Crea regles que permeten el servei web només des de la subxarxa LAN de la pràctica. Valida des d'una VM permesa i una altra situada en una xarxa no autoritzada. Abans de modificar paràmetres del nucli, revisa el seu valor actual:
+
 sysctl net.ipv4.ip_forward
 sysctl net.ipv4.conf.all.accept_redirects
 sysctl net.ipv4.conf.all.send_redirects
 sysctl net.ipv4.conf.all.log_martians
-```
 
-En un host que no sea router, guarda esta configuración en `/etc/sysctl.d/99-perimetro.conf`:
 
-```text
+En un host que no siga router, guarda esta configuració en /etc/sysctl.d/99-perimetro.conf:
+
 net.ipv4.ip_forward = 0
 net.ipv4.conf.all.accept_redirects = 0
 net.ipv4.conf.all.send_redirects = 0
 net.ipv4.conf.all.log_martians = 1
-```
 
-Aplica los cambios con `sudo sysctl --system`, verifica los valores y explica por qué no se deben aplicar sin adaptación en un gateway, un firewall o un servidor VPN.
 
-## 6. Práctica 4 - Registro, alertas y respuesta inicial
+Aplica els canvis amb sudo sysctl --system, verifica els valors i explica per què no s'han d'aplicar sense adaptació en un gateway, un firewall o un servidor VPN.
 
-Activa el registro de las reglas de bloqueo relevantes en el firewall del entorno de pruebas. Genera de forma controlada un intento de conexión no permitido desde LAN a DMZ y otro desde DMZ a LAN. No uses técnicas de evasión ni herramientas contra destinos ajenos.
+6. Pràctica 4 - Registre, alertes i resposta inicial
 
-Para cada evento, recoge fecha y hora, interfaz, IP de origen y destino, protocolo, puerto, regla aplicada y acción. Sincroniza la hora de las VM y propone qué eventos deberían enviarse a un servidor de logs o SIEM: cambios de reglas, autenticaciones administrativas, bloqueos repetidos, fallos VPN y alertas IDS/IPS.
+Activa el registre de les regles de bloqueig rellevants en el firewall de l'entorn de proves. Genera de manera controlada un intent de connexió no permés des de LAN a DMZ i un altre des de DMZ a LAN. No utilitzes tècniques d'evasió ni eines contra destinacions alienes.
 
-Elabora un procedimiento breve de respuesta: validación de la alerta, contención, conservación de evidencias, comunicación, corrección y revisión posterior. Distingue una alerta que requiere investigación de un falso positivo documentado.
+Per a cada esdeveniment, arreplega data i hora, interfície, IP d'origen i destinació, protocol, port, regla aplicada i acció. Sincronitza l'hora de les VM i proposa quins esdeveniments s'haurien d'enviar a un servidor de logs o SIEM: canvis de regles, autenticacions administratives, bloquejos repetits, errors VPN i alertes IDS/IPS.
 
-## 7. Práctica 5 - Proxy directo con Squid
+Elabora un procediment breu de resposta: validació de l'alerta, contenció, conservació d'evidències, comunicació, correcció i revisió posterior. Distingix una alerta que requerix investigació d'un fals positiu documentat.
 
-Instala Squid en una VM AlmaLinux 9 y crea una copia de seguridad de la configuración:
+7. Pràctica 5 - Proxy directe amb Squid
 
-```bash
+Instal·la Squid en una VM AlmaLinux 9 i crea una còpia de seguretat de la configuració:
+
 sudo dnf install -y squid
 sudo cp /etc/squid/squid.conf /etc/squid/squid.conf.bak
-```
 
-Define una ACL para la subred LAN de prácticas. Ordena las directivas para aplicar primero bloqueos específicos, después autorización de clientes permitidos y finalmente `http_access deny all`. Valida la sintaxis y activa el servicio:
 
-```bash
+Definix una ACL per a la subxarxa LAN de pràctiques. Ordena les directives per a aplicar primer bloquejos específics, després autorització de clients permesos i finalment http_access deny all. Valida la sintaxi i activa el servici:
+
 sudo squid -k parse
 sudo systemctl enable --now squid
-```
 
-Configura una VM cliente para usar el proxy en `IP_SQUID:3128`. Prueba un destino de entorno de pruebas permitido y una entrada de bloqueo basada en un dominio de pruebas o ficticio. Analiza `/var/log/squid/access.log` e identifica cliente, destino, método HTTP y resultado. Explica las limitaciones de filtrar HTTPS sin una arquitectura de inspección TLS, certificados gestionados y requisitos de privacidad.
 
-## 8. Práctica 6 - Proxy inverso, TLS y WAF
+Configura una VM client perquè utilitze el proxy en IP_SQUID:3128. Prova una destinació d'entorn de proves permesa i una entrada de bloqueig basada en un domini de proves o fictici. Analitza /var/log/squid/access.log i identifica client, destinació, mètode HTTP i resultat. Explica les limitacions de filtrar HTTPS sense una arquitectura d'inspecció TLS, certificats gestionats i requisits de privacitat.
 
-En una VM Linux ejecuta dos servicios HTTP de prueba propios en los puertos `8081` y `8082`. Instala Nginx y configura un proxy inverso que publique ambos servicios bajo rutas diferentes:
+8. Pràctica 6 - Proxy invers, TLS i WAF
 
-```nginx
+En una VM Linux executa dos serveis HTTP de prova propis en els ports 8081 i 8082. Instal·la Nginx i configura un proxy invers que publique els dos serveis sota rutes diferents:
+
 server {
     listen 80;
     server_name _;
@@ -159,78 +153,74 @@ server {
         proxy_pass http://127.0.0.1:8082/;
     }
 }
-```
 
-Valida con `sudo nginx -t`, activa el servicio y prueba las rutas con `curl`. Demuestra que los puertos internos no se exponen a las otras VM. Añade TLS con un certificado de entorno de pruebas y comprueba el protocolo y certificado utilizado con `curl -vk https://HOST_DE_PRUEBAS/`.
 
-Investiga un WAF compatible con el entorno, como ModSecurity con el conjunto de reglas OWASP CRS. Explica dónde se situaría, qué tipos de solicitudes puede inspeccionar y por qué debe iniciarse en modo de detección antes de habilitar bloqueos. No generes cargas de ataque contra aplicaciones ajenas.
+Valida amb sudo nginx -t, activa el servici i prova les rutes amb curl. Demostra que els ports interns no s'exposen a les altres VM. Afig TLS amb un certificat d'entorn de proves i comprova el protocol i certificat utilitzat amb:
 
-## 9. Práctica 7 - Alta disponibilidad y recuperación del perímetro
+curl -vk https://HOST_DE_PRUEBAS/
 
-Diseña una propuesta para evitar que el firewall sea un SPOF. Incluye dos firewalls, enlaces redundantes, alimentación, red de gestión, DNS, sincronización de configuración o estado, dirección virtual y monitorización. Indica qué modelo usarías, activo-pasivo o activo-activo, y por qué.
 
-En un entorno de pruebas que disponga de recursos, configura un par de firewalls con una dirección virtual mediante CARP o una alternativa equivalente. Realiza una conmutación planificada y registra tiempo de interrupción, comportamiento de las conexiones existentes, registros generados y recuperación del nodo original. Si el entorno de pruebas no dispone de dos firewalls, presenta el diseño, la secuencia de conmutación y el plan de pruebas sin realizar el despliegue.
+Investiga un WAF compatible amb l'entorn, com ModSecurity amb el conjunt de regles OWASP CRS. Explica on se situaria, quins tipus de sol·licituds pot inspeccionar i per què ha d'iniciar-se en mode de detecció abans d'habilitar bloquejos. No generes càrregues d'atac contra aplicacions alienes.
 
-Realiza una copia de la configuración, guárdala cifrada en una ubicación de entorno de pruebas separada y describe el procedimiento para restaurarla en una VM de sustitución.
+9. Pràctica 7 - Alta disponibilitat i recuperació del perímetre
 
-## 10. Actividades
+Dissenya una proposta per a evitar que el firewall siga un SPOF. Inclou dos firewalls, enllaços redundants, alimentació, xarxa de gestió, DNS, sincronització de configuració o estat, adreça virtual i monitorització. Indica quin model utilitzaries, actiu-passiu o actiu-actiu, i per què.
 
-1. Compara firewall de paquetes, *stateful*, de aplicación y NGFW según visibilidad y limitaciones.
-2. Diseña la matriz de comunicaciones para Internet, LAN, DMZ, VPN y gestión.
-3. Explica por qué NAT no sustituye el filtrado de firewall.
-4. Propón controles para un servidor web en DMZ que necesita una base de datos interna.
-5. Analiza cinco eventos de firewall y prioriza cuáles investigarías.
-6. Compara proxy directo, proxy inverso y WAF según los activos que protegen.
-7. Identifica los SPOF de una arquitectura con firewall, enlace WAN, DNS y proxy únicos.
+En un entorn de proves que dispose de recursos, configura un parell de firewalls amb una adreça virtual mitjançant CARP o una alternativa equivalent. Realitza una commutació planificada i registra temps d'interrupció, comportament de les connexions existents, registres generats i recuperació del node original. Si l'entorn de proves no disposa de dos firewalls, presenta el disseny, la seqüència de commutació i el pla de proves sense realitzar el desplegament.
 
-## 11. Autoevaluación
+Realitza una còpia de la configuració, guarda-la xifrada en una ubicació d'entorn de proves separada i descriu el procediment per a restaurar-la en una VM de substitució.
 
-1. ¿Qué función cumple un firewall?
-2. ¿Qué diferencia existe entre filtrado de paquetes y *stateful*?
-3. ¿Qué significa denegar por defecto?
-4. ¿Qué es NAT y qué no protege por sí solo?
-5. ¿Qué es una DMZ?
-6. ¿Por qué DMZ-LAN debe ser especialmente restrictivo?
-7. ¿Qué información aporta un registro de firewall?
-8. ¿Qué diferencia existe entre proxy directo e inverso?
-9. ¿Qué limita el filtrado de HTTPS sin inspección TLS?
-10. ¿Qué función puede realizar un WAF?
-11. ¿Por qué un firewall puede ser un SPOF?
-12. ¿Qué debe incluir una prueba de conmutación?
+10. Activitats
+Compara firewall de paquets, stateful, d'aplicació i NGFW segons visibilitat i limitacions.
+Dissenya la matriu de comunicacions per a Internet, LAN, DMZ, VPN i gestió.
+Explica per què NAT no substituïx el filtratge de firewall.
+Proposa controls per a un servidor web en DMZ que necessita una base de dades interna.
+Analitza cinc esdeveniments de firewall i prioritza quins investigaries.
+Compara proxy directe, proxy invers i WAF segons els actius que protegixen.
+Identifica els SPOF d'una arquitectura amb firewall, enllaç WAN, DNS i proxy únics.
+11. Autoavaluació
+Quina funció complix un firewall?
+Quina diferència existix entre filtratge de paquets i stateful?
+Què significa denegar per defecte?
+Què és NAT i què no protegix per si mateix?
+Què és una DMZ?
+Per què DMZ-LAN ha de ser especialment restrictiu?
+Quina informació aporta un registre de firewall?
+Quina diferència existix entre proxy directe i invers?
+Què limita el filtratge d'HTTPS sense inspecció TLS?
+Quina funció pot realitzar un WAF?
+Per què un firewall pot ser un SPOF?
+Què ha d'incloure una prova de commutació?
+12. Tasca avaluable única - Disseny de seguretat perimetral
 
-## 12. Tarea evaluable única - Diseño de seguridad perimetral
+Entrega una memòria en PDF o Markdown per a una empresa de 40 usuaris amb una seu, serveis interns, una aplicació web pública, WLAN corporativa i de convidats, accés remot i necessitat de controlar la navegació.
 
-Entrega una memoria en PDF o Markdown para una empresa de 40 usuarios con una sede, servicios internos, una aplicación web pública, WLAN corporativa e invitados, acceso remoto y necesidad de controlar navegación.
+La memòria ha d'incloure:
 
-La memoria debe incluir:
+Diagrama lògic amb WAN, LAN, DMZ, VPN, gestió, firewall, proxy i controls de monitorització.
+Inventari d'actius, amenaces i punts únics de fallada.
+Taula de xarxes i matriu de regles de firewall amb denegació per defecte.
+Disseny de NAT, publicació del servici web i controls DMZ-LAN.
+Proposta de proxy directe, proxy invers i WAF quan siga procedent.
+Registres, alertes i procediment bàsic de resposta.
+Mesures de disponibilitat, actualitzacions, còpia de configuració i recuperació.
+Pla de proves amb resultats esperats, reversió i justificació tècnica.
+Criteri	PesArquitectura, actius i amenaces	15 %
+Firewall, regles i segmentació	25 %
+NAT, DMZ i publicació segura	15 %
+Registres, resposta i firewall Linux	10 %
+Proxies, TLS i WAF	15 %
+Disponibilitat i recuperació del perímetre	10 %
+Evidències tècniques i justificació	10 %
+Total	100 %
+13. Recursos
+Documentació de pfSense
+OPNsense
+Netfilter
+nftables
+Squid
+Nginx: reverse proxy
+OWASP ModSecurity Core Rule Set
+CARP en pfSense
 
-1. Diagrama lógico con WAN, LAN, DMZ, VPN, gestión, firewall, proxy y controles de monitorización.
-2. Inventario de activos, amenazas y puntos únicos de fallo.
-3. Tabla de redes y matriz de reglas de firewall con denegación por defecto.
-4. Diseño de NAT, publicación del servicio web y controles DMZ-LAN.
-5. Propuesta de proxy directo, proxy inverso y WAF cuando proceda.
-6. Registros, alertas y procedimiento básico de respuesta.
-7. Medidas de disponibilidad, actualizaciones, copia de configuración y recuperación.
-8. Plan de pruebas con resultados esperados, reversión y justificación técnica.
-
-| Criterio | Peso |
-| --- | ---: |
-| Arquitectura, activos y amenazas | 15 % |
-| Firewall, reglas y segmentación | 25 % |
-| NAT, DMZ y publicación segura | 15 % |
-| Registros, respuesta y firewall Linux | 10 % |
-| Proxies, TLS y WAF | 15 % |
-| Disponibilidad y recuperación del perímetro | 10 % |
-| Evidencias técnicas y justificación | 10 % |
-| **Total** | **100 %** |
-
-## 13. Recursos
-
-- [Documentación de pfSense](https://docs.netgate.com/pfsense/en/latest/)
-- [OPNsense](https://docs.opnsense.org/)
-- [Netfilter](https://www.netfilter.org/)
-- [nftables](https://wiki.nftables.org/)
-- [Squid](https://www.squid-cache.org/Doc/)
-- [Nginx: reverse proxy](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
-- [OWASP ModSecurity Core Rule Set](https://coreruleset.org/)
-- [CARP en pfSense](https://docs.netgate.com/pfsense/en/latest/highavailability/index.html)
+ ```
