@@ -2,6 +2,7 @@
 
 ## title: "2. Seguretat passiva."
 weight: 1
+---
 
 # UD2 - Seguretat passiva: emmagatzematge
 
