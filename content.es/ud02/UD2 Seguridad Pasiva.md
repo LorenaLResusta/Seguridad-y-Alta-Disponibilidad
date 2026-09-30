@@ -1,8 +1,4 @@
----
-title: "2. Seguridad pasiva."
-weight: 1
----
-
+º
 
 # UD2 - Seguridad pasiva: almacenamiento
 
