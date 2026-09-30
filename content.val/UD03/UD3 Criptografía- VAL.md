@@ -1,596 +1,1046 @@
 ---
-title: "3. Criptografía"
+
+## title: "2. Seguretat passiva."
 weight: 1
----
 
-# UD3 - Criptografía
+# UD2 - Seguretat passiva: emmagatzematge
 
-> Fundamentos, cifrado, integridad, firma digital y certificados para proteger la información y las comunicaciones.
+> Protecció de la informació, redundància, còpies de seguretat i recuperació.
 
-| Datos de la unidad | Información |
+| Dades de la unitat | Informació |
 | --- | --- |
-| Módulo | Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Modalidad | Semipresencial |
-| Duración | 14 horas |
+| Mòdul | Seguretat i Alta Disponibilitat |
+| Curs | 2n ASIR |
+| Modalitat | Semipresencial |
+| Durada | 12 hores |
 
-## Índice
+## Índex
 
-1. [Fundamentos y propiedades de seguridad](#1-fundamentos-y-propiedades-de-seguridad)
-2. [Criptografía simétrica](#2-criptografía-simétrica)
-3. [Criptografía asimétrica](#3-criptografía-asimétrica)
-4. [Funciones hash, firmas y protección de contraseñas](#4-funciones-hash-firmas-y-protección-de-contraseñas)
-5. [Certificados, PKI y TLS](#5-certificados-pki-y-tls)
-6. [Resumen](#6-resumen)
-7. [Recursos](#7-recursos)
-8. [Relación con los resultados de aprendizaje](#8-relación-con-los-resultados-de-aprendizaje)
+1. [Fonaments i seguretat física](https://www.google.com/search?q=%231-fonaments-i-seguretat-f%C3%ADsica)
+2. [Emmagatzematge i fallades](https://www.google.com/search?q=%232-emmagatzematge-i-fallades)
+3. [Redundància i RAID](https://www.google.com/search?q=%233-redund%C3%A0ncia-i-raid)
+4. [Còpies de seguretat i recuperació](https://www.google.com/search?q=%234-c%C3%B2pies-de-seguretat-i-recuperaci%C3%B3)
+5. [Esborrament segur i cicle de vida](https://www.google.com/search?q=%235-esborrament-segur-i-cicle-de-vida)
+6. [Resum](https://www.google.com/search?q=%236-resum)
+7. [Recursos](https://www.google.com/search?q=%237-recursos)
+8. [Relació amb els resultats d'aprenentatge](https://www.google.com/search?q=%238-relaci%C3%B3-amb-els-resultats-daprenentatge)
 
 ---
 
-## 1. Fundamentos y propiedades de seguridad
+## 1. Fonaments i seguretat física
 
-### 1.1. Introducción
+### 1.1. Introducció
 
-La criptografía constituye una de las principales herramientas para proteger la información y las comunicaciones de los sistemas informáticos.
+La seguretat d'un sistema informàtic no consisteix únicament a impedir que un atacant hi accedisca. També cal estar preparat per a situacions en què es produïsquen fallades.
 
-En esta unidad se estudiarán los fundamentos de la criptografía y los principales mecanismos utilizados actualmente para proteger la información: cifrado simétrico, cifrado asimétrico, funciones hash, firmas digitales y certificados digitales.
+Un servidor pot patir:
 
-Se prestará especial atención a la selección del mecanismo adecuado según el objetivo de seguridad y al uso responsable de claves, certificados y algoritmos normalizados.
+* L'avaria d'un disc.
+* Una fallada elèctrica.
+* Un error humà.
+* L'eliminació accidental de fitxers.
+* La corrupció d'un sistema de fitxers.
+* Un atac de ransomware.
+* Un incendi o una inundació.
+* El robatori de l'equipament.
+* Una actualització defectuosa.
+* Una fallada de software.
 
-El objetivo es que el alumnado no solo conozca los algoritmos criptográficos, sino que sea capaz de identificar qué mecanismo debe utilizar en cada situación y por qué.
+Per aquest motiu, les organitzacions necessiten mecanismes que permeten reduir l'impacte dels incidents i recuperar la informació i els serveis.
 
-### 1.2. Objetivos
+Aquests mecanismes formen part de la seguretat passiva.
 
-Al finalizar la unidad, el alumnado será capaz de:
+En aquesta unitat estudiarem especialment els sistemes d'emmagatzematge, la redundància mitjançant RAID, les còpies de seguretat, els sistemes NAS, les snapshots i les estratègies de recuperació.
 
-- Comprender los fundamentos de la criptografía.
-- Identificar las propiedades de seguridad que proporciona.
-- Diferenciar cifrado, hash y firma digital.
-- Comprender el funcionamiento de la criptografía simétrica.
-- Conocer los principales algoritmos simétricos.
-- Comprender el funcionamiento de la criptografía asimétrica.
-- Diferenciar clave pública y clave privada.
-- Conocer algoritmos como RSA y ECC.
-- Comprender el funcionamiento de las funciones hash.
-- Conocer los mecanismos utilizados para proteger contraseñas.
-- Comprender el concepto de firma digital.
-- Comprender el funcionamiento de los certificados digitales.
-- Conocer el concepto de PKI.
-- Comprender el papel de las autoridades certificadoras.
-- Comprender el funcionamiento básico de HTTPS/TLS.
-- Aplicar buenas prácticas en la gestión de claves.
-### 1.3. ¿Qué es la criptografía?
+### 1.2. Objectius
 
-La criptografía engloba técnicas matemáticas utilizadas para proteger información.
+En finalitzar aquesta unitat, l'alumnat serà capaç de:
 
-Permite implementar mecanismos relacionados con:
+* Diferenciar seguretat activa i seguretat passiva.
+* Identificar els principals sistemes d'emmagatzematge.
+* Diferenciar HDD, SSD i NVMe.
+* Identificar els principals tipus de fallades d'emmagatzematge.
+* Comprendre el concepte de redundància.
+* Explicar el funcionament de RAID.
+* Diferenciar RAID 0, RAID 1, RAID 5, RAID 6 i RAID 10.
+* Seleccionar un nivell RAID en funció de les necessitats.
+* Comprendre les limitacions de RAID.
+* Explicar què és una còpia de seguretat.
+* Diferenciar còpies completes, incrementals i diferencials.
+* Dissenyar una estratègia bàsica de còpies.
+* Aplicar la regla 3-2-1.
+* Comprendre els conceptes RPO i RTO.
+* Conéixer sistemes NAS i snapshots.
+* Realitzar i comprovar còpies de seguretat i recuperació.
+* Dissenyar una política d'emmagatzematge i backup.
 
-Confidencialidad.
-Integridad.
-Autenticidad.
-No repudio.
+### 1.3. Seguretat passiva
 
-En un sistema criptográfico podemos encontrar:
+La seguretat passiva engloba les mesures destinades principalment a reduir les conseqüències d'un incident i facilitar la recuperació.
 
-Información original: datos que queremos proteger.
-Algoritmo criptográfico: procedimiento utilizado.
-Clave: información que controla el proceso criptográfico.
-Texto cifrado: resultado del cifrado.
-Descifrado: proceso para recuperar la información original.
+Per exemple, imaginem un servidor que disposa de dos discs.
 
-Ejemplo:
+Si un d'ells falla, una configuració redundant pot permetre que el sistema continue funcionant.
 
-              CLAVE
-                │
-                ▼
-Texto claro → CIFRADO → Texto cifrado
-                            │
-                            ▼
-                       DESCIFRADO
-                            │
-                            ▼
-                       Texto claro
-### 1.4. Propiedades de seguridad
+Si a més es disposa de còpies de seguretat, serà possible recuperar la informació fins i tot davant de problemes més greus.
 
-#### 1.4.1. Confidencialidad
+Podem representar el concepte de la forma següent:
 
-La información solo debe poder ser consultada por usuarios autorizados.
-
-Ejemplo:
-
-Una empresa almacena las nóminas de sus trabajadores en un servidor. Si los archivos están cifrados, obtener físicamente una copia de ellos no debería permitir leer su contenido sin disponer de la clave adecuada.
-
-#### 1.4.2. Integridad
-
-Permite detectar modificaciones realizadas sobre la información.
-
-Por ejemplo, podemos calcular un hash de un fichero:
-
-Fichero
-   │
-   ▼
- SHA-256
-   │
-   ▼
-Hash
-
-Si el fichero cambia, el hash resultante también debería cambiar.
-
-#### 1.4.3. Autenticidad
-
-Permite comprobar la identidad del origen de una información.
-
-Por ejemplo, una firma digital permite comprobar que un documento ha sido firmado mediante una determinada clave privada.
-
-#### 1.4.4. No repudio
-
-Permite disponer de mecanismos que relacionen una determinada acción con su autor.
-
-Las firmas digitales pueden contribuir al no repudio, aunque su validez también depende del contexto legal y de los procedimientos utilizados.
-
-### 1.5. Principio de Kerckhoffs
-
-La seguridad de un sistema criptográfico no debe depender de mantener secreto el algoritmo, sino de proteger correctamente la clave. Este principio permite que algoritmos como AES, RSA o las funciones SHA sean públicos, revisados por especialistas y utilizados por muchas organizaciones. Ocultar el funcionamiento de un algoritmo no es una medida suficiente: si se descubre, el sistema no debería quedar expuesto.
-
-En la práctica, una organización debe seleccionar algoritmos normalizados, aplicar implementaciones mantenidas y centrar sus controles en la generación, almacenamiento, rotación y revocación de las claves. Por ejemplo, usar AES correctamente con una clave protegida resulta preferible a utilizar un algoritmo propio cuyo funcionamiento nadie ha revisado.
-
-### 1.6. Aplicaciones de la criptografía
-
-La criptografía se aplica a datos en tránsito y en reposo. HTTPS protege la comunicación entre un navegador y un servidor; el cifrado de disco reduce el impacto del robo de un portátil; PGP y S/MIME pueden proteger el correo electrónico; y las firmas digitales permiten comprobar la integridad y autoría de documentos o programas. Tecnologías como blockchain también utilizan hashes y firmas para verificar transacciones, aunque una cadena de bloques no sustituye los controles de seguridad convencionales.
-
-La elección depende del objetivo. Para ocultar una copia de seguridad se utiliza cifrado; para comprobar que una descarga no se ha alterado se utiliza un hash; para demostrar el origen de un documento se emplea una firma digital; y para confiar en la identidad de un servidor web se utiliza un certificado dentro de una PKI.
-
-En el correo electrónico, PGP suele basarse en una red de confianza entre usuarios, mientras que S/MIME utiliza habitualmente certificados emitidos por una autoridad de certificación. En almacenamiento, herramientas como BitLocker, FileVault o LUKS cifran los datos en reposo; el cifrado de un proveedor en la nube no elimina la necesidad de controlar accesos, copias, claves y configuración. En blockchain, las claves privadas autorizan operaciones y los hashes enlazan los bloques, pero la pérdida de una clave privada puede impedir el acceso a los activos asociados.
-
-## 2. Criptografía simétrica
-
-### 2.1. Cifrado
-
-El cifrado transforma información legible en información que no debería poder interpretarse sin disponer de la clave correspondiente.
-
-INFORMACIÓN ORIGINAL
-        │
-        │ Cifrado
-        ▼
-INFORMACIÓN CIFRADA
-        │
-        │ Descifrado
-        ▼
-INFORMACIÓN ORIGINAL
-
-Un sistema criptográfico moderno debe utilizar algoritmos y claves suficientemente robustos.
-
-La seguridad no debería depender de que el algoritmo sea secreto.
-
-### 2.2. Criptografía simétrica
-
-La criptografía simétrica utiliza una misma clave secreta para cifrar y descifrar.
-
-                 CLAVE
+```
+                SEGURETAT
                    │
-                   ▼
-Mensaje ───────► CIFRADO
-                   │
-                   ▼
-              Mensaje cifrado
-                   │
-                   ▼
-               DESCIFRADO
-                   │
-                   ▼
-                Mensaje
+          ┌────────┴────────┐
+          │                 │
+        Activa            Passiva
+          │                 │
+   Prevenir / detectar    Recuperar
+   / blocar               / continuar
 
-El principal problema es cómo conseguir que emisor y receptor compartan la clave de forma segura.
+```
 
-### 2.3. Ventajas e inconvenientes de la criptografía simétrica
-Ventajas
-Es rápida.
-Consume pocos recursos.
-Es adecuada para grandes cantidades de información.
-Se utiliza habitualmente para cifrar datos y comunicaciones.
-Inconveniente
+**Exemples de seguretat activa:**
 
-El intercambio inicial de la clave puede ser un problema.
+* Firewall.
+* Antivirus.
+* IDS/IPS.
+* Control d'accés.
+* Monitoratge i sistemes de detecció.
 
-Si un atacante consigue la clave secreta, podrá utilizarla para descifrar la información protegida con ella.
+**Exemples de seguretat passiva:**
 
-### 2.4. Algoritmos simétricos
+* RAID i sistemes redundants.
+* Còpies de seguretat i emmagatzematge extern.
+* SAI i replicació.
+* Plans de recuperació.
 
-Algunos algoritmos conocidos son:
+### 1.4. Seguretat física i CPD
 
-AES.
-ChaCha20.
-3DES.
-DES.
+Un centre de processament de dades (CPD) concentra servidors, xarxes i emmagatzematge crítics. Centralitzar els equips facilita el control d'accessos, la climatització, el manteniment i les comunicacions, però també exigeix planificar els riscos físics i ambientals. La ubicació ha d'evitar zones amb elevat risc d'inundació, incendi, vibracions o accessos no controlats, i la sala ha de comptar amb procediments documentats per a recuperar els serveis davant d'una incidència.
 
-Actualmente:
+Les mesures habituals inclouen control d'accés mitjançant credencials o biometria, videovigilància, detecció i extinció d'incendis, fals sòl per a cablejat i ventilació, i control de temperatura i humitat. En un CPD amb racks, els passadissos freds aporten aire a la part frontal dels equips i els passadissos calents arrepleguen l'aire d'eixida; aquesta separació redueix el sobreescalfament i millora l'eficiència energètica.
 
-AES es un estándar ampliamente utilizado.
-ChaCha20 también se utiliza en sistemas modernos.
-DES se considera obsoleto.
-3DES está obsoleto para nuevos diseños.
-### 2.5. AES
+La continuïtat també requereix alimentació i comunicacions redundants. Un SAI proporciona temps per a una apagada meguidament controlada durant un tall breu; un generador pot cobrir interrupcions meguidament prolongades. Per a serveis crítics, es poden contractar enllaços d'Internet amb proveïdors i rutes diferents. Un centre de suport, ubicat a suficient distància del CPD principal, permet restaurar serveis si una catàstrofe afecta la ubicació primària. Per exemple, una empresa pot replicar la base de dades i conservar còpies verificades en un segon centre, provant periòdicament el procediment de commutació.
 
-AES (Advanced Encryption Standard) es uno de los algoritmos de cifrado simétrico más utilizados.
+## 2. Emmagatzematge i fallades
 
-Admite claves de:
+### 2.1. Emmagatzematge de la informació
 
-128 bits.
-192 bits.
-256 bits.
+La informació d'una organització es pot emmagatzemar en diferents dispositius i sistemes.
 
-Por ejemplo:
+Entre els més habituals trobem:
 
-                  AES
-                   │
-       ┌───────────┼───────────┐
-       ▼           ▼           ▼
-    AES-128     AES-192     AES-256
+HDD.
+SSD.
+NVMe.
+NAS.
+SAN.
+Cabines d'emmagatzematge.
+Sistemes distribuïts.
 
-AES se utiliza en numerosos sistemas de almacenamiento, comunicaciones y aplicaciones.
+La tria depén de factors com ara:
 
-### 2.6. Modos de operación y cifrado autenticado
+Capacitat.
+Rendiment.
+Cost.
+Fiabilitat.
+Disponibilitat.
+Redundància.
+Tipus de informació.
 
-AES es un cifrador de bloques y necesita un modo de operación para proteger mensajes de tamaño variable. El modo **ECB** no debe utilizarse para información sensible porque bloques iguales producen resultados iguales y pueden revelar patrones. Los modos modernos de cifrado autenticado, como **AES-GCM** o **ChaCha20-Poly1305**, protegen la confidencialidad y además detectan cambios no autorizados mediante una etiqueta de autenticación.
+També importa la forma d'accés: un sistema de còpies històriques pot utilitzar cinta, que ofereix gran capacitat a baix cost però accés seqüencial; una base de dades necessita normalment accés aleatori i baixa latència, per la qual cosa pot requerir SSD o NVMe. Per a compartir documents entre diversos equips sol ser suficient un NAS amb accés a nivell de fitxer, mentre que un entorn de virtualització pot necessitar emmagatzematge de blocs mitjançant SAN o una plataforma definida per software.
 
-El vector de inicialización o *nonce* no suele ser secreto, pero debe cumplir las condiciones del modo elegido; en especial, no debe reutilizarse con la misma clave cuando el algoritmo lo prohíbe. Una elección segura no consiste solo en escoger AES-256: también requiere un modo adecuado, una biblioteca actualizada y una gestión correcta de claves y *nonces*.
+Per exemple, una xicoteta empresa pot combinar SSD per a les màquines virtuals que executen aplicacions, HDD en un NAS per a documents compartits i emmagatzematge extern per a una còpia de seguretat. No existeix una tecnologia universalment millor: la solució adequada respon als requisits de rendiment, disponibilitat, pressupost i protecció de les dades.
 
-## 3. Criptografía asimétrica
+### 2.2. Discs HDD
 
-### 3.1. Criptografía asimétrica
+Els discs HDD utilitzen plats magnètics i capçals mecànics per a emmagatzemar i recuperar informació.
 
-La criptografía asimétrica utiliza un par de claves:
+Una representació simplificada seria:
 
-Clave pública.
-Clave privada.
+```
+   HDD
 
-Las dos claves están relacionadas matemáticamente.
+```
 
-        PAR DE CLAVES
+┌───────────────┐
+│   Plat        │
+│      ↓        │
+│  ──────────   │
+│      ↑        │
+│   Capçal      │
+└───────────────┘
 
-   ┌─────────────────────┐
-   │                     │
-   ▼                     ▼
-Clave pública       Clave privada
-   │                     │
-Puede distribuirse    Debe protegerse
+Avantatges
+Gran capacitat.
+Preu reduït per GB.
+Adequats per a grans volums de informació.
+Interessants per a emmagatzematge de backup.
 
-La clave privada nunca debería compartirse.
+Inconvenients
+Components mecànics.
+Major latència.
+Menor rendiment que els SSD en determinats escenaris.
+Sensibilitat a colps i vibracions.
 
-### 3.2. Clave pública
+### 2.3. Discs SSD
 
-La clave pública puede distribuirse a otras personas o sistemas.
+Els SSD emmagatzemen la informació en memòria flash.
 
-Puede utilizarse, según el algoritmo y el protocolo, para:
+No utilitzen parts mecàniques mòbils.
 
-Cifrar información destinada al propietario.
-Verificar firmas.
-Participar en mecanismos de establecimiento de claves.
-### 3.3. Clave privada
+Avantatges
+Alta velocitat.
+Baixa latència.
+Menys soroll.
+Major resistència davant de vibracions.
+Bon rendiment per a sistemes operatius i aplicacions.
 
-La clave privada debe mantenerse protegida.
+Inconvenients
+Preu per GB generalment superior.
+Desgast de les cel·les.
+Recuperació de dades potencialment complexa davant de determinades fallades.
 
-Puede utilizarse para:
+Els SSD són habituals en:
 
-Descifrar información.
-Generar firmas digitales.
-Autenticarse mediante certificados.
-Participar en determinados protocolos criptográficos.
+Servidors.
+Ordinadors.
+Màquines virtuals.
+Bases de dades.
+Sistemes d'alt rendiment.
 
-Una clave privada comprometida puede poner en riesgo todo el sistema que dependa de ella.
+### 2.4. NVMe
 
-### 3.4. RSA
+NVMe és un protocol dissenyat específicament per a dispositius d'emmagatzematge no volàtil d'alta velocitat.
 
-RSA es uno de los algoritmos asimétricos más conocidos.
+Els dispositius NVMe solen utilitzar PCI Express.
 
-Puede utilizarse para:
+Comparats amb dispositius SATA tradicionals, poden proporcionar:
 
-Cifrado.
-Firmas digitales.
-Determinados mecanismos de intercambio o establecimiento de claves.
+Major amplada de banda.
+Menor latència.
+Major nombre d'operacions d'entrada/eixida.
 
-Una de sus características es que trabaja con un par de claves:
+Són especialment interessants per a:
 
-Clave pública
-      │
-      ▼
-   RSA
-      ▲
-      │
-Clave privada
-### 3.5. Criptografía de curva elíptica
+Bases de dades.
+Virtualització.
+Servidors.
+Aplicacions amb moltes operacions de disc.
 
-La criptografía basada en curvas elípticas, conocida como ECC, permite implementar sistemas criptográficos de clave pública utilizando tamaños de clave menores que RSA para niveles de seguridad comparables en determinados escenarios.
+### 2.5. Fallades d'emmagatzematge
 
-Algunos sistemas relacionados son:
+Els problemes d'emmagatzematge poden tindre diferents orígens.
 
-ECDSA.
-ECDH.
-EdDSA.
+#### 2.5.1. Fallada física
 
-Se utilizan ampliamente en tecnologías modernas.
+Exemple:
 
-### 3.6. Simétrica frente a asimétrica
-Característica	Simétrica	Asimétrica
-Claves	Una clave secreta	Pública + privada
-Velocidad	Alta	Menor
-Grandes cantidades de datos	Muy adecuada	Menos adecuada
-Gestión de claves	Más complicada	Facilita el intercambio
-Firmas digitales	No es su objetivo principal	Sí
-Ejemplos	AES, ChaCha20	RSA, ECC
+El disc deixa de funcionar.
 
-En sistemas reales es habitual utilizar las dos tecnologías conjuntamente.
+Es pot produir per:
 
-Por ejemplo:
+Desgast.
+Temperatura.
+Fallada electrònica.
+Fallada mecànica.
+Danys físics.
 
-Criptografía asimétrica
-          │
-          ▼
-Intercambio/protección de clave
-          │
-          ▼
-Criptografía simétrica
-          │
-          ▼
-Transmisión de datos
+#### 2.5.2. Fallada lògica
 
-Los protocolos actuales combinan ambos enfoques: la criptografía de clave pública autentica a las partes y permite establecer secretos de sesión; después, un algoritmo simétrico cifra la mayor parte de los datos por su mejor rendimiento. TLS es un ejemplo habitual de esta combinación.
+El dispositiu continua funcionant, però la informació o el sistema de fitxers presenta problemes.
 
-### 3.7. Diffie-Hellman y gestión de claves
+Exemples:
 
-Diffie-Hellman permite que dos partes establezcan un secreto compartido a través de una red no confiable sin enviar ese secreto directamente. Sus variantes modernas, como ECDH, se utilizan para crear claves de sesión. Por sí solo no autentica a las partes, por lo que debe combinarse con certificados, firmas u otro mecanismo de autenticación para evitar ataques de intermediario.
+Corrupció del sistema de fitxers.
+Partició danyada.
+Eliminació accidental.
+Metadades corruptes.
 
-Las claves privadas deben almacenarse con permisos restrictivos, cifrado y copias de seguridad protegidas. Una organización debe documentar quién puede utilizarlas, separarlas por entorno, rotarlas cuando corresponda y revocarlas ante una sospecha de exposición. En sistemas de riesgo elevado pueden emplearse HSM, tarjetas inteligentes o tokens, que realizan la operación criptográfica sin exponer la clave privada.
-## 4. Funciones hash, firmas y protección de contraseñas
+#### 2.5.3. Error humà
 
-### 4.1. Funciones hash
+Un administrador pot executar accidentalment:
 
-Una función hash genera un resumen de los datos de entrada.
+rm -rf
 
-Fichero
-   │
-   ▼
-Función HASH
-   │
-   ▼
-Resumen
+sobre el directori equivocat.
 
-El resultado tiene una longitud determinada por el algoritmo.
+També es pot produir:
 
-Algunos algoritmos conocidos:
+Sobreescriptura de fitxers.
+Eliminació de bases de dades.
+Configuració incorrecta.
+Formatat accidental.
 
-SHA-256.
-SHA-384.
-SHA-512.
-### 4.2. Características de los hashes
+#### 2.5.4. Malware
 
-Una función hash criptográfica debe dificultar:
+Un ransomware pot xifrar els fitxers disponibles.
 
-Obtener los datos originales a partir del hash.
-Encontrar dos entradas con el mismo hash.
-Manipular los datos sin que el cambio sea detectable.
+Per exemple:
 
-Una característica importante es el efecto avalancha.
+document1.docx
+↓
+document1.docx.xifrat
 
-Por ejemplo:
+Si el sistema de backup està connectat i accessible des del mateix entorn, també podria veure's afectat.
 
-"Hola"
+#### 2.5.5. Catàstrofes físiques
 
-SHA-256
-   ↓
-Hash A
+Alguns riscos són:
 
+Incendi.
+Inundació.
+Robatori.
+Sobretensió.
+Fallada de refrigeració.
 
-"hola"
+Per això és recomanable disposar de còpies en una ubicació diferent.
 
-SHA-256
-   ↓
-Hash B
+### 2.6. Fiabilitat i monitoratge de l'emmagatzematge
 
-Un cambio aparentemente pequeño en los datos produce un resultado completamente diferente.
+En seleccionar emmagatzematge s'han de valorar capacitat, rendiment, cost, consum, durabilitat i fiabilitat. El **MTBF** expressa una estimació estadística del temps mitjà entre fallades d'una població d'unitats, mentre que l'**AFR** representa la taxa anualitzada de fallades. Cap mètrica no prediu el moment exacte en què fallarà un disc concret; per això, les decisions s'han de complementar amb redundància, còpies de seguretat i supervisió.
 
-### 4.3. Hash y contraseñas
+La tecnologia SMART permet consultar indicadors de salut de HDD i SSD, com ara sectors reassignats, errors de lectura, temperatura i, en SSD, desgast de les cel·les. Una alerta SMART ha de provocar la revisió i substitució planificada de la unitat, però la seua absència no garanteix que no vaja a fallar. Per exemple, si un servidor detecta sectors reassignats creixents en un disc d'un RAID 5, l'administrador l'ha de substituir abans que coincidisca amb una altra fallada durant la reconstrucció.
 
-Los hashes se han utilizado tradicionalmente para almacenar contraseñas, pero no es suficiente aplicar directamente SHA-256 a una contraseña.
+| Necessitat | Opció habitual | Exemple |
+| --- | --- | --- |
+| Gran capacitat a baix cost | HDD o cinta per a arxivament. | Còpies històriques mensuals. |
+| Baixa latència i moltes operacions d'E/E | SSD NVMe. | Base de dades o màquines virtuals. |
+| Compartició de fitxers | NAS amb SMB/NFS. | Documentació d'un departament. |
+| Accés per blocs d'alt rendiment | SAN o emmagatzematge definit per software. | Clúster de virtualització. |
 
-Para almacenar contraseñas deben utilizarse funciones específicas de derivación de claves, como:
+## 3. Redundància i RAID
 
-Argon2.
-bcrypt.
-scrypt.
-PBKDF2.
+### 3.1. Redundància
 
-Estas funciones permiten hacer más costoso el proceso de probar muchas contraseñas.
+La redundància consisteix a disposar d'elements addicionals que permeten mantindre el servei quan un d'ells falla.
 
-### 4.4. Salt
+Exemple:
 
-El salt es un valor adicional, normalmente aleatorio, que se combina con la contraseña antes de aplicar la función de derivación.
-
-Contraseña + Salt
-       │
-       ▼
-Función de derivación
-       │
-       ▼
-Resultado almacenado
-
-El uso de un salt diferente para cada contraseña dificulta determinados ataques basados en valores precalculados.
-
-El *salt* debe generarse de forma aleatoria y almacenarse junto al resultado derivado; no es una clave secreta. En sistemas con requisitos elevados puede añadirse un *pepper*, un valor secreto gestionado separadamente por la aplicación. Para contraseñas no se deben diseñar algoritmos propios ni usar cifrado reversible: se usan funciones como Argon2id, bcrypt, scrypt o PBKDF2 con parámetros revisados según el entorno.
-
-### 4.5. Firma digital
-
-Una firma digital permite comprobar principalmente:
-
-Integridad.
-Autenticidad.
-
-Proceso simplificado:
-
-Documento
-    │
-    ▼
-   HASH
-    │
-    ▼
-Firma con clave privada
-    │
-    ▼
-Firma digital
-
-El receptor utiliza la información pública correspondiente para verificar la firma.
-
-### 4.6. Cifrado frente a firma digital
-
-No debemos confundir ambos conceptos.
-
-Cifrado	Firma
-Protege confidencialidad	Protege integridad/autenticidad
-Oculta información	Permite verificar el origen
-Utiliza mecanismos de cifrado	Utiliza mecanismos de firma
-Busca impedir la lectura	Busca detectar modificaciones y verificar el firmante
-
-Una información puede estar:
-
-Cifrada.
-Firmada.
-Cifrada y firmada.
-Ni cifrada ni firmada.
-## 5. Certificados, PKI y TLS
-
-### 5.1. Certificados digitales
-
-Un certificado digital permite asociar una identidad con una clave pública.
-
-Un certificado puede contener información como:
-
-Identidad del titular.
-Clave pública.
-Emisor.
-Número de serie.
-Periodo de validez.
-Algoritmos utilizados.
-Firma de la autoridad certificadora.
-
-Ejemplo:
-
-             CERTIFICADO
-                  │
-        ┌─────────┼─────────┐
-        ▼         ▼         ▼
-    Identidad  Clave      Firma
-                pública     CA
-### 5.2. Autoridad de certificación
-
-Una CA (Certificate Authority) es una entidad que emite y firma certificados digitales.
-
-Su función principal es establecer una relación de confianza entre:
-
-Identidad ←──── Certificado ────→ Clave pública
-
-Los sistemas operativos y navegadores incorporan autoridades certificadoras de confianza.
-
-### 5.3. PKI
-
-Una PKI (Public Key Infrastructure) es una infraestructura destinada a gestionar claves públicas y certificados digitales.
-
-Puede incluir:
-
-Autoridades certificadoras.
-Autoridades de registro.
-Autoridades de validación.
-Certificados.
-Claves.
-Políticas de certificación.
-Mecanismos de revocación.
-Sistemas de comprobación del estado de certificados.
-
-La autoridad de registro comprueba la identidad del solicitante antes de la emisión. La autoridad de validación informa sobre el estado de un certificado, por ejemplo mediante OCSP. Los repositorios publican certificados y listas de revocación para que los clientes puedan construir y comprobar la cadena de confianza.
-### 5.4. Cadena de confianza
-
-Los certificados pueden formar una cadena de confianza.
-
-Ejemplo:
-
-CA raíz
-   │
-   ▼
-CA intermedia
-   │
-   ▼
-Certificado servidor
-   │
-   ▼
-www.empresa.es
-
-El cliente puede comprobar la cadena hasta llegar a una autoridad que considera de confianza.
-
-### 5.5. Revocación de certificados
-
-Un certificado puede dejar de ser válido antes de su fecha de caducidad.
-
-Por ejemplo:
-
-Se ha comprometido la clave privada.
-Se ha producido un error en la emisión.
-La identidad asociada ha cambiado.
-Ya no se desea utilizar el certificado.
-
-Existen mecanismos como:
-
-CRL.
-OCSP.
-### 5.6. TLS y HTTPS
-
-HTTPS utiliza TLS para proteger las comunicaciones entre clientes y servidores.
-
-Simplificando el proceso:
-
-Cliente
-   │
-   │ conexión TLS
-   ▼
 Servidor
-   │
-   ├── Certificado
-   ├── Autenticación
-   └── Negociación criptográfica
-             │
-             ▼
-       Comunicación segura
+├── Disc 1
+└── Disc 2
 
-TLS utiliza diferentes mecanismos criptográficos para conseguir una comunicación segura.
+Si tots dos contenen informació redundant i un falla, el sistema pot continuar funcionant.
 
-Durante la conexión, el cliente valida que el certificado corresponde al nombre del servicio, que está dentro de su periodo de validez y que encadena con una autoridad de confianza. Un certificado válido no garantiza por sí solo que una web sea legítima o segura: también importa la configuración del servidor, las actualizaciones y la protección de su clave privada.
+La redundància es pot aplicar a:
 
-### 5.7. Tipos y formatos de certificados
+Discs.
+Fonts d'alimentació.
+Servidors.
+Xarxes.
+Connexions a Internet.
+Sistemes d'emmagatzematge.
 
-Los certificados pueden clasificarse por su uso: de servidor para HTTPS, personales para identificación o firma, de firma de código y de autoridad de certificación. Según la validación, los certificados de dominio (DV) comprueban el control de un dominio, los de organización (OV) incluyen comprobaciones sobre la entidad y los de validación extendida (EV) aplican un proceso adicional. El nivel de validación no sustituye la revisión del servicio ni convierte una web en segura por sí mismo.
+### 3.2. RAID
 
-El formato más habitual es X.509. Los certificados y claves se encuentran con frecuencia en PEM, una codificación de texto Base64 delimitada por encabezados como `BEGIN CERTIFICATE`. DER es una codificación binaria de X.509. PKCS#12, también llamado PFX, puede contener certificado y clave privada protegidos con contraseña; por ello requiere una custodia especialmente estricta. PKCS#7 permite distribuir certificados y cadenas sin incluir claves privadas.
+RAID — Redundant Array of Independent Disks
 
-### 5.8. Criptografía cuántica y post-cuántica
+RAID permet combinar diversos discs per a aconseguir diferents objectius:
 
-La distribución cuántica de claves utiliza propiedades físicas de sistemas cuánticos para detectar la interceptación de una clave. En protocolos como BB84, las partes intercambian estados cuánticos y comparan información por un canal clásico; medir esos estados altera el resultado y permite detectar una posible escucha. No cifra por sí misma todos los datos ni sustituye la criptografía convencional: proporciona un mecanismo especializado de distribución de claves.
+Major rendiment.
+Redundància.
+Tolerància a fallades.
+Major capacitat útil.
 
-Los ordenadores cuánticos a gran escala podrían afectar a RSA, Diffie-Hellman y ECC mediante algoritmos como Shor. En cambio, el cifrado simétrico y las funciones hash no se rompen del mismo modo, aunque conviene utilizar tamaños de clave apropiados. Esta amenaza es relevante para información que necesita confidencialidad durante muchos años, porque un adversario puede guardar hoy comunicaciones cifradas para intentar descifrarlas en el futuro.
+Tanmateix, RAID no és un sistema de backup.
 
-La criptografía post-cuántica busca algoritmos resistentes a ataques clásicos y cuánticos. NIST ha publicado estándares iniciales como ML-KEM para establecimiento de claves, ML-DSA para firmas y SLH-DSA para firmas basadas en hash. La migración debe planificarse con agilidad criptográfica: inventariar dónde se usan algoritmos y certificados, mantener componentes actualizados y poder sustituirlos sin rediseñar todo el servicio. No es necesario crear algoritmos propios ni abandonar TLS actual; el objetivo es prepararse para adoptar soluciones estandarizadas cuando los proveedores las incorporen.
+Aquesta diferència ha de quedar clara:
 
-## 6. Resumen
+RAID
+↓
+Protecció principalment davant de fallades de discs
 
-La criptografía protege información y comunicaciones mediante mecanismos con finalidades distintas: el cifrado aporta confidencialidad, los hashes permiten comprobar integridad, las firmas prueban integridad y autenticidad, y los certificados vinculan una identidad con una clave pública.
+BACKUP
+↓
+Protecció davant de pèrdua, modificació o destrucció de informació
 
-Los sistemas actuales combinan criptografía simétrica para proteger datos de forma eficiente y criptografía asimétrica para autenticarse o establecer claves. La seguridad depende también de usar algoritmos normalizados, evitar mecanismos obsoletos y custodiar, rotar y revocar correctamente las claves.
+### 3.3. RAID 0
+
+RAID 0 distribueix les dades entre diversos discs mitjançant una tècnica denominada striping.
+
+Exemple:
+
+```
+   RAID 0
+
+```
+
+Disc 1       Disc 2
+
+---
+
+Bloc A        Bloc B
+Bloc C        Bloc D
+Bloc E        Bloc F
+
+Avantatge
+
+Pot augmentar considerablement el rendiment.
+
+Inconvenient
+
+No existeix redundància.
+
+Si falla un dels discs:
+
+Disc 1 → OK
+Disc 2 → FALLA
+
+es pot perdre el conjunt complet de la informació.
+
+Ús
+
+Es pot utilitzar quan el rendiment és prioritari i les dades es poden reconstruir des d'una altra font.
+
+### 3.4. RAID 1
+
+RAID 1 utilitza mirroring, és a dir, manté una còpia de les dades en un altre disc.
+
+Disc 1       Disc 2
+
+Dades A       Dades A
+Dades B       Dades B
+Dades C       Dades C
+
+Si un disc falla:
+
+Disc 1 → FALLA
+Disc 2 → OK
+
+la informació continua disponible.
+
+Avantatges
+Senzill.
+Bona tolerància a fallades.
+Recuperació relativament simple.
+
+Inconvenient
+
+La capacitat útil és aproximadament la d'un únic disc.
+
+Per exemple:
+
+2 × 2 TB
+
+proporcionen aproximadament:
+
+2 TB útils
+
+### 3.5. RAID 5
+
+RAID 5 combina distribució de dades i paritat.
+
+Necessita almenys tres discs.
+
+Una representació simplificada:
+
+Disc 1   Disc 2   Disc 3
+
+Dades     Dades     Paritat
+Dades     Paridad   Dades
+Paritat   Dades     Dades
+
+La informació de paritat permet reconstruir les dades quan falla un dels discs.
+
+Avantatges
+Tolerància a una fallada.
+Bon aprofitament de la capacitat.
+Pot proporcionar un equilibri entre rendiment, capacitat i redundància.
+
+Inconvenients
+La reconstrucció pot ser lenta.
+Durant la reconstrucció existeix una situació de major risc.
+Les operacions d'escriptura tenen un cost addicional a causa de la paritat.
+
+### 3.6. RAID 6
+
+RAID 6 utilitza doble paritat.
+
+Necessita almenys quatre discs i pot suportar la fallada simultània de dues unitats.
+
+Disc 1   Disc 2   Disc 3   Disc 4
+Dades     Dades     Paritat   Paritat
+Dades     Paritat   Dades     Paritat
+Paritat   Dades     Dades     Paritat
+
+És apropiat per a sistemes amb grans quantitats d'emmagatzematge on es desitja una major tolerància a fallades.
+
+### 3.7. RAID 10
+
+RAID 10 combina:
+
+RAID 1 → redundància.
+RAID 0 → distribució.
+
+Exemple:
+
+```
+      RAID 10
+
+   ┌─────────────┐
+   │             │
+RAID 1        RAID 1
+D1 + D2       D3 + D4
+   │             │
+   └──── RAID 0 ─┘
+
+```
+
+Proporciona:
+
+Bon rendiment.
+Redundància.
+Bon comportament en sistemes amb moltes operacions d'entrada/eixida.
+
+El nombre de discs necessaris és superior al de RAID 1.
+
+### 3.8. Comparació de RAID
+
+| Nivell | Discs mínims | Redundància | Tolerància | Característica principal |
+| --- | --- | --- | --- | --- |
+| RAID 0 | 2 | No | Cap | Rendiment |
+| RAID 1 | 2 | Sí | 1 disc | Simplicitat |
+| RAID 5 | 3 | Sí | 1 disc | Capacitat + redundància |
+| RAID 6 | 4 | Sí | 2 discs | Major tolerància |
+| RAID 10 | 4 | Sí | Depén del patró de fallades | Rendiment + redundància |
+
+### 3.9. RAID no és backup
+
+Aquest concepte és especialment important.
+
+Suposem que tenim:
+
+Servidor
+↓
+RAID 1
+↓
+Disc A + Disc B
+
+Un usuari elimina accidentalment:
+
+clients.xlsx
+
+L'eliminació es replica en tots dos discs.
+
+Per tant:
+
+Disc A → fitxer eliminat
+Disc B → fitxer eliminat
+
+RAID no permet recuperar automàticament el fitxer.
+
+En canvi, un backup podria contindre una versió anterior:
+
+Backup
+↓
+clients.xlsx
+↓
+Recuperació
+
+Per això:
+
+RAID protegeix principalment davant de determinades fallades de hardware; el backup protegeix la informació davant de molts tipus de pèrdua o alteració.
+
+## 4. Còpies de seguretat i recuperació
+
+### 4.1. Còpies de seguretat
+
+Una còpia de seguretat és una còpia d'informació emmagatzemada en un mitjà alternatiu que es pot utilitzar per a recuperar les dades originals després d'una pèrdua, dany, corrupció o incident. Ha de protegir dades, configuracions i, quan siga necessari, imatges de sistemes complets. Una imatge facilita la restauració d'un equip després d'una fallada greu; en canvi, una còpia de fitxers permet recuperar selectivament un document sense restaurar tot el sistema.
+
+Una estratègia de backup ha de definir:
+
+Quina informació copiar.
+Quan copiar-la.
+On emmagatzemar-la.
+Quant de temps conservar-la.
+Qui hi pot accedir.
+Com protegir-la.
+Com restaurar-la.
+Com comprovar que funciona.
+
+Les còpies s'han d'automatitzar sempre que siga possible, xifrar-se quan contenen informació sensible i supervisar-se mitjançant avisos d'èxit o error. Una planificació habitual pot combinar una còpia completa setmanal, còpies incrementals diàries i una retenció diferenciada per a versions diàries, mensuals i anuals. La periodicitat ha de respondre al RPO: si una organització només accepta perdre fins a quatre hores de treball, una còpia diària no serà suficient.
+
+La restauració és la prova definitiva d'una estratègia. Per exemple, després de configurar una còpia programada d'una base de dades, l'administrador l'ha de restaurar en un entorn de proves, comprovar que obri correctament i mesurar el temps emprat. Aquesta evidència permet confirmar si el procediment compleix el RTO establit.
+
+### 4.2. Backup complet
+
+Una còpia completa conté tota la informació seleccionada.
+
+Exemple:
+
+Diumenge
+Backup complet → 500 GB
+
+Avantatges:
+
+Restauració senzilla.
+Independència respecte d'altres còpies.
+
+Inconvenients:
+
+Consumeix més emmagatzematge.
+Pot tardar més temps.
+
+### 4.3. Backup incremental
+
+Una còpia incremental conté els canvis realitzats des de l'última còpia.
+
+Exemple:
+
+Diumenge
+Completa
+
+Dilluns
+Canvis del dilluns
+
+Dimarts
+Canvis del dimarts
+
+Dimecres
+Canvis del dimecres
+
+Avantatge:
+
+Menor consum d'espai.
+
+Inconvenient:
+
+Per a realitzar una recuperació completa pot ser necessari disposar de:
+
+Backup complet
++
+Incremental dilluns
++
+Incremental dimarts
++
+Incremental dimecres
+
+### 4.4. Backup diferencial
+
+La còpia diferencial emmagatzema els canvis realitzats des de l'última còpia completa.
+
+Exemple:
+
+Diumenge
+Completa
+
+Dilluns
+Canvis des de diumenge
+
+Dimarts
+Canvis des de diumenge + dilluns
+
+Dimecres
+Canvis des de diumenge + dilluns + dimarts
+
+Per a recuperar l'estat del dimecres normalment necessitem:
+
+Backup complet
++
+Backup diferencial del dimecres
+
+### 4.5. Comparació de còpies
+
+| Tipus | Espai | Velocitat de backup | Recuperació |
+| --- | --- | --- | --- |
+| Completa | Alt | Menor | Molt senzilla |
+| Incremental | Baix | Alta | Més complexa |
+| Diferencial | Mitjà | Intermèdia | Senzilla |
+
+### 4.6. Regla 3-2-1
+
+La regla 3-2-1 és una estratègia senzilla per a millorar la protecció dels backups.
+
+Consisteix a mantindre:
+
+3 còpies de la informació
+
+2 suports diferents
+
+1 còpia fora de la ubicació principal
+
+Exemple:
+
+```
+             DADES
+               │
+      ┌────────┼────────┐
+      │        │        │
+   Original   NAS     Cloud
+                     / ubicació externa
+
+```
+
+Això permet reduir el risc que un únic incident destruïsca totes les còpies.
+
+### 4.7. Backup i ransomware
+
+Els sistemes de backup també s'han de protegir.
+
+Imaginem:
+
+Servidor
+↓
+Backup NAS
+
+Si l'atacant aconsegueix privilegis suficients sobre tots dos sistemes, podria xifrar:
+
+Servidor → xifrat
+NAS      → xifrat
+
+Per això hem d'aplicar mesures addicionals:
+
+Separació de comptes.
+Contrasenyes meguidament robustes.
+MFA.
+Permisos mínims.
+Segmentació de xarxa.
+Versionat.
+Còpies desconnectades quan siga possible.
+Emmagatzematge immutable.
+Còpies externes.
+Proves de recuperació.
+
+### 4.8. RPO
+
+RPO — Recovery Point Objective
+
+El RPO indica la quantitat màxima de informació que una organització està disposada a perdre.
+
+Exemple:
+
+RPO = 4 hores
+
+Significa que l'estratègia ha de permetre recuperar informació amb una antiguitat màxima objectiu d'unes quatre hores.
+
+Com menor siga el RPO:
+
+RPO xicotet
+↓
+Més freqüència de còpia/replicació
+↓
+Major cost i complexitat
+
+### 4.9. RTO
+
+RTO — Recovery Time Objective
+
+El RTO indica quant de temps pot tardar com a màxim la recuperació d'un servei.
+
+Exemple:
+
+RTO = 8 hores
+
+L'organització ha de disposar de procediments i recursos adequats per a intentar recuperar el servei dins d'aquest objectiu.
+
+### 4.10. Diferència entre RPO i RTO
+
+| Concepte | Pregunta |
+| --- | --- |
+| RPO | Quanta informació podem perdre? |
+| RTO | Quant de temps podem estar sense servei? |
+
+Exemple:
+
+Una empresa estableix:
+
+RPO = 1 hora
+RTO = 4 hores
+
+Per tant:
+
+S'intenta limitar la pèrdua d'informació a una hora.
+S'intenta recuperar el servei en quatre hores.
+
+### 4.11. NAS
+
+Un NAS — Network Attached Storage és un dispositiu d'emmagatzematge connectat a una xarxa.
+
+Permet proporcionar emmagatzematge centralitzat a diferents equips.
+
+```
+         ┌──── PC 1
+         │
+
+```
+
+Xarxa ───────┼──── PC 2
+│
+├──── PC 3
+│
+└──── NAS
+
+Un NAS pot proporcionar:
+
+Carpetes compartides.
+Usuaris.
+Permisos.
+RAID.
+Snapshots.
+Còpies de seguretat.
+Replicació.
+Serveis de xarxa.
+
+### 4.12. NAS davant d'emmagatzematge local
+
+Emmagatzematge local
+PC
+↓
+Disc
+
+Les dades estan directament en l'equip.
+
+NAS
+PC ───┐
+PC ───┼── Xarxa ── NAS
+PC ───┘
+
+Les dades es centralitzen en un sistema d'emmagatzematge accessible mitjançant xarxa.
+
+Això facilita:
+
+Administració.
+Compartició.
+Backup.
+Control d'accés.
+
+### 4.13. TrueNAS
+
+TrueNAS és una plataforma utilitzada per a implementar sistemes d'emmagatzematge en xarxa.
+
+Permet treballar amb:
+
+Discs.
+Pools d'emmagatzematge.
+Sistemes de fitxers.
+Usuaris.
+Permisos.
+Comparticions.
+Snapshots.
+Replicació.
+Serveis de xarxa.
+
+En un entorn de proves d'ASIR es pot utilitzar per a practicar:
+
+RAID.
+Emmagatzematge.
+Compartició de fitxers.
+Backup.
+Snapshots.
+Recuperació.
+
+### 4.14. Snapshots
+
+Una snapshot representa l'estat d'un sistema de fitxers o emmagatzematge en un moment determinat.
+
+Exemple:
+
+10:00 → Snapshot 1
+12:00 → Snapshot 2
+14:00 → Snapshot 3
+
+Si un usuari modifica un fitxer a les 14:30, pot ser possible recuperar una versió anterior mitjançant una snapshot.
+
+Les snapshots són especialment útils per a:
+
+Errors humans.
+Recuperació ràpida.
+Versionat.
+Protecció davant de determinades modificacions.
+
+Però:
+
+Una snapshot no substitueix necessàriament una còpia de seguretat.
+
+Si totes les snapshots estan emmagatzemades en el mateix dispositiu que les dades i aquest dispositiu es destrueix, també es poden perdre les snapshots.
+
+### 4.15. Recuperació de informació
+
+Una estratègia de backup ha d'incloure procediments de recuperació.
+
+Procés bàsic:
+
+Incident
+↓
+Identificar informació afectada
+↓
+Seleccionar backup
+↓
+Restaurar
+↓
+Comprovar integritat
+↓
+Comprovar aplicació
+↓
+Posar servei en producció
+↓
+Documentar
+
+### 4.16. Proves de restauració
+
+No n'hi ha prou amb fer còpies.
+
+Cal comprovar periòdicament que es poden restaurar.
+
+Una prova pot consistir a:
+
+Seleccionar una còpia.
+Restaurar alguns fitxers.
+Comprovar el seu contingut.
+Restaurar una màquina virtual.
+Comprovar una base de dades.
+Mesurar el temps de recuperació.
+Registrar els resultats.
+
+Una còpia que mai no ha sigut provada suposa un risc.
+
+### 4.17. Política de backup
+
+Una política de còpies hauria de definir clarament:
+
+Informació protegida
+
+Exemple:
+
+Bases de dades.
+Documents.
+Configuracions.
+Màquines virtuals.
+Servidors.
+
+Freqüència
+
+Exemple:
+
+Backup complet → setmanal
+Backup incremental → diari
+
+Retenció
+
+Exemple:
+
+Diaris → 30 dies
+Setmanals → 3 mesos
+Mensuals → 1 any
+
+Destins
+NAS.
+Servidor de backup.
+Cloud.
+Ubicació externa.
+
+### 4.18. Eines de backup
+
+#### rsync
+
+rsync permet sincronitzar fitxers i directoris.
+
+Exemple:
+
+rsync -av /datos/ /backup/datos/
+
+Es pot utilitzar per a realitzar sincronitzacions locals o remotes.
+
+#### Clonezilla
+
+Clonezilla permet treballar amb imatges i clonacions de discs i particions.
+
+Es pot utilitzar per a:
+
+Clonar equips.
+Crear imatges.
+Restaurar sistemes.
+Preparar desplegaments.
+
+#### Duplicati
+
+Duplicati permet crear còpies programades i pot utilitzar diferents destins d'emmagatzematge.
+
+Entre les seues característiques es troben:
+
+Programació.
+Versionat.
+Xifrat.
+Destins locals i remots.
+
+## 5. Esborrament segur i cicle de vida
+
+### 5.1. Esborrament segur de la informació
+
+Eliminar un fitxer o formatar ràpidament una unitat no garanteix que les dades no es puguen recuperar. El mètode adequat depén del mitjà, del nivell de confidencialitat i de la reutilització prevista. En HDD, la sobreescriptura gestionada correctament pot ser eficaç perquè els sectors es poden escriure de forma directa. En SSD, el *wear leveling* i l'espai reservat pel controlador impedeixen assegurar la sobreescriptura d'una ubicació concreta; es recomanen les ordes de sanejament del fabricant, com ara **ATA Secure Erase**, o l'esborrament criptogràfic mitjançant destrucció de claus quan la unitat es va xifrar des de l'inici.
+
+La guia [NIST SP 800-88](https://csrc.nist.gov/pubs/sp/800/88/r1/final) diferencia tres nivells: **clear**, que elimina les dades de manera que no siguen recuperables amb tècniques habituals; **purge**, que aplica un sanejament més profund; i **destroy**, que inutilitza físicament el suport. L'organització ha de definir quin mètode empra, qui l'autoritza i quina evidència conserva. Per exemple, abans de reciclar un portàtil que contenia informació personal, es pot verificar que estava xifrat, eliminar de forma segura les seues claus, restablir-lo i registrar el número de sèrie, el responsable i el resultat del procés.
+
+En serveis cloud, el client no controla directament el hardware i ha de revisar les condicions d'eliminació, retenció i còpies del proveïdor. El xifrat, una política de retenció definida, contractes adequats i el registre de les operacions ajuden a complir les obligacions de protecció de dades. L'esborrament segur també s'aplica a dispositius mòbils: s'han d'eliminar els comptes vinculats, comprovar la sincronització en el núvol i utilitzar el restabliment de fàbrica amb el xifrat meguidament habilitat.
+
+## 6. Resum
+
+En aquesta unitat hem estudiat com protegir la informació davant de fallades i pèrdues.
+
+Els conceptes fonamentals són:
+
+* Seguretat passiva i protecció física.
+* Emmagatzematge en HDD, SSD i NVMe.
+* Redundància i RAID.
+* Backup, NAS, snapshots i recuperació.
+* RPO, RTO i proves de restauració.
+* Esborrament segur i cicle de vida del suport.
+
+Els nivells RAID permeten millorar la disponibilitat o el rendiment, però no substitueixen les còpies de seguretat.
+
+Una estratègia professional ha de combinar diferents mecanismes:
+
+```
+    INFORMACIÓ
+         │
+ ┌───────┴────────┐
+ │                │
+
+```
+
+Redundància         Backup
+│                │
+RAID        3-2-1 / extern
+│                │
+└───────┬────────┘
+│
+RECUPERACIÓ
+
+La idea fonamental d'aquesta unitat és:
+
+No ens hem de preguntar només com evitar que les dades es perden, sinó també com recuperar-les quan la fallada inevitablement es produïsca.
 
 ## 7. Recursos
 
-- [NIST: Cryptographic Standards and Guidelines](https://csrc.nist.gov/projects/cryptographic-standards-and-guidelines)
-- [NIST: criptografía post-cuántica](https://csrc.nist.gov/projects/post-quantum-cryptography)
-- [Documentación de OpenSSL](https://docs.openssl.org/)
-- [Documentación de GnuPG](https://www.gnupg.org/documentation/)
-- [Let's Encrypt](https://letsencrypt.org/docs/)
+* TrueNAS.
+* Clonezilla.
+* Duplicati.
+* rsync.
+* BorgBackup.
+* Restic.
+* [NIST SP 800-88: Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r1/final)
+* [INCIBE: esborrament segur de la informació](https://www.incibe.es/sites/default/files/contenidos/guias/doc/guia_ciberseguridad_borrado_seguro_metad_0.pdf)
+* [Guia de seguretat en centres de dades de Google](https://www.google.com/about/datacenters/data-security/)
 
-## 8. Relación con los resultados de aprendizaje
+## 8. Relació amb els resultats d'aprenentatge
 
-Esta unidad contribuye a la adopción de prácticas seguras, la protección de información, la autenticación de sistemas y usuarios, y la aplicación de mecanismos criptográficos en comunicaciones y servicios.
+Aquesta unitat contribueix principalment a:
+
+### 8.1. RA1
+
+Adopta pràctiques segures d'utilització i treball amb sistemes informàtics, reconeixent les vulnerabilitats i les necessitats d'assegurament dels sistemes.
+
+Especialment mitjançant:
+
+* Protecció de la informació i seguretat passiva.
+* Còpies de seguretat i recuperació.
+
+### 8.2. RA6
+
+Implementa solucions d'alta disponibilitat mitjançant tècniques de virtualització i sistemes d'emmagatzematge redundant.
+
+Especialment mitjançant:
+
+* RAID, redundància i emmagatzematge.
+* NAS i recuperació.
+* RPO, RTO i continuïtat del servei.

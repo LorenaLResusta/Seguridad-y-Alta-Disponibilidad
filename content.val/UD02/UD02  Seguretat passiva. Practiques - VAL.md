@@ -1,1017 +1,485 @@
-
-# UD2 - Seguretat passiva: emmagatzematge[cite: 7]
-
-> Protecció de la informació, redundància, còpies de seguretat i recuperació.[cite: 7]
-
-| Dades de la unitat | Informació |[cite: 7]
-| --- | --- |
-| Mòdul | Seguretat i Alta Disponibilitat |[cite: 7]
-| Curs | 2n ASIR |[cite: 7]
-| Modalitat | Semipresencial |[cite: 7]
-| Durada | 12 hores |[cite: 7]
-
-## Índex[cite: 7]
-
-1. [Fonaments i seguretat física](#1-fonaments-i-seguretat-física)[cite: 7]
-2. [Emmagatzematge i fallades](#2-emmagatzematge-i-fallades)[cite: 7]
-3. [Redundància i RAID](#3-redundància-i-raid)[cite: 7]
-4. [Còpies de seguretat i recuperació](#4-còpies-de-seguretat-i-recuperació)[cite: 7]
-5. [Esborrat segur i cicle de vida](#5-esborrat-segur-i-cicle-de-vida)[cite: 7]
-6. [Resum](#6-resum)[cite: 7]
-7. [Recursos](#7-recursos)[cite: 7]
-8. [Relació amb els resultats d'aprenentatge](#8-relació-amb-els-resultats-daprenentatge)[cite: 7]
-
 ---
+title: "2.Seguretat passiva: emmagatzematge. Prac"
+weight: 2
+---
+# UD2 - Pràctiques: seguretat passiva i emmagatzematge
 
-## 1. Fonaments i seguretat física[cite: 7]
+> Monitoratge, redundància, còpies de seguretat, recuperació i esborrament segur en un entorn de proves Linux.
 
-### 1.1. Introducció[cite: 7]
-
-La seguretat d'un sistema informàtic no consisteix únicament a impedir que un atacant hi accedisca[cite: 7]. També és necessari estar preparat per a situacions en què es produïsquen fallades[cite: 7].
-
-Un servidor pot patir:[cite: 7]
-
-- L'avaria d'un disc.[cite: 7]
-- Una fallada elèctrica.[cite: 7]
-- Un error humà.[cite: 7]
-- L'eliminació accidental d'arxius.[cite: 7]
-- La corrupció d'un sistema d'arxius.[cite: 7]
-- Un atac de ransomware.[cite: 7]
-- Un incendi o una inundació.[cite: 7]
-- El robatori de l'equipament.[cite: 7]
-- Una actualització defectuosa.[cite: 7]
-- Una fallada de programari.[cite: 7]
-
-Per aquest motiu, les organitzacions necessiten mecanismes que permeten reduir l'impacte dels incidents i recuperar la informació i els serveis[cite: 7].
-
-Aquests mecanismes formen part de la seguretat passiva[cite: 7].
-
-En aquesta unitat estudiarem especialment els sistemes d'emmagatzematge, la redundància mitjançant RAID, les còpies de seguretat, els sistemes NAS, les snapshots i les estratègies de recuperació[cite: 7].
-
-### 1.2. Objectius[cite: 7]
-
-En finalitzar aquesta unitat, l'alumnat serà capaç de:[cite: 7]
-
-- Diferenciar seguretat activa i seguretat passiva.[cite: 7]
-- Identificar els principals sistemes d'emmagatzematge.[cite: 7]
-- Diferenciar HDD, SSD i NVMe.[cite: 7]
-- Identificar els principals tipus de fallades d'emmagatzematge.[cite: 7]
-- Comprendre el concepte de redundància.[cite: 7]
-- Explicar el funcionament de RAID.[cite: 7]
-- Diferenciar RAID 0, RAID 1, RAID 5, RAID 6 i RAID 10.[cite: 7]
-- Seleccionar un nivell RAID en funció de les necessitats.[cite: 7]
-- Comprendre les limitacions de RAID.[cite: 7]
-- Explicar què és una còpia de seguretat.[cite: 7]
-- Diferenciar còpies completes, incrementals i diferencials.[cite: 7]
-- Dissenyar una estratègia bàsica de còpies.[cite: 7]
-- Aplicar la regla 3-2-1.[cite: 7]
-- Comprendre els conceptes RPO i RTO.[cite: 7]
-- Conéixer sistemes NAS i snapshots.[cite: 7]
-- Realitzar i comprovar còpies de seguretat i recuperació.[cite: 7]
-- Dissenyar una política d'emmagatzematge i backup.[cite: 7]
-
-### 1.3. Seguretat passiva[cite: 7]
-
-La seguretat passiva engloba les mesures destinades principalment a reduir les conseqüències d'un incident i facilitar la recuperació[cite: 7].
-
-Per exemple, imaginem un servidor que disposa de dos discos[cite: 7].
-
-Si un d'ells falla, una configuració redundant pot permetre que el sistema continue funcionant[cite: 7].
-
-Si a més es disposa de còpies de seguretat, serà possible recuperar la informació fins i tot davant problemes més greus[cite: 7].
-
-Podem representar el concepte de la següent forma:[cite: 7]
-
-                    SEGURETAT
-                       │
-              ┌────────┴────────┐
-              │                 │
-            Activa            Passiva
-              │                 │
-       Prevenir / detectar    Recuperar
-       / bloquejar            / continuar
-
-**Exemples de seguretat activa:**[cite: 7]
-
-- Tallafocs.[cite: 7]
-- Antivirus.[cite: 7]
-- IDS/IPS.[cite: 7]
-- Control d'accés.[cite: 7]
-- Monitoratge i sistemes de detecció.[cite: 7]
-
-**Exemples de seguretat passiva:**[cite: 7]
-
-- RAID i sistemes redundants.[cite: 7]
-- Còpies de seguretat i emmagatzematge extern.[cite: 7]
-- SAI i replicació.[cite: 7]
-- Plans de recuperació.[cite: 7]
-
-### 1.4. Seguretat física i CPD[cite: 7]
-
-Un centre de processament de dades (CPD) concentra servidors, xarxes i emmagatzematge crítics[cite: 7]. Centralitzar els equips facilita el control d'accessos, la climatització, el manteniment i les comunicacions, però també exigeix planificar els riscos físics i ambientals[cite: 7]. La ubicació ha d'evitar zones amb elevat risc d'inundació, incendi, vibracions o accessos no controlats, i la sala ha de comptar amb procediments documentats per a recuperar els serveis davant una incidència[cite: 7].
-
-Les mesures habituals inclouen control d'accés mitjançant credencials o biometria, videovigilància, detecció i extinció d'incendis, fals sòl per a cablejat i ventilació, i control de temperatura i humitat[cite: 7]. En un CPD amb racks, els passadissos freds aporten aire a la part frontal dels equips i els passadissos calents arrepleguen l'aire d'eixida; aquesta separació redueix el sobreescalfament i millora l'eficiència energètica[cite: 7].
-
-La continuïtat també requereix alimentació i comunicacions redundants[cite: 7]. Un SAI proporciona temps per a un apagat controlat durant un tall breu; un generador pot cobrir interrupcions prolongades[cite: 7]. Per a serveis crítics, es poden contractar enllaços d'Internet amb proveïdors i rutes diferents[cite: 7]. Un centre de suport, ubicat a suficient distància del CPD principal, permet restaurar serveis si una catàstrofe afecta la ubicació primària[cite: 7]. Per exemple, una empresa pot replicar la base de dades i conservar còpies verificades en un segon centre, provant periòdicament el procediment de commutació[cite: 7].
-
-## 2. Emmagatzematge i fallades[cite: 7]
-
-### 2.1. Emmagatzematge de la informació[cite: 7]
-
-La informació d'una organització es pot emmagatzemar en diferents dispositius i sistemes[cite: 7].
-
-Entre els més habituals trobem:[cite: 7]
-
-HDD.[cite: 7]
-SSD.[cite: 7]
-NVMe.[cite: 7]
-NAS.[cite: 7]
-SAN.[cite: 7]
-Cabines d'emmagatzematge.[cite: 7]
-Sistemes distribuïts.[cite: 7]
-
-La tria depén de factors com:[cite: 7]
-
-Capacitat.[cite: 7]
-Rendiment.[cite: 7]
-Cost.[cite: 7]
-Fiabilitat.[cite: 7]
-Disponibilitat.[cite: 7]
-Redundància.[cite: 7]
-Tipus d'informació.[cite: 7]
-
-També importa la forma d'accés: un sistema de còpies històriques pot utilitzar cinta, que ofereix gran capacitat a baix cost però accés seqüencial; una base de dades necessita normalment accés aleatori i baixa latència, per la qual cosa pot requerir SSD o NVMe[cite: 7]. Per a compartir documents entre diversos equips sol ser suficient un NAS amb accés a nivell d'arxiu, mentre que un entorn de virtualització pot necessitar emmagatzematge de blocs mitjançant SAN o una plataforma definida per programari[cite: 7].
-
-Per exemple, una petita empresa pot combinar SSD per a les màquines virtuals que executen aplicacions, HDD en un NAS per a documents compartits i emmagatzematge extern per a una còpia de seguretat[cite: 7]. No existeix una tecnologia universalment millor: la solució adequada respon als requisits de rendiment, disponibilitat, pressupost i protecció de les dades[cite: 7].
-
-### 2.2. Discos HDD[cite: 7]
-
-Els discos HDD utilitzen plats magnètics i capçals mecànics per a emmagatzemar i recuperar informació[cite: 7].
-
-Una representació simplificada seria:[cite: 7]
-
-       HDD
- ┌───────────────┐
- │   Plat        │
- │      ↓        │
- │  ──────────   │
- │      ↑        │
- │   Capçal      │
- └───────────────┘
-
-Avantatges[cite: 7]
-Gran capacitat.[cite: 7]
-Preu reduït per GB.[cite: 7]
-Adequats per a grans volums d'informació.[cite: 7]
-Interessants per a emmagatzematge de backup.[cite: 7]
-
-Inconvenients[cite: 7]
-Components mecànics.[cite: 7]
-Major latència.[cite: 7]
-Menor rendiment que els SSD en determinats escenaris.[cite: 7]
-Sensibilitat a colps i vibracions.[cite: 7]
-
-### 2.3. Discos SSD[cite: 7]
-
-Els SSD emmagatzemen la informació en memòria flash[cite: 7].
-
-No utilitzen parts mecàniques mòbils[cite: 7].
-
-Avantatges[cite: 7]
-Alta velocitat.[cite: 7]
-Baixa latència.[cite: 7]
-Menor soroll.[cite: 7]
-Major resistència enfront de vibracions.[cite: 7]
-Bon rendiment per a sistemes operatius i aplicacions.[cite: 7]
-
-Inconvenients[cite: 7]
-Preu per GB generalment superior.[cite: 7]
-Desgast de les cel·les.[cite: 7]
-Recuperació de dades potencialment complexa davant determinades fallades.[cite: 7]
-
-Els SSD són habituals en:[cite: 7]
-
-Servidors.[cite: 7]
-Ordinadors.[cite: 7]
-Màquines virtuals.[cite: 7]
-Bases de dades.[cite: 7]
-Sistemes d'alt rendiment.[cite: 7]
-
-### 2.4. NVMe[cite: 7]
-
-NVMe és un protocol dissenyat específicament per a dispositius d'emmagatzematge no volàtil d'alta velocitat[cite: 7].
-
-Els dispositius NVMe solen utilitzar PCI Express[cite: 7].
-
-Comparats amb dispositius SATA tradicionals, poden proporcionar:[cite: 7]
-
-Major ample de banda.[cite: 7]
-Menor latència.[cite: 7]
-Major nombre d'operacions d'entrada/eixida.[cite: 7]
-
-Són especialment interessants per a:[cite: 7]
-
-Bases de dades.[cite: 7]
-Virtualització.[cite: 7]
-Servidors.[cite: 7]
-Aplicacions amb moltes operacions de disc.[cite: 7]
-
-### 2.5. Fallades d'emmagatzematge[cite: 7]
-
-Els problemes d'emmagatzematge poden tindre diferents orígens[cite: 7].
-
-#### 2.5.1. Fallada física[cite: 7]
-
-Exemple:[cite: 7]
-
-El disc deixa de funcionar[cite: 7].
-
-Es pot produir per:[cite: 7]
-
-Desgast.[cite: 7]
-Temperatura.[cite: 7]
-Fallada electrònica.[cite: 7]
-Fallada mecànica.[cite: 7]
-Danys físics.[cite: 7]
-
-#### 2.5.2. Fallada lògica[cite: 7]
-
-El dispositiu continua funcionant, però la informació o el sistema d'arxius presenta problemes[cite: 7].
-
-Exemples:[cite: 7]
-
-Corrupció del sistema d'arxius.[cite: 7]
-Partició danyada.[cite: 7]
-Eliminació accidental.[cite: 7]
-Metadades corruptes.[cite: 7]
-
-#### 2.5.3. Error humà[cite: 7]
-
-Un administrador pot executar accidentalment:[cite: 7]
-
-rm -rf
-
-sobre el directori equivocat[cite: 7].
-
-També es pot produir:[cite: 7]
-
-Sobreescriptura d'arxius.[cite: 7]
-Eliminació de bases de dades.[cite: 7]
-Configuració incorrecta.[cite: 7]
-Formatat accidental.[cite: 7]
-
-#### 2.5.4. Malware[cite: 7]
-
-Un ransomware pot xifrar els arxius disponibles[cite: 7].
-
-Per exemple:[cite: 7]
-
-documento1.docx
-      ↓
-documento1.docx.cifrado
-
-Si el sistema de backup està connectat i accessible des del mateix entorn, també es podria veure afectat[cite: 7].
-
-#### 2.5.5. Catàstrofes físiques[cite: 7]
-
-Alguns riscos són:[cite: 7]
-
-Incendi.[cite: 7]
-Inundació.[cite: 7]
-Robatori.[cite: 7]
-Sobretensió.[cite: 7]
-Fallada de refrigeració.[cite: 7]
-
-Per això és recomanable disposar de còpies en una ubicació diferent[cite: 7].
-
-### 2.6. Fiabilitat i monitoratge de l'emmagatzematge[cite: 7]
-
-En seleccionar emmagatzematge s'han de valorar capacitat, rendiment, cost, consum, durabilitat i fiabilitat[cite: 7]. El **MTBF** expressa una estimació estadística del temps mitjà entre fallades d'una població d'unitats, mentre que l'**AFR** representa la taxa anualitzada de fallades[cite: 7]. Cap mètrica prediu el moment exacte en què fallarà un disc concret; per això, les decisions s'han de complementar amb redundància, còpies de seguretat i supervisió[cite: 7].
-
-La tecnologia SMART permet consultar indicadors de salut d'HDD i SSD, com a sectors reassignats, errors de lectura, temperatura i, en SSD, desgast de les cel·les[cite: 7]. Una alerta SMART ha de provocar la revisió i substitució planificada de la unitat, però la seua absència no garanteix que no vaja a fallar[cite: 7]. Per exemple, si un servidor detecta sectors reassignats creixents en un disc d'un RAID 5, l'administrador ha de substituir-lo abans que coincidisca amb una altra fallada durant la reconstrucció[cite: 7].
-
-| Necessitat | Opció habitual | Exemple |[cite: 7]
-| --- | --- | --- |
-| Gran capacitat a baix cost | HDD o cinta per a arxivament. | Còpies històriques mensuals. |[cite: 7]
-| Baixa latència i moltes operacions d'E/E | SSD NVMe. | Base de dades o màquines virtuals. |[cite: 7]
-| Compartició d'arxius | NAS amb SMB/NFS. | Documentació d'un departament. |[cite: 7]
-| Accés per blocs d'alt rendiment | SAN o emmagatzematge definit per programari. | Clúster de virtualització. |[cite: 7]
-
-## 3. Redundància i RAID[cite: 7]
-
-### 3.1. Redundància[cite: 7]
-
-La redundància consisteix a disposar d'elements addicionals que permeten mantindre el servei quan un d'ells falla[cite: 7].
-
-Exemple:[cite: 7]
-
-Servidor
- ├── Disc 1
- └── Disc 2
-
-Si tots dos contenen informació redundant i un falla, el sistema pot continuar funcionant[cite: 7].
-
-La redundància es pot aplicar a:[cite: 7]
-
-Discos.[cite: 7]
-Fonts d'alimentació.[cite: 7]
-Servidors.[cite: 7]
-Xarxes.[cite: 7]
-Connexions a Internet.[cite: 7]
-Sistemes d'emmagatzematge.[cite: 7]
-
-### 3.2. RAID[cite: 7]
-
-RAID — Redundant Array of Independent Disks[cite: 7]
-
-RAID permet combinar diversos discos per a aconseguir diferents objectius:[cite: 7]
-
-Major rendiment.[cite: 7]
-Redundància.[cite: 7]
-Tolerància a fallades.[cite: 7]
-Major capacitat útil.[cite: 7]
-
-No obstant això, RAID no és un sistema de backup[cite: 7].
-
-Aquesta diferència ha de quedar clara:[cite: 7]
-
-RAID
-↓
-Protecció principalment enfront de fallades de discos
-
-BACKUP
-↓
-Protecció enfront de pèrdua, modificació o destrucció d'informació
-
-### 3.3. RAID 0[cite: 7]
-
-RAID 0 distribueix les dades entre diversos discos mitjançant una tècnica denominada striping[cite: 7].
-
-Exemple:[cite: 7]
-
-       RAID 0
-
-Disc 1        Disc 2
---------      --------
-Bloc A        Bloc B
-Bloc C        Bloc D
-Bloc E        Bloc F
-
-Avantatge[cite: 7]
-
-Pot augmentar considerablement el rendiment[cite: 7].
-
-Inconvenient[cite: 7]
-
-No existeix redundància[cite: 7].
-
-Si falla un dels discos:[cite: 7]
-
-Disc 1 → OK
-Disc 2 → FALLA
-
-es pot perdre el conjunt complet d'informació[cite: 7].
-
-Ús[cite: 7]
-
-Es pot utilitzar quan el rendiment és prioritari i les dades es poden reconstruir des d'una altra font[cite: 7].
-
-### 3.4. RAID 1[cite: 7]
-
-RAID 1 utilitza mirroring, és a dir, manté una còpia de les dades en un altre disc[cite: 7].
-
-Disc 1        Disc 2
-
-Dades A       Dades A
-Dades B       Dades B
-Dades C       Dades C
-
-Si un disc falla:[cite: 7]
-
-Disc 1 → FALLA
-Disc 2 → OK
-
-la informació continua disponible[cite: 7].
-
-Avantatges[cite: 7]
-Senzill.[cite: 7]
-Bona tolerància a fallades.[cite: 7]
-Recuperació relativament senzilla.[cite: 7]
-
-Inconvenient[cite: 7]
-
-La capacitat útil és aproximadament la d'un únic disc[cite: 7].
-
-Per exemple:[cite: 7]
-
-2 × 2 TB
-
-proporcionen aproximadament:[cite: 7]
-
-2 TB útils
-
-### 3.5. RAID 5[cite: 7]
-
-RAID 5 combina distribució de dades i paritat[cite: 7].
-
-Necessita almenys tres discos[cite: 7].
-
-Una representació simplificada:[cite: 7]
-
-Disc 1   Disc 2   Disc 3
-
-Dades    Dades    Paritat
-Dades    Paritat  Dades
-Paritat  Dades    Dades
-
-La informació de paritat permet reconstruir les dades quan falla un dels discos[cite: 7].
-
-Avantatges[cite: 7]
-Tolerància a una fallada.[cite: 7]
-Bon aprofitament de la capacitat.[cite: 7]
-Pot proporcionar un equilibri entre rendiment, capacitat i redundància.[cite: 7]
-
-Inconvenients[cite: 7]
-La reconstrucció pot ser lenta.[cite: 7]
-Durant la reconstrucció existeix una situació de major risc.[cite: 7]
-Les operacions d'escriptura tenen un cost addicional a causa de la paritat.[cite: 7]
-
-### 3.6. RAID 6[cite: 7]
-
-RAID 6 utilitza doble paritat[cite: 7].
-
-Necessita almenys quatre discos i pot suportar la fallada simultània de dos unitats[cite: 7].
-
-Disc 1   Disc 2   Disc 3   Disc 4
-Dades    Dades    Paritat  Paritat
-Dades    Paritat  Dades    Paritat
-Paritat  Dades    Dades    Paritat
-
-És apropiat per a sistemes amb grans quantitats d'emmagatzematge on es desitja una major tolerància a fallades[cite: 7].
-
-### 3.7. RAID 10[cite: 7]
-
-RAID 10 combina:[cite: 7]
-
-RAID 1 → redundància.[cite: 7]
-RAID 0 → distribució.[cite: 7]
-
-Exemple:[cite: 7]
-
-          RAID 10
-
-       ┌─────────────┐
-       │             │
-    RAID 1        RAID 1
-    D1 + D2       D3 + D4
-       │             │
-       └──── RAID 0 ─┘
-
-Proporciona:[cite: 7]
-
-Bon rendiment.[cite: 7]
-Redundància.[cite: 7]
-Bon comportament en sistemes amb moltes operacions d'entrada/eixida.[cite: 7]
-
-El nombre de discos necessaris és superior al de RAID 1[cite: 7].
-
-### 3.8. Comparació de RAID[cite: 7]
-
-| Nivell | Discos mínims | Redundància | Tolerància | Característica principal |[cite: 7]
-| --- | ---: | --- | --- | --- |
-| RAID 0 | 2 | No | Cap | Rendiment |[cite: 7]
-| RAID 1 | 2 | Sí | 1 disc | Simplicitat |[cite: 7]
-| RAID 5 | 3 | Sí | 1 disc | Capacitat + redundància |[cite: 7]
-| RAID 6 | 4 | Sí | 2 discos | Major tolerància |[cite: 7]
-| RAID 10 | 4 | Sí | Depén del patró de fallades | Rendiment + redundància |[cite: 7]
-
-### 3.9. RAID no és backup[cite: 7]
-
-Aquest concepte és especialment important[cite: 7].
-
-Suposem que tenim:[cite: 7]
-
-Servidor
-   ↓
-RAID 1
-   ↓
-Disc A + Disc B
-
-Un usuari elimina accidentalment:[cite: 7]
-
-clientes.xlsx
-
-L'eliminació es replica en tots dos discos[cite: 7].
-
-Per tant:[cite: 7]
-
-Disc A → arxiu eliminat
-Disc B → arxiu eliminat
-
-RAID no permet recuperar automàticament l'arxiu[cite: 7].
-
-En canvi, un backup podria contindre una versió anterior:[cite: 7]
-
-Backup
-   ↓
-clientes.xlsx
-   ↓
-Recuperació
-
-Per això:[cite: 7]
-
-RAID protegeix principalment enfront de determinades fallades de maquinari; el backup protegeix la informació enfront de molts tipus de pèrdua o alteració[cite: 7].
-
-## 4. Còpies de seguretat i recuperació[cite: 7]
-
-### 4.1. Còpies de seguretat[cite: 7]
-
-Una còpia de seguretat és una còpia d'informació emmagatzemada en un medi alternatiu que es pot utilitzar per a recuperar les dades originals després d'una pèrdua, dany, corrupció o incident[cite: 7]. Ha de protegir dades, configuracions i, quan siga necessari, imatges de sistemes complets[cite: 7]. Una imatge facilita la restauració d'un equip després d'una fallada greu; en canvi, una còpia d'arxius permet recuperar selectivament un document sense restaurar tot el sistema[cite: 7].
-
-Una estratègia de backup ha de definir:[cite: 7]
-
-Quina informació copiar.[cite: 7]
-Quan copiar-la.[cite: 7]
-On emmagatzemar-la.[cite: 7]
-Quant de temps conservar-la.[cite: 7]
-Qui hi pot accedir.[cite: 7]
-Com protegir-la.[cite: 7]
-Com restaurar-la.[cite: 7]
-Com comprovar que funciona.[cite: 7]
-
-Les còpies s'han d'automatitzar sempre que siga possible, xifrar-se quan contenen informació sensible i supervisar-se mitjançant avisos d'èxit o error[cite: 7]. Una planificació habitual pot combinar una còpia completa semanal, còpies incrementals diàries i una retenció diferenciada per a versions diàries, mensuals i anuals[cite: 7]. La periodicitat ha de respondre al RPO: si una organització només accepta perdre fins a quatre hores de treball, una còpia diària no serà suficient[cite: 7].
-
-La restauració és la prova definitiva d'una estratègia[cite: 7]. Per exemple, després de configurar una còpia programada d'una base de dades, l'administrador ha de restaurar-la en un entorn de proves, comprovar que obri correctament i mesurar el temps emprat[cite: 7]. Eixa evidència permet confirmar si el procediment compleix el RTO establit[cite: 7].
-
-### 4.2. Backup complet[cite: 7]
-
-Una còpia completa conté tota la informació seleccionada[cite: 7].
-
-Exemple:[cite: 7]
-
-Diumenge
-Backup complet → 500 GB
-
-Avantatges:[cite: 7]
-
-Restauració senzilla.[cite: 7]
-Independència respecte d'altres còpies.[cite: 7]
-
-Inconvenients:[cite: 7]
-
-Consumeix més emmagatzematge.[cite: 7]
-Pot tardar més temps.[cite: 7]
-
-### 4.3. Backup incremental[cite: 7]
-
-Una còpia incremental conté els canvis realitzats des de l'última còpia[cite: 7].
-
-Exemple:[cite: 7]
-
-Diumenge
-Completa
-
-Dilluns
-Canvis del dilluns
-
-Dimarts
-Canvis del dimarts
-
-Dimecres
-Canvis del dimecres
-
-Avantatge:[cite: 7]
-
-Menor consum d'espai[cite: 7].
-
-Inconvenient:[cite: 7]
-
-Per a realitzar una recuperació completa pot ser necessari disposar de:[cite: 7]
-
-Backup complet
-+
-Incremental dilluns
-+
-Incremental dimarts
-+
-Incremental dimecres
-
-### 4.4. Backup diferencial[cite: 7]
-
-La còpia diferencial emmagatzema els canvis realitzats des de l'última còpia completa[cite: 7].
-
-Exemple:[cite: 7]
-
-Diumenge
-Completa
-
-Dilluns
-Canvis des del diumenge
-
-Dimarts
-Canvis des del diumenge + dilluns
-
-Dimecres
-Canvis des del diumenge + dilluns + dimarts
-
-Per a recuperar l'estat del dimecres normalment necessitem:[cite: 7]
-
-Backup complet
-+
-Backup diferencial del dimecres
-
-### 4.5. Comparació de còpies[cite: 7]
-
-| Tipus | Espai | Velocitat de backup | Recuperació |[cite: 7]
-| --- | --- | --- | --- |
-| Completa | Alt | Menor | Molt senzilla |[cite: 7]
-| Incremental | Baix | Alta | Més complexa |[cite: 7]
-| Diferencial | Mitjà | Intermèdia | Senzilla |[cite: 7]
-
-### 4.6. Regla 3-2-1[cite: 7]
-
-La regla 3-2-1 és una estratègia senzilla per a millorar la protecció dels backups[cite: 7].
-
-Consisteix a mantindre:[cite: 7]
-
-3 còpies de la informació[cite: 7]
-
-2 suports diferents[cite: 7]
-
-1 còpia fora de la ubicació principal[cite: 7]
-
-Exemple:[cite: 7]
-
-                 DADES
-                   │
-          ┌────────┼────────┐
-          │        │        │
-       Original   NAS     Cloud
-                         / ubicació externa
-
-Açò permet reduir el risc que un únic incident destruïsca totes les còpies[cite: 7].
-
-### 4.7. Backup i ransomware[cite: 7]
-
-Els sistemes de backup també s'han de protegir[cite: 7].
-
-Imaginem:[cite: 7]
-
-Servidor
-    ↓
-Backup NAS
-
-Si l'atacant aconsegueix privilegis suficients sobre tots dos sistemes, podria xifrar:[cite: 7]
-
-Servidor → xifrat
-NAS      → xifrat
-
-Per això hem d'aplicar mesures addicionals:[cite: 7]
-
-Separació de comptes.[cite: 7]
-Contrasenyes robustes.[cite: 7]
-MFA.[cite: 7]
-Permisos mínims.[cite: 7]
-Segmentació de xarxa.[cite: 7]
-Versionat.[cite: 7]
-Còpies desconnectades quan siga possible.[cite: 7]
-Emmagatzematge immutable.[cite: 7]
-Còpies externes.[cite: 7]
-Proves de recuperació.[cite: 7]
-
-### 4.8. RPO[cite: 7]
-
-RPO — Recovery Point Objective[cite: 7]
-
-El RPO indica la quantitat màxima d'informació que una organització està disposada a perdre[cite: 7].
-
-Exemple:[cite: 7]
-
-RPO = 4 hores
-
-Significa que l'estratègia ha de permetre recuperar informació amb una antiguitat màxima objectiu d'unes quatre hores[cite: 7].
-
-Com menor siga el RPO:[cite: 7]
-
-RPO petit
-    ↓
-Més freqüència de còpia/replicació
-    ↓
-Major cost i complexitat
-
-### 4.9. RTO[cite: 7]
-
-RTO — Recovery Time Objective[cite: 7]
-
-El RTO indica quant de temps pot tardar com a màxim la recuperació d'un servei[cite: 7].
-
-Exemple:[cite: 7]
-
-RTO = 8 hores
-
-L'organització ha de disposar de procediments i recursos adequats per a intentar recuperar el servei dins d'eixe objectiu[cite: 7].
-
-### 4.10. Diferència entre RPO i RTO[cite: 7]
-
-| Concepte | Pregunta |[cite: 7]
+| Dades de les pràctiques | Informació |
 | --- | --- |
-| RPO | Quanta informació podem perdre? |[cite: 7]
-| RTO | Quant de temps podem estar sense servei? |[cite: 7]
+| Mòdul | Seguretat i Alta Disponibilitat |
+| Curs | 2n ASIR |
+| Modalitat | Semipresencial |
+| Durada estimada | 10 hores |
+| Entorn | VirtualBox i una distribució Linux compatible |
 
-Exemple:[cite: 7]
+## 1. Objectius
 
-Una empresa estableix:[cite: 7]
+En finalitzar aquest itinerari, l'alumnat serà capaç de:
 
-RPO = 1 hora
-RTO = 4 hores
+- Identificar unitats d'emmagatzematge i consultar el seu estat.
+- Crear i administrar un RAID 5 per programari amb `mdadm`.
+- Simular una fallada controlada i reconstruir un RAID.
+- Realitzar una còpia de seguretat remota amb `rsync` i restaurar fitxers.
+- Diferenciar l'esborrament normal de l'esborrament segur i aplicar-lo únicament sobre dades de prova.
+- Documentar les evidències i proposar una estratègia bàsica de protecció de dades.
 
-Per tant:[cite: 7]
+## 2. Abast i normes 
 
-S'intenta limitar la pèrdua d'informació a una hora[cite: 7].
-S'intenta recuperar el servei en quatre hores[cite: 7].
+Aquestes pràctiques es realitzen únicament en màquines virtuals pròpies. No executes ordes d'esborrament, formatació, RAID ni recuperació en l'equip personal, en un disc físic o en sistemes aliens. Abans de cada pràctica, crea una instantània (*snapshot*) de la màquina virtual per a poder tornar a un estat conegut.
 
-### 4.11. NAS[cite: 7]
+L'itinerari omet la configuració de SAN, iSCSI, RAID en Windows, TrueNAS, Clonezilla per xarxa i recuperació forense de fitxers esborrats. Són activitats útils, però requereixen més màquines, recursos o configuracions específiques. Ací es prioritzen procediments que es poden repetir i verificar amb dues màquines virtuals Linux.
 
-Un NAS — Network Attached Storage és un dispositiu d'emmagatzematge connectat a una xarxa[cite: 7].
+## 3. Preparació comuna
 
-Permet proporcionar emmagatzematge centralitzat a diferents equips[cite: 7].
+### 3.1. Màquines virtuals necessàries
 
-             ┌──── PC 1
-             │
-Xarxa ───────┼──── PC 2
-             │
-             ├──── PC 3
-             │
-             └──── NAS
+Es necessiten dues màquines Linux actualitzades:
 
-Un NAS pot proporcionar:[cite: 7]
+| Màquina | Nom d'equip | Funció |
+| --- | --- | --- |
+| Client | `client-cognom` | Conté les dades de treball i el RAID. |
+| Servidor | `servidor-cognom` | Rep les còpies de seguretat mitjançant SSH. |
 
-Carpetes compartides.[cite: 7]
-Usuaris.[cite: 7]
-Permisos.[cite: 7]
-RAID.[cite: 7]
-Snapshots.[cite: 7]
-Còpies de seguretat.[cite: 7]
-Replicació.[cite: 7]
-Serveis de xarxa.[cite: 7]
+Pots partir de la màquina Linux meua en la UD1 i clonar-la des de VirtualBox. AlmaLinux és l'opció recomanada per a seguir les ordes principals d'aquesta guia, però també es poden utilitzar Debian, Ubuntu Server, Rocky Linux o Fedora. En clonar, genera una nova adreça MAC per a evitar conflictes de xarxa.
 
-### 4.12. NAS enfront d'emmagatzematge local[cite: 7]
-Emmagatzematge local[cite: 7]
-PC
- ↓
-Disc
+### 3.2. Xarxa i noms
 
-Les dades estan directament en l'equip[cite: 7].
+1. Configura totes dues màquines amb l'adaptador de xarxa en **NAT** per a instal·lar paquets.
+2. Arranca cada màquina i canvia el seu nom. Substitueix `cognom` pel teu primer cognom sense espais:
 
-NAS[cite: 7]
-PC ───┐
-PC ───┼── Xarxa ── NAS
-PC ───┘
+```bash
+sudo hostnamectl set-hostname client-cognom
 
-Les dades es centralitzen en un sistema d'emmagatzematge accessible mitjançant xarxa[cite: 7].
+```
 
-Això facilita:[cite: 7]
+En l'altra màquina:
 
-Administració.[cite: 7]
-Compartició.[cite: 7]
-Backup.[cite: 7]
-Control d'accés.[cite: 7]
+```bash
+sudo hostnamectl set-hostname servidor-cognom
 
-### 4.13. TrueNAS[cite: 7]
+```
 
-TrueNAS és una plataforma utilitzada per a implementar sistemes d'emmagatzematge en xarxa[cite: 7].
+3. Reinicia o obri una nova sessió i verifica el nom:
 
-Permet treballar amb:[cite: 7]
+```bash
+hostnamectl
 
-Discos.[cite: 7]
-Pools d'emmagatzematge.[cite: 7]
-Sistemes d'arxius.[cite: 7]
-Usuaris.[cite: 7]
-Permisos.[cite: 7]
-Comparticions.[cite: 7]
-Snapshots.[cite: 7]
-Replicació.[cite: 7]
-Serveis de xarxa.[cite: 7]
+```
 
-En un entorn de proves d'ASIR es pot utilitzar per a practicar:[cite: 7]
+4. Actualitza totes dues màquines:
 
-RAID.[cite: 7]
-Emmagatzematge.[cite: 7]
-Compartició d'arxius.[cite: 7]
-Backup.[cite: 7]
-Snapshots.[cite: 7]
-Recuperació.[cite: 7]
+```bash
+# AlmaLinux, Rocky Linux o Fedora
+sudo dnf update -y
 
-### 4.14. Snapshots[cite: 7]
+# Debian o Ubuntu
+sudo apt update && sudo apt upgrade -y
 
-Una snapshot representa l'estat d'un sistema d'arxius o emmagatzematge en un moment determinat[cite: 7].
+```
 
-Exemple:[cite: 7]
+5. Crea una instantània (*snapshot*) de cada màquina amb el nom `ud2-inici`.
 
-10:00 → Snapshot 1
-12:00 → Snapshot 2
-14:00 → Snapshot 3
+### 3.3. Discs virtuals del client
 
-Si un usuari modifica un arxiu a les 14:30, pot ser possible recuperar una versió anterior mitjançant una snapshot[cite: 7].
+1. Apaga la màquina `client-cognom`.
+2. En VirtualBox, obri **Configuració > Emmagatzematge**.
+3. Afig tres discs virtuals nous de 4 GB cadascun. Anomena'ls `raid-a`, `raid-b` i `raid-c`.
+4. Afig un quart disc virtual de 4 GB anomenat `raid-recanvi`, però no l'utilitzes encara.
+5. Inicia la màquina client i comprova els discs:
 
-Les snapshots són especialment útils per a:[cite: 7]
+```bash
+lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS
 
-Errors humans.[cite: 7]
-Recuperació ràpida.[cite: 7]
-Versionat.[cite: 7]
-Protecció enfront de determinades modificacions.[cite: 7]
+```
 
-Però:[cite: 7]
+Anota els noms assignats als quatre discs nous. En els exemples s'utilitzaran `/dev/sdb`, `/dev/sdc`, `/dev/sdd` i `/dev/sde`, però has de substituir-los pels que apareguen en el teu sistema.
 
-Una snapshot no substitueix necessàriament una còpia de seguretat[cite: 7].
+## 4. Pràctica 1 - Inventari i estat SMART
 
-Si totes les snapshots estan emmagatzemades en el mateix dispositiu que les dades i aquest dispositiu es destrueix, també es poden perdre les snapshots[cite: 7].
+### 4.1. Identificar les unitats
 
-### 4.15. Recuperació d'informació[cite: 7]
+1. Instal·la les eines de monitoratge:
 
-Una estratègia de backup ha d'incloure procediments de recuperació[cite: 7].
+```bash
+# AlmaLinux, Rocky Linux o Fedora
+sudo dnf install smartmontools -y
 
-Procés bàsic:[cite: 7]
+# Debian o Ubuntu
+sudo apt install smartmontools -y
 
-Incident
-   ↓
-Identificar informació afectada
-   ↓
-Seleccionar backup
-   ↓
-Restaurar
-   ↓
-Comprovar integritat
-   ↓
-Comprovar aplicació
-   ↓
-Posar servei en producció
-   ↓
-Documentar
+```
 
-### 4.16. Proves de restauració[cite: 7]
+2. Mostra l'inventari d'unitats:
 
-No n'hi ha prou amb realitzar còpies[cite: 7].
+```bash
+lsblk -o NAME,MODEL,SIZE,TYPE,TRAN
 
-És necessari comprovar periòdicament que es poden restaurar[cite: 7].
+```
 
-Una prova pot consistir a:[cite: 7]
+3. Consulta l'estat SMART de la unitat del sistema. Substitueix `/dev/sda` si el teu disc principal té un altre nom:
 
-Seleccionar una còpia.[cite: 7]
-Restaurar alguns arxius.[cite: 7]
-Comprovar el seu contingut.[cite: 7]
-Restaurar una màquina virtual.[cite: 7]
-Comprovar una base de dades.[cite: 7]
-Mesurar el temps de recuperació.[cite: 7]
-Registrar els resultats.[cite: 7]
+```bash
+sudo smartctl -H /dev/sda
 
-Una còpia que mai ha sigut provada suposa un risc[cite: 7].
+```
 
-### 4.17. Política de backup[cite: 7]
+4. Intenta obtindre l'informe detallat:
 
-Una política de còpies hauria de definir clarament:[cite: 7]
+```bash
+sudo smartctl -a /dev/sda
 
-Informació protegida[cite: 7]
+```
 
-Exemple:[cite: 7]
+En moltes màquines virtuals, VirtualBox no exposa els atributs SMART del disc virtual. Si apareix un missatge que SMART no està disponible, inclou la eixida com a evidència i explica la limitació: el sistema convidat veu un disc virtual, no el maquinari físic real.
 
-Bases de dades.[cite: 7]
-Documents.[cite: 7]
-Configuracions.[cite: 7]
-Màquines virtuals.[cite: 7]
-Servidors.[cite: 7]
+### 4.2. Analitzar el resultat
 
-Freqüència[cite: 7]
+1. Indica model, grandària i tipus de connexió que mostra `lsblk`.
+2. Explica què signifiquen, a nivell general, els atributs de sectors reassignats, sectors pendents i errors no corregibles.
+3. Justifica per què una alerta SMART ha de provocar una còpia de seguretat i revisió de la unitat, però no substitueix RAID ni còpies de seguretat.
 
-Exemple:[cite: 7]
+## 5. Pràctica 2 - Creació i comprovació de RAID 5
 
-Backup complet → semanal
-Backup incremental → diari
+### 5.1. Instal·lar i verificar `mdadm`
 
-Retenció[cite: 7]
+1. Instal·la l'eina de RAID per programari:
 
-Exemple:[cite: 7]
+```bash
+# AlmaLinux, Rocky Linux o Fedora
+sudo dnf install mdadm -y
 
-Diaris → 30 dies
-Semanals → 3 mesos
-Mensuals → 1 any
+# Debian o Ubuntu
+sudo apt install mdadm -y
 
-Destins[cite: 7]
-NAS.[cite: 7]
-Servidor de backup.[cite: 7]
-Cloud.[cite: 7]
-Ubicació externa.[cite: 7]
+```
 
-### 4.18. Eines de backup[cite: 7]
+2. Comprova de nou els discs i confirma que els tres discs de RAID no contenen dades importants:
 
-#### rsync[cite: 7]
+```bash
+lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS
 
-rsync permet sincronitzar arxius i directoris[cite: 7].
+```
 
-Exemple:[cite: 7]
+3. Neteja exclusivament les signatures dels tres discs virtuals que utilitzaràs. No me n'executes d'aquestes ordes sobre el disc del sistema:
 
-rsync -av /datos/ /backup/datos/
+```bash
+sudo wipefs -a /dev/sdb
+sudo wipefs -a /dev/sdc
+sudo wipefs -a /dev/sdd
 
-Es pot utilitzar per a realitzar sincronitzacions locals o remotes[cite: 7].
+```
 
-#### Clonezilla[cite: 7]
+### 5.2. Crear el volum RAID
 
-Clonezilla permet treballar amb imatges i clonacions de discos i particions[cite: 7].
+1. Crea un RAID 5 amb els tres discs de dades:
 
-Es pot utilitzar per a:[cite: 7]
+```bash
+sudo mdadm --create --verbose /dev/md0 --level=5 --raid-devices=3 /dev/sdb /dev/sdc /dev/sdd
 
-Clonar equips.[cite: 7]
-Crear imatges.[cite: 7]
-Restaurar sistemes.[cite: 7]
-Preparar desplegaments.[cite: 7]
+```
 
-#### Duplicati[cite: 7]
+2. Confirma la creació quan `mdadm` la sol·licite.
+3. Consulta el progrés de sincronització. Prem `Ctrl+C` en acabar la comprovació:
 
-Duplicati permet crear còpies programades i pot utilitzar diferents destins d'emmagatzematge[cite: 7].
+```bash
+watch -n 1 cat /proc/mdstat
 
-Entre les seues característiques es troben:[cite: 7]
+```
 
-Programació.[cite: 7]
-Versionat.[cite: 7]
-Xifrat.[cite: 7]
-Destins locals i remots.[cite: 7]
+4. Revisa els detalls del conjunt:
 
-## 5. Esborrat segur i cicle de vida[cite: 7]
+```bash
+sudo mdadm --detail /dev/md0
 
-### 5.1. Esborrat segur d'informació[cite: 7]
+```
 
-Eliminar un arxiu o formatar ràpidament una unitat no garanteix que les dades no puguen recuperar-se[cite: 7]. El mètode adequat depén del medi, del nivell de confidencialitat i de la reutilització prevista[cite: 7]. En HDD, la sobreescriptura gestionada correctament pot ser eficaç perquè els sectors es poden escriure de forma directa[cite: 7]. En SSD, el *wear leveling* i l'espai reservat pel controlador impedeixen assegurar la sobreescriptura d'una ubicació concreta; es recomanen les ordes de sanejament del fabricant, com **ATA Secure Erase**, o l'esborrat criptogràfic mitjançant destrucció de claus quan la unitat es va xifrar des de l'inici[cite: 7].
+### 5.3. Formatar i muntar el RAID
 
-La guia [NIST SP 800-88](https://csrc.nist.gov/pubs/sp/800/88/r1/final) diferencia tres nivells: **clear**, que elimina les dades de manera que no siguen recuperables amb tècniques habituals; **purge**, que aplica un sanejament més profund; i **destroy**, que inutilitza físicament el suport[cite: 7]. L'organització ha de definir quin mètode empra, qui l'autoritza i quina evidència conserva[cite: 7]. Per exemple, abans de reciclar un portàtil que contenia informació personal, es pot verificar que estava xifrat, eliminar de forma segura les seues claus, restablir-lo i registrar el número de sèrie, el responsable i el resultat del procés[cite: 7].
+1. Quan la sincronització haja acabat, crea un sistema de fitxers ext4:
 
-En serveis cloud, el client no controla directament el maquinari i ha de revisar les condicions d'eliminació, retenció i còpies del proveïdor[cite: 7]. El xifrat, una política de retenció definida, contractes adequats i el registre de les operacions ajuden a complir les obligacions de protecció de dades[cite: 7]. L'esborrat segur també s'aplica a dispositius mòbils: s'han d'eliminar els comptes vinculats, comprovar la sincronització en el núvol i utilitzar el restabliment de fàbrica amb el xifrat habilitat[cite: 7].
+```bash
+sudo mkfs.ext4 /dev/md0
 
-## 6. Resum[cite: 7]
+```
 
-En aquesta unitat hem estudiat com protegir la informació enfront de fallades i pèrdues[cite: 7].
+2. Crea el punt de muntatge i munta el volum:
 
-Els conceptes fonamentals són:[cite: 7]
+```bash
+sudo mkdir -p /mnt/raid5
+sudo mount /dev/md0 /mnt/raid5
 
-- Seguretat passiva i protecció física.[cite: 7]
-- Emmagatzematge en HDD, SSD i NVMe.[cite: 7]
-- Redundància i RAID.[cite: 7]
-- Backup, NAS, snapshots i recuperació.[cite: 7]
-- RPO, RTO i proves de restauració.[cite: 7]
-- Esborrat segur i cicle de vida del suport.[cite: 7]
+```
 
-Els nivells RAID permeten millorar la disponibilitat o el rendiment, però no substitueixen les còpies de seguretat[cite: 7].
+3. Comprova capacitat i muntatge:
 
-Una estratègia professional ha de combinar diferents mecanismes:[cite: 7]
+```bash
+df -h /mnt/raid5
 
-        INFORMACIÓ
-             │
-     ┌───────┴────────┐
-     │                │
- Redundància         Backup
-     │                │
-    RAID        3-2-1 / extern
-     │                │
-     └───────┬────────┘
-             │
-        RECUPERACIÓ
+```
 
-La idea fonamental d'aquesta unitat és:[cite: 7]
+4. Crea dades de prova i verifica que s'han guardat:
 
-No hem de preguntar-nos solament com evitar que les dades es perden, sinó també com recuperar-les quan la fallada inevitablement es produïsca[cite: 7].
+```bash
+echo "Prova RAID 5 - $(date)" | sudo tee /mnt/raid5/prova-raid.txt
+sudo cat /mnt/raid5/prova-raid.txt
 
-## 7. Recursos[cite: 7]
+```
 
-- TrueNAS.[cite: 7]
-- Clonezilla.[cite: 7]
-- Duplicati.[cite: 7]
-- rsync.[cite: 7]
-- BorgBackup.[cite: 7]
-- Restic.[cite: 7]
-- [NIST SP 800-88: Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r1/final)[cite: 7]
-- [INCIBE: borrado seguro de información](https://www.incibe.es/sites/default/files/contenidos/guias/doc/guia_ciberseguridad_borrado_seguro_metad_0.pdf)[cite: 7]
-- [Guía de seguridad en centros de datos de Google](https://www.google.com/about/datacenters/data-security/)[cite: 7]
+### 5.4. Simular una fallada i reconstruir
 
-## 8. Relació amb els resultats d'aprenentatge[cite: 7]
+Aquesta simulació marca com a fallit un disc virtual del conjunt, però no esborra dades. Així i tot, verifica que utilitzes el disc correcte.
 
-Aquesta unitat contribueix principalment a:[cite: 7]
+1. Marca `/dev/sdb` com a fallit i elimina'l del conjunt:
 
-### 8.1. RA1[cite: 7]
+```bash
+sudo mdadm /dev/md0 --fail /dev/sdb
+sudo mdadm /dev/md0 --remove /dev/sdb
 
-Adopta pràctiques segures d'utilització i treball amb sistemes informàtics, reconeixent les vulnerabilitats i les necessitats d'assegurament dels sistemes[cite: 7].
+```
 
-Especialment mitjançant:[cite: 7]
+2. Consulta l'estat degradat:
 
-- Protecció de la informació i seguretat passiva.[cite: 7]
-- Còpies de seguretat i recuperació.[cite: 7]
+```bash
+cat /proc/mdstat
+sudo mdadm --detail /dev/md0
 
-### 8.2. RA6[cite: 7]
+```
 
-Implementa solucions d'alta disponibilitat mitjançant tècniques de virtualització i sistemes d'emmagatzematge redundant[cite: 7].
+3. Comprova que el fitxer continua disponible:
 
-Especialment mitjançant:[cite: 7]
+```bash
+sudo cat /mnt/raid5/prova-raid.txt
 
-- RAID, redundància i emmagatzematge.[cite: 7]
-- NAS i recuperació.[cite: 7]
-- RPO, RTO i continuïtat del servei.[cite: 7]
+```
+
+4. Afig el disc de recanvi, suposant que siga `/dev/sde`:
+
+```bash
+sudo wipefs -a /dev/sde
+sudo mdadm /dev/md0 --add /dev/sde
+
+```
+
+5. Observa la reconstrucció:
+
+```bash
+watch -n 1 cat /proc/mdstat
+
+```
+
+6. Quan acabe, comprova que el conjunt està actiu i que el fitxer continua accessible:
+
+```bash
+sudo mdadm --detail /dev/md0
+sudo cat /mnt/raid5/prova-raid.txt
+
+```
+
+7. Explica què hauria hagut si haguera fallat un segon disc abans de completar la reconstrucció.
+
+## 6. Pràctica 3 - Còpia remota i recuperació amb `rsync`
+
+### 6.1. Preparar el servidor de còpies
+
+En `servidor-cognom`:
+
+1. Instal·la i activa el servidor SSH:
+
+```bash
+# AlmaLinux, Rocky Linux o Fedora
+sudo dnf install openssh-server rsync -y
+
+# Debian o Ubuntu
+sudo apt install openssh-server rsync -y
+sudo systemctl enable --now sshd
+
+```
+
+2. Consulta l'adreça IP:
+
+```bash
+ip -br a
+
+```
+
+3. Anota la IP de la interfície de xarxa. En les ordes següents es representarà com a `IP_SERVIDOR`.
+
+### 6.2. Crear dades i realitzar una còpia
+
+En `client-cognom`:
+
+1. Instal·la `rsync`:
+
+```bash
+# AlmaLinux, Rocky Linux o Fedora
+sudo dnf install rsync -y
+
+# Debian o Ubuntu
+sudo apt install rsync -y
+
+```
+
+2. Crea dades de prova en el RAID:
+
+```bash
+sudo mkdir -p /mnt/raid5/datos
+echo "Document inicial" | sudo tee /mnt/raid5/datos/informe.txt
+echo "Inventari d'actius" | sudo tee /mnt/raid5/datos/inventario.txt
+sudo chown -R "$USER":"$USER" /mnt/raid5/datos
+
+```
+
+3. Realitza una còpia al directori personal del mateix usuari en el servidor. Substitueix `usuari` i `IP_SERVIDOR`:
+
+```bash
+rsync -av /mnt/raid5/datos/ usuari@IP_SERVIDOR:~/copia-ud2/
+
+```
+
+4. Comprova el contingut en el servidor:
+
+```bash
+ssh usuari@IP_SERVIDOR 'ls -l ~/copia-ud2'
+
+```
+
+La barra final en `datos/` indica que es copia el contingut del directori. Sense eixa barra, `rsync` crearia una carpeta `datos` dins de la destinació.
+
+### 6.3. Restaurar un fitxer eliminat
+
+1. En el client, elimina només el fitxer de prova:
+
+```bash
+rm /mnt/raid5/datos/informe.txt
+
+```
+
+2. Comprova que ja no existeix:
+
+```bash
+ls -l /mnt/raid5/datos
+
+```
+
+3. Restaura el fitxer des del servidor:
+
+```bash
+rsync -av usuari@IP_SERVIDOR:~/copia-ud2/informe.txt /mnt/raid5/datos/
+
+```
+
+4. Verifica el contingut restaurat:
+
+```bash
+cat /mnt/raid5/datos/informe.txt
+
+```
+
+5. Explica per què RAID no hauria recuperat aquest fitxer: RAID protegeix davant la fallada d'un disc, però replica o distribueix també l'esborrament accidental.
+
+## 7. Pràctica 4 - Esborrament segur i cicle de vida
+
+### 7.1. Comparar esborrament normal i esborrament segur
+
+Aquesta activitat es limita a un fitxer de prova en el RAID virtual. No intentes recuperar fitxers ni me n'executes d'eines d'esborrament sobre unitats físiques.
+
+1. Crea un fitxer de prova:
+
+```bash
+echo "Dada confidencial de prova" > /mnt/raid5/datos/confidencial.txt
+
+```
+
+2. Realitza un esborrament normal i verifica que el fitxer ja no apareix en el directori:
+
+```bash
+rm /mnt/raid5/datos/confidencial.txt
+ls -l /mnt/raid5/datos
+
+```
+
+3. Torna a crear el fitxer i realitza un esborrament mitjançant sobreescriptura:
+
+```bash
+echo "Dada confidencial de prova" > /mnt/raid5/datos/confidencial.txt
+shred -u -n 1 /mnt/raid5/datos/confidencial.txt
+ls -l /mnt/raid5/datos
+
+```
+
+4. Explica la diferència entre tots dos mètodes i per què la sobreescriptura pot ser adequada per a un HDD, però no garanteix el sanejament complet d'un SSD a causa del *wear leveling* i a les àrees gestionades pel controlador.
+
+## 8. Activitats
+
+### 8.1. Fonaments, RAID i còpies
+
+1. Explica la diferència entre seguretat activa i seguretat passiva. Inclou tres exemples de cadascuna.
+2. Una empresa disposa de quatre discs de 4 TB. Compara RAID 0, RAID 1, RAID 5 i RAID 10. Indica capacitat útil aproximada, tolerància a fallades i característiques principals.
+3. Explica per què RAID no substitueix a un sistema de còpies de seguretat.
+4. Una empresa realitza les següents còpies: diumenge, completa; dilluns, dimarts i dimecres, incrementals. Si el sistema falla dimecres, indica quines còpies seran necessàries per a recuperar la informació.
+5. Dissenya una estratègia 3-2-1 per a una empresa petita.
+6. Explica la diferència pràctica entre un RPO d'una hora i un RTO d'una hora.
+
+### 8.2. Riscos físics i retirada d'equips
+
+1. Una petita empresa vol instal·lar un CPD en la planta baixa, al costat d'un magatzem amb accés públic. Identifica almenys cinc riscos físics o ambientals i proposa una mesura proporcionada per a cadascun.
+2. Una organització retirarà dos equips: un PC amb HDD que contenia documents interns i un portàtil amb SSD xifrat que contenia dades personals. Proposa un procés d'esborrament o sanejament per a cada equip i indica quines evidències han de registrar-se abans de reciclar-los.
+
+## 9. Autoavaluació
+
+Respon de manera breu i amb vocabulari tècnic. Pots comprovar les respostes en la unitat teòrica una vegada completades.
+
+### 9.1. Emmagatzematge i redundància
+
+1. Quin objectiu té la seguretat passiva?
+2. Quina diferència existeix entre HDD i SSD?
+3. Quina característica principal proporciona RAID 1?
+4. Què passa si falla un disc en RAID 0?
+5. Quants discs necessita com a mínim RAID 5?
+6. Quin avantatge proporciona RAID 6 enfront de RAID 5?
+7. Què caracteritza a RAID 10?
+8. Quina informació pot aportar SMART sobre una unitat d'emmagatzematge?
+
+### 9.2. Còpies i recuperació
+
+1. Quina diferència existeix entre una còpia completa i una incremental?
+2. Què estableix la regla 3-2-1?
+3. Què significa RPO?
+4. Què significa RTO?
+5. Què és un NAS?
+6. Per a què serveix una instantània (*snapshot*)?
+7. Per què és important provar les còpies?
+8. Quina eina de Linux permet sincronitzar fitxers i directoris?
+9. Per què un SAI no substitueix a un generador ni a una estratègia de recuperació?
+
+### 9.3. Sanejament i cicle de vida
+
+1. Quin mètode és més adequat per a sanejar un SSD: sobreescriure sectors concrets o emprar un mecanisme de sanejament del fabricant? Per què?
+2. Quina diferència existeix entre els nivells *clear*, *purge* i *destroy* del NIST SP 800-88?
+3. Quines precaucions addicionals han de considerar-se en eliminar dades emmagatzemades en el núvol?
+
+## 10. Tasca avaluable única - Informe de continuïtat i recuperació
+
+Lliura un únic informe en PDF o Markdown que integre les quatre pràctiques. Ha d'incloure captures pròpies i explicacions redactades amb les teues paraules.
+
+### 10.1. Contingut obligatori
+
+1. Diagrama senzill de les dues màquines virtuals, els quatre discs del client i la ruta de la còpia remota.
+2. Inventari de les unitats i resultat de la consulta SMART, incloent-hi la limitació si VirtualBox no mostra atributs reals.
+3. Evidències de creació, estat normal, estat degradat i reconstrucció del RAID 5.
+4. Càlcul de capacitat útil aproximada del RAID creat i nombre de fallades de disc que tolera.
+5. Evidències de la còpia amb `rsync`, l'esborrament accidental i la restauració correcta d'`informe.txt`.
+6. Comparació entre RAID, còpia de seguretat i esborrament segur, indicant quin problema resol cada mesura.
+
+## 11. Recursos
+
+* [Documentació de `mdadm](https://man7.org/linux/man-pages/man8/mdadm.8.html)`
+* [Manual de `rsync](https://man7.org/linux/man-pages/man1/rsync.1.html)`
+* [smartmontools](https://www.smartmontools.org/)
+* [NIST SP 800-88: Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r1/final)
+
+```
 
 ```

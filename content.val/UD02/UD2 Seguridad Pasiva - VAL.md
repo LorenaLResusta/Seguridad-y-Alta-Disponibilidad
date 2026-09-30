@@ -1,8 +1,8 @@
 ---
-
-## title: "2. Seguretat passiva."
+title: "2.Seguretat passiva: emmagatzematge
+"
 weight: 1
-
+---
 # UD2 - Seguretat passiva: emmagatzematge
 
 > Protecció de la informació, redundància, còpies de seguretat i recuperació.
