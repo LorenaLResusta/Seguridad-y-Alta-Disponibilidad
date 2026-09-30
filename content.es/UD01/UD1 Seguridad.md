@@ -1,3 +1,9 @@
+---
+title: "1. . Prácticas"
+weight: 1
+---
+
+
 # UD1 - Introducción a la seguridad informática
 
 > Conceptos fundamentales para la protección de sistemas e información.

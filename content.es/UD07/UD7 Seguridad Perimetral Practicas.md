@@ -1,3 +1,8 @@
+---
+title: "7.  seguridad perimetral. Prácticas"
+weight: 2
+---
+
 # UD7 - Prácticas: seguridad perimetral
 
 > Configuración y validación de controles perimetrales mediante evidencias técnicas reproducibles.

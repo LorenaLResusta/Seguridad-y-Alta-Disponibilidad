@@ -1,3 +1,8 @@
+---
+title: "5.  Alta disponibilidad."
+weight: 2
+---
+
 # UD5 - Prácticas: alta disponibilidad
 
 > Diseño, despliegue y validación de servicios redundantes en entornos de pruebas virtualizados.

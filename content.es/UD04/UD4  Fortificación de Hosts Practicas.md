@@ -1,3 +1,8 @@
+---
+title: "4. Fortificación de Hosts. Prácticas"
+weight: 2
+---
+
 # UD4 - Prácticas: fortificación de hosts
 
 > Configuración segura, cifrado, auditoría y monitorización de una máquina virtual Linux.

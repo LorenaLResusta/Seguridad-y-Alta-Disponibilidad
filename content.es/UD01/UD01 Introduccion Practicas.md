@@ -1,3 +1,9 @@
+---
+title: "1. Introducción. Prácticas"
+weight: 2
+---
+
+
 # UD1 - Prácticas: introducción a la seguridad
 
 > Preparación de un entorno de pruebas Linux y elaboración de un plan básico de gestión de riesgos.

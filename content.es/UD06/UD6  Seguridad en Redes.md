@@ -1,3 +1,8 @@
+---
+title: "6 - Seguridad en redes."
+weight: 1
+---
+
 # UD6 - Seguridad en redes
 
 > Protección de las comunicaciones, el acceso y los servicios de red mediante segmentación, cifrado, detección y controles perimetrales.

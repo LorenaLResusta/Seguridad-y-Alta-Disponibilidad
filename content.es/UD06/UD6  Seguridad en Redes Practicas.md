@@ -1,3 +1,8 @@
+---
+title: "6 - Seguridad en redes. Prácticas"
+weight: 2
+---
+
 # UD6 - Prácticas: seguridad en redes
 
 > Segmentación, perímetro, WLAN, VPN y detección en entornos de pruebas controlados.

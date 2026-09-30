@@ -1,3 +1,8 @@
+---
+title: "4. Fortificación de Hosts."
+weight: 1
+---
+
 # UD4 - Fortificación de Hosts
 
 > Medidas para reducir la superficie de ataque, proteger sistemas operativos y detectar incidentes.

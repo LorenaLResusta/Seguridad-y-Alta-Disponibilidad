@@ -1,3 +1,8 @@
+---
+title: "2. Seguridad pasiva. Prácticas"
+weight: 1
+---
+
 # UD2 - Prácticas: seguridad pasiva y almacenamiento
 
 > Monitorización, redundancia, copias de seguridad, recuperación y borrado seguro en un entorno de pruebas Linux.

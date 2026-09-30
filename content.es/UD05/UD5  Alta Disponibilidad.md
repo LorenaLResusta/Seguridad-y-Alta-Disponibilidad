@@ -1,3 +1,8 @@
+---
+title: "5.  Alta disponibilidad."
+weight: 1
+---
+
 # UD5 - Alta disponibilidad
 
 > Diseño de servicios redundantes, tolerantes a fallos y recuperables.

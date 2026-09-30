@@ -1,3 +1,7 @@
+---
+title: "7.  seguridad perimetral. Prácticas"
+weight: 1
+---
 # UD7 - Seguridad perimetral
 
 > Protección de las fronteras de red mediante firewalls, segmentación, publicación segura y control del tráfico.
