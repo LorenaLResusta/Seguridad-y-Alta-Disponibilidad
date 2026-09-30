@@ -1,0 +1,27 @@
+baseURL = "https://user.gitlab.io/doc-sistemas-informaticos/"  # Cambia por tu URL de GitLab Pages o GitHub Pages
+locale = "es-es"
+title = "Documentación Sistemas Informáticos"
+theme = "hugo-book"
+
+# Configuración multilingüe
+defaultContentLanguage = "es"
+
+# Configuración para multilingüe
+[languages]
+  [languages.es]
+    languageName = "Castellano"
+    weight = 1
+    contentDir = "content.es"
+
+  [languages.val]
+    languageName = "Valencià"
+    weight = 2
+    contentDir = "content.val"
+
+[params]
+  # Origen de los ficheros a renderizar
+  BookSection = '/'
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
