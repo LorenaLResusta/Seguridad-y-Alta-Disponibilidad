@@ -1,6 +1,6 @@
 baseURL = "https://user.gitlab.io/doc-sistemas-informaticos/"  # Cambia por tu URL de GitLab Pages o GitHub Pages
 locale = "es-es"
-title = "Documentación Sistemas Informáticos"
+title = "Seguridad y Alta Disponibilidad"
 theme = "hugo-book"
 
 # Configuración multilingüe
