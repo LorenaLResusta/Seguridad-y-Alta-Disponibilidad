@@ -56,6 +56,13 @@ Una **zona** agrupa equipos con el mismo nivel de confianza y los mismos requisi
 | **Gestión** | Administración de equipos y cortafuegos | Muy alta | Solo administradores |
 | **Invitados / IoT** | Equipos no gestionados | Nula | Solo Internet |
 
+<!-- enr:u7a -->
+![Cortafuegos de tres zonas con DMZ](/images/ud7/dmz-tres-zonas.svg)
+*Figura 7.1. Arquitectura de tres zonas: lo publicado vive en la DMZ, que no puede iniciar conexiones hacia la LAN.*
+
+> [!TIP]
+> Antes de escribir una sola regla, rellena la **matriz de flujos** (origen → destino → servicio → acción). Las reglas del cortafuegos son su traducción literal; si la matriz es correcta, las reglas salen solas.
+
 ### 3.2. Arquitecturas clásicas
 
 | Arquitectura | Descripción | Limitaciones |
@@ -200,6 +207,10 @@ iptables-translate -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo iptables-save | sudo iptables-restore-translate   # traduce un conjunto completo (revisa el resultado)
 ```
 
+<!-- enr:u7b -->
+> [!CAUTION]
+> **Un cortafuegos con política `drop` mal aplicado te deja sin acceso remoto.** Ten siempre acceso por consola de VirtualBox, comprueba con `nft -c -f` y aplica con una **red de seguridad** (por ejemplo, programar `nft flush ruleset` a los 2 minutos y cancelarlo si todo va bien).
+
 ### 5.3. Cortafuegos de tres zonas completo
 
 Escenario del laboratorio (apartado 12 y prácticas): cortafuegos `fw` con tres interfaces.
@@ -310,6 +321,13 @@ sudo nft -f /etc/nftables.conf                                    # aplica
 sudo systemctl stop deshacer-fw.timer                             # cancela el deshacer
 sudo systemctl enable --now nftables                              # persistente
 ```
+
+<!-- enr:u7c -->
+{{% details title="🧠 Comprueba lo que has aprendido: nftables" open=false %}}
+**¿Qué diferencia hay entre las cadenas `input`, `forward` y `output`? ¿Cuál se aplica al tráfico LAN → Internet a través del cortafuegos?**
+
+`input` filtra lo destinado al propio cortafuegos, `output` lo que genera él y `forward` lo que lo atraviesa. El tráfico LAN → Internet **atraviesa** el equipo, así que lo gobierna `forward` (y la salida a Internet necesita además NAT).
+{{% /details %}}
 
 ### 5.4. Conjuntos, mapas, medidores y bloqueos dinámicos
 
@@ -426,6 +444,10 @@ table ip nat {
 ```
 
 ---
+
+<!-- enr:u7d -->
+> [!NOTE]
+> Para que Linux actúe como router hay que activar `net.ipv4.ip_forward=1`. Es un cambio importante de seguridad: desde ese momento el equipo reenvía paquetes entre redes y **debe tener un cortafuegos** correcto.
 
 ## 7. Fortificación de la pila TCP/IP en el cortafuegos
 
@@ -581,6 +603,10 @@ Gestión visual, actualizaciones del sistema, **backups de configuración con un
 
 ---
 
+<!-- enr:u7e -->
+![Comparativa entre proxy directo y proxy inverso](/images/ud7/proxy-directo-inverso.svg)
+*Figura 7.2. El proxy directo protege y controla a los clientes; el inverso protege a los servidores.*
+
 ## 10. Proxy: tipos y funciones
 
 Un **proxy** es un intermediario: recibe peticiones de un cliente y las reenvía a un servidor, o al revés.
@@ -720,6 +746,10 @@ Formato de `access.log` (por defecto):
 | `HIER_DIRECT/IP` | Cómo se obtuvo |
 
 Estadísticas de caché: `sudo grep -c TCP_HIT /var/log/squid/access.log` y la utilidad `squidclient mgr:info` (si está instalada).
+
+<!-- enr:u7f -->
+> [!WARNING]
+> La autenticación **básica** de Squid envía las credenciales en Base64 (no cifradas). Úsala solo en una LAN de confianza o combínala con un transporte seguro; en entornos reales se integra con LDAP/Kerberos.
 
 ### 11.4. Autenticación de usuarios
 
@@ -913,6 +943,13 @@ curl -vk https://localhost/ 2>&1 | grep -E 'SSL connection|subject|HTTP/'       
 curl -sI https://localhost/ -k | grep -i strict-transport                           # cabecera HSTS
 ```
 
+<!-- enr:u7g -->
+{{% details title="🧠 Comprueba lo que has aprendido: proxies" open=false %}}
+**Quieres que los equipos de la LAN solo puedan navegar por una lista de sitios. ¿Proxy directo o inverso? ¿Y para publicar la intranet con TLS y un WAF?**
+
+Lista de sitios para los clientes → proxy **directo** (Squid, con ACL). Publicar la intranet protegida → proxy **inverso** (Nginx, con TLS y WAF delante de los servidores).
+{{% /details %}}
+
 ### 12.4. Balanceo y limitación de peticiones
 
 El proxy inverso puede repartir entre varios servidores (UD5) y limitar abusos:
@@ -1017,6 +1054,10 @@ vrrp_instance FW_LAN {
 Y una instancia análoga para la WAN y la DMZ, agrupadas con `vrrp_sync_group` para que **todas conmuten a la vez** (si solo cambia una pata, el tráfico se rompe).
 
 **Prueba de fallo:** `sudo systemctl stop keepalived` en el principal mientras hay un `ping`/`ssh` continuo desde la LAN a Internet; mide la interrupción y comprueba si la conexión SSH sobrevive (con `conntrackd`, sí).
+
+<!-- enr:u7h -->
+> [!IMPORTANT]
+> **Todo cambio en el perímetro se documenta, se prueba y se puede revertir.** Guarda la configuración en un repositorio (Git) y anota quién, cuándo y por qué cambió cada regla: es la base de la trazabilidad y de las auditorías.
 
 ### 13.2. Gestión de cambios y copias de la configuración
 

@@ -95,6 +95,10 @@ for k in $(seq 1 25); do
 done | grep -n "ATACAR"
 ```
 
+<!-- enr:u3a -->
+> [!WARNING]
+> **Nunca inventes tu propio algoritmo de cifrado.** Los algoritmos fiables han sido analizados durante años por la comunidad; uno casero casi siempre tiene fallos. Usa siempre bibliotecas y algoritmos estándar.
+
 ### 3.3. Principio de Kerckhoffs
 
 > «La seguridad de un sistema criptográfico debe depender únicamente del secreto de la **clave**, no del secreto del **algoritmo**.» (Auguste Kerckhoffs, 1883)
@@ -157,6 +161,10 @@ AES cifra **bloques** de 16 bytes. Para cifrar un fichero de varios megas se nec
 | **GCM** | CTR + autenticación (etiqueta) | **Recomendado**: cifrado autenticado |
 
 El problema de ECB se ilustra con la famosa imagen del «pingüino de ECB»: al cifrar una imagen en modo ECB, la silueta sigue siendo visible porque las zonas del mismo color producen bloques cifrados idénticos.
+
+<!-- enr:u3b -->
+> [!WARNING]
+> **El modo ECB no debe usarse jamás:** bloques iguales de texto claro producen bloques iguales de texto cifrado y se «ven» los patrones (es el famoso ejemplo del pingüino cifrado). Se practica en el laboratorio (práctica 2).
 
 ### 4.4. Cifrado autenticado (AEAD)
 
@@ -413,6 +421,19 @@ Un espía ve p, g, A=8 y B=19, pero para obtener s necesita a o b
 
 Hoy se usa su versión con curvas elípticas (**ECDHE** con **X25519**). La «E» final significa **efímero**: se genera un par nuevo en cada conexión, lo que proporciona **secreto perfecto hacia adelante** (*Perfect Forward Secrecy*, PFS): si en el futuro se roba la clave privada del servidor, las conversaciones grabadas en el pasado siguen protegidas.
 
+<!-- enr:u3c -->
+![Esquema de cifrado híbrido](/images/ud3/cifrado-hibrido.svg)
+*Figura 3.1. La clave de sesión K cifra los datos; la criptografía asimétrica solo protege K.*
+
+> [!TIP]
+> **Regla mental:** simétrica = **rápida pero con problema de distribución de claves**; asimétrica = **lenta pero resuelve la distribución**. TLS, PGP y los mensajes seguros combinan ambas.
+
+{{% details title="🧠 Comprueba lo que has aprendido: simétrica o asimétrica" open=false %}}
+**¿Qué usarías para cifrar un backup de 500 GB que solo tú vas a abrir? ¿Y para enviar una clave a un compañero sin haberos visto nunca?**
+
+Backup → simétrica (AES-256-GCM, p. ej. con `age` o `restic`). Enviar una clave a alguien desconocido → asimétrica (clave pública del compañero) o intercambio de claves tipo Diffie-Hellman.
+{{% /details %}}
+
 ### 5.6. Criptografía híbrida
 
 En la práctica se combinan ambas para aprovechar sus ventajas:
@@ -542,6 +563,10 @@ openssl dgst -sha256 -hmac "ClaveSecretaCompartida" pedido.json
 Ejemplo real: los *webhooks* de GitHub o de las pasarelas de pago envían una cabecera con el HMAC del mensaje para que el servidor compruebe que la petición es legítima.
 
 ---
+
+<!-- enr:u3d -->
+> [!WARNING]
+> **Guardar contraseñas con `MD5` o `SHA-256` simples es un error grave:** son demasiado rápidos. Se deben usar funciones **lentas y con sal** (`yescrypt`, `Argon2id`, `bcrypt`, `scrypt`) para que probar millones de combinaciones sea inviable.
 
 ## 7. Almacenamiento seguro de contraseñas
 
@@ -789,6 +814,13 @@ ls /etc/ssl/certs | head            # Debian/Ubuntu
 trust list | head                   # AlmaLinux/Rocky (p11-kit)
 ```
 
+<!-- enr:u3e -->
+![Cadena de confianza de un certificado X.509](/images/ud3/cadena-confianza.svg)
+*Figura 3.2. Un certificado es de confianza porque la cadena termina en una CA raíz que el sistema ya conoce.*
+
+> [!TIP]
+> Para ver la cadena de un sitio real desde la terminal: `openssl s_client -connect www.ejemplo.es:443 -showcerts </dev/null`. Verás cada certificado de la cadena y el resultado de la verificación.
+
 ### 9.4. Infraestructura de clave pública (PKI)
 
 Una **PKI** es el conjunto de hardware, software, personas, políticas y procedimientos necesarios para crear, gestionar, distribuir, usar, almacenar y revocar certificados.
@@ -859,6 +891,13 @@ openssl pkcs12 -in servidor.p12 -info -noout
 
 > [!WARNING]
 > Un fichero `.p12`/`.pfx` contiene la **clave privada**. Quien lo obtenga y adivine su contraseña puede firmar en tu nombre. Guárdalo cifrado, con una contraseña robusta, y nunca lo envíes por correo.
+
+<!-- enr:u3f -->
+{{% details title="🧠 Comprueba lo que has aprendido: certificados" open=false %}}
+**El navegador muestra «NET::ERR_CERT_COMMON_NAME_INVALID». ¿Qué comprobación ha fallado?**
+
+El nombre del sitio al que accedes no coincide con ninguna entrada SAN del certificado. La cadena de confianza y las fechas pueden estar bien; falla la comprobación de identidad (nombre). Solución: emitir el certificado con el SAN correcto.
+{{% /details %}}
 
 ### 9.7. Revocación
 
@@ -977,6 +1016,10 @@ Estos protocolos se trabajan en la UD6 (acceso remoto y VPN).
 | Gestión de secretos | Gestores de contraseñas, HSM, TPM | UD4 |
 
 ---
+
+<!-- enr:u3g -->
+> [!IMPORTANT]
+> **La seguridad de un sistema criptográfico es la de sus claves.** Una clave privada en un repositorio de Git, en un correo o con permisos `644` equivale a no tener cifrado. Protégelas con permisos `600`, contraseña de paso (*passphrase*) y, cuando sea posible, en un módulo hardware (HSM, YubiKey).
 
 ## 12. Gestión de claves
 

@@ -134,6 +134,10 @@ Como VirtualBox no emula S.M.A.R.T., repite la consulta en tu **equipo anfitrió
 
 **Análisis**: anota modelo, horas de funcionamiento, temperatura y, según el tipo de disco, los atributos 5, 197 y 198 (HDD) o `percentage_used` y `media_errors` (NVMe). ¿Está sano el disco? ¿Qué atributo vigilarías?
 
+<!-- hint:h1 -->
+> [!WARNING]
+> Identifica **siempre** el disco del sistema antes de ejecutar comandos de formato o RAID. Aquí es `sda` (25 GB); los discos de práctica son los pequeños (`sdb`–`sde`). Un `mdadm --create` o `wipefs` sobre el disco equivocado destruye el sistema.
+
 ---
 
 ## 5. Práctica 2 - RAID 5 con disco de reserva
@@ -179,6 +183,13 @@ Fíjate en estos campos:
        3       8       64        -      spare   /dev/sde
 ```
 
+<!-- hint:h2 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **`mdadm: Device or resource busy`:** el disco tiene restos de otro RAID o de una partición. Límpialo con `sudo wipefs -a /dev/sdX` y repite.
+- **No ves avance:** la sincronización inicial tarda unos minutos aunque los discos sean pequeños. Mira `watch -n 1 cat /proc/mdstat`.
+- **Tras reiniciar el RAID cambia de nombre (`md127`):** guarda la configuración con `mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf` y actualiza el *initramfs*.
+{{% /details %}}
+
 ### 5.2. Sistema de ficheros y montaje permanente
 
 ```bash
@@ -222,6 +233,10 @@ sudo umount /srv/datos && sudo mount -a && findmnt /srv/datos
 
 Reinicia y comprueba que el RAID se ensambla y se monta solo.
 
+<!-- hint:h3 -->
+> [!TIP]
+> Monta por **UUID** (`blkid /dev/md0`) y añade la opción `nofail` en `/etc/fstab`. Así, si el RAID no está disponible, el sistema arranca igualmente en lugar de quedarse en el modo de emergencia. Comprueba el fichero con `sudo findmnt --verify` antes de reiniciar.
+
 ### 5.3. Datos de prueba con verificación de integridad
 
 ```bash
@@ -254,6 +269,11 @@ Mientras se reconstruye, comprueba que los datos siguen accesibles **e íntegros
 cd /srv/datos && sudo sha256sum -c --quiet /root/hashes_datos.sha256 && echo "Datos íntegros"
 ```
 
+<!-- hint:h4 -->
+{{% details title="🎯 Resultado esperado" open=false %}}
+En `/proc/mdstat` verás que el array pasa de `[3/3] [UUU]` a `[3/2] [UU_]`, y, como hay disco de reserva, aparece una línea `recovery = …%` mientras reconstruye. Los datos siguen accesibles durante todo el proceso: compruébalo con las sumas de verificación creadas en el paso 5.3.
+{{% /details %}}
+
 ### 5.5. Sustituir el disco averiado
 
 ```bash
@@ -269,6 +289,10 @@ sudo mdadm --detail /dev/md0 | grep -E "State|Devices|spare"
 2. Marca como fallidos **dos** discos activos seguidos, sin esperar a la reconstrucción.
 3. ¿Qué ocurre con el RAID? ¿Y con los datos? Explica el resultado.
 4. Restaura la instantánea.
+
+<!-- hint:h5 -->
+> [!CAUTION]
+> Con RAID 5, el **segundo** fallo antes de terminar la reconstrucción hace que el array se pierda. Es la razón por la que RAID **no sustituye** a la copia de seguridad y por la que un disco de reserva en caliente reduce (pero no elimina) el riesgo.
 
 ### 5.7. Monitorización
 
@@ -286,6 +310,11 @@ systemctl status mdmonitor --no-pager
 2. ¿Qué ventaja ha aportado el disco de reserva?
 3. ¿Qué habría pasado sin él si fallase un segundo disco durante la sustitución?
 4. Explica con un ejemplo por qué este RAID no sustituye a una copia de seguridad.
+
+<!-- hint:h6 -->
+{{% details title="💡 Pista" open=false %}}
+Piensa en el *peor momento posible*: ¿qué pasaría si falla otro disco justo durante la reconstrucción? ¿Y si un ransomware cifra los datos? ¿Los protege el RAID en esos casos? Relaciona tus respuestas con la regla 3-2-1-1-0.
+{{% /details %}}
 
 ---
 
@@ -340,6 +369,12 @@ Para terminar:
 
 **Pregunta**: ¿qué ocurriría si durante la vida de la instantánea se modificasen más de 200 MB en el volumen original?
 
+<!-- hint:h7 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **`Insufficient free space` al crear la instantánea:** el grupo de volúmenes no tiene extensiones libres. Compruébalo con `sudo vgs` (columna `VFree`) y reduce el tamaño con `-L` o amplía el VG.
+- **La instantánea se llena:** si los cambios superan su tamaño, se invalida. Mídela con `sudo lvs` (columna `Data%`).
+{{% /details %}}
+
 ---
 
 ## 7. Práctica 4 - Copias completas e incrementales con `tar`
@@ -357,6 +392,11 @@ sudo cp -r /etc/skel /srv/datos/proyecto 2>/dev/null; echo "inicio" | sudo tee /
 sudo tar --listed-incremental=/backup/tar/datos.snar \
          -czpf /backup/tar/datos_0_full.tar.gz -C /srv datos
 ```
+
+<!-- hint:h8 -->
+{{% details title="💡 Pista" open=false %}}
+El fichero `.snar` guarda el **estado** de la última copia (qué ficheros y con qué fecha). Gracias a él, la siguiente ejecución copia solo lo que ha cambiado. Si lo borras o lo pierdes, la siguiente copia será completa; guárdalo junto a las copias.
+{{% /details %}}
 
 ### 7.3. Cambios y copias incrementales
 
@@ -395,6 +435,11 @@ cat /tmp/restaura_tar/datos/proyecto/notas.txt
 - `notas.txt` contiene el cambio del martes.
 - `lunes.txt` **no** aparece: `tar` registra también los borrados y la restauración reproduce el estado del martes.
 - Si quisieras recuperar `lunes.txt`, ¿qué copias restaurarías?
+
+<!-- hint:h9 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+Restaura **en orden** (primero la completa, luego cada incremental). Al extraer una copia incremental usa `--listed-incremental=/dev/null` para que `tar` aplique también los borrados registrados. Si omites un eslabón, faltarán ficheros o aparecerán ficheros que ya se habían borrado.
+{{% /details %}}
 
 ---
 
@@ -461,6 +506,11 @@ ls -l /backups/sad-cli/
 du -sh /backups/sad-cli/*                    # la segunda copia ocupa muy poco
 ls -li /backups/sad-cli/*/empresa/documento_1.bin   # mismo número de inodo = mismo fichero
 ```
+
+<!-- hint:h10 -->
+{{% details title="💡 Pista" open=false %}}
+Cada carpeta diaria parece una copia completa, pero los ficheros sin cambios son **enlaces duros** al mismo dato. Compruébalo con `ls -li` (el *inodo* es idéntico) y compara `du -sh` de la primera carpeta con el de todas juntas: el total crece solo por lo que cambió.
+{{% /details %}}
 
 ### 8.3. Restaurar un fichero borrado
 
@@ -535,6 +585,10 @@ sudo ls /backups/restic-sad-cli/
 sudo grep -r "Contrato confidencial" /backups/restic-sad-cli/ || echo "No se encuentra el texto: los datos están cifrados"
 ```
 
+<!-- hint:h11 -->
+> [!TIP]
+> Después de cada copia, ejecuta `restic check` para verificar la integridad del repositorio y haz de vez en cuando una restauración de prueba en una carpeta temporal (`restic restore latest --target /tmp/prueba`). **Una copia sin restaurar nunca está comprobada.**
+
 ### 9.3. Deduplicación
 
 ```bash
@@ -587,6 +641,10 @@ date +%T > /root/hora_ataque.txt
 /root/simula_ransomware.sh
 ```
 
+<!-- hint:h12 -->
+> [!WARNING]
+> El script simula el ataque **solo sobre los datos de práctica** (`/srv/datos`) de tu máquina virtual. No lo ejecutes en ningún otro equipo ni lo adaptes para actuar sobre datos reales. El objetivo es entrenar la **detección y la recuperación**.
+
 ### 9.6. Detección
 
 ```bash
@@ -617,6 +675,11 @@ date +%T > /root/hora_fin_restauracion.txt
 # 5. Reactivar las copias
 systemctl start backup-restic.timer
 ```
+
+<!-- hint:h13 -->
+{{% details title="💡 Pista" open=false %}}
+Orden recomendado: (1) **aislar** (parar el temporizador y desconectar la red si procede), (2) **identificar** la última copia anterior al ataque con `restic snapshots`, (3) **restaurar en una carpeta aparte** y verificar, (4) volver los datos a su sitio, (5) analizar la causa. Anota la hora de inicio y fin para calcular el **RTO real**.
+{{% /details %}}
 
 ### 9.8. Análisis
 
@@ -726,6 +789,11 @@ NUT[...]: APAGADO ORDENADO: aquí se ejecutaría /sbin/shutdown -h +0
 
 Restaura el estado `OL` y reinicia `nut-monitor`.
 
+<!-- hint:h14 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+Comprueba que los servicios de NUT están activos (`systemctl status nut-server nut-monitor`) y que el UPS responde: `upsc saisim@localhost`. Si no cambia el estado a `OB` (*on battery*), revisa que editaste el fichero de datos del UPS simulado y espera unos segundos: NUT consulta de forma periódica.
+{{% /details %}}
+
 ### 10.3. Preguntas
 
 1. ¿Qué significan los estados `OL`, `OB` y `LB`?
@@ -796,6 +864,11 @@ sudo cryptsetup open cifrado.img vol_cifrado <<< "ClaveLab2026"   # ya no es pos
 2. ¿Por qué `shred` sobre un fichero dentro de un SSD o de un sistema de ficheros Btrfs no garantiza el borrado?
 3. ¿Qué ventaja tiene cifrar un disco desde el principio de cara a su retirada?
 4. Redacta un procedimiento de retirada de equipos para una empresa (inventario, método por tipo de soporte, certificado, registro).
+
+<!-- hint:h15 -->
+{{% details title="💡 Pista" open=false %}}
+Compara los tres resultados: ¿qué datos se recuperaban tras el borrado normal? ¿Y tras `shred`? ¿Y tras destruir la clave? Piensa también en **SSD y en la nube**, donde sobrescribir no garantiza nada y el borrado criptográfico es la opción práctica.
+{{% /details %}}
 
 ---
 

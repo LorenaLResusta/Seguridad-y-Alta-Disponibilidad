@@ -71,6 +71,11 @@ VBoxManage natnetwork add --netname SAD-NAT --network "192.168.100.0/24" --enabl
 VBoxManage natnetwork list
 ```
 
+<!-- hint:h1 -->
+{{% details title="💡 Pista" open=false %}}
+En VirtualBox existen dos modos distintos: **NAT** (cada VM queda aislada, con salida a Internet pero sin ver a las demás) y **Red NAT** (*NAT Network*, las VM comparten una red y se ven entre sí). Para este módulo necesitas **Red NAT**, con el nombre `SAD-NAT`. Si dos VM no se hacen ping, revisa primero esto.
+{{% /details %}}
+
 ### 3.4. Crear e instalar la máquina virtual
 
 1. **Nueva** → Nombre `sad-linux01`. Selecciona la ISO. Desmarca la **instalación desatendida**.
@@ -136,6 +141,13 @@ sudo dnf upgrade -y      # descarga e instala todas las actualizaciones
 
 Si se ha actualizado el núcleo, reinicia con `sudo systemctl reboot`.
 
+<!-- hint:h2 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **`ip -br address` no muestra dirección IP:** comprueba en VirtualBox que el adaptador está conectado a `SAD-NAT` y que *Cable conectado* está marcado.
+- **El nombre de la interfaz no es `enp0s3`:** puede llamarse `ens3`, `enp0s8`, etc. Usa el que muestre tu salida en todos los comandos.
+- **No hay Internet pero sí IP:** prueba `ping -c 2 1.1.1.1` (red) y luego `ping -c 2 debian.org` (DNS). Si falla solo el segundo, es un problema de DNS.
+{{% /details %}}
+
 ### 3.6. Crear la instantánea base
 
 1. Apaga la VM: `sudo systemctl poweroff`.
@@ -150,6 +162,10 @@ VBoxManage snapshot sad-linux01 list
 
 > [!IMPORTANT]
 > Una instantánea **no es una copia de seguridad**: se guarda en el mismo disco que la VM. Si ese disco falla, se pierden ambas. Lo estudiaremos en la UD2.
+
+<!-- hint:h3 -->
+> [!TIP]
+> **Toma una instantánea antes de cada práctica que modifique el sistema** y ponle un nombre con la fecha (por ejemplo, `antes-UD1-P2-2026-10-06`). Si algo sale mal, vuelves al punto anterior en segundos. Es el equivalente de laboratorio a una copia de seguridad.
 
 ---
 
@@ -229,6 +245,11 @@ tcp   LISTEN [::]:22             users:(("sshd",pid=640,fd=4))
 | Puerto | Protocolo | Servicio | ¿Necesario? | Accesible desde | Riesgo |
 | --- | --- | --- | --- | --- | --- |
 | 22 | TCP | OpenSSH | Sí, administración | Todas las interfaces | Fuerza bruta si hay contraseñas débiles |
+
+<!-- hint:h4 -->
+{{% details title="💡 Pista" open=false %}}
+Fíjate en la **dirección de escucha** de cada puerto: `0.0.0.0` o `[::]` significa «accesible desde cualquier red»; `127.0.0.1` significa «solo desde esta máquina». Un servicio de uso interno (una base de datos, por ejemplo) que escuche en `0.0.0.0` es un candidato claro a corregir.
+{{% /details %}}
 
 ### 4.5. Actualizaciones pendientes
 
@@ -317,6 +338,18 @@ getent hosts www.mibanco.es
 # 203.0.113.66    www.mibanco.es
 ```
 
+<!-- hint:h5 -->
+{{% details title="🎯 Resultado esperado" open=false %}}
+La comprobación debe señalar el fichero alterado y el resumen final (según el idioma del sistema):
+
+```text
+/etc/hosts: FALLIDO            (en inglés: FAILED)
+sha256sum: AVISO: 1 suma calculada NO coincide
+```
+
+El resto de ficheros aparecen como `HECHO` (`OK`). Si **todos** salen bien, no has modificado `/etc/hosts` o la línea base se creó después del cambio.
+{{% /details %}}
+
 ### 5.4. Trazabilidad: ¿quién ha sido?
 
 ```bash
@@ -331,6 +364,13 @@ oct 06 11:02:15 sad-linux01 sudo[1873]: fperez : TTY=pts/0 ; PWD=/home/fperez/ud
 ```
 
 El registro identifica **usuario**, **terminal**, **directorio**, **hora** y **orden**: trazabilidad completa.
+
+<!-- hint:h6 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **No aparece nada en el registro:** la traza de `sudo` solo existe si ejecutaste el comando con `sudo`. Lo que se ve es *quién usó sudo*, no el contenido del cambio.
+- **En AlmaLinux** los mensajes de `sudo` y `su` pueden estar en `/var/log/secure`: `sudo grep sudo /var/log/secure | tail`.
+- Si la VM acaba de reiniciarse, usa `journalctl --since today` o añade `-b` (arranque actual).
+{{% /details %}}
 
 ### 5.5. Mitigar y comprobar
 
@@ -429,6 +469,10 @@ Simulamos varios intentos fallidos de inicio de sesión con `su` desde **otra te
 su - prueba_ud01
 ```
 
+<!-- hint:h7 -->
+> [!WARNING]
+> **Solo contra el usuario de pruebas `prueba_ud01`**, dentro de tu máquina virtual y con el fin de ver cómo queda registrado. No pruebes contraseñas en cuentas reales ni en equipos ajenos. El objetivo es comprender la **huella en los registros** y la mitigación, no el ataque.
+
 ### 6.4. Detectar los intentos fallidos
 
 ```bash
@@ -451,6 +495,11 @@ oct 06 11:20:01 sad-linux01 su[2011]: pam_unix(su-l:auth): authentication failur
 - `sort | uniq -c` agrupa y cuenta las repeticiones.
 
 En un servidor real con SSH expuesto verías cientos de intentos diarios contra `root`, `admin`, `test`… desde IP de todo el mundo.
+
+<!-- hint:h8 -->
+{{% details title="💡 Pista" open=false %}}
+Fíjate en los campos `user=`, `rhost=` y la hora de cada línea. Muchos fallos seguidos, del mismo origen y en pocos segundos, son la firma típica de un ataque automatizado; un fallo suelto es lo normal (un despiste al teclear).
+{{% /details %}}
 
 ### 6.5. Mitigación
 
@@ -522,6 +571,13 @@ grep -E "^(From|Reply-To|Return-Path|Subject|Received):" sospechoso.eml
 grep -A3 "^Authentication-Results" sospechoso.eml
 grep -oE 'href="[^"]+"' sospechoso.eml
 ```
+
+<!-- hint:h9 -->
+{{% details title="💡 Pista" open=false %}}
+Compara tres cosas: el dominio de `From`, el de `Return-Path` y el de `Reply-To`. Si no coinciden entre sí ni con la empresa que dice ser, es una señal fuerte de suplantación. Después mira `Authentication-Results`: `spf=fail`, `dkim=fail` o `dmarc=fail` indican que el servidor remitente **no está autorizado** a enviar en nombre de ese dominio.
+
+**No abras enlaces ni adjuntos:** analiza solo el texto del fichero `.eml`.
+{{% /details %}}
 
 ### 7.3. Preguntas
 
@@ -596,6 +652,12 @@ Comprueba la versión instalada del software afectado:
 ssh -V                                   # versión del cliente OpenSSH
 dpkg -l openssh-server 2>/dev/null | tail -1 || rpm -q openssh-server
 ```
+
+<!-- hint:h10 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **La consulta devuelve error 403 o 429:** la API pública de la NVD limita las peticiones sin clave (unas 5 cada 30 segundos). Espera medio minuto y reintenta.
+- **Sin salida de red desde la VM:** puedes consultar la CVE en el navegador de tu equipo (`https://nvd.nist.gov/vuln/detail/CVE-XXXX-XXXX`) y copiar los datos a la tabla.
+{{% /details %}}
 
 ### 8.3. Tabla de análisis
 
@@ -709,6 +771,11 @@ fls -r -m / evidencia_caso01.img > bodyfile.txt
 mactime -b bodyfile.txt -d | column -s, -t
 ```
 
+<!-- hint:h11 -->
+{{% details title="💡 Pista" open=false %}}
+`fls -r` lista los ficheros del sistema de ficheros y `fls -r -d` solo los **borrados** (aparecen marcados con `*`). Con el número de inodo que muestra `fls` puedes recuperar el contenido: `icat evidencia_caso01.img <inodo>`. Trabaja siempre sobre la **copia**, nunca sobre el original.
+{{% /details %}}
+
 ### 9.4. Comprobación de integridad final
 
 ```bash
@@ -716,6 +783,11 @@ sha256sum usb.img evidencia_caso01.img
 ```
 
 Los hashes deben seguir coincidiendo con los iniciales: el análisis **no ha alterado** las evidencias.
+
+<!-- hint:h12 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+Si los *hashes* del original y de la copia **no coinciden** al final, la evidencia queda invalidada. Lo más probable: se montó o modificó el original, o se analizó sin proteger contra escritura. Repite la adquisición desde el principio y protege el original (`chmod 444`, o monta con `-o ro`).
+{{% /details %}}
 
 ### 9.5. Preguntas
 
@@ -759,6 +831,11 @@ Para al menos **seis** activos, identifica amenaza y vulnerabilidad. Incluye ame
 ### 10.4. Paso 3: valoración del riesgo
 
 Valora probabilidad e impacto (1-3), calcula el riesgo y ordénalo. Puedes usar el script `matriz_riesgos.py` de la teoría. Justifica los tres riesgos más altos.
+
+<!-- hint:h13 -->
+{{% details title="💡 Pista" open=false %}}
+**Riesgo = probabilidad × impacto.** Usa una escala del 1 al 5 para cada factor y ordena la tabla de mayor a menor riesgo. Los de valor 15 o más se tratan primero; después decide para cada uno si lo **mitigas, transfieres, evitas o aceptas**, y justifícalo.
+{{% /details %}}
 
 ### 10.5. Paso 4: tratamiento y plan de mejora
 

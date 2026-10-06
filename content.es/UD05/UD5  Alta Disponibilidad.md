@@ -67,6 +67,10 @@ Para mejorar la disponibilidad hay dos caminos: **aumentar el MTBF** (mejor hard
 > [!NOTE]
 > **Ejemplo.** Un servidor con MTBF = 8 760 h (un fallo al año) y MTTR = 4 h: D = 8760 / 8764 = **99,954 %**, unas 4 horas de parada anuales. Si una conmutación automática reduce el MTTR a 30 segundos, la parada anual baja a unos 30 segundos.
 
+<!-- enr:u5a -->
+> [!TIP]
+> **Memoriza tres cifras:** 99 % → 3,65 días/año de parada; 99,9 % → 8,76 h/año; 99,99 % → 52,6 min/año. Cada «nueve» más multiplica el coste por un factor grande: no pidas 99,999 % si el negocio solo necesita 99,9 %.
+
 ### 3.3. Los «nueves»
 
 La disponibilidad se expresa en «nueves». Cada nueve adicional **reduce diez veces** la parada admisible, y **multiplica el coste**:
@@ -167,6 +171,16 @@ Cadena completa      = 99.8500 %  -> 13.14 h
 ```
 
 **Lección importante:** duplicar el servidor web mejora solo de 99,75 % a 99,85 %. El **eslabón más débil** (la base de datos y el balanceador, que siguen siendo únicos) limita el resultado. No sirve de nada redundar un componente si otro sigue siendo un SPOF.
+
+<!-- enr:u5b -->
+> [!WARNING]
+> **Disponibilidad en serie = multiplicar.** Si una aplicación depende de 3 componentes con 99,9 % cada uno, la disponibilidad total es 0,999³ ≈ 99,7 %: **peor** que la de cualquiera de ellos. Por eso la redundancia se aplica en paralelo en cada capa.
+
+{{% details title="🧠 Comprueba lo que has aprendido: SPOF" open=false %}}
+**Tienes dos servidores web detrás de un solo balanceador HAProxy. ¿Cuál es el punto único de fallo?**
+
+El balanceador. Si cae, los dos servidores web dejan de ser accesibles aunque estén sanos. Se corrige con un segundo balanceador y una IP virtual (Keepalived/VRRP).
+{{% /details %}}
 
 ### 3.6. Punto único de fallo (SPOF)
 
@@ -358,6 +372,10 @@ sudo ip link set enp0s8 up               # restablece
 ```
 
 ---
+
+<!-- enr:u5c -->
+![Arquitectura de alta disponibilidad con balanceadores, servidores web y base de datos](/images/ud5/arquitectura-ha.svg)
+*Figura 5.1. Arquitectura de referencia: cada capa está duplicada, así que no hay un único componente cuyo fallo pare el servicio.*
 
 ## 5. Virtualización y alta disponibilidad
 
@@ -659,6 +677,10 @@ ip -br a show enp0s3                    # en lb01 debe aparecer 192.168.100.50 c
 journalctl -u keepalived -n 20 --no-pager   # "Entering MASTER STATE"
 ```
 
+<!-- enr:u5d -->
+> [!NOTE]
+> **Failover no es lo mismo que alta disponibilidad completa.** Keepalived mueve la IP en 1-3 segundos, pero las conexiones abiertas se cortan y las sesiones se pierden si no se comparten. Mide siempre cuánto dura la interrupción.
+
 ### 7.3. Prueba de fallo (*failover*)
 
 Desde un cliente, un `ping` y una petición continua a la VIP:
@@ -695,6 +717,10 @@ Cuando lo que se debe mantener no es solo una IP, sino **servicios con estado o 
 | **Agentes de recurso** | Scripts que arrancan/paran/comprueban un recurso (`IPaddr2`, `systemd`, `Filesystem`…) |
 | **STONITH / fencing** | Mecanismo para **aislar o apagar** un nodo sospechoso antes de recuperar sus recursos |
 | **`pcs`** | Herramienta de línea de comandos para gestionar todo el clúster |
+
+<!-- enr:u5e -->
+> [!CAUTION]
+> **Split-brain (cerebro dividido):** si dos nodos creen que son el principal a la vez y ambos escriben en el mismo almacenamiento, se **corrompen los datos**. El *quórum* (mayoría de votos) y el *fencing* (apagar el nodo dudoso) existen para evitarlo. Un clúster de **dos nodos** necesita un tercer elemento (testigo/quorum device).
 
 ### 8.2. Quórum y *fencing*
 
@@ -842,6 +868,10 @@ sudo mariadb -e "STOP REPLICA; RESET REPLICA ALL; SET GLOBAL read_only=0;"
 > [!NOTE]
 > Esta promoción manual muestra los pasos, pero tiene un riesgo: si `db01` volvía a arrancar con datos propios no replicados habría **divergencia**. En producción se automatiza con herramientas como **MariaDB MaxScale**, **Orchestrator** o con **Galera Cluster** (replicación síncrona multi-primario), que gestionan el quórum y la reintegración de los nodos.
 
+<!-- enr:u5f -->
+> [!WARNING]
+> **La replicación no es una copia de seguridad.** Si borras una tabla por error, la réplica la borra también en milisegundos. Necesitas ambas cosas: replicación (disponibilidad) y copias con histórico (recuperación).
+
 ### 9.3. Almacenamiento replicado y distribuido
 
 | Tecnología | Descripción | Uso |
@@ -964,6 +994,13 @@ journalctl -t chequeo-web --since "5 min ago"
 ```
 
 ---
+
+<!-- enr:u5g -->
+{{% details title="🧠 Comprueba lo que has aprendido: RTO y RPO" open=false %}}
+**¿Qué técnica es más adecuada para un RPO de 0 y un RTO de segundos en una base de datos crítica?**
+
+Replicación síncrona (o semisíncrona) con conmutación automática (*failover*). La copia nocturna da un RPO de horas y la replicación asíncrona puede perder las últimas transacciones.
+{{% /details %}}
 
 ## 12. Ejemplo integrado: arquitectura de referencia
 

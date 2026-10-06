@@ -79,6 +79,10 @@ Aspectos a considerar en su diseño:
 | **Comunicaciones** | Dos operadores con rutas físicas diferentes |
 | **Monitorización ambiental** | Sensores de temperatura, humedad, humo, agua y apertura de puertas con alertas |
 
+<!-- enr:u2a -->
+> [!NOTE]
+> Los **niveles TIER** (I a IV) del Uptime Institute indican la redundancia de un CPD: un Tier III permite mantenimiento sin parada; un Tier IV tolera además un fallo imprevisto. A mayor nivel, mayor disponibilidad… y mayor coste.
+
 ### 3.2. Niveles TIER
 
 El **Uptime Institute** clasifica los CPD en cuatro niveles según su redundancia. La norma europea equivalente es la **EN 50600**.
@@ -454,6 +458,19 @@ print(f"{A ^ P:08b}")     # 01101001  -> es B recuperado
 | RAID 6 | 16 TB | 67 % |
 | RAID 10 | 12 TB | 50 % |
 
+<!-- enr:u2b -->
+![Esquema de RAID 0, RAID 1 y RAID 5](/images/ud2/raid-niveles.svg)
+*Figura 2.1. Reparto de bloques en los niveles RAID más usados. En RAID 5 la paridad (P) rota entre los discos.*
+
+> [!TIP]
+> **Fórmulas rápidas** (N discos del mismo tamaño): RAID 0 → N·T; RAID 1 → T; RAID 5 → (N−1)·T; RAID 6 → (N−2)·T; RAID 10 → N·T/2.
+
+{{% details title="🧠 Comprueba lo que has aprendido: RAID" open=false %}}
+**Tienes 4 discos de 2 TB. ¿Qué capacidad útil obtienes con RAID 5 y con RAID 10? ¿Cuántos discos pueden fallar?**
+
+RAID 5 → (4−1)·2 = 6 TB y tolera 1 fallo. RAID 10 → 4·2/2 = 4 TB y tolera 1 fallo seguro (hasta 2 si no son del mismo espejo).
+{{% /details %}}
+
 ### 6.4. RAID por hardware, por software y *fake RAID*
 
 | Tipo | Descripción | Ventajas | Inconvenientes |
@@ -548,6 +565,10 @@ echo "MAILADDR admin@empresa.local" | sudo tee -a /etc/mdadm/mdadm.conf
 # Enviar un aviso de prueba para comprobar que funciona
 sudo mdadm --monitor --scan --test --oneshot
 ```
+
+<!-- enr:u2c -->
+> [!WARNING]
+> **Cuidado con RAID 5 y los discos grandes.** Al reconstruir un RAID 5 se leen *todos* los discos restantes durante horas; es el momento más probable de un segundo fallo. Con discos grandes se prefiere RAID 6 o RAID 10.
 
 ### 6.6. RAID no es una copia de seguridad
 
@@ -678,6 +699,13 @@ Las herramientas modernas (restic, Borg, Proxmox Backup Server, Veeam…) usan *
 | **1** | Al menos **una** copia **desconectada** (*offline*, *air-gapped*) o **inmutable** | Cinta guardada en caja fuerte o almacenamiento con bloqueo de objetos (WORM) |
 | **0** | **Cero** errores al verificar la restauración | Pruebas de restauración periódicas |
 
+<!-- enr:u2d -->
+![Regla de copias de seguridad 3-2-1-1-0](/images/ud2/regla-3-2-1.svg)
+*Figura 2.2. Regla 3-2-1-1-0: más de una copia, en medios distintos, una fuera de sitio e inmutable, y verificada.*
+
+> [!IMPORTANT]
+> Una copia **que nunca se ha restaurado** es solo una esperanza. La «tercera C» de las copias es la **comprobación**: programa restauraciones de prueba periódicas (apartado 9.6).
+
 ### 8.4. Copias de seguridad y *ransomware*
 
 El *ransomware* actual busca y destruye las copias antes de cifrar. Medidas específicas:
@@ -726,6 +754,13 @@ Ambos valores se deciden con la dirección mediante un **análisis de impacto en
 | Ficheros compartidos | 4 h | 8 h | *Snapshots* cada 4 h + copia diaria externa |
 | ERP / tienda en línea | 15 min | 2 h | Replicación de la base de datos + copia horaria |
 | Sistema de pagos | ≈ 0 | Minutos | Clúster con replicación síncrona (UD5) |
+
+<!-- enr:u2e -->
+{{% details title="🧠 Comprueba lo que has aprendido: RPO y RTO" open=false %}}
+**Una empresa hace copia cada noche a las 02:00 y tarda 3 horas en restaurar. El servidor cae a las 17:00. ¿Cuánto trabajo puede perder como máximo y cuánto tardará en volver?**
+
+Perderá hasta 24 h de datos (RPO real ≈ 24 h, desde la copia anterior) y tardará unas 3 h en recuperar el servicio (RTO ≈ 3 h). Si el negocio necesita menos pérdida, hay que copiar con más frecuencia o replicar.
+{{% /details %}}
 
 ### 8.6. Rotación y retención
 
@@ -975,6 +1010,10 @@ diff -r /srv/datos /tmp/restauracion/srv/datos && echo "Restauración verificada
 Un DRP debe incluir: inventario de sistemas priorizados, RPO/RTO de cada uno, responsables y contactos, ubicación de copias y claves, procedimientos paso a paso, y un calendario de **simulacros**. La norma de referencia es la **ISO 22301**.
 
 ---
+
+<!-- enr:u2f -->
+> [!WARNING]
+> **En SSD y en la nube, sobrescribir no garantiza el borrado** (nivelación de desgaste, bloques reasignados). La opción fiable es el **borrado criptográfico** (destruir la clave) o el comando de borrado seguro del propio dispositivo.
 
 ## 11. Borrado seguro y ciclo de vida de los soportes
 

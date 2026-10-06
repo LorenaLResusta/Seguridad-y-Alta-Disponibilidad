@@ -113,6 +113,11 @@ python3 disp.py | tee ~/ud5-evidencias/01-disponibilidad.txt
 
 **Comprobación:** ¿qué conclusión sacas sobre dónde invertir primero? (pista: el eslabón más débil de la cadena en serie).
 
+<!-- hint:h1 -->
+{{% details title="💡 Pista" open=false %}}
+Disponibilidad = MTBF / (MTBF + MTTR). Para componentes **en serie** se multiplican las disponibilidades; en **paralelo**, la indisponibilidad total es el producto de las indisponibilidades (1 − A = (1 − A₁)·(1 − A₂)). Comprueba tus resultados con el script `disp.py` de la teoría.
+{{% /details %}}
+
 ---
 
 ## 4. Práctica 2 · RAID 1 y fallo de un disco
@@ -157,6 +162,11 @@ Limpieza:
 ```bash
 sudo umount /mnt/raid && sudo mdadm --stop /dev/md0 && sudo losetup -D && sudo rm -f /root/disco?.img
 ```
+
+<!-- hint:h2 -->
+{{% details title="🎯 Resultado esperado" open=false %}}
+Estado normal: `[2/2] [UU]`. Tras marcar un disco como fallido: `[2/1] [U_]`, con el servicio funcionando sin interrupción. Tras añadir el disco nuevo, `recovery = …%` y de nuevo `[UU]`. Si el array queda en `inactive`, revisa `mdadm --detail` y los mensajes de `journalctl -k`.
+{{% /details %}}
 
 ---
 
@@ -267,6 +277,12 @@ curl -s -o /dev/null -w '%{http_code}\n' http://192.168.100.61/salud.php    # 20
 > [!TIP]
 > Si falla la conexión a la BD: `sudo ss -tlnp | grep 3306` (escucha), `mariadb -h 192.168.100.70 -uappuser -pClaveAppLab1 tienda` desde el web (permiso/usuario/cortafuegos) y, en AlmaLinux, `sudo ausearch -m avc -ts recent` (SELinux).
 
+<!-- hint:h3 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **El servidor web no conecta con la base de datos:** en `db01`, MariaDB debe escuchar en la red (`bind-address = 0.0.0.0` o la IP de laboratorio), el usuario debe poder conectar desde la red (`'usuario'@'192.168.100.%'`) y el puerto 3306 debe estar abierto.
+- **Prueba rápida desde un web:** `mariadb -h 192.168.100.70 -u <usuario> -p -e "SELECT 1"`.
+{{% /details %}}
+
 ---
 
 ## 6. Práctica 4 · Balanceo con HAProxy
@@ -330,6 +346,10 @@ sudo systemctl status haproxy --no-pager
 > [!NOTE]
 > En AlmaLinux, si SELinux está activo, HAProxy puede necesitar `sudo setsebool -P haproxy_connect_any on` para conectar con los backends en puertos distintos del habitual. Con el puerto 80 no es necesario.
 
+<!-- hint:h4 -->
+> [!TIP]
+> Valida **siempre** la configuración antes de recargar: `sudo haproxy -c -f /etc/haproxy/haproxy.cfg`. Aplica con `sudo systemctl reload haproxy` (no corta conexiones); si algo sale mal, restaura la copia `haproxy.cfg.bak`.
+
 ### 6.2. Comprobación del reparto
 
 ```bash
@@ -356,6 +376,11 @@ Arranca de nuevo Apache en `web01`: tras `rise 2` comprobaciones correctas vuelv
 **Fallo 2: la aplicación falla pero el servidor web sigue vivo.** Para MariaDB en `db01`: ambos nodos devuelven 503 en `/salud.php`, HAProxy los marca **DOWN** y el cliente recibe `503 Service Unavailable`. Arranca MariaDB y comprueba la recuperación. *Pregunta:* ¿qué ventaja tiene el *health check* de aplicación frente a comprobar solo el puerto 80?
 
 **Fallo 3: se detiene HAProxy.** `sudo systemctl stop haproxy` en `lb01`: el servicio queda inaccesible. Esto demuestra que el **balanceador es ahora el SPOF** → práctica 5.
+
+<!-- hint:h5 -->
+{{% details title="💡 Pista" open=false %}}
+Deja el bucle de peticiones ejecutándose en una terminal, para `web01` en otra y observa: ¿cuántas peticiones fallan? HAProxy tarda en marcar el servidor como caído lo que indiquen `inter` y `fall` en la línea `server … check`. Reducirlos acelera la detección, pero aumenta el riesgo de falsos positivos.
+{{% /details %}}
 
 ### 6.4. Mantenimiento sin parada
 
@@ -442,6 +467,13 @@ curl -s http://192.168.100.50/ | cut -c1-30              # el servicio responde 
 > [!WARNING]
 > Si tienes cortafuegos, permite el protocolo VRRP (IP 112) entre `lb01` y `lb02`, o ambos se creerán MASTER. Compruébalo con `sudo tcpdump -ni enp0s3 proto 112`: debes ver los anuncios cada segundo desde la IP del MASTER.
 
+<!-- hint:h6 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **Las dos máquinas tienen la VIP a la vez** (*split-brain*): deben coincidir `virtual_router_id` y `auth_pass`, la interfaz debe ser la correcta (`ip -br a`) y el protocolo **VRRP (112)** debe pasar entre ambos (`sudo tcpdump -ni enp0s3 proto 112`).
+- **La VIP no aparece en ninguno:** `sudo systemctl status keepalived` y `journalctl -u keepalived`; comprueba que la sintaxis de `unicast_peer` es correcta.
+- Recuerda que la IP virtual es un alias: se ve con `ip -br a`, no con `ifconfig`.
+{{% /details %}}
+
 ### 7.3. Pruebas de fallo (anota la hora y los segundos de interrupción)
 
 En el cliente, lanza la petición continua **a la IP virtual**:
@@ -465,6 +497,10 @@ Para cada prueba rellena:
 | C | | | | |
 
 **Ampliación:** añade `nopreempt` (con `state BACKUP` en ambos y prioridades distintas) y repite la prueba C. ¿Qué diferencia observas al volver `lb01`? ¿Por qué puede interesar evitar el «vaivén» de la VIP?
+
+<!-- hint:h7 -->
+> [!NOTE]
+> Anota en una tabla: hora del fallo, hora de recuperación, peticiones perdidas y cuál es el **tiempo real de conmutación**. Ese dato es tu RTO medido, y es lo que compararás con el que exige el SLA.
 
 ---
 
@@ -545,6 +581,10 @@ sudo mariadb -e "STOP REPLICA; RESET REPLICA ALL; SET GLOBAL read_only = 0;"
 
 **Preguntas para el informe:** ¿qué pasaría si `db01` volviera a arrancar y la aplicación siguiera escribiendo en él? ¿Qué tipo de herramientas automatizan esta promoción? ¿Por qué esta replicación **no** sustituye a una copia de seguridad? Demuéstralo ejecutando `DROP TABLE` en el primario y viendo qué ocurre en la réplica (hazlo sobre una tabla de prueba, no sobre `visitas`).
 
+<!-- hint:h8 -->
+> [!CAUTION]
+> Tras promocionar la réplica, la antigua primaria **no debe volver a aceptar escrituras** mientras el servicio apunta a la nueva (*split-brain* de datos). Cuando se recupere, se reconfigura como **réplica** de la nueva primaria. Promover sin comprobar el retraso de la réplica puede perder las últimas transacciones.
+
 ---
 
 ## 9. Práctica 7 · Fallo bajo carga
@@ -569,6 +609,11 @@ Compara: peticiones fallidas (`Failed requests`, `Non-2xx responses`), caída de
 > [!CAUTION]
 > Estas pruebas se realizan solo sobre tu laboratorio. Generar carga sobre servicios ajenos puede constituir un ataque de denegación de servicio.
 
+<!-- hint:h9 -->
+{{% details title="💡 Pista" open=false %}}
+Abre tres terminales: (1) `ab` generando carga contra la VIP, (2) el bucle `curl` que muestra el código HTTP, (3) la terminal donde detienes `web01` o apagas `lb01`. Compara `Failed requests` y `Requests per second` con la prueba base: la diferencia es el **coste del fallo**.
+{{% /details %}}
+
 ---
 
 ## 10. Práctica 8 · Clúster Pacemaker/Corosync (activo-pasivo)
@@ -582,6 +627,13 @@ Sigue el procedimiento del apartado 8.3 de la [teoría](../teoria/#83-ejemplo-co
 3. **Fallo brusco:** apaga la VM de `nodo2` (o `sudo systemctl stop corosync` en él). En `nodo1`, `sudo pcs status` debe mostrar a `nodo2` *OFFLINE* y los recursos arrancados en `nodo1`. Anota el tiempo.
 4. **Análisis de quórum:** ejecuta `sudo pcs quorum status` y explica por qué un clúster de **2 nodos** es frágil. ¿Qué añadirías (*QDevice*, tercer nodo)?
 5. **Fencing:** explica, sin ejecutarlo, qué riesgo corres con `stonith-enabled=false` si los nodos compartieran un disco, y cómo lo resolverías en un entorno real (IPMI/iLO, conmutador de energía).
+
+<!-- hint:h10 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **Estado del clúster:** `sudo pcs status` (o `sudo crm_mon -1`). Todos los nodos deben aparecer `Online`.
+- **El recurso no arranca:** `sudo pcs resource debug-start <recurso>` y `journalctl -u pacemaker`.
+- **Aviso:** desactivar *fencing* (`stonith-enabled=false`) es aceptable solo en laboratorio; en producción es imprescindible para evitar la corrupción de datos.
+{{% /details %}}
 
 ---
 

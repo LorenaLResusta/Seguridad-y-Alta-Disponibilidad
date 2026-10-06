@@ -126,6 +126,11 @@ ping -c 2 172.16.0.1 && ping -c 2 192.168.50.10          # ¡alcanza la LAN! (es
 
 Haz una *snapshot* `ud7-inicio` de las cuatro VM.
 
+<!-- hint:h1 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+Los nombres de las interfaces pueden variar (`enp0s3`, `enp0s8`, `enp0s9`). Compruébalo con `ip -br link` y ajusta las variables `WAN`, `LAN` y `DMZ` del fichero de reglas a lo que veas. Las direcciones configuradas con `ip addr add` **no son persistentes**: si reinicias, hay que volver a aplicarlas.
+{{% /details %}}
+
 ---
 
 ## 3. Práctica 1 · Perímetro, zonas y matriz de flujos
@@ -148,6 +153,11 @@ Haz una *snapshot* `ud7-inicio` de las cuatro VM.
 
 3. Define las **pruebas de aceptación**: para cada fila, un comando que **debe funcionar** y otro que **debe fallar**. Será tu plan de pruebas.
 
+<!-- hint:h2 -->
+{{% details title="💡 Pista" open=false %}}
+Antes de escribir una regla, completa la matriz con tres columnas: **origen → destino → servicio → acción**. Si algo no figura en la matriz, la política por defecto (`drop`) lo bloquea. Las reglas son la traducción literal de esa tabla, y la tabla es lo que enseñarás al cliente o al auditor.
+{{% /details %}}
+
 ---
 
 ## 4. Práctica 2 · Cortafuegos con nftables y política `drop`
@@ -168,6 +178,10 @@ Crea `/etc/nftables.conf` con el **ruleset de tres zonas** del apartado 5.3 de l
 sudo nft -c -f /etc/nftables.conf && echo "SINTAXIS CORRECTA"
 ```
 
+<!-- hint:h3 -->
+> [!WARNING]
+> No mezcles cortafuegos: si dejas `firewalld` o `ufw` activos junto con `nftables`, las reglas se pisan y el comportamiento es impredecible. En este laboratorio el único gestor del cortafuegos es el fichero `/etc/nftables.conf`.
+
 ### 4.2. Aplicación con red de seguridad
 
 ```bash
@@ -182,6 +196,10 @@ Comprueba que **sigues conectado** a `fw` y que las pruebas del apartado 4.3 se 
 sudo systemctl stop deshacer-fw.timer              # cancela el deshacer
 sudo systemctl enable --now nftables               # persiste al reiniciar
 ```
+
+<!-- hint:h4 -->
+> [!TIP]
+> Si todo va bien, **cancela el deshacer** con `sudo systemctl stop deshacer-fw.timer`. Si olvidas hacerlo, a los 3 minutos se borrará el conjunto de reglas y el cortafuegos quedará abierto. Esa es precisamente la red de seguridad: es preferible un cortafuegos abierto durante un momento que una máquina inaccesible.
 
 ### 4.3. Pruebas de aceptación (positivas y negativas)
 
@@ -200,6 +218,11 @@ Rellena la tabla con el resultado real:
 | 8− | LAN → puerto no permitido | `cli-lan` | `nc -zv -w 2 192.168.100.10 8080` | *Timeout* | |
 
 Guarda `sudo nft list ruleset > ~/ud7-evidencias/02-ruleset.txt` y las salidas de las pruebas.
+
+<!-- hint:h5 -->
+{{% details title="💡 Pista" open=false %}}
+Prueba siempre **ambos sentidos**: lo permitido debe funcionar (prueba positiva) y lo prohibido debe fallar (prueba negativa). Una regla de la que solo compruebas que «deja pasar» no está validada: puede que sea un `accept` demasiado amplio. Anota cada prueba y su resultado en la tabla de aceptación.
+{{% /details %}}
 
 ### 4.4. Contadores: ¿se aplican realmente las reglas?
 
@@ -246,6 +269,11 @@ sudo conntrack -L | grep 172.16.0.10                                    # la tra
 
 Anota qué direcciones ve cada captura y explica cómo regresa la respuesta con la IP original.
 
+<!-- hint:h6 -->
+{{% details title="🎯 Resultado esperado" open=false %}}
+Captura en cada lado del cortafuegos: en `enp0s3` (WAN) el destino es `192.168.100.100`; en `enp0s9` (DMZ) el mismo tráfico llega ya con destino `172.16.0.10`. Eso es **DNAT** en acción: la dirección de destino se reescribe antes del reenvío.
+{{% /details %}}
+
 ### 5.3. Comprobar la contención de la DMZ
 
 Supón que el servidor de la DMZ ha sido comprometido. Desde `web-dmz` intenta alcanzar la LAN (como lo haría un atacante, pero con simples herramientas de prueba de conectividad):
@@ -267,6 +295,11 @@ sudo nft list chain inet filtro reenvio | grep -B1 'DMZ-A-LAN'          # el con
 1. En `web-dmz` para Apache (`sudo systemctl stop apache2`) y repite `curl` desde `sad-cli`: observa si el error es *timeout* o *connection refused* y explica **por qué** (el SYN llega y la DMZ responde con RST).
 2. Arranca el servicio y verifica la recuperación.
 3. **Pregunta:** ¿qué ocurriría si en `web-dmz` olvidases el *gateway*? Compruébalo temporalmente (`sudo ip route del default`) con una captura en el `fw`: ¿se ve el SYN-ACK de vuelta? Restáuralo después.
+
+<!-- hint:h7 -->
+{{% details title="💡 Pista" open=false %}}
+Para el servidor de la DMZ y observa qué ocurre desde Internet: la regla de NAT sigue existiendo, pero la conexión se rechaza o expira. Esto sirve para diferenciar **un fallo del servicio** de **un fallo del cortafuegos**: mira los contadores de las reglas y los registros.
+{{% /details %}}
 
 ---
 
@@ -314,6 +347,11 @@ Pide a un compañero (o hazlo tú tras una *snapshot*) que provoque **una de est
 
 Para cada avería documenta: **síntoma observado → hipótesis → prueba que la confirma (comando y salida) → solución → comprobación**. Restaura el estado inicial después de cada una.
 
+<!-- hint:h8 -->
+{{% details title="💡 Pista" open=false %}}
+Sigue siempre el mismo método, **capa por capa**: (1) enlace (`ip -br link`), (2) direccionamiento y rutas (`ip -br a`, `ip route`), (3) reenvío (`sysctl net.ipv4.ip_forward`), (4) reglas (`nft list ruleset`, contadores, `nft monitor trace`), (5) servicio de destino (`ss -tlnp`, `nc -zv`), (6) registros. Es más rápido que probar cosas al azar.
+{{% /details %}}
+
 ---
 
 ## 7. Práctica 5 · Proxy directo con Squid
@@ -340,6 +378,10 @@ sudo nft add rule inet filtro entrada iifname "enp0s8" tcp dport 3128 accept
 
 (Para hacerlo permanente, añade la regla a `/etc/nftables.conf`.)
 
+<!-- hint:h9 -->
+> [!TIP]
+> Valida la sintaxis con `sudo squid -k parse` antes de reiniciar. **El orden de `http_access` importa:** Squid evalúa de arriba abajo y se detiene en la primera coincidencia; las reglas de bloqueo van antes que las de permiso, y la última siempre es `http_access deny all`.
+
 ### 7.2. Pruebas desde `cli-lan`
 
 ```bash
@@ -362,6 +404,13 @@ sudo tail -n 10 /var/log/squid/access.log | tee ~/ud7-evidencias/05-access.log
 
 **Prueba de caché:** descarga dos veces un fichero estático (`curl -x http://192.168.50.1:3128 -o /dev/null -s -w '%{time_total}\n' http://example.org/`). En el log, el segundo acceso debería aparecer como `TCP_MEM_HIT`/`TCP_HIT` si el contenido es *cacheable*; si no, razona por qué (cabeceras `Cache-Control`).
 
+<!-- hint:h10 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **`403 Forbidden` / `TCP_DENIED`:** el cliente no está en una ACL permitida o el sitio está en la lista de bloqueados. Mira `sudo tail -f /var/log/squid/access.log` mientras pruebas.
+- **No hay respuesta:** comprueba que Squid escucha (`ss -tlnp | grep 3128`) y que el cortafuegos del `fw` permite el puerto 3128 desde la LAN.
+- **El navegador salta el proxy:** `curl` usa `http_proxy` si lo exportas; los navegadores tienen su propia configuración.
+{{% /details %}}
+
 ### 7.3. Autenticación
 
 1. Crea usuarios con `htpasswd` y configura el *helper* según el apartado 11.4 de la teoría (la ruta del helper cambia entre Debian y AlmaLinux).
@@ -376,6 +425,10 @@ sudo tail -n 3 /var/log/squid/access.log            # ahora el log muestra el us
 
 3. **Diagnóstico:** si recibes `407` con credenciales correctas, prueba el *helper* a mano: `echo "ana ClaveAna1" | /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd` (debe responder `OK`).
 
+<!-- hint:h11 -->
+> [!WARNING]
+> La autenticación **básica** transmite usuario y contraseña en Base64 (codificado, no cifrado). Cualquiera que capture el tráfico entre cliente y proxy puede leerla. En laboratorio es aceptable; en producción, usa Kerberos/NTLM/LDAP o limita el uso de la autenticación al segmento de confianza.
+
 ### 7.4. Modo transparente
 
 1. Añade a `squid.conf`: `http_port 3129 intercept`; `sudo squid -k parse && sudo squid -k reconfigure`.
@@ -388,6 +441,10 @@ sudo nft add rule inet filtro entrada iifname "enp0s8" tcp dport 3129 accept
 
 3. Desde `cli-lan` **sin** configurar proxy: `curl -sI http://example.org/ | head -1` y comprueba que la petición aparece en `access.log`. Prueba también `curl https://example.org/`: ¿pasa por el proxy? Explica por qué **no**.
 4. Para **forzar** el uso del proxy, bloquea en el cortafuegos la salida directa de la LAN al puerto 80 (salvo la redirigida) y valora qué hacer con 443.
+
+<!-- hint:h12 -->
+> [!NOTE]
+> El modo transparente funciona bien con **HTTP**. El HTTPS no se puede interceptar sin romper el cifrado extremo a extremo (haría falta que los clientes confíen en una CA propia, lo que tiene implicaciones legales y de privacidad). Para HTTPS se configura el proxy en los clientes o se filtra por nombre (SNI).
 
 ### 7.5. Monitorización gráfica
 
@@ -454,6 +511,11 @@ sudo grep -c 'limiting requests' /var/log/nginx/error.log
 
 Anota cuántas peticiones fueron rechazadas (`503`) y ajusta `rate` y `burst` hasta que una navegación normal no se vea afectada.
 
+<!-- hint:h13 -->
+{{% details title="🎯 Resultado esperado" open=false %}}
+Con `limit_req` activo, parte de las peticiones de `ab` devolverán **503** (`Non-2xx responses`) en cuanto se supera el ritmo permitido. Es la señal de que la limitación funciona. Ajusta `rate` y `burst` para encontrar un equilibrio entre proteger el servicio y no molestar a usuarios legítimos.
+{{% /details %}}
+
 ### 8.4. WAF en modo detección
 
 1. Comprueba si tu distribución ofrece el módulo (`apt search modsecurity`). Instálalo y actívalo con `SecRuleEngine DetectionOnly` y OWASP CRS, según la documentación del paquete.
@@ -469,6 +531,11 @@ sudo tail -n 20 /var/log/modsec_audit.log
 
 > [!NOTE]
 > Si el paquete no está disponible en tu versión, realiza esta parte de forma documental: describe dónde situarías el WAF, qué peticiones inspeccionaría y el plan de implantación gradual (detección → ajuste → bloqueo).
+
+<!-- hint:h14 -->
+{{% details title="💡 Pista" open=false %}}
+En `DetectionOnly` el WAF **registra** pero **no bloquea** (por eso las peticiones sospechosas siguen devolviendo `200`). Se empieza así a propósito, para descubrir falsos positivos sin romper la aplicación. Solo cuando las reglas están ajustadas se pasa a `SecRuleEngine On`, donde la petición devuelve `403`. Los eventos se leen en `/var/log/modsec_audit.log` (la ruta puede variar según el paquete).
+{{% /details %}}
 
 ---
 
@@ -517,6 +584,10 @@ sudo cp -a /etc/nftables.conf /etc/sysctl.d/90-fw.conf /etc/squid/squid.conf ~/u
 ```
 
 Prueba la **restauración** en una VM de sustitución: instala nftables, descifra (`gpg -d`), aplica con `nft -f` y repite las pruebas de aceptación. Mide el **tiempo de restauración** (RTO) y anota qué faltaba (rutas, `sysctl`, interfaces, claves).
+
+<!-- hint:h15 -->
+> [!WARNING]
+> La configuración del cortafuegos contiene información sensible (topología, direcciones, a veces secretos). **Cífrala** (por eso el ejemplo usa `gpg --symmetric`) y guarda la copia fuera del propio equipo. Prueba la restauración: una configuración que nunca se ha restaurado no está respaldada de verdad.
 
 ---
 

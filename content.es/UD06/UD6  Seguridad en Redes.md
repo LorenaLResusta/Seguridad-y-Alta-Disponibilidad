@@ -60,6 +60,10 @@ El modelo OSI sirve para ordenar las amenazas: cada capa tiene sus propios punto
 
 **Defensa de fondo:** el cifrado extremo a extremo con **autenticación del servidor** (TLS con certificados válidos, SSH con huellas verificadas, VPN). Aunque alguien se interponga, no puede leer ni modificar sin ser detectado.
 
+<!-- enr:u6a -->
+> [!WARNING]
+> **Solo en tu laboratorio.** Las técnicas de esta sección (ARP spoofing, DHCP falso, MAC flooding) son ataques reales que están penados en una red ajena. Aquí se estudian para aprender a **detectarlos y prevenirlos**; en las prácticas solo se simula el *efecto* sobre tu propia máquina virtual.
+
 ### 3.2. ARP spoofing (envenenamiento ARP)
 
 **ARP** (*Address Resolution Protocol*) traduce una IP en la MAC de la tarjeta de red de ese equipo dentro de la misma LAN. Funciona así:
@@ -177,6 +181,13 @@ interface GigabitEthernet0/1
 ```
 
 En un laboratorio con máquinas virtuales no hay switch gestionable, pero un **puente Linux** (`bridge`) con filtrado permite reproducir parte de estas medidas (ver prácticas).
+
+<!-- enr:u6b -->
+![Segmentación con VLAN y ACL](/images/ud6/segmentacion-vlan.svg)
+*Figura 6.1. Dos VLAN separadas por el router: todo el tráfico entre ellas pasa por el cortafuegos y puede filtrarse.*
+
+> [!NOTE]
+> Las VLAN **segmentan**, pero por sí solas **no protegen**: si el router permite todo entre VLAN, no se ha ganado nada. La seguridad la dan las ACL aplicadas en el punto de unión.
 
 ### 4.2. Segmentación con VLAN
 
@@ -503,6 +514,19 @@ flowchart LR
 > [!NOTE]
 > **Tecnologías obsoletas que no debes usar:** PPTP y L2TP sin IPsec, IKEv1 con «modo agresivo», PSK débiles, cifrados 3DES/RC4/SHA-1. Usa los modos modernos (AES-GCM, ChaCha20-Poly1305, curvas elípticas).
 
+<!-- enr:u6c -->
+![Esquema de VPN WireGuard de acceso remoto](/images/ud6/wireguard-tunel.svg)
+*Figura 6.2. WireGuard enruta por el túnel solo las redes indicadas en `AllowedIPs` y autentica a los pares con claves públicas.*
+
+> [!IMPORTANT]
+> Las claves **privadas** (`privatekey`) no se comparten ni se suben a Git. Solo se intercambian las **públicas**. Si se pierde un equipo, se elimina su `[Peer]` en el servidor y queda revocado.
+
+{{% details title="🧠 Comprueba lo que has aprendido: VPN" open=false %}}
+**¿Qué ocurre con el tráfico a Internet del cliente si `AllowedIPs = 10.10.10.0/24`? ¿Y si fuera `0.0.0.0/0`?**
+
+Con `10.10.10.0/24` solo el tráfico hacia esa red va por el túnel (*split tunneling*) y el resto sale por la conexión normal. Con `0.0.0.0/0` **todo** el tráfico del cliente pasa por la VPN (*full tunnel*), lo que obliga a configurar NAT y DNS en el servidor.
+{{% /details %}}
+
 ### 8.3. WireGuard: VPN de acceso remoto paso a paso
 
 **WireGuard** está integrado en el kernel de Linux. Cada extremo (*peer*) tiene un **par de claves** y declara qué IP aceptará de los demás (`AllowedIPs`). Sin negociaciones complejas: es muy fácil de configurar y auditar.
@@ -762,6 +786,10 @@ Un **IDS** (*Intrusion Detection System*) **observa** el tráfico o el sistema y
 | **Falso negativo** | Ataque real **no detectado** (el más peligroso) |
 | **Verdadero negativo** | Tráfico normal sin alerta |
 
+<!-- enr:u6d -->
+> [!TIP]
+> Un IDS genera **falsos positivos**. Antes de pasar a modo IPS (que bloquea), ejecuta Suricata en modo *detección* varios días, ajusta las reglas ruidosas y valora el impacto de bloquear algo legítimo.
+
 ### 10.2. Suricata
 
 **Suricata** es un motor libre de **NIDS/IPS** y monitorización de seguridad de red (OISF). Analiza el tráfico en tiempo real, decodifica protocolos (HTTP, DNS, TLS, SMB…), aplica **reglas** y genera registros estructurados (`eve.json`).
@@ -917,6 +945,10 @@ Filtros de visualización útiles:
 Funciones imprescindibles: *Follow → TCP Stream* (reconstruye una conversación), *Statistics → Conversations* (quién habla con quién) y *Statistics → Protocol Hierarchy*.
 
 ---
+
+<!-- enr:u6e -->
+> [!NOTE]
+> **Wireshark y tcpdump:** capturar tráfico de otras personas sin autorización puede vulnerar el secreto de las comunicaciones. En el aula, captura solo el tráfico de tus VM del laboratorio.
 
 ## 12. Ejemplo integrado: ciclo defensivo completo
 

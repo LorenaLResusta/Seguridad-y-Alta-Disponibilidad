@@ -133,6 +133,10 @@ sudo ip neigh del 192.168.100.30 dev enp0s3               # deja el laboratorio 
 
 **Para el informe:** ¿qué señales permiten a un administrador **detectar** una caché ARP alterada? ¿Por qué las entradas estáticas **no escalan** y qué medida de red (DAI) es la solución real?
 
+<!-- hint:h1 -->
+> [!WARNING]
+> Esta práctica **simula el efecto** de una caché envenenada modificando solo la caché ARP de **tu propia VM**; no genera tráfico malicioso hacia la red. Está prohibido (y es delito) enviar respuestas ARP falsas en una red ajena. Al terminar, restaura la caché: `sudo ip neigh flush all`.
+
 ### 3.3. Detección continua con arpwatch (en `sad-web`)
 
 ```bash
@@ -142,6 +146,11 @@ sudo journalctl -u arpwatch --since "10 min ago" --no-pager | tee ~/ud6-evidenci
 ```
 
 `arpwatch` guarda los pares IP–MAC que ve y avisa cuando **cambian** («changed ethernet address»). Genera un cambio **legítimo** para comprobarlo: cambia la MAC de una VM en VirtualBox y reiníciala, o asigna temporalmente la IP de otra VM, y localiza el aviso en el registro.
+
+<!-- hint:h2 -->
+{{% details title="🎯 Resultado esperado" open=false %}}
+`arpwatch` registra los cambios de pareja IP-MAC. Mira `sudo journalctl -u arpwatch` o `/var/lib/arpwatch/` y busca mensajes como `changed ethernet address` o `flip flop`: son la señal de que una dirección IP ha empezado a ser anunciada por otra MAC.
+{{% /details %}}
 
 ### 3.4. DHCP: observar el intercambio y localizar servidores
 
@@ -208,6 +217,11 @@ sudo ip addr add 10.10.40.10/24 dev $IFACE.40 && sudo ip link set $IFACE.40 up
 sudo ip route add 10.10.20.0/24 via 10.10.40.1
 ```
 
+<!-- hint:h3 -->
+{{% details title="💡 Pista" open=false %}}
+Para comprobar que la subinterfaz es una VLAN 802.1Q: `ip -d link show enp0s3.20` (debe aparecer `vlan protocol 802.1Q id 20`). Las subinterfaces se pierden al reiniciar si no las haces persistentes: para el laboratorio basta con recrearlas.
+{{% /details %}}
+
 ### 4.2. Comprobación del aislamiento y del etiquetado
 
 ```bash
@@ -267,6 +281,10 @@ Mira el registro de lo bloqueado en `gw-vpn`: `sudo journalctl -k --since "5 min
 
 **Entrega:** tabla de flujos (origen → destino → servicio → permitido/denegado) con la evidencia de cada prueba y el volcado de `nft list ruleset`.
 
+<!-- hint:h4 -->
+> [!TIP]
+> Comprueba la sintaxis **antes** de cargar (`sudo nft -c -f …`) y haz la prueba con una red de seguridad. Después valida las dos direcciones: lo permitido **funciona** y lo prohibido **falla** (pruebas positivas y negativas). Los contadores (`counter`) te dicen qué regla actuó.
+
 ---
 
 ## 5. Práctica 3 · Protocolos seguros y SSH avanzado
@@ -292,6 +310,11 @@ kill %1                                                  # cierra el túnel
 ```
 
 Comprueba que **sin** el túnel `sad-cli` no alcanza `10.10.10.10` (no hay ruta): `curl -m 3 http://10.10.10.10/`.
+
+<!-- hint:h5 -->
+{{% details title="💡 Pista" open=false %}}
+`-N` indica que no se abra una shell (solo el túnel) y `-L 8080:10.10.10.10:80` reenvía el puerto local 8080 al puerto 80 del destino **visto desde el servidor SSH**. Para cerrar el túnel: `kill %1` (o `fg` y Ctrl+C). Los túneles son útiles, pero también una vía para saltarse el cortafuegos: en producción conviene controlarlos (`AllowTcpForwarding`).
+{{% /details %}}
 
 ### 5.3. Bastión con `ProxyJump`
 
@@ -341,6 +364,13 @@ sudo sshd -t && sudo systemctl reload ssh
 5. Comprueba: `ssh -v ana@10.10.10.10 2>&1 | grep -i certificate` debe mostrar que se ofrece el certificado y entra **sin** `authorized_keys`. Prueba la caducidad: firma un certificado con `-V +1m`, espera un minuto y comprueba que se rechaza.
 
 **Preguntas:** ¿qué ventajas ofrece un certificado SSH frente a distribuir claves en `authorized_keys`? ¿Cómo se **revoca** un certificado antes de que caduque? (pista: `RevokedKeys`).
+
+<!-- hint:h6 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **`Certificate invalid: name is not a listed principal`:** el usuario con el que entras no está en los *principals* del certificado (`ssh-keygen -L -f id_ed25519-cert.pub`).
+- **El servidor sigue pidiendo clave:** ¿`TrustedUserCAKeys` apunta a la pública de la CA? ¿Se recargó `sshd`? Mira `ssh -vvv` en el cliente.
+- **Certificado caducado:** los certificados SSH tienen vigencia; renuévalos antes de que expiren.
+{{% /details %}}
 
 ---
 
@@ -416,6 +446,10 @@ sudo systemctl enable --now wg-quick@wg0                       # en ambas máqui
 
 `srv-lan` debe devolver el tráfico a `10.99.0.2` por `gw-vpn`: como su puerta de enlace ya es `10.10.10.1`, funciona sin más.
 
+<!-- hint:h7 -->
+> [!WARNING]
+> Las claves **privadas** de WireGuard se crean con `umask 077` y el fichero `wg0.conf` con permisos `600`. No las pegues en chats ni las subas a Git. Solo se comparten las claves **públicas**. Si una clave privada se expone, hay que generar una nueva y sustituir la pública en el otro extremo.
+
 ### 6.3. Comprobaciones
 
 ```bash
@@ -439,6 +473,13 @@ sudo tcpdump -ni wg0 -A -c 10 'tcp port 80'                    # dentro de la in
 2. Restaura el `[Peer]`. Detén y arranca `wg-quick@wg0` en `gw-vpn` y mide cuánto tarda el túnel en volver a funcionar (gracias a `PersistentKeepalive`).
 
 **Preguntas:** ¿qué hace `AllowedIPs` en cada extremo? ¿Cómo cambiarías la configuración para enviar **todo** el tráfico del cliente por la VPN? ¿Qué riesgo corre la clave privada de `sad-cli` si le roban el portátil y cómo lo mitigarías?
+
+<!-- hint:h8 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+Si `wg show` no muestra `latest handshake`: (1) el puerto **UDP 51820** debe estar abierto en el servidor, (2) el `Endpoint` del cliente debe ser correcto, (3) las claves públicas deben estar **cruzadas** (la pública del cliente en el servidor y viceversa), (4) `AllowedIPs` debe incluir la IP del túnel del otro lado, (5) ambos relojes deben estar razonablemente sincronizados.
+
+**Prueba de revocación:** `sudo wg set wg0 peer <clave_pública_cliente> remove` y comprueba que el cliente ya no puede comunicarse.
+{{% /details %}}
 
 ---
 
@@ -493,6 +534,11 @@ Anota para cada caso la respuesta y qué ves en la salida de depuración del ser
 
 **Ampliación (opcional):** configura el módulo **`pam_radius_auth`** en `sad-web` para que el inicio de sesión de un usuario de prueba se valide contra RADIUS (copia antes los ficheros de `/etc/pam.d/`, mantén una sesión de `root` abierta y revierte al terminar), o conecta un punto de acceso virtual con `hostapd` (WPA2/WPA3-Enterprise) al servidor.
 
+<!-- hint:h9 -->
+{{% details title="💡 Pista" open=false %}}
+Arranca FreeRADIUS en primer plano y en modo depuración (`sudo freeradius -X`) para ver cada paso de la autenticación. Después prueba con `radtest`: debes recibir `Access-Accept` con credenciales correctas y `Access-Reject` con incorrectas. El secreto compartido entre cliente y servidor RADIUS debe ser largo y distinto en cada cliente.
+{{% /details %}}
+
 ---
 
 ## 8. Práctica 6 · Detección de intrusiones con Suricata
@@ -544,6 +590,13 @@ sudo jq -c 'select(.event_type=="alert") | {hora:.timestamp, regla:.alert.signat
 
 **Ampliación (IPS):** en `gw-vpn` o `sad-web` (con reenvío), dirige el tráfico a `nfqueue` y ejecuta Suricata con `-q 0`, siguiendo el apartado 10.2 de la teoría; cambia una regla de prueba a `drop` y comprueba que corta la petición. **Haz una *snapshot* antes**: un fallo puede dejar la máquina sin red.
 
+<!-- hint:h10 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **Validar la configuración y las reglas antes de arrancar:** `sudo suricata -T -c /etc/suricata/suricata.yaml -v`.
+- **No genera alertas:** comprueba que escucha en la interfaz correcta (`af-packet`), que la regla está cargada (`rule-files`) y que generas tráfico que la cumple.
+- Las alertas están en `/var/log/suricata/fast.log` y, con más detalle, en `eve.json` (consúltalo con `jq`).
+{{% /details %}}
+
 ---
 
 ## 9. Práctica 7 · Captura y análisis de tráfico
@@ -565,6 +618,11 @@ wait
    - Con `dns`, ¿qué tipo de registros se consultan? ¿Viajan cifrados?
 3. Repite con una petición **HTTPS** y localiza el `Client Hello` (`tls.handshake.type == 1`): ¿qué versión de TLS se negocia? ¿Qué información sigue siendo visible (SNI)? ¿Qué ya no lo es?
 4. **Diagnóstico:** provoca un fallo (por ejemplo, un puerto cerrado con `curl http://192.168.100.30:8081`) y busca en la captura el paquete `RST`. Compáralo con un puerto **filtrado** (regla `drop` en el cortafuegos): ¿qué diferencia se ve?
+
+<!-- hint:h11 -->
+{{% details title="💡 Pista" open=false %}}
+Filtros de visualización muy útiles en Wireshark: `dns`, `http`, `tcp.flags.syn==1 && tcp.flags.ack==0` (inicios de conexión), `ip.addr==192.168.100.30`, `tls.handshake.type==1` (ClientHello). Con *Seguir flujo TCP* (clic derecho) verás la conversación completa: en HTTP, en claro; en HTTPS, cifrada.
+{{% /details %}}
 
 ---
 

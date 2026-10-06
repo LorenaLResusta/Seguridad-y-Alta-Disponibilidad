@@ -79,6 +79,11 @@ head -c 100M /dev/urandom | sha256sum
 
 **Preguntas**: ¿qué propiedad demuestra cada par de órdenes? ¿Cuántos caracteres hexadecimales tiene un SHA-256 y cuántos bits representa?
 
+<!-- hint:h1 -->
+{{% details title="💡 Pista" open=false %}}
+`echo` añade un **salto de línea** al final, así que `echo 'hola'` y `printf 'hola'` no producen el mismo hash. Este detalle causa muchos «el hash no coincide» en la vida real: asegúrate siempre de qué bytes estás calculando.
+{{% /details %}}
+
 ### 3.2. Comparar algoritmos
 
 ```bash
@@ -135,6 +140,10 @@ mv SHA256SUMS.original SHA256SUMS
 ```
 
 **Pregunta**: explica por qué comprobar solo el hash de una ISO descargada de una web comprometida no es suficiente y cómo lo resuelve la firma.
+
+<!-- hint:h2 -->
+> [!IMPORTANT]
+> `Good signature` solo prueba que la firma es válida **para esa clave**. Debes comprobar además que la clave es la del proyecto, contrastando su **huella** (`gpg --fingerprint`) con la publicada en la web oficial. Si no, un atacante podría haber firmado un ISO falso con su propia clave.
 
 ### 3.4. HMAC: integridad con clave
 
@@ -205,6 +214,11 @@ Copia las tres imágenes a tu equipo (por ejemplo con `scp`) y ábrelas. En `log
 
 **Pregunta**: ¿qué información filtra ECB aunque el contenido esté cifrado?
 
+<!-- hint:h3 -->
+{{% details title="💡 Pista" open=false %}}
+Compara la imagen cifrada con ECB y con un modo de cifrado de flujo/CBC/CTR. En ECB se **reconoce la silueta** del logotipo porque bloques iguales producen bloques cifrados iguales; en los otros modos solo se ve ruido. Conclusión: un buen algoritmo (AES) con un modo inadecuado (ECB) sigue siendo inseguro.
+{{% /details %}}
+
 ### 4.3. Cifrado autenticado: detección de manipulaciones
 
 Guarda el programa del apartado 4.4 de la teoría como `aes_gcm.py` y ejecútalo:
@@ -232,6 +246,11 @@ openssl enc -d -aes-256-ctr -K $K -iv $IV -in orden.ctr
 ```
 
 **Conclusión**: cifrar no garantiza la integridad. Explica con tus palabras por qué AES-GCM habría detectado el cambio.
+
+<!-- hint:h4 -->
+{{% details title="💡 Pista" open=false %}}
+En modo CTR, cambiar un byte del cifrado cambia **exactamente ese byte** del texto claro (por eso puedes convertir `0100` en `9100` sin conocer la clave). Con un modo autenticado (AES-GCM, ChaCha20-Poly1305), cualquier alteración hace fallar la etiqueta de autenticación y el descifrado se **rechaza**.
+{{% /details %}}
 
 ---
 
@@ -276,6 +295,12 @@ gpg --output ~/revocacion_ana.asc --gen-revoke ana@sad.lab
 
 Repite como **bruno**.
 
+<!-- hint:h5 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **GnuPG no pide la contraseña o falla con `Inappropriate ioctl for device`:** ejecuta `export GPG_TTY=$(tty)` antes del comando (ocurre al trabajar por SSH o con `su`).
+- **Dos usuarios, dos llavero:** cada usuario (`ana`, `bruno`) tiene su propio `~/.gnupg`. Comprueba con `whoami` que estás en el usuario correcto.
+{{% /details %}}
+
 ### 5.2. Intercambiar claves públicas y comprobar huellas
 
 ```bash
@@ -298,6 +323,10 @@ Si la huella coincide, firma la clave para certificar que la has comprobado:
 ```bash
 gpg --sign-key bruno@sad.lab
 ```
+
+<!-- hint:h6 -->
+> [!WARNING]
+> Importar una clave pública **no equivale a confiar** en ella. Verifica la huella por un canal alternativo (en persona, por teléfono) antes de firmarla o de usarla para algo importante. Si no, un atacante que intercepte el intercambio puede sustituir la clave (ataque de hombre en el medio).
 
 ### 5.3. Cifrar y firmar
 
@@ -384,6 +413,11 @@ sudo grep -E '^prueba_ud03b?:' /etc/shadow | cut -d: -f1,2
 ```
 
 Los hashes son distintos porque cada uno tiene su propia sal. **Pregunta**: ¿qué ventaja tendría un atacante si no hubiese sal?
+
+<!-- hint:h7 -->
+{{% details title="💡 Pista" open=false %}}
+Las dos cuentas tienen **la misma contraseña** pero hashes **distintos** en `/etc/shadow`. La diferencia está en la **sal** (el campo entre `$` y `$`). Así, aunque dos usuarios elijan la misma contraseña, no se nota, y no se pueden precalcular tablas de hashes para todos a la vez.
+{{% /details %}}
 
 ### 6.3. El efecto del coste
 
@@ -518,6 +552,10 @@ Observa que en un certificado raíz el **sujeto** y el **emisor** coinciden.
 > [!WARNING]
 > La clave privada de la CA es el activo más crítico de una PKI: con ella se pueden emitir certificados válidos para cualquier nombre. En producción se guarda en un HSM o en un equipo desconectado.
 
+<!-- hint:h8 -->
+> [!WARNING]
+> La clave privada de la CA (`private/ca.key`) es el activo más valioso de toda la PKI: quien la tenga puede emitir certificados «de confianza». En el laboratorio basta con `chmod 400` y una contraseña; en producción la CA raíz permanece **fuera de línea** (offline) y, si es posible, en un HSM.
+
 ### 7.3. Solicitud del servidor (CSR)
 
 La clave del servidor se genera **en el servidor**: la clave privada no debe viajar. En `sad-web`:
@@ -552,6 +590,13 @@ openssl verify -CAfile certs/ca.crt certs/sad-web.crt # certs/sad-web.crt: OK
 openssl x509 -in certs/sad-web.crt -noout -ext subjectAltName,extendedKeyUsage -dates
 scp certs/sad-web.crt certs/ca.crt USUARIO@sad-web:/tmp/
 ```
+
+<!-- hint:h9 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **`TXT_DB error number 2`:** ya existe un certificado emitido con el mismo *subject*. Revoca el anterior o cambia el nombre del *subject*.
+- **`I am unable to access the ./newcerts directory` / `index.txt: No such file`:** falta preparar la estructura de la CA (`index.txt` vacío y `serial` con `1000`). Revisa el apartado 7.1.
+- **El certificado no incluye el nombre:** comprueba con `openssl x509 -in certs/sad-web.crt -noout -ext subjectAltName`. El nombre debe estar en el SAN.
+{{% /details %}}
 
 ---
 
@@ -643,6 +688,13 @@ sudo ss -tlnp | grep nginx                          # escucha en 80 y 443
 > [!TIP]
 > `reload` aplica la nueva configuración sin interrumpir las conexiones en curso; `restart` detiene y vuelve a arrancar el servicio. Si `nginx -t` da error, `reload` no se debe ejecutar.
 
+<!-- hint:h10 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **`cannot load certificate key`:** ruta incorrecta o permisos. La clave debe poder leerla el proceso maestro de Nginx (`root`) y tener permisos `600`.
+- **`bind() to 0.0.0.0:443 failed`:** otro servicio usa el puerto 443. Comprueba con `sudo ss -tlnp | grep :443`.
+- Si algo falla, restaura: `sudo rm -r /etc/nginx && sudo cp -a /root/nginx.bak.<fecha> /etc/nginx`.
+{{% /details %}}
+
 ### 8.4. Probar desde el cliente
 
 En `sad-cli`:
@@ -678,6 +730,14 @@ curl https://sad-web                 # falla: "sad-web" no está en el SAN
 
 Para probarlo con un navegador del equipo anfitrión, añade `sad-web.lab` al fichero `hosts` del anfitrión (en Windows `C:\Windows\System32\drivers\etc\hosts`) e importa `ca.crt` en el almacén de certificados raíz de confianza **solo durante la práctica**. Elimínalo al terminar.
 
+<!-- hint:h11 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+**`curl: (60) SSL certificate problem: unable to get local issuer certificate`** significa que el cliente no conoce tu CA. Dos soluciones: indicarla en la llamada (`--cacert`) o instalarla en el almacén del sistema:
+
+- Debian: copiar `ca.crt` a `/usr/local/share/ca-certificates/sad-ca.crt` y ejecutar `sudo update-ca-certificates`.
+- AlmaLinux: copiar a `/etc/pki/ca-trust/source/anchors/` y ejecutar `sudo update-ca-trust`.
+{{% /details %}}
+
 ---
 
 ## 9. Práctica 7 - Análisis de la configuración TLS
@@ -697,6 +757,11 @@ openssl s_client -connect sad-web.lab:443 -tls1_3 </dev/null 2>&1 | grep -E "Pro
 # Cabecera HSTS
 curl -sI https://sad-web.lab | grep -i strict
 ```
+
+<!-- hint:h12 -->
+{{% details title="🎯 Resultado esperado" open=false %}}
+La conexión con **TLS 1.1 debe fallar** (`alert protocol version` o `handshake failure`) y las de TLS 1.2 y 1.3 deben funcionar mostrando el protocolo y la suite de cifrado negociados. Si TLS 1.0/1.1 funcionan, la configuración es insegura (ver 9.3).
+{{% /details %}}
 
 ### 9.2. Con Nmap
 
@@ -765,6 +830,11 @@ Publica la CRL en el servidor web (la URL figura en la extensión `crlDistributi
 1. ¿Por qué no basta con emitir un certificado nuevo con la misma clave?
 2. ¿Qué diferencias hay entre CRL y OCSP?
 3. ¿Qué ventaja tienen los certificados de corta duración frente a la revocación?
+
+<!-- hint:h13 -->
+{{% details title="💡 Pista" open=false %}}
+Para comprobar que la revocación surte efecto: `openssl verify -crl_check -CAfile certs/ca.crt -CRLfile crl/ca.crl certs/sad-web.crt` debe responder `error 23 … certificate revoked`. Recuerda que **Nginx no consulta la CRL por sí mismo**: la comprobación la hacen los clientes (o un servicio OCSP), de ahí la importancia de distribuir la CRL.
+{{% /details %}}
 
 ---
 

@@ -38,6 +38,13 @@ Un servidor recién instalado **no es un servidor seguro**. Las instalaciones po
 | **Trazabilidad** | Todo lo importante queda registrado | `auditd`, `journald` |
 | **Verificación** | Una medida que no se comprueba no existe | Un escaneo `nmap` tras cada cambio |
 
+<!-- enr:u4a -->
+![Ciclo del hardening](/images/ud4/ciclo-hardening.svg)
+*Figura 4.1. El hardening es un ciclo: medir antes y después, aplicar con copia previa y verificar siempre.*
+
+> [!WARNING]
+> **Regla de oro:** antes de tocar una configuración crítica (SSH, cortafuegos, PAM, `fstab`) haz copia del fichero, **mantén una segunda sesión abierta** y comprueba la sintaxis antes de recargar. Un error al endurecer SSH o el cortafuegos puede dejarte fuera de la máquina.
+
 ### 1.2. El ciclo del hardening
 
 Cada medida de esta unidad se estudia con el mismo ciclo defensivo:
@@ -136,6 +143,10 @@ sudo usermod -s /usr/sbin/nologin cuenta_servicio    # cuenta que no puede abrir
 sudo chage -l ana            # muestra la política actual de la cuenta
 sudo chage -M 90 -W 14 ana   # caduca a los 90 días, avisa 14 antes
 ```
+
+<!-- enr:u4b -->
+> [!WARNING]
+> **Edita siempre `sudoers` con `visudo`** (o con `visudo -f /etc/sudoers.d/fichero`). Un error de sintaxis puede impedir usar `sudo` y dejarte sin privilegios. Comprueba con `sudo visudo -c` antes de cerrar la sesión.
 
 ### 3.2. sudo: privilegios controlados
 
@@ -292,6 +303,10 @@ echo 'Correcto-Caballo-Pila-7!' | pwscore   # puntuación alta
 
 > [!TIP]
 > Las recomendaciones actuales (NIST SP 800-63B) favorecen **contraseñas largas** (frases) frente a reglas de complejidad estrictas o caducidades frecuentes, y comprobar que no estén en listas de contraseñas filtradas. El CE e) de RA1 pide «adoptar políticas de contraseñas»: documenta cuál adoptas y por qué.
+
+<!-- enr:u4c -->
+> [!TIP]
+> Si activas `faillock` en un servidor, prueba primero con un usuario de pruebas y **no bloquees a `root` por consola**: ante un ataque de fuerza bruta, el bloqueo podría convertirse en una denegación de servicio sobre ti mismo.
 
 ### 4.3. Bloqueo por intentos fallidos con faillock
 
@@ -563,6 +578,16 @@ sudo systemctl restart nginx && systemctl is-active nginx    # comprueba que sig
 > [!TIP]
 > Si tras aplicar restricciones el servicio falla, elimina el override (`sudo systemctl revert nginx.service`) y añade las opciones de una en una.
 
+<!-- enr:u4d -->
+> [!NOTE]
+> **Nmap solo contra tus máquinas de laboratorio.** Escanear sistemas ajenos sin permiso puede ser ilegal. Escanea siempre `192.168.100.0/24` (tu red de práctica), nunca redes públicas.
+
+{{% details title="🧠 Comprueba lo que has aprendido: servicios" open=false %}}
+**¿Qué diferencia hay entre `systemctl disable` y `systemctl mask`? ¿Cuál usarías para un servicio que nunca debe arrancar?**
+
+`disable` impide el arranque automático, pero se puede iniciar a mano o por dependencia; `mask` lo enlaza a `/dev/null` y nada puede iniciarlo. Para algo que nunca debe ejecutarse: `mask`.
+{{% /details %}}
+
 ### 7.4. Verificar desde fuera con Nmap
 
 `ss` te dice lo que escucha *dentro* del equipo; **Nmap** muestra lo que ve un atacante *desde la red* (y, por tanto, lo que deja pasar el cortafuegos).
@@ -705,6 +730,10 @@ ssh ana@192.168.100.30                                    # ahora entra con la c
 - `~/.ssh/id_ed25519.pub` es la **pública**: se copia a los servidores.
 - La primera conexión muestra la *huella* de la clave del servidor: **verifícala** por otro canal; si cambia sin motivo, podría tratarse de un ataque de intermediario.
 
+<!-- enr:u4e -->
+> [!WARNING]
+> **Secuencia segura para endurecer SSH:** (1) copia de `sshd_config`, (2) comprueba la sintaxis con `sudo sshd -t`, (3) recarga con `systemctl reload ssh`, (4) **sin cerrar la sesión actual** abre otra y verifica que entras con clave. Solo entonces cierra la primera.
+
 ### 9.3. Endurecer sshd
 
 Se escribe un fichero propio en `/etc/ssh/sshd_config.d/` (en lugar de editar `sshd_config`), que sobrevive a las actualizaciones. En `sshd` **gana el primer valor leído**, por eso el nombre empieza por `10-`: se lee antes que los de la distribución (`50-...`).
@@ -816,6 +845,10 @@ El control de acceso clásico (permisos `rwx`) es **discrecional**: el propietar
 
 > [!CAUTION]
 > «Desactivar SELinux» no es una solución: es perder una capa de defensa. Si algo falla, **se diagnostica y se ajusta**; no se apaga.
+
+<!-- enr:u4f -->
+> [!CAUTION]
+> **No desactives SELinux «para que funcione»** (`setenforce 0` de forma permanente). Es la respuesta equivocada: lee el mensaje de `ausearch`/`audit2why` y corrige el contexto o el *boolean* adecuado. Desactivar SELinux elimina una capa de defensa completa.
 
 ### 10.1. SELinux (AlmaLinux)
 
@@ -982,6 +1015,13 @@ sudo systemctl restart systemd-journald
 > [!NOTE]
 > Los registros locales son lo primero que borra un atacante. En entornos reales se **envían a un servidor central** (rsyslog, Wazuh) para conservarlos aunque el equipo caiga.
 
+<!-- enr:u4g -->
+{{% details title="🧠 Comprueba lo que has aprendido: registros" open=false %}}
+**Quieres saber quién modificó `/etc/passwd`. ¿Qué herramienta te lo dirá con precisión: `journalctl` o `auditd`?**
+
+`auditd`, con una regla de vigilancia sobre ese fichero (`-w /etc/passwd -p wa -k identidad`), registra el usuario, el proceso y el momento exacto del cambio. `journalctl` solo ve lo que los servicios envían al registro.
+{{% /details %}}
+
 ### 12.2. Auditoría con auditd
 
 `journald` registra lo que los programas *cuentan*; el **sistema de auditoría** del kernel registra lo que **ocurre** (accesos a ficheros, llamadas al sistema), de forma difícil de falsear.
@@ -1125,6 +1165,10 @@ Get-LapsADPassword -Identity SRV01 -AsPlainText        # consulta (requiere perm
 Su activación se hace con una GPO («Configuración de LAPS»). Los detalles completos están en la documentación de Microsoft.
 
 ---
+
+<!-- enr:u4h -->
+> [!TIP]
+> **Método de diagnóstico en tres pasos** cuando algo deja de funcionar tras endurecer: (1) ¿qué cambié? (`diff` con la copia), (2) ¿qué dice el registro? (`journalctl -xe`), (3) deshaz el último cambio y comprueba que vuelve a funcionar antes de buscar la causa.
 
 ## 14. Problemas habituales
 

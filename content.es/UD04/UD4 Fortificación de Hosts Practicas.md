@@ -43,6 +43,10 @@ weight: 2
 2. Crea una *snapshot* de cada máquina llamada `ud4-inicio`. Si algo sale mal, vuelves al estado inicial.
 3. Abre **dos terminales** contra `sad-web`: una para trabajar y otra de seguridad (para corregir errores sin perder el acceso). La consola de VirtualBox también sirve como acceso de emergencia.
 
+<!-- hint:h1 -->
+> [!TIP]
+> Haz una instantánea **antes de empezar cada práctica** (nómbrala `pre-P3`, `pre-P4`, …). El hardening cambia SSH, PAM y el cortafuegos: si te quedas sin acceso, volver atrás en VirtualBox es instantáneo.
+
 ### 2.2. Directorio de evidencias
 
 En `sad-web`:
@@ -103,6 +107,11 @@ nmap -sV -p- 192.168.100.30 | tee ~/nmap-antes.txt
 
 Copia el resultado a `sad-web` o consérvalo para el informe. `-sV` intenta identificar el servicio y su versión; `-p-` explora los 65 535 puertos.
 
+<!-- hint:h2 -->
+{{% details title="💡 Pista" open=false %}}
+Guarda la salida (`nmap-antes.txt`): en la práctica 4 volverás a ejecutar el mismo escaneo y **compararás** el antes y el después. Sin un «antes» no puedes demostrar que la medida ha servido.
+{{% /details %}}
+
 ### 3.3. Análisis
 
 Rellena esta tabla en tu informe:
@@ -156,6 +165,10 @@ su - luis -c 'sudo -l'                      # luis no tiene permisos sudo
 
 Revisa el registro: `sudo journalctl _COMM=sudo --since "10 min ago"`. Los intentos fallidos quedan anotados.
 
+<!-- hint:h3 -->
+> [!WARNING]
+> Mantén **una segunda terminal con `root` abierta** (`sudo -i`) mientras editas `sudoers`. Si cometes un error de sintaxis y pierdes `sudo`, podrás corregirlo desde esa sesión. Usa siempre `visudo` y valida con `sudo visudo -c`.
+
 ### 4.3. ACL
 
 ```bash
@@ -195,6 +208,18 @@ sudo passwd luis                              # prueba con 'abc123': debe rechaz
 
 Registra el resultado en `~/ud4-evidencias/02-pwquality.txt`.
 
+<!-- hint:h4 -->
+{{% details title="🎯 Resultado esperado" open=false %}}
+Con la política aplicada, `passwd` debe rechazar contraseñas débiles con mensajes como:
+
+```text
+BAD PASSWORD: The password is shorter than 12 characters
+BAD PASSWORD: The password contains less than 1 digits
+```
+
+Pruébalo con `123456`, con una palabra del diccionario y con una frase larga (esta última sí debe aceptarse).
+{{% /details %}}
+
 ### 4.5. Bloqueo por intentos fallidos (opcional, con precaución)
 
 Sigue el apartado 4.3 de la teoría (AlmaLinux: `authselect enable-feature with-faillock`; Debian: edición de `common-auth`). **Mantén abierta una sesión de `root`** durante la prueba.
@@ -207,6 +232,10 @@ sudo faillock --user luis --reset              # desbloquear
 
 > [!WARNING]
 > Si la configuración PAM falla y no puedes iniciar sesión, restaura desde la consola: `cp /etc/pam.d/common-auth.bak /etc/pam.d/common-auth` (Debian) o `authselect disable-feature with-faillock` (AlmaLinux).
+
+<!-- hint:h5 -->
+> [!CAUTION]
+> Prueba el bloqueo **solo con el usuario de pruebas `luis`**, nunca con tu cuenta de administración ni con `root`. Si te bloqueas: `sudo faillock --user luis --reset`. En producción, un bloqueo agresivo puede convertirse en una **denegación de servicio** contra tus propios usuarios.
 
 ---
 
@@ -258,6 +287,10 @@ sudo sshd -T | grep -Ei 'permitrootlogin|passwordauthentication|allowusers' | te
 sudo systemctl reload ssh        # Debian   ·   AlmaLinux: sudo systemctl reload sshd
 ```
 
+<!-- hint:h6 -->
+> [!WARNING]
+> **Sigue siempre este orden:** (1) copia del fichero, (2) `sudo sshd -t` para validar la sintaxis, (3) `sudo systemctl reload ssh` (en AlmaLinux, `sshd`), (4) **sin cerrar la sesión actual**, abre otra terminal y comprueba que entras con clave. Solo entonces cierra la primera. Si desactivas la contraseña antes de comprobar la clave, te quedas fuera.
+
 ### 5.3. Comprobación (desde `sad-cli`)
 
 ```bash
@@ -272,6 +305,13 @@ Revisa el registro en `sad-web`:
 ```bash
 sudo journalctl -u ssh --since "10 min ago" --no-pager | tail -20     # AlmaLinux: -u sshd
 ```
+
+<!-- hint:h7 -->
+{{% details title="🎯 Resultado esperado" open=false %}}
+- Con clave: entra y muestra el mensaje `acceso con clave OK`.
+- Sin clave (`-o PubkeyAuthentication=no`): `Permission denied (publickey)`.
+- Como `root`: `Permission denied` aunque la contraseña fuera correcta (`PermitRootLogin no`).
+{{% /details %}}
 
 ### 5.4. Fail2ban
 
@@ -321,6 +361,11 @@ sudo fail2ban-client set sshd unbanip 192.168.100.10                        # de
 
 Tras desbloquear, vuelve a entrar desde `sad-cli` para comprobar la recuperación.
 
+<!-- hint:h8 -->
+{{% details title="💡 Pista" open=false %}}
+Para provocar el bloqueo, haz varios intentos fallidos desde `sad-cli` y mira el estado con `sudo fail2ban-client status sshd`. Para **desbloquear** tu IP de laboratorio: `sudo fail2ban-client set sshd unbanip 192.168.100.10`. Si algo no funciona, el diagnóstico está en `journalctl -u fail2ban`.
+{{% /details %}}
+
 ### 5.5. Solución de problemas
 
 | Problema | Qué mirar |
@@ -369,6 +414,10 @@ sudo firewall-cmd --list-all | tee ~/ud4-evidencias/04-firewalld.txt
 {{% /tab %}}
 {{< /tabs >}}
 
+<!-- hint:h9 -->
+> [!WARNING]
+> Permite SSH **antes** de activar el cortafuegos con `default deny incoming`: `sudo ufw allow 22/tcp` y solo después `sudo ufw enable`. La «red de seguridad» del apartado 6.1 (apagado automático a los 3 minutos) existe precisamente por si te equivocas.
+
 ### 6.3. Comprobación
 
 Desde `sad-cli`:
@@ -384,6 +433,11 @@ Si todo funciona, **cancela el deshacer**: `sudo systemctl stop deshacer-fw.time
 
 > [!TIP]
 > Prueba una regla negativa: desde otra IP no incluida en `192.168.100.0/24` (por ejemplo, con una segunda VM en otra red) el puerto 22 debe aparecer filtrado. Anota qué diferencias ves entre `filtered` (el paquete se descarta) y `closed` (se rechaza con RST).
+
+<!-- hint:h10 -->
+{{% details title="💡 Pista" open=false %}}
+Compara los dos ficheros de Nmap: de **todos** los puertos abiertos del «antes», solo deben seguir visibles los que has decidido publicar (por ejemplo 22 y 80). Un servicio que antes veías y ya no ve es una **reducción de la superficie de ataque**; anótalo en el informe.
+{{% /details %}}
 
 ---
 
@@ -423,6 +477,10 @@ sudo umount /mnt/seguro && sudo cryptsetup close seguro
 > `luksFormat` destruye el contenido del dispositivo indicado. Revisa **dos veces** la ruta; en este laboratorio solo debe ser `/root/volumen.img`.
 
 **Preguntas para el informe:** ¿qué ocurre si olvidas la frase de paso? ¿Y si se corrompe la cabecera y no tienes copia? ¿Dónde guardarías la copia de la cabecera y por qué?
+
+<!-- hint:h11 -->
+> [!CAUTION]
+> Con LUKS, **si pierdes la frase de paso y no tienes copia de la cabecera, los datos no se pueden recuperar**. Haz `sudo cryptsetup luksHeaderBackup /root/volumen.img --header-backup-file ~/cabecera.img` y guárdala en otro sitio. Esa cabecera es sensible: quien la tenga y conozca la frase podría abrir el volumen.
 
 ---
 
@@ -519,6 +577,14 @@ sudo aa-enforce /usr/local/bin/leer-config.sh
 {{% /tab %}}
 {{< /tabs >}}
 
+<!-- hint:h12 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **Algo falla y sospechas de SELinux:** `sudo ausearch -m avc -ts recent` muestra el bloqueo. `sudo audit2why < /var/log/audit/audit.log` explica la causa.
+- **Contexto incorrecto en una carpeta nueva:** `sudo semanage fcontext -a -t httpd_sys_content_t "/srv/web(/.*)?"` y después `sudo restorecon -Rv /srv/web`.
+- **No desactives SELinux** (`setenforce 0`) como solución definitiva: corrige el contexto o el *boolean* (`getsebool -a | grep httpd`).
+- En Debian, el equivalente es AppArmor: `sudo aa-status` y `sudo journalctl -k | grep -i apparmor`.
+{{% /details %}}
+
 ---
 
 ## 9. Práctica 7 · Auditoría, integridad y antimalware
@@ -563,6 +629,11 @@ sudo rm /etc/ssh/sshd_config.d/99-prueba.conf && sudo userdel -r temporal-audit
 
 Anota para cada evento: **quién** (`auid`), **qué** (ruta, acción), **cuándo** y **con qué resultado**.
 
+<!-- hint:h13 -->
+{{% details title="💡 Pista" open=false %}}
+Para consultar los eventos de una regla con su etiqueta: `sudo ausearch -k <etiqueta> -i` (la opción `-i` interpreta los números en nombres de usuario y de llamada al sistema). `sudo aureport --summary` ofrece un resumen general.
+{{% /details %}}
+
 ### 9.3. AIDE
 
 {{< tabs >}}
@@ -588,6 +659,11 @@ sudo sed -i '$d' /etc/hosts                                      # revertir el c
 
 El informe de AIDE debe mostrar `/etc/hosts` en «Changed entries», con el hash anterior y el actual.
 
+<!-- hint:h14 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+Tras un cambio **legítimo** (una actualización, por ejemplo), AIDE avisará de diferencias hasta que actualices la base de datos de referencia (`aide --update` y copiar la base nueva sobre la anterior). Una base de datos de referencia **debe guardarse en un lugar protegido** (solo lectura o fuera del equipo); si el atacante la modifica, el control deja de servir.
+{{% /details %}}
+
 ### 9.4. ClamAV con el fichero EICAR
 
 ```bash
@@ -600,6 +676,10 @@ clamscan -r --infected ~/prueba-av                                              
 ```
 
 El fichero EICAR es una cadena de texto **inofensiva** reconocida por todos los antivirus como prueba. No utilices muestras de malware real.
+
+<!-- hint:h15 -->
+> [!NOTE]
+> El fichero **EICAR** no es un virus: es una cadena de texto estándar que todos los antivirus detectan a propósito para poder probar su funcionamiento sin riesgo. Si ClamAV no lo detecta, el problema es la base de firmas (`freshclam`) o la ruta que escaneas.
 
 ---
 
@@ -622,6 +702,11 @@ Procedimiento:
 | --- | --- | --- | --- | --- |
 | … | … | … | … | … |
 
+<!-- hint:h16 -->
+{{% details title="💡 Pista" open=false %}}
+No intentes llegar a 100 puntos en el índice de Lynis a toda costa: muchas sugerencias dependen del contexto del servidor. Prioriza las de mayor impacto (acceso remoto, usuarios, cortafuegos, actualizaciones), aplícalas **una a una** y vuelve a medir. Documenta también las que decides **no** aplicar y por qué.
+{{% /details %}}
+
 ---
 
 ## 11. Práctica 9 · Monitorización centralizada con Wazuh
@@ -643,6 +728,12 @@ sudo bash wazuh-install.sh -a              # instalación todo en uno (servidor,
 ```
 
 3. Al terminar, el instalador muestra la contraseña del usuario `admin` del panel. **Guárdala** y accede a `https://192.168.100.40` desde el navegador (certificado autofirmado: es esperado en el laboratorio).
+
+<!-- hint:h17 -->
+{{% details title="🔧 Si algo falla" open=false %}}
+- **El instalador falla o se queda sin memoria:** Wazuh necesita al menos 4 GB de RAM y 2 CPU. Aumenta los recursos de la VM.
+- Los comandos de instalación y las versiones cambian con frecuencia: **contrasta siempre con la guía oficial** (`documentation.wazuh.com`) antes de ejecutarlos.
+{{% /details %}}
 
 ### 11.2. Agente en `sad-web`
 
@@ -690,6 +781,10 @@ auditpol /set /subcategory:"Logon" /success:enable /failure:enable
 ```
 
 Comprueba cada medida (con el cmdlet `Get-` o la consola «Directiva de seguridad local») y haz un inicio de sesión fallido contra tu cuenta de laboratorio para localizar el evento **4625** en el *Visor de eventos* (Seguridad). Anota los campos *Cuenta*, *Tipo de inicio de sesión* y *Dirección de red de origen*.
+
+<!-- hint:h18 -->
+> [!TIP]
+> Antes de activar BitLocker o cambiar la política de seguridad local, **toma una instantánea** de la VM y guarda la clave de recuperación fuera de la máquina. Practica el procedimiento de recuperación: es lo que necesitarás el día que el usuario olvide su PIN.
 
 ---
 

@@ -65,6 +65,13 @@ Al finalizar esta unidad serás capaz de:
 
 ---
 
+<!-- enr:u1a -->
+![Tríada CID: confidencialidad, integridad y disponibilidad](/images/ud1/triada-cid.svg)
+*Figura 1.1. Los tres pilares de la seguridad de la información. Cada medida de seguridad protege, sobre todo, uno de ellos.*
+
+> [!TIP]
+> **Truco para recordarlo:** ante cualquier incidente pregúntate «¿qué ha fallado: que alguien *lo ha visto* (C), que alguien *lo ha cambiado* (I) o que *ya no se puede usar* (D)?». Un mismo incidente puede afectar a varios a la vez.
+
 ## 3. Seguridad informática y seguridad de la información
 
 Aunque a menudo se usan como sinónimos, conviene distinguirlos:
@@ -241,6 +248,18 @@ El **no repudio** impide que alguien pueda **negar** haber realizado una acción
 - **No repudio en destino**: el receptor no puede negar haberlo recibido (por ejemplo, un acuse de recibo firmado, como en las notificaciones electrónicas de la Administración).
 
 La tecnología que lo hace posible es la **firma digital** basada en criptografía asimétrica (UD3).
+
+<!-- enr:u1b -->
+> [!WARNING]
+> **Error muy habitual en los exámenes:** confundir **integridad** con **confidencialidad**. Cifrar un fichero protege la confidencialidad, pero **no impide** que alguien lo borre o lo modifique. Para detectar modificaciones se usan *hashes* y firmas (UD3).
+
+{{% details title="🧠 Comprueba lo que has aprendido: los principios" open=false %}}
+**1.** Un empleado envía por error una nómina a otra persona. ¿Qué principio se ha violado?
+**2.** Un ransomware cifra el servidor de ficheros y nadie puede trabajar. ¿Y ahora?
+**3.** Un atacante cambia el IBAN de una factura en la base de datos. ¿Y aquí?
+
+**Respuestas:** 1 → confidencialidad. 2 → disponibilidad (y también integridad, porque los ficheros han sido alterados). 3 → integridad.
+{{% /details %}}
 
 ### 4.7. Ejercicio: identifica el principio
 
@@ -599,6 +618,13 @@ Ninguna medida es perfecta. La **defensa en profundidad** consiste en superponer
 │ │ │ │ │ │ │                  ACTIVO
 ```
 
+<!-- enr:u1c -->
+![Defensa en profundidad: capas concéntricas de protección](/images/ud1/defensa-profundidad.svg)
+*Figura 1.2. Defensa en profundidad: el atacante debe superar varias capas, y cada capa detecta o frena lo que la anterior no ha parado.*
+
+> [!IMPORTANT]
+> Ninguna medida es infalible. Por eso la seguridad se diseña **por capas**: si falla el cortafuegos, el antimalware del host y los permisos de ficheros siguen protegiendo el dato.
+
 ### 6.5. Ejercicio: clasifica las medidas
 
 Clasifica cada medida como **física o lógica** y como **activa o pasiva**: RAID 1, cortafuegos, SAI, antivirus, copia de seguridad, lector de tarjetas en la puerta del CPD, IDS, cifrado de disco, extintor de gas, actualización del sistema operativo.
@@ -754,6 +780,10 @@ Received: from mail.servidor-desconocido.ru (203.0.113.50)
 
 > [!TIP]
 > Ante la duda, no se pulsa el enlace: se accede a la entidad **escribiendo su dirección** en el navegador o llamando a un teléfono conocido. Y se avisa al equipo de seguridad: un aviso a tiempo puede proteger a toda la organización.
+
+<!-- enr:u1d -->
+> [!WARNING]
+> **Ética y legalidad.** Probar las contraseñas de sistemas ajenos, o de los tuyos sin autorización, puede ser un delito (arts. 197 bis y 264 del Código Penal). En este módulo solo se trabaja **en el laboratorio virtual** y con cuentas creadas para la práctica. Aquí estudiamos las técnicas para entender **cómo defenderse**, no para atacar.
 
 ### 7.6. Ataques a contraseñas
 
@@ -1044,6 +1074,16 @@ echo "Información guardada en $SALIDA"
 
 ---
 
+<!-- enr:u1e -->
+> [!TIP]
+> **En un incidente real, lo primero es contener, no investigar.** Antes de apagar o reinstalar una máquina comprometida, piensa en la evidencia: una máquina apagada pierde la memoria volátil. La decisión se documenta siempre.
+
+{{% details title="🧠 Comprueba lo que has aprendido: gestión de incidentes" open=false %}}
+**¿En qué fase estás si aíslas de la red un equipo infectado para que no contagie a otros?**
+
+Contención. La erradicación (eliminar el malware) y la recuperación (volver a servicio) vienen después; la preparación y la detección vienen antes.
+{{% /details %}}
+
 ## 10. Auditoría de seguridad y equipos de ciberseguridad
 
 Una **auditoría de seguridad** es una revisión sistemática e independiente para comprobar si los controles existen, están bien configurados y son eficaces.
@@ -1294,6 +1334,10 @@ Una academia de idiomas detecta que un portátil robado contenía, sin cifrar, u
 8. **Formar** periódicamente al personal frente a la ingeniería social.
 9. Tener un **plan de respuesta** a incidentes y probarlo.
 10. Revisar las medidas periódicamente: la seguridad es un proceso continuo.
+
+<!-- enr:u1f -->
+> [!NOTE]
+> Los controles se clasifican con dos ejes que no hay que mezclar: **cuándo actúan** (preventivo, detectivo, correctivo) y **qué naturaleza tienen** (físico, técnico, organizativo).
 
 ## 14. Ejercicios de repaso
 
