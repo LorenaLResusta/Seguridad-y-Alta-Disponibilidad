@@ -1,294 +1,879 @@
 ---
-title: "1. Introducción. Prácticas"
+title: "Prácticas"
+slug: "practicas"
 weight: 2
 ---
 
+# UD1. Prácticas: introducción a la seguridad
 
-# UD1 - Prácticas: introducción a la seguridad
-
-> Preparación de un entorno de pruebas Linux y elaboración de un plan básico de gestión de riesgos.
+> Preparación del laboratorio, revisión básica de un sistema Linux, detección de amenazas habituales, análisis de vulnerabilidades, iniciación al análisis forense y elaboración de un plan de gestión de riesgos.
 
 | Datos de las prácticas | Información |
 | --- | --- |
-| Módulo | Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Modalidad | Semipresencial |
-| Duración estimada | 6 horas |
-| Entorno | VirtualBox y una distribución Linux compatible |
+| Duración estimada | 7 horas |
+| Entorno | VirtualBox 7.x · Debian 13 o AlmaLinux 10 |
+| Criterios de evaluación | RA1 a, b, c, d, e, i · RA7 a, b, c, d, f, g |
 
 ## 1. Objetivos
 
-Al finalizar las prácticas, el alumnado será capaz de:
+- Preparar una máquina virtual aislada y recuperable para las prácticas del módulo.
+- Inventariar un sistema: identidad, red, usuarios, servicios y puertos.
+- Comprobar la integridad de ficheros y la trazabilidad de las acciones.
+- Detectar intentos fallidos de autenticación y valorar una política de contraseñas.
+- Analizar un correo de *phishing* a partir de sus cabeceras.
+- Identificar vulnerabilidades del sistema relacionadas con CVE.
+- Adquirir y analizar una evidencia digital respetando su integridad.
+- Elaborar un plan de gestión de riesgos y un procedimiento de respuesta a incidentes.
 
-- Preparar una máquina virtual aislada para prácticas de seguridad.
-- Identificar activos, amenazas, vulnerabilidades y riesgos.
-- Aplicar medidas básicas de protección en un sistema Linux.
-- Proponer controles técnicos, organizativos y físicos proporcionados.
-- Documentar evidencias y un plan de mejora realista.
+## 2. Normas del laboratorio
 
-## 2. Alcance y normas del entorno de pruebas
+> [!CAUTION]
+> - Trabaja únicamente sobre **tu propia máquina virtual** y los sistemas que autorice el profesorado.
+> - No escanees ni pruebes credenciales contra equipos, redes o servicios ajenos.
+> - No uses datos personales reales en capturas, informes ni pruebas.
+> - Crea una **instantánea** antes de cada práctica para poder volver a un estado conocido.
 
-- Trabaja únicamente sobre tu propia máquina virtual y los sistemas autorizados por el profesorado.
-- No realices análisis, escaneos ni pruebas sobre equipos, redes o servicios ajenos.
-- No uses datos personales reales en capturas, informes ni pruebas.
-- Realiza una snapshot antes de cambiar configuraciones relevantes para poder volver a un estado conocido.
+**Entrega de evidencias**: para cada práctica guarda las salidas de los comandos (copiando el texto o con capturas) y responde a las preguntas de análisis. Todas las evidencias se guardarán en `~/ud01/evidencias`.
 
-## 3. Preparación común
+---
 
-### 3.1. Material necesario
+## 3. Práctica 0 - Preparación del laboratorio
 
-- Un equipo con virtualización habilitada.
-- [VirtualBox](https://www.virtualbox.org/).
-- Una ISO de instalación mínima de una distribución Linux compatible.
-- Espacio libre en disco para la máquina virtual.
+### 3.1. ¿Por qué máquinas virtuales?
 
-AlmaLinux es la distribución recomendada para mantener la continuidad con el resto del módulo, pero no es obligatoria. También se pueden utilizar Debian, Ubuntu Server, Rocky Linux o Fedora. En este documento, los comandos se muestran para AlmaLinux y distribuciones de la familia RHEL; en Debian o Ubuntu se debe usar `apt` en lugar de `dnf`.
+Una **máquina virtual (VM)** es un ordenador simulado por software (el **hipervisor**, en nuestro caso VirtualBox) que se ejecuta dentro del equipo real (el **anfitrión**). Para practicar seguridad tiene tres ventajas:
 
-### 3.2. Crear la máquina virtual
+1. **Aislamiento**: lo que ocurra en la VM no afecta al anfitrión ni a la red del centro.
+2. **Recuperación**: las **instantáneas** (*snapshots*) permiten volver atrás en segundos.
+3. **Reproducibilidad**: todo el grupo trabaja con el mismo entorno.
 
-1. Instala VirtualBox desde su sitio oficial y ábrelo.
-2. Selecciona **Nueva** y asigna el nombre `linux-ud01`.
-3. Selecciona la ISO descargada. Si VirtualBox propone una instalación desatendida, desmárcala para completar manualmente las opciones de instalación.
-4. Asigna como referencia 2 GB de memoria RAM, 2 procesadores y un disco virtual dinámico de 25 GB. Ajusta estos valores si el equipo anfitrión dispone de pocos recursos.
-5. En la configuración de red, selecciona **NAT**. Esta opción permite actualizar el sistema sin exponer directamente la máquina virtual a la red local.
-6. Inicia la máquina y sigue el asistente de instalación de la distribución elegida.
+### 3.2. Material
 
-### 3.3. Instalar y configurar el sistema
+- Un equipo con la virtualización activada en la UEFI/BIOS (Intel VT-x o AMD-V).
+- [VirtualBox 7.x](https://www.virtualbox.org/wiki/Downloads).
+- Una ISO de **Debian 13** (*netinst*) o de **AlmaLinux 10** (*minimal* o *boot*).
+- Unos 30 GB libres en disco.
 
-1. Elige el idioma de instalación.
-2. En **Destino de la instalación**, selecciona el disco virtual creado y acepta la configuración automática de particiones.
-3. Activa la conexión de red y establece el nombre de equipo `linux-ud01`.
-4. Crea una cuenta de usuario con la inicial de tu nombre seguida de tu primer apellido. Ejemplo: `fperez`.
-5. Marca la opción para que el usuario pueda administrar el sistema y crea una contraseña robusta para la cuenta administrativa.
-6. Inicia la instalación. Cuando termine, reinicia la máquina y retira la ISO virtual si se solicita.
-7. Inicia sesión con el usuario creado y abre una terminal.
+> [!NOTE]
+> En este módulo los ejemplos indican siempre los comandos de las dos familias de distribuciones cuando son diferentes. Elige una y úsala durante todo el curso.
 
-### 3.4. Comprobaciones iniciales
+### 3.3. Crear una red NAT para el módulo
 
-Ejecuta estos comandos y guarda una captura o copia de la salida de cada uno:
+Con el modo **NAT** simple de VirtualBox cada VM está sola en su red. Con una **Red NAT** varias VM se ven entre sí y salen a Internet, pero no son accesibles desde la red del centro. Esta será la red de trabajo de las primeras unidades.
 
-```bash
-hostnamectl
-cat /etc/os-release
-ip a
-whoami
-```
+1. En VirtualBox: **Archivo → Herramientas → Administrador de red → Redes NAT → Crear**.
+2. Nombre: `SAD-NAT`. Prefijo IPv4: `192.168.100.0/24`. DHCP activado.
 
-Actualiza el sistema. Introduce la contraseña cuando se solicite:
+También puede crearse desde la línea de órdenes del anfitrión con `VBoxManage`, la herramienta de administración de VirtualBox:
 
 ```bash
-# AlmaLinux, Rocky Linux o Fedora
-sudo dnf update -y
-
-# Debian o Ubuntu
-sudo apt update && sudo apt upgrade -y
+VBoxManage natnetwork add --netname SAD-NAT --network "192.168.100.0/24" --enable --dhcp on
+VBoxManage natnetwork list
 ```
 
-Comprueba que el usuario pertenece al grupo de administración:
+### 3.4. Crear e instalar la máquina virtual
+
+1. **Nueva** → Nombre `sad-linux01`. Selecciona la ISO. Desmarca la **instalación desatendida**.
+2. Memoria: 2048 MB. CPU: 2. Disco: 25 GB dinámico.
+3. **Configuración → Red → Adaptador 1**: conectado a **Red NAT** → `SAD-NAT`.
+4. Inicia la VM y realiza una instalación mínima:
+
+| Opción | Debian 13 | AlmaLinux 10 |
+| --- | --- | --- |
+| Nombre del equipo | `sad-linux01` | `sad-linux01` |
+| Usuario | inicial + primer apellido (ej. `fperez`) | igual, marcando **Hacer administrador** |
+| Contraseña de `root` | **Déjala en blanco**: así el usuario se añade al grupo `sudo` | Deja la cuenta `root` bloqueada |
+| Software | Solo **servidor SSH** y **utilidades estándar** | Instalación **mínima** |
+
+> [!TIP]
+> Dejar la cuenta `root` sin contraseña y administrar con `sudo` es una buena práctica: cada acción administrativa queda registrada con el nombre de la persona que la ejecutó (trazabilidad).
+
+### 3.5. Comprobaciones iniciales
+
+Inicia sesión y comprueba el sistema:
 
 ```bash
-id
-sudo -l
+hostnamectl                 # nombre del equipo, sistema operativo y núcleo
+cat /etc/os-release         # distribución y versión exactas
+ip -br address              # interfaces y direcciones IP en formato breve
+ip route                    # puerta de enlace por defecto
+id                          # usuario, UID y grupos a los que pertenece
+sudo -l                     # qué puede ejecutar con sudo
+timedatectl                 # hora del sistema y sincronización NTP
 ```
 
-Explica brevemente qué evidencia aporta cada comando: identidad del sistema, versión, configuración de red e identidad/permisos del usuario.
+Resultado esperado (Debian):
 
-### 3.5. Crear una snapshot
+```text
+$ ip -br address
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+enp0s3           UP             192.168.100.4/24 fe80::a00:27ff:fe4e:66a1/64
 
-1. Apaga la máquina virtual desde Linux o asegúrate de que queda en un estado consistente.
-2. En VirtualBox, selecciona `linux-ud01` y abre la vista **Snapshots**.
-3. Crea una instantánea denominada `01-instalacion-actualizada`.
-4. Añade una descripción que indique la fecha y que el sistema ha sido actualizado.
-5. Incluye una captura de la snapshot en la entrega.
+$ id
+uid=1000(fperez) gid=1000(fperez) grupos=1000(fperez),24(cdrom),27(sudo),...
 
-La snapshot permite recuperar rápidamente el estado inicial del entorno de pruebas. No sustituye a una copia de seguridad externa, pero reduce el riesgo de perder tiempo ante una configuración errónea durante las prácticas posteriores.
+$ timedatectl
+...
+System clock synchronized: yes
+              NTP service: active
+```
 
-## 4. Práctica 1 - Revisión básica de seguridad del sistema
+Actualiza el sistema:
 
-### 4.1. Inventario mínimo
+{{< tabs >}}
+{{% tab "Debian / Ubuntu" %}}
+```bash
+sudo apt update          # descarga la lista de paquetes disponibles
+sudo apt full-upgrade -y # instala todas las actualizaciones
+```
+{{% /tab %}}
+{{% tab "AlmaLinux / Rocky" %}}
+```bash
+sudo dnf upgrade -y      # descarga e instala todas las actualizaciones
+```
+{{% /tab %}}
+{{< /tabs >}}
 
-1. Crea una carpeta para las evidencias de la práctica:
+Si se ha actualizado el núcleo, reinicia con `sudo systemctl reboot`.
+
+### 3.6. Crear la instantánea base
+
+1. Apaga la VM: `sudo systemctl poweroff`.
+2. En VirtualBox, selecciona la VM → **Instantáneas** → **Tomar**.
+3. Nombre: `00-instalacion-actualizada`. Descripción: fecha y «sistema recién instalado y actualizado».
+
+```bash
+# Equivalente desde la línea de órdenes del anfitrión
+VBoxManage snapshot sad-linux01 take "00-instalacion-actualizada" --description "Sistema base actualizado"
+VBoxManage snapshot sad-linux01 list
+```
+
+> [!IMPORTANT]
+> Una instantánea **no es una copia de seguridad**: se guarda en el mismo disco que la VM. Si ese disco falla, se pierden ambas. Lo estudiaremos en la UD2.
+
+---
+
+## 4. Práctica 1 - Inventario y revisión básica de seguridad
+
+**Objetivo**: conocer el estado del sistema antes de protegerlo. *No se puede proteger lo que no se conoce.*
+
+### 4.1. Preparar la carpeta de evidencias
 
 ```bash
 mkdir -p ~/ud01/evidencias
+cd ~/ud01/evidencias
 ```
 
-2. Guarda en un fichero la información básica del equipo:
+### 4.2. Inventario del sistema
 
 ```bash
-hostnamectl > ~/ud01/evidencias/sistema.txt
-ip a >> ~/ud01/evidencias/sistema.txt
+{
+  echo "=== SISTEMA ===";   hostnamectl
+  echo "=== RED ===";       ip -br address; ip route
+  echo "=== DISCOS ===";    lsblk -f
+  echo "=== MEMORIA ===";   free -h
+} > inventario.txt
+less inventario.txt
 ```
 
-3. Revisa los servicios actualmente activos:
+- Las llaves `{ ... }` agrupan varias órdenes para redirigir la salida de todas a un único fichero.
+- `lsblk -f` muestra los dispositivos de bloque (discos y particiones) con su sistema de ficheros.
+- `free -h` muestra la memoria en unidades legibles (*human readable*).
+
+### 4.3. Usuarios del sistema
+
+Cada línea de `/etc/passwd` describe una cuenta: `usuario:x:UID:GID:descripción:directorio:shell`.
 
 ```bash
-systemctl list-units --type=service --state=running
+# Cuentas con UID >= 1000: son las cuentas de personas
+awk -F: '$3 >= 1000 && $3 < 65534 {print $1, $3, $7}' /etc/passwd
+
+# Cuentas que pueden iniciar sesión (tienen una shell válida)
+grep -Ev '(nologin|false)$' /etc/passwd
+
+# Miembros de los grupos de administración
+getent group sudo wheel
 ```
 
-4. Identifica tres activos de tu entorno de pruebas: la máquina virtual, la cuenta de usuario y la configuración de red. Indica para cada uno qué información o servicio protege y por qué tiene valor.
+- `awk -F:` separa cada línea por los dos puntos; `$3` es el tercer campo (UID) y `$7` la *shell*.
+- Las cuentas de servicio (como `www-data` o `sshd`) tienen UID bajos y *shell* `nologin`: no pueden iniciar sesión interactiva.
 
-### 4.2. Cuentas y mínimo privilegio
+**Pregunta**: ¿hay alguna cuenta, además de la tuya y de `root`, que pueda iniciar sesión? ¿Quién puede administrar el sistema?
 
-1. Consulta las cuentas locales del sistema:
+### 4.4. Servicios y puertos en escucha
+
+Un servicio que escucha en un puerto de red es una posible puerta de entrada. Hay que conocerlos todos y justificar cada uno.
 
 ```bash
-getent passwd
+# Servicios en ejecución
+systemctl list-units --type=service --state=running --no-pager
+
+# Puertos TCP y UDP en escucha y el proceso que los abre
+sudo ss -tulpn
 ```
 
-2. Distingue entre la cuenta creada durante la instalación y las cuentas de servicio. No elimines cuentas del sistema.
-3. Crea una cuenta de prueba sin permisos administrativos:
+Salida esperada en una instalación mínima:
+
+```text
+Netid State  Local Address:Port  Process
+udp   UNCONN 0.0.0.0:68          users:(("dhclient",pid=512,fd=7))
+tcp   LISTEN 0.0.0.0:22          users:(("sshd",pid=640,fd=3))
+tcp   LISTEN [::]:22             users:(("sshd",pid=640,fd=4))
+```
+
+- `0.0.0.0:22` significa que SSH escucha en **todas** las interfaces IPv4.
+- Un servicio que escucha en `127.0.0.1` solo es accesible desde el propio equipo.
+
+**Pregunta**: completa la tabla para cada puerto en escucha.
+
+| Puerto | Protocolo | Servicio | ¿Necesario? | Accesible desde | Riesgo |
+| --- | --- | --- | --- | --- | --- |
+| 22 | TCP | OpenSSH | Sí, administración | Todas las interfaces | Fuerza bruta si hay contraseñas débiles |
+
+### 4.5. Actualizaciones pendientes
+
+{{< tabs >}}
+{{% tab "Debian / Ubuntu" %}}
+```bash
+sudo apt update
+apt list --upgradable
+```
+{{% /tab %}}
+{{% tab "AlmaLinux / Rocky" %}}
+```bash
+sudo dnf check-update            # devuelve código 100 si hay actualizaciones
+sudo dnf updateinfo list --security   # solo actualizaciones de seguridad
+```
+{{% /tab %}}
+{{< /tabs >}}
+
+### 4.6. Análisis
+
+Redacta en `analisis_p1.md`:
+
+1. Tres **activos** de tu VM, su valor y la propiedad (C, I, D) más importante de cada uno.
+2. Dos **vulnerabilidades** potenciales detectadas (o que podrían aparecer) y su clasificación por tipología y origen.
+3. Una medida de seguridad **física** y una **lógica** aplicables a tu VM y a tu equipo anfitrión.
+
+---
+
+## 5. Práctica 2 - Integridad y trazabilidad
+
+**Ciclo de trabajo**: *amenaza* (un intruso o un error modifica ficheros de configuración) → *vulnerabilidad* (nadie vigila los cambios) → *ataque* (se modifica `/etc/hosts`) → *detección* (comparación de hashes y registros) → *mitigación* (restaurar y proteger) → *comprobación*.
+
+### 5.1. Crear una línea base de integridad
+
+Una **línea base** (*baseline*) es una fotografía del estado correcto del sistema con la que comparar después.
 
 ```bash
-sudo useradd -m invitado_ud01
-sudo passwd invitado_ud01
+cd ~/ud01/evidencias
+
+# Huellas SHA-256 de ficheros críticos de configuración
+sudo sha256sum /etc/passwd /etc/group /etc/hosts /etc/ssh/sshd_config > linea_base.sha256
+cat linea_base.sha256
+
+# Protegemos la línea base frente a modificaciones accidentales
+chmod 400 linea_base.sha256
 ```
 
-4. Comprueba que la cuenta no puede ejecutar órdenes administrativas:
+### 5.2. Simular una modificación maliciosa
+
+Muchos *malware* modifican `/etc/hosts` para redirigir dominios legítimos a servidores del atacante.
 
 ```bash
-su - invitado_ud01
-sudo -l
-exit
+# Copia de seguridad de la configuración antes de tocarla
+sudo cp -a /etc/hosts /etc/hosts.bak
+
+# «Ataque» simulado: redirigimos un dominio
+echo "203.0.113.66   www.mibanco.es" | sudo tee -a /etc/hosts
 ```
 
-5. Explica cómo este resultado aplica el principio de mínimo privilegio.
-6. Elimina la cuenta de prueba al finalizar:
+- `tee -a` añade (*append*) el texto al final del fichero. Se usa con `sudo tee` porque una redirección `>>` no hereda los privilegios de `sudo`.
+- `203.0.113.0/24` es un rango reservado para documentación: no pertenece a nadie.
+
+### 5.3. Detectar la modificación
 
 ```bash
-sudo userdel -r invitado_ud01
+sudo sha256sum -c linea_base.sha256
 ```
 
-### 4.3. Actualizaciones y registros
+Resultado esperado:
 
-1. Comprueba las actualizaciones pendientes:
+```text
+/etc/passwd: La suma coincide
+/etc/group: La suma coincide
+/etc/hosts: FALLÓ
+/etc/ssh/sshd_config: La suma coincide
+sha256sum: AVISO: 1 suma de verificación calculada NO coincide
+```
+
+Para ver **qué** ha cambiado:
 
 ```bash
-sudo dnf check-update
+diff /etc/hosts.bak /etc/hosts
+# > 203.0.113.66   www.mibanco.es
+
+getent hosts www.mibanco.es
+# 203.0.113.66    www.mibanco.es
 ```
 
-Es normal que este comando indique que no hay actualizaciones o devuelva un código distinto de cero cuando existen paquetes pendientes.
-
-2. Consulta los últimos eventos del sistema:
+### 5.4. Trazabilidad: ¿quién ha sido?
 
 ```bash
-sudo journalctl -n 30
+sudo journalctl _COMM=sudo --since today --no-pager | grep hosts
 ```
 
-3. Describe dos ejemplos de información que un registro puede aportar durante una investigación: fecha y hora de un reinicio, servicio que generó un error, cuenta que inició sesión o cambios realizados por el administrador.
+Resultado esperado:
 
-## 5. Práctica 2 - Plan de gestión de riesgos
+```text
+oct 06 11:02:15 sad-linux01 sudo[1873]: fperez : TTY=pts/0 ; PWD=/home/fperez/ud01/evidencias ;
+  USER=root ; COMMAND=/usr/bin/tee -a /etc/hosts
+```
 
-### 5.1. Seleccionar un escenario
+El registro identifica **usuario**, **terminal**, **directorio**, **hora** y **orden**: trazabilidad completa.
+
+### 5.5. Mitigar y comprobar
+
+```bash
+sudo cp -a /etc/hosts.bak /etc/hosts     # restauramos el original
+sudo sha256sum -c linea_base.sha256      # todas las sumas deben coincidir
+getent hosts www.mibanco.es              # ya no devuelve la IP falsa
+sudo rm /etc/hosts.bak
+```
+
+### 5.6. Automatizar la vigilancia
+
+Este script compara la línea base y escribe un aviso en el diario del sistema si algo ha cambiado:
+
+```bash
+#!/usr/bin/env bash
+# /usr/local/sbin/comprobar_integridad.sh
+# Compara los ficheros críticos con su línea base y registra el resultado.
+BASE="/home/fperez/ud01/evidencias/linea_base.sha256"   # adapta la ruta
+
+if sha256sum --quiet -c "$BASE" 2>/dev/null; then
+    logger -t integridad "OK: los ficheros críticos no han cambiado"
+else
+    logger -p auth.warning -t integridad "ALERTA: cambios detectados respecto a la línea base"
+    exit 1
+fi
+```
+
+```bash
+sudo install -m 750 comprobar_integridad.sh /usr/local/sbin/
+sudo /usr/local/sbin/comprobar_integridad.sh
+journalctl -t integridad -n 5 --no-pager
+```
+
+- `logger` escribe mensajes en el registro del sistema; `-t` asigna una etiqueta y `-p` la prioridad.
+- `install -m 750` copia el fichero asignando permisos en un solo paso.
+
+> [!NOTE]
+> Herramientas como **AIDE** o el módulo de integridad de **Wazuh** hacen esto mismo de forma profesional y para miles de ficheros. Las veremos en la UD4.
+
+**Preguntas**: ¿qué principio protege la comparación de hashes? ¿Qué principio protege el registro de `sudo`? ¿Por qué la línea base debería guardarse fuera del propio servidor?
+
+---
+
+## 6. Práctica 3 - Contraseñas y detección de fuerza bruta
+
+**Ciclo**: *amenaza* (bot que prueba contraseñas) → *vulnerabilidad* (contraseña débil, sin límite de intentos) → *ataque* (intentos fallidos simulados) → *detección* (registros) → *mitigación* (política de contraseñas, bloqueo y MFA) → *comprobación*.
+
+### 6.1. Crear un usuario de pruebas
+
+```bash
+sudo useradd -m -s /bin/bash prueba_ud01   # -m crea el directorio personal, -s asigna la shell
+sudo passwd prueba_ud01                     # asigna una contraseña: usa "Prueba2026!"
+```
+
+### 6.2. Valorar la calidad de las contraseñas
+
+Instala las utilidades de `libpwquality`, la biblioteca que usa PAM para valorar contraseñas:
+
+{{< tabs >}}
+{{% tab "Debian / Ubuntu" %}}
+```bash
+sudo apt install -y libpwquality-tools
+```
+{{% /tab %}}
+{{% tab "AlmaLinux / Rocky" %}}
+```bash
+sudo dnf install -y libpwquality
+```
+{{% /tab %}}
+{{< /tabs >}}
+
+```bash
+for p in "123456" "Prueba2026!" "empresa2026" "tostada-azul-mochila-trueno"; do
+    printf '%-30s ' "$p"; echo "$p" | pwscore 2>&1
+done
+```
+
+Resultado aproximado:
+
+```text
+123456                         Password quality check failed: The password is shorter than 8 characters
+Prueba2026!                    41
+empresa2026                    Password quality check failed: The password fails the dictionary check
+tostada-azul-mochila-trueno    100
+```
+
+`pwscore` devuelve una puntuación de 0 a 100 o el motivo del rechazo.
+
+### 6.3. Simular un ataque de fuerza bruta local
+
+Simulamos varios intentos fallidos de inicio de sesión con `su` desde **otra terminal** (Ctrl+Alt+F2 en la consola de la VM o una segunda sesión SSH):
+
+```bash
+# Introduce contraseñas incorrectas cuando las pida (repite 5 veces)
+su - prueba_ud01
+```
+
+### 6.4. Detectar los intentos fallidos
+
+```bash
+# Mensajes de autenticación fallida en la última hora
+sudo journalctl --since "-1h" --no-pager | grep -Ei "authentication failure|FAILED SU"
+
+# Contar intentos fallidos por usuario objetivo
+sudo journalctl --since "-1h" --no-pager | grep -oP "authentication failure.*user=\K\S+" | sort | uniq -c
+```
+
+Resultado esperado:
+
+```text
+oct 06 11:20:01 sad-linux01 su[2011]: pam_unix(su-l:auth): authentication failure; logname=fperez uid=1000 euid=0 tty=pts/1 ruser=fperez rhost=  user=prueba_ud01
+...
+      5 prueba_ud01
+```
+
+- `grep -oP ... \K\S+` usa una expresión regular de Perl: `\K` descarta lo anterior y se queda solo con el nombre de usuario.
+- `sort | uniq -c` agrupa y cuenta las repeticiones.
+
+En un servidor real con SSH expuesto verías cientos de intentos diarios contra `root`, `admin`, `test`… desde IP de todo el mundo.
+
+### 6.5. Mitigación
+
+1. Revisa la caducidad y estado de la cuenta:
+
+    ```bash
+    sudo chage -l prueba_ud01
+    sudo passwd -S prueba_ud01      # estado: P (contraseña válida), L (bloqueada)
+    ```
+
+2. Bloquea temporalmente la cuenta comprometida y comprueba que no puede iniciar sesión:
+
+    ```bash
+    sudo passwd -l prueba_ud01      # -l (lock) bloquea la contraseña
+    sudo passwd -S prueba_ud01
+    su - prueba_ud01                 # debe fallar aunque la contraseña sea correcta
+    ```
+
+3. Redacta en `politica_contrasenas.md` una política de contraseñas para tu laboratorio siguiendo las recomendaciones de la teoría (longitud, listas de contraseñas filtradas, bloqueo tras intentos, MFA, cuentas separadas).
+
+> [!NOTE]
+> El bloqueo **automático** tras varios intentos (`pam_faillock`), las reglas de calidad (`pam_pwquality`) y la protección de SSH con Fail2ban se configuran en la **UD4**.
+
+### 6.6. Limpieza
+
+```bash
+sudo userdel -r prueba_ud01      # -r elimina también su directorio personal
+```
+
+---
+
+## 7. Práctica 4 - Análisis de un correo de phishing
+
+**Objetivo**: reconocer indicadores técnicos y no técnicos de un correo fraudulento (RA1.d).
+
+### 7.1. Material
+
+Guarda el siguiente mensaje en `~/ud01/evidencias/sospechoso.eml`. Es un ejemplo **ficticio** con direcciones de documentación.
+
+```text
+Return-Path: <notificaciones@correos-envios-es.top>
+Received: from mail.envios-rapidos.top (mail.envios-rapidos.top [198.51.100.23])
+        by mx.ejemplo.es (Postfix) with ESMTPS id 4XyZ1
+        for <alumno@ejemplo.es>; Tue, 6 Oct 2026 07:41:12 +0200 (CEST)
+Authentication-Results: mx.ejemplo.es;
+        spf=fail (mx.ejemplo.es: domain of correos-envios-es.top does not designate 198.51.100.23 as permitted sender) smtp.mailfrom=correos-envios-es.top;
+        dkim=none;
+        dmarc=fail (p=NONE) header.from=correos-envios-es.top
+From: "Correos" <notificaciones@correos-envios-es.top>
+Reply-To: soporte.pagos@protonmail.example
+To: alumno@ejemplo.es
+Subject: Su paquete esta retenido - accion requerida
+Date: Tue, 6 Oct 2026 07:41:09 +0200
+Content-Type: text/html; charset="UTF-8"
+
+<p>Estimado cliente,</p>
+<p>Su envio no ha podido ser entregado por falta de pago de las tasas de aduana (1,79 EUR).</p>
+<p>Si no realiza el pago en las proximas <b>12 horas</b> el paquete sera devuelto.</p>
+<p><a href="https://correos-envios-es.top/pago?id=88731">Pagar ahora en Correos.es</a></p>
+```
+
+### 7.2. Análisis técnico
+
+Extrae los campos importantes con `grep`:
+
+```bash
+cd ~/ud01/evidencias
+grep -E "^(From|Reply-To|Return-Path|Subject|Received):" sospechoso.eml
+grep -A3 "^Authentication-Results" sospechoso.eml
+grep -oE 'href="[^"]+"' sospechoso.eml
+```
+
+### 7.3. Preguntas
+
+1. ¿Coincide el dominio del remitente con el dominio oficial de la empresa suplantada?
+2. ¿Qué significan los resultados `spf=fail`, `dkim=none` y `dmarc=fail`?
+3. ¿Por qué es sospechoso que `Reply-To` sea distinto de `From`?
+4. ¿A qué dominio apunta realmente el enlace? ¿Coincide con el texto que se muestra?
+5. Enumera al menos **seis** indicadores de *phishing*, técnicos y no técnicos.
+6. ¿Qué técnica de ingeniería social utiliza (urgencia, autoridad, miedo, curiosidad…)?
+7. Redacta el procedimiento que debería seguir un empleado que recibe este correo.
+
+{{% details "Pistas para la corrección" %}}
+- Dominio `.top` que imita a la empresa (*typosquatting*), sin firma DKIM y con SPF y DMARC fallidos.
+- `Reply-To` a un servicio de correo gratuito: las respuestas irían al atacante.
+- El texto del enlace dice «Correos.es» pero el `href` lleva a `correos-envios-es.top`.
+- Urgencia (12 horas), importe pequeño para no levantar sospechas, saludo genérico, faltas de ortografía (sin tildes).
+- Procedimiento: no pulsar, no responder, notificar al responsable de seguridad (o reenviar como adjunto al buzón de incidentes), borrar; si se pulsó o se introdujeron datos, avisar inmediatamente y cambiar credenciales/bloquear tarjeta.
+{{% /details %}}
+
+---
+
+## 8. Práctica 5 - Vulnerabilidades conocidas del sistema
+
+**Objetivo**: relacionar el software instalado con vulnerabilidades públicas (CVE) y priorizar su corrección (RA1.c).
+
+### 8.1. Listar vulnerabilidades del sistema
+
+{{< tabs >}}
+{{% tab "Debian" %}}
+`debsecan` compara los paquetes instalados con el rastreador de seguridad de Debian.
+
+```bash
+sudo apt install -y debsecan
+# Vulnerabilidades que YA tienen corrección disponible en trixie
+debsecan --suite trixie --only-fixed
+# Formato detallado
+debsecan --suite trixie --format detail | less
+```
+{{% /tab %}}
+{{% tab "AlmaLinux / Rocky" %}}
+`dnf updateinfo` consulta los avisos de seguridad publicados por la distribución.
+
+```bash
+# Resumen de avisos pendientes por gravedad
+sudo dnf updateinfo summary
+# Avisos de seguridad pendientes con su CVE
+sudo dnf updateinfo list --security --with-cve
+# Información de un aviso concreto
+sudo dnf updateinfo info ALSA-2026:XXXX
+```
+{{% /tab %}}
+{{< /tabs >}}
+
+> [!NOTE]
+> Si acabas de actualizar, puede que no aparezca ninguna vulnerabilidad con corrección pendiente. Restaura temporalmente la instantánea anterior a la actualización o consulta una versión concreta de un paquete para hacer el ejercicio.
+
+### 8.2. Investigar una CVE
+
+Elige una CVE de la lista (o usa `CVE-2024-6387`) y consulta su ficha:
+
+```bash
+CVE=CVE-2024-6387
+curl -s "https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=$CVE" \
+  | jq -r '.vulnerabilities[0].cve | .id, .published, .descriptions[0].value,
+           (.metrics.cvssMetricV31[0].cvssData | "CVSS \(.baseScore) \(.baseSeverity) \(.vectorString)"),
+           (.weaknesses[0].description[0].value)'
+```
+
+Comprueba la versión instalada del software afectado:
+
+```bash
+ssh -V                                   # versión del cliente OpenSSH
+dpkg -l openssh-server 2>/dev/null | tail -1 || rpm -q openssh-server
+```
+
+### 8.3. Tabla de análisis
+
+| CVE | Software | CVSS | ¿Explotada activamente (KEV)? | ¿Expuesta? | Prioridad | Acción |
+| --- | --- | --- | --- | --- | --- | --- |
+| CVE-2024-6387 | OpenSSH | 8,1 Alta | Consultar catálogo KEV | Sí, puerto 22 | Alta | Actualizar `openssh-server` |
+
+### 8.4. Mitigar y comprobar
+
+Aplica las actualizaciones de seguridad y vuelve a ejecutar `debsecan` o `dnf updateinfo`. La lista debe haber disminuido.
+
+---
+
+## 9. Práctica 6 - Iniciación al análisis forense
+
+**Objetivo**: adquirir una evidencia preservando su integridad, mantener una cadena de custodia y recuperar un fichero borrado (RA1.i).
+
+**Escenario**: un empleado ha entregado una memoria USB que contenía un documento confidencial. Sospechamos que lo borró antes de entregarla. Simularemos la memoria con un **fichero de imagen** de 64 MB, de modo que no se necesita ningún disco adicional.
+
+### 9.1. Preparar la «memoria USB»
+
+{{< tabs >}}
+{{% tab "Debian / Ubuntu" %}}
+```bash
+sudo apt install -y dosfstools sleuthkit
+```
+{{% /tab %}}
+{{% tab "AlmaLinux / Rocky" %}}
+```bash
+sudo dnf install -y epel-release
+sudo dnf install -y dosfstools sleuthkit
+```
+{{% /tab %}}
+{{< /tabs >}}
+
+- `dosfstools` permite crear sistemas de ficheros FAT (los habituales en memorias USB).
+- **The Sleuth Kit** es un conjunto de herramientas forenses libres para analizar sistemas de ficheros.
+
+```bash
+mkdir -p ~/ud01/forense && cd ~/ud01/forense
+
+# Creamos un fichero vacío de 64 MB y le damos formato FAT32
+truncate -s 64M usb.img
+mkfs.vfat -F 32 -n USB_EMPLEADO usb.img
+
+# Lo montamos como si fuera un dispositivo y copiamos ficheros
+sudo mkdir -p /mnt/usb
+sudo mount -o loop,uid=$(id -u) usb.img /mnt/usb
+echo "Planos del nuevo producto - CONFIDENCIAL" > /mnt/usb/confidencial.txt
+echo "Lista de la compra" > /mnt/usb/compra.txt
+sync
+
+# El «empleado» borra el documento confidencial
+rm /mnt/usb/confidencial.txt
+ls -l /mnt/usb
+sudo umount /mnt/usb
+```
+
+### 9.2. Adquisición y preservación
+
+```bash
+# 1. Hash del ORIGINAL
+sha256sum usb.img | tee hash_original.txt
+
+# 2. Copia de trabajo bit a bit
+dd if=usb.img of=evidencia_caso01.img bs=4M status=progress
+
+# 3. Hash de la COPIA: debe ser idéntico
+sha256sum evidencia_caso01.img | tee hash_copia.txt
+
+# 4. Protegemos el original contra escritura
+chmod 444 usb.img
+```
+
+Rellena el **registro de cadena de custodia**:
+
+| Fecha y hora | Evidencia | Acción | Responsable | Hash SHA-256 | Observaciones |
+| --- | --- | --- | --- | --- | --- |
+| 06/10/2026 11:45 | usb.img (USB_EMPLEADO) | Recepción | (tu nombre) | (hash) | Entregada por RR. HH. |
+| 06/10/2026 11:50 | evidencia_caso01.img | Copia bit a bit con `dd` | (tu nombre) | (hash) | Coincide con el original |
+
+### 9.3. Análisis de la copia
+
+```bash
+# Información del sistema de ficheros
+fsstat evidencia_caso01.img | head -20
+
+# Listado de ficheros, incluidos los BORRADOS (-d muestra solo los borrados)
+fls -r evidencia_caso01.img
+fls -r -d evidencia_caso01.img
+```
+
+Salida esperada (los números de entrada pueden variar):
+
+```text
+r/r 4:  USB_EMPLEADO (Volume Label Entry)
+r/r * 6:        confidencial.txt
+r/r 8:  compra.txt
+```
+
+El asterisco `*` indica un fichero **borrado**. El número (`6`) es su dirección (inodo) en el sistema de ficheros. En FAT el borrado solo marca la entrada como libre: el contenido sigue en el disco hasta que se sobrescribe.
+
+```bash
+# Recuperar el contenido a partir de su dirección
+icat evidencia_caso01.img 6 > recuperado_confidencial.txt
+cat recuperado_confidencial.txt
+# Planos del nuevo producto - CONFIDENCIAL
+
+# Línea temporal (fechas de acceso, modificación y creación)
+fls -r -m / evidencia_caso01.img > bodyfile.txt
+mactime -b bodyfile.txt -d | column -s, -t
+```
+
+### 9.4. Comprobación de integridad final
+
+```bash
+sha256sum usb.img evidencia_caso01.img
+```
+
+Los hashes deben seguir coincidiendo con los iniciales: el análisis **no ha alterado** las evidencias.
+
+### 9.5. Preguntas
+
+1. ¿Por qué se trabaja sobre una copia y no sobre el original?
+2. ¿Qué demuestra que los dos hashes coincidan antes y después del análisis?
+3. ¿Por qué ha sido posible recuperar el fichero borrado? ¿Cómo se podría haber borrado de forma segura? (Lo veremos en la UD2).
+4. Redacta un breve informe pericial (media página) con: objeto, evidencias recibidas, metodología, herramientas y versiones (`fls -V`), resultados y conclusión.
+
+---
+
+## 10. Práctica 7 - Plan de gestión de riesgos
+
+### 10.1. Escenarios
 
 Elige uno de estos escenarios para el informe:
 
-| Escenario | Organización | Situación principal |
+| Escenario | Organización | Situación |
 | --- | --- | --- |
-| A | TechSolutions S.L. | Migración a la nube, CMS y accesos sospechosos a documentación técnica. |
-| B | PetCare SL | Historiales digitalizados, servidor externo y datos corruptos o expuestos. |
-| C | GourmetExpress | Pedidos y pagos en línea, servidor en un almacén y caídas del servicio. |
-| D | CulturaUrbana | Plataforma de eventos, redes sociales comprometidas y corte eléctrico en el servidor. |
-| E | Venus SA | Digitalización de historiales, CMS y servidor en un espacio inadecuado. |
+| A | TechSolutions S.L. (25 empleados) | Migración a la nube, CMS para la web, accesos sospechosos a documentación técnica. |
+| B | PetCare S.L. (clínica veterinaria) | Historiales digitalizados, servidor en un despacho, datos corruptos tras un corte de luz. |
+| C | GourmetExpress (comida a domicilio) | Pedidos y pagos en línea, servidor en el almacén, caídas del servicio en horas punta. |
+| D | CulturaUrbana (asociación cultural) | Plataforma de eventos, redes sociales comprometidas, contraseñas compartidas. |
+| E | Academia Venus | Notas y datos de menores, portátiles del profesorado sin cifrar, Wi-Fi compartida con el alumnado. |
 
-### 5.2. Paso 1: inventario y clasificación de activos
+### 10.2. Paso 1: inventario y valoración de activos
 
-1. Identifica al menos ocho activos del escenario, incluyendo información, personas, servicios, hardware, software y comunicaciones.
-2. Clasifica cada activo según su importancia: alta, media o baja.
-3. Relaciona cada activo con una propiedad de seguridad prioritaria: confidencialidad, integridad o disponibilidad.
-4. Completa una tabla como esta:
+Identifica al menos **ocho** activos de tipos distintos (información, servicios, software, hardware, comunicaciones, personas, instalaciones) y valóralos de 0 a 10 en cada dimensión.
 
-| Activo | Tipo | Valor | Propiedad prioritaria | Justificación |
+| Activo | Tipo (MAGERIT) | C | I | D | Justificación |
+| --- | --- | :-: | :-: | :-: | --- |
+| Base de datos de clientes | Información | 9 | 8 | 7 | Datos personales; necesarios para el servicio diario |
+
+### 10.3. Paso 2: amenazas y vulnerabilidades
+
+Para al menos **seis** activos, identifica amenaza y vulnerabilidad. Incluye amenazas naturales, industriales, accidentales e intencionadas.
+
+| Activo | Amenaza | Vulnerabilidad | Tipología / origen de la vulnerabilidad | Incidente posible |
 | --- | --- | --- | --- | --- |
-| Base de datos de clientes | Información | Alto | Confidencialidad | Contiene datos personales y es necesaria para el servicio. |
+| Servidor web | Ciberdelincuente | CMS sin actualizar | Software / terceros | Desfiguración o robo de datos |
 
-### 5.3. Paso 2: amenazas y vulnerabilidades
+### 10.4. Paso 3: valoración del riesgo
 
-1. Para al menos cinco activos, identifica una amenaza posible y una vulnerabilidad que podría facilitar el incidente.
-2. Incluye amenazas técnicas, humanas y físicas.
-3. Distingue claramente amenaza y vulnerabilidad. Por ejemplo, el ransomware es una amenaza; un sistema sin actualizar es una vulnerabilidad.
-4. Completa la tabla:
+Valora probabilidad e impacto (1-3), calcula el riesgo y ordénalo. Puedes usar el script `matriz_riesgos.py` de la teoría. Justifica los tres riesgos más altos.
 
-| Activo | Amenaza | Vulnerabilidad | Posible incidente | Evidencia del escenario |
-| --- | --- | --- | --- | --- |
-| Servidor web | Acceso no autorizado | CMS sin actualizar | Robo o alteración de datos | La organización usa un CMS de código abierto. |
+### 10.5. Paso 4: tratamiento y plan de mejora
 
-### 5.4. Paso 3: valorar los riesgos
+Propón al menos **ocho** salvaguardas que combinen controles físicos, técnicos y organizativos, e indica la estrategia de tratamiento.
 
-1. Estima la probabilidad y el impacto de cada caso como bajo, medio o alto.
-2. Calcula un nivel de riesgo utilizando esta regla sencilla:
+| Riesgo | Estrategia | Salvaguarda | Tipo de control | Responsable | Prioridad | Coste estimado | Evidencia de implantación |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| *Phishing* | Mitigar | MFA + formación trimestral | Técnico + organizativo | Sistemas / RR. HH. | Alta | Bajo | Captura de MFA activo, registro de asistencia |
 
-```text
-Riesgo = Probabilidad x Impacto
-```
+Estima el **riesgo residual** tras aplicar las salvaguardas.
 
-3. Puedes usar la siguiente matriz orientativa:
+### 10.6. Paso 5: procedimiento de respuesta
 
-| Probabilidad / impacto | Bajo | Medio | Alto |
-| --- | --- | --- | --- |
-| Baja | Bajo | Bajo | Medio |
-| Media | Bajo | Medio | Alto |
-| Alta | Medio | Alto | Muy alto |
+Redacta un procedimiento (una página) para uno de los riesgos más altos siguiendo las fases: preparación, detección y análisis, contención, erradicación, recuperación y lecciones aprendidas. Indica a quién se notificaría (INCIBE-CERT, AEPD, Policía) y en qué plazos.
 
-4. Ordena los riesgos desde el más prioritario hasta el menos prioritario y justifica las tres primeras prioridades.
+### 10.7. Paso 6: cumplimiento legal
 
-### 5.5. Paso 4: plan de mejora
+1. Indica qué tratamientos de datos personales realiza la organización y su base legal.
+2. Identifica responsable, encargados (proveedores) y si necesita DPD.
+3. Describe cómo atendería una solicitud de **derecho de acceso** de un cliente (plazo, verificación de identidad, formato de respuesta).
+4. Indica si le afecta la LSSI-CE (web, *cookies*, comunicaciones comerciales) y qué debe cumplir.
+5. Indica qué norma (ISO 27001, ENS, NIST CSF) le recomendarías como marco de mejora y por qué.
 
-1. Propón al menos seis medidas, combinando controles técnicos, organizativos y físicos.
-2. Para cada medida, indica qué riesgo reduce y qué principio de seguridad protege.
-3. Prioriza medidas realistas para una organización pequeña: MFA en cuentas administrativas, actualizaciones, copias de seguridad verificadas, formación ante phishing, revisión de permisos, cifrado de portátiles, SAI o reubicación de equipos.
-4. Completa la tabla:
+---
 
-| Riesgo priorizado | Medida propuesta | Tipo de control | Responsable | Prioridad | Evidencia de aplicación |
-| --- | --- | --- | --- | --- | --- |
-| Robo de credenciales | MFA y formación ante phishing | Técnico y organizativo | Administración de sistemas | Alta | Captura de la configuración y registro de la formación. |
+## 11. Problemas habituales
 
-### 5.6. Paso 5: respuesta ante un incidente
+| Problema | Causa probable | Solución |
+| --- | --- | --- |
+| La VM no arranca: «VT-x is not available» | Virtualización desactivada en la UEFI/BIOS o Hyper-V activo en Windows | Activar VT-x/AMD-V; desactivar Hyper-V / «Plataforma de máquina virtual» |
+| La VM no tiene red | Adaptador no conectado a `SAD-NAT` o DHCP de la red NAT desactivado | Revisar la configuración del adaptador; `ip -br a` |
+| `usuario is not in the sudoers file` | Se asignó contraseña a `root` en la instalación de Debian | Como root: `usermod -aG sudo usuario` y volver a iniciar sesión |
+| `journalctl` no muestra mensajes antiguos | El diario no es persistente | Comprobar que existe `/var/log/journal` (persistente por defecto en Debian 13 y AlmaLinux 10) |
+| `fls` no muestra el fichero borrado | La imagen se montó y escribió tras el borrado, sobrescribiendo la entrada | Repetir la preparación sin copiar más ficheros tras el borrado |
+| `mount: wrong fs type` | Falta `dosfstools` o la imagen está corrupta | Instalar `dosfstools`; volver a crear la imagen |
 
-Redacta un procedimiento de una página para uno de los riesgos altos. Debe incluir:
+## 12. Actividades
 
-1. Detección: qué alerta o indicio permite reconocer el incidente.
-2. Análisis: qué datos se revisarán y quién los revisará.
-3. Contención: cómo limitar el daño sin destruir evidencias.
-4. Erradicación y recuperación: cómo eliminar la causa y restaurar el servicio.
-5. Lecciones aprendidas: qué medida evitaría o reduciría un incidente similar.
+1. Explica la diferencia entre amenaza, vulnerabilidad, riesgo, ataque e incidente con ejemplos de tu laboratorio.
+2. Clasifica como física/lógica y activa/pasiva: RAID, cortafuegos, SAI, antivirus, copia de seguridad, control de acceso al CPD, IDS, cifrado de disco.
+3. Analiza la contraseña `empresa2026` con `pwscore` y calcula su espacio de búsqueda. Propón una alternativa.
+4. Busca un caso real de *ransomware* en España en los últimos dos años (por ejemplo en noticias de INCIBE o de la AEPD). Identifica vector de entrada, impacto y medidas que lo habrían evitado.
+5. Prepara un ejercicio para un servicio web del laboratorio: describe una actividad autorizada de Red Team, las evidencias que revisaría el Blue Team, una mejora de Purple Team y dos reglas de alcance del White Team.
+6. Compara MAGERIT, ISO 27005 y NIST SP 800-30 en una tabla (ámbito, fases, herramientas).
 
+## 13. Autoevaluación
 
-## 6. Actividades
+{{% details "1. ¿Qué tres propiedades forman la tríada CIA?" %}}
+Confidencialidad, integridad y disponibilidad.
+{{% /details %}}
 
-1. Explica la diferencia entre amenaza, vulnerabilidad, riesgo, ataque e incidente.
-2. Clasifica RAID, firewall, SAI, antivirus, copia de seguridad, control de acceso físico e IDS como medidas físicas, lógicas, activas o pasivas.
-3. Analiza los problemas de seguridad de la contraseña `empresa2026` y propón una política adecuada.
-4. Analiza un correo sospechoso e identifica al menos cinco indicadores de phishing.
-5. Realiza el [Ejercicio 2.1: análisis de amenazas](https://fperezies.github.io/seguridad/UD1/exercises/2.1.amenazas.html) e identifica activos, amenazas, vulnerabilidades y medidas de protección.
-6. Para un servicio web de entorno de pruebas, describe una actividad autorizada de Red Team, las evidencias que revisaría Blue Team, una mejora de Purple Team y dos reglas de alcance de White Team.
-7. Una academia conserva datos de contacto y calificaciones. Propón tres controles técnicos, tres organizativos y un marco de referencia para su mejora continua.
+{{% details "2. ¿Qué diferencia hay entre amenaza y vulnerabilidad?" %}}
+La amenaza es el agente o evento que puede causar daño (un atacante, un incendio); la vulnerabilidad es la debilidad que permite que ese daño se produzca (contraseña débil, CPD sin extinción).
+{{% /details %}}
 
-## 7. Autoevaluación
+{{% details "3. ¿Qué mecanismo permite comprobar la integridad de un fichero?" %}}
+Una función hash (por ejemplo SHA-256). Si el hash calculado no coincide con el original, el fichero ha cambiado.
+{{% /details %}}
 
-1. ¿Qué tres propiedades forman la triada CIA?
-2. ¿Qué diferencia existe entre amenaza y vulnerabilidad?
-3. ¿Qué objetivo tiene la confidencialidad?
-4. ¿Qué mecanismo permite comprobar la integridad de un fichero?
-5. ¿Qué es el principio de mínimo privilegio?
-6. ¿Qué diferencia existe entre seguridad activa y pasiva?
-7. ¿Qué significa CVE?
-8. ¿Qué es un ataque DDoS?
-9. ¿Qué objetivo tiene una auditoría de seguridad?
-10. ¿Cuáles son las fases principales de gestión de un incidente?
-11. ¿Qué diferencia existe entre Red Team, Blue Team y Purple Team?
-12. ¿Qué organismo puede apoyar a una empresa española ante un incidente de ciberseguridad?
-13. ¿Qué representa una CVE y para qué sirve CVSS?
-14. ¿Qué norma define requisitos certificables para un SGSI?
+{{% details "4. ¿Por qué una instantánea de VirtualBox no es una copia de seguridad?" %}}
+Porque se almacena en el mismo disco que la máquina virtual. Si se pierde ese disco, se pierden la VM y sus instantáneas.
+{{% /details %}}
 
-## 8. Tarea evaluable única - Análisis de seguridad
+{{% details "5. ¿Qué significan CVE y CVSS?" %}}
+CVE es el identificador público de una vulnerabilidad concreta. CVSS es el sistema de puntuación de 0 a 10 que estima su gravedad técnica.
+{{% /details %}}
 
-Entrega un informe en PDF o Markdown sobre uno de los escenarios de la práctica 2. Debe incluir el inventario de activos, amenazas, vulnerabilidades, valoración de riesgos, seis medidas priorizadas y un procedimiento de respuesta ante uno de los riesgos altos. Añade una política básica de contraseñas, una política de copias de seguridad y una conclusión con las tres medidas más urgentes.
+{{% details "6. ¿Qué es el orden de volatilidad?" %}}
+El criterio de recogida de evidencias que empieza por las más volátiles (memoria, conexiones de red) y termina por las persistentes (disco, copias).
+{{% /details %}}
 
-## 9. Recursos
+{{% details "7. ¿En qué plazo hay que notificar a la AEPD una brecha de datos personales?" %}}
+Sin dilación indebida y, como máximo, en 72 horas desde que se tiene conocimiento (art. 33 RGPD), salvo que sea improbable que suponga un riesgo para los derechos de las personas.
+{{% /details %}}
 
-- [AlmaLinux](https://almalinux.org/)
-- [VirtualBox](https://www.virtualbox.org/)
+{{% details "8. ¿Qué norma define requisitos certificables para un SGSI?" %}}
+ISO/IEC 27001 (versión vigente de 2022).
+{{% /details %}}
+
+{{% details "9. ¿Qué es más resistente: una contraseña de 8 caracteres con símbolos o una frase de 5 palabras aleatorias?" %}}
+La frase de 5 palabras aleatorias (unos 64 bits frente a unos 52), y además es más fácil de recordar.
+{{% /details %}}
+
+{{% details "10. ¿Qué diferencia hay entre Blue Team y Purple Team?" %}}
+El Blue Team defiende, monitoriza y responde. El Purple Team coordina a los equipos rojo y azul para convertir las técnicas de ataque simuladas en mejoras de detección y defensa.
+{{% /details %}}
+
+## 14. Tarea evaluable - Informe de análisis de seguridad
+
+Entrega un informe en PDF o Markdown que incluya:
+
+1. **Evidencias de las prácticas 1 a 6** (inventario, línea base e incidente simulado, detección de fuerza bruta, análisis de *phishing*, tabla de CVE, informe forense con cadena de custodia).
+2. **Plan de gestión de riesgos** completo de la práctica 7 (activos, amenazas, vulnerabilidades, matriz de riesgos, salvaguardas, riesgo residual).
+3. **Política de contraseñas** y **política de copias de seguridad** básicas para el escenario elegido.
+4. **Procedimiento de respuesta** a un incidente y análisis de **cumplimiento legal**.
+5. **Conclusión** con las tres medidas más urgentes y su justificación.
+
+### Rúbrica
+
+| Criterio | Peso | Excelente (100 %) | Adecuado (60 %) | Insuficiente (0-30 %) |
+| --- | :-: | --- | --- | --- |
+| Evidencias técnicas (RA1 b, c, e, i) | 30 % | Completas, explicadas e interpretadas | Completas pero poco explicadas | Faltan o no se interpretan |
+| Análisis de riesgos (RA1 a, c) | 25 % | Activos, amenazas y vulnerabilidades coherentes; riesgos justificados | Coherente con errores menores | Confunde conceptos |
+| Salvaguardas y respuesta (RA1 d, h) | 20 % | Proporcionadas, priorizadas y verificables | Adecuadas pero genéricas | Poco realistas |
+| Cumplimiento legal (RA7) | 15 % | Identifica figuras, derechos, plazos y normas | Identifica lo básico | Ausente o incorrecto |
+| Presentación y redacción técnica | 10 % | Clara, ordenada, sin errores | Algún error | Desordenada |
+
+## 15. Recursos
+
+- [VirtualBox: manual de usuario](https://www.virtualbox.org/manual/)
+- [Debian: manual de seguridad (*Securing Debian Manual*)](https://www.debian.org/doc/manuals/securing-debian-manual/)
+- [AlmaLinux: documentación](https://wiki.almalinux.org/)
+- [The Sleuth Kit](https://www.sleuthkit.org/sleuthkit/)
+- [Rastreador de seguridad de Debian](https://security-tracker.debian.org/tracker/)
 - [INCIBE: Plan Director de Seguridad](https://www.incibe.es/empresas/que-te-interesa/plan-director-seguridad)
+- [INCIBE: Guía de gestión de riesgos para empresas](https://www.incibe.es/empresas/guias)
 - [MAGERIT v3](https://administracionelectronica.gob.es/pae_Home/pae_Documentacion/pae_Metodolog/pae_Magerit.html)
-- [ISO/IEC 27001 e ISO/IEC 27002](https://www.industria.gob.es/es-es/servicios/calidad/normalizacion/Paginas/enlaces-interes.aspx)
+- [AEPD: Guía para la notificación de brechas de datos personales](https://www.aepd.es/guias/guia-brechas-seguridad.pdf)

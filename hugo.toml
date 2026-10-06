@@ -1,12 +1,13 @@
-baseURL = "https://user.gitlab.io/doc-sistemas-informaticos/"  # Cambia por tu URL de GitLab Pages o GitHub Pages
+# Configuración del sitio Hugo de los apuntes de Seguridad y Alta Disponibilidad
+# En GitHub Pages la Action sobrescribe baseURL con la URL real del sitio.
+baseURL = "https://lorenalresusta.github.io/Seguridad-y-Alta-Disponibilidad/"
 locale = "es-es"
 title = "Seguridad y Alta Disponibilidad"
 theme = "hugo-book"
 
-# Configuración multilingüe
+# Idioma por defecto
 defaultContentLanguage = "es"
 
-# Configuración para multilingüe
 [languages]
   [languages.es]
     languageName = "Castellano"
@@ -21,6 +22,20 @@ defaultContentLanguage = "es"
 [params]
   # Origen de los ficheros a renderizar
   BookSection = '/'
+  # Tabla de contenidos lateral en cada página
+  BookToC = true
+  # Buscador integrado
+  BookSearch = true
+  # Enlace al repositorio
+  BookRepo = 'https://github.com/LorenaLResusta/Seguridad-y-Alta-Disponibilidad'
+
+[markup]
+  [markup.goldmark.renderer]
+    # Necesario para Mermaid y algunos bloques HTML de los apuntes
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
 
 [caches]
   [caches.images]

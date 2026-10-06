@@ -1,0 +1,11 @@
+{{- /*
+  Hook de imágenes: las rutas que empiezan por "/" (por ejemplo /images/ud1/x.jpg)
+  se resuelven respecto a baseURL, de modo que funcionan también cuando el sitio
+  se publica en un subdirectorio de GitHub Pages.
+*/ -}}
+{{- $dest := .Destination -}}
+{{- if and (hasPrefix $dest "/") (not (hasPrefix $dest "//")) -}}
+  {{- $dest = relURL (strings.TrimPrefix "/" $dest) -}}
+{{- end -}}
+<img src="{{ $dest | safeURL }}" alt="{{ .Text }}" {{ with .Title }}title="{{ . }}"{{ end }} loading="lazy" style="max-width:100%;height:auto;"/>
+{{- /**/ -}}

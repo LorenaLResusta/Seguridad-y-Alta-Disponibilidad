@@ -1,845 +1,1338 @@
 ---
-title: "1. Introducción."
+title: "Teoría"
+slug: "teoria"
 weight: 1
 ---
 
+# UD1. Introducción a la seguridad informática
 
-# UD1 - Introducción a la seguridad informática
-
-> Conceptos fundamentales para la protección de sistemas e información.
+> Conceptos fundamentales para comprender, analizar y gestionar la seguridad de los sistemas de información.
 
 | Datos de la unidad | Información |
 | --- | --- |
-| Módulo | Seguridad y Alta Disponibilidad |
+| Módulo | 0378. Seguridad y Alta Disponibilidad |
 | Curso | 2.º ASIR |
-| Modalidad | Semipresencial |
 | Duración | 14 horas |
-
-## Índice
-
-1. [Fundamentos y principios de seguridad](#1-fundamentos-y-principios-de-seguridad)
-2. [Activos, riesgos y tipos de seguridad](#2-activos-riesgos-y-tipos-de-seguridad)
-3. [Amenazas y vulnerabilidades](#3-amenazas-y-vulnerabilidades)
-4. [Medidas de protección y políticas](#4-medidas-de-protección-y-políticas)
-5. [Gestión, respuesta y cumplimiento](#5-gestión-respuesta-y-cumplimiento)
-6. [Resumen](#6-resumen)
-7. [Recursos](#7-recursos)
-8. [Relación con los resultados de aprendizaje](#8-relación-con-los-resultados-de-aprendizaje)
+| Resultados de aprendizaje | RA1 (a, b, c, d, e, f, h, i) · RA7 (a-g) |
 
 ---
 
-## 1. Fundamentos y principios de seguridad
+## 1. Introducción
 
-### 1.1. Introducción
+La información es uno de los activos más valiosos de cualquier organización. Una clínica veterinaria guarda los historiales de sus clientes; una tienda en línea, los pedidos y los datos de pago; un instituto, las calificaciones del alumnado. Todos dependen de ordenadores, servidores, redes y servicios en Internet para trabajar.
 
-La información constituye uno de los activos más importantes de cualquier organización. Empresas, administraciones y usuarios particulares almacenan y procesan grandes cantidades de información mediante ordenadores, servidores, dispositivos móviles, redes y servicios en Internet.
+Cuando algo falla, las consecuencias pueden ser graves:
 
-La dependencia de los sistemas informáticos hace que una incidencia de seguridad pueda provocar consecuencias importantes:
+| Incidente | Consecuencia directa | Consecuencia indirecta |
+| --- | --- | --- |
+| Un disco del servidor se avería y no hay copia | Pérdida de datos | Horas de trabajo perdidas, clientes insatisfechos |
+| Un empleado abre un adjunto con *ransomware* | Ficheros cifrados, servicio parado | Pérdida económica, posible sanción por la AEPD |
+| Se filtra la base de datos de clientes | Datos personales expuestos | Daño reputacional, obligación legal de notificar |
+| Un ataque DDoS tumba la web en Black Friday | Ventas perdidas | Los clientes se van a la competencia |
 
-* Pérdida de información.
-* Robo de datos.
-* Interrupción de servicios.
-* Daños económicos.
-* Pérdida de confianza de clientes y usuarios.
-* Incumplimiento de obligaciones legales.
-* Daños en la imagen de la organización.
+La **seguridad informática** es el conjunto de técnicas, procedimientos, herramientas y medidas organizativas destinadas a proteger los sistemas de información frente a amenazas, de forma que la información siga siendo **confidencial**, **íntegra** y **disponible**.
 
-La seguridad informática comprende el conjunto de técnicas, procedimientos, herramientas y medidas destinadas a proteger los sistemas de información frente a amenazas.
+Hay dos ideas que acompañarán todo el módulo:
 
-La seguridad debe gestionarse antes de que ocurra un incidente. Una organización que depende de sus aplicaciones, comunicaciones y datos necesita identificar qué activos son esenciales, qué puede fallar y cuánto tiempo puede estar sin cada servicio. El primer paso es realizar un análisis de riesgos que relacione activos, amenazas, vulnerabilidades, probabilidad e impacto; después se aplican controles proporcionados al valor del activo y al riesgo aceptable.
+1. **La seguridad absoluta no existe.** Todo sistema tiene software con errores, personas que se equivocan y proveedores que fallan. El objetivo es reducir el riesgo hasta un nivel **aceptable** y con un coste **proporcionado**.
+2. **La seguridad es un proceso, no un producto.** Instalar un antivirus o un cortafuegos no hace segura una organización. Se necesita un ciclo continuo de *evaluar → proteger → comprobar → mejorar*.
 
-La seguridad absoluta no existe. Los sistemas incorporan software, hardware, redes, proveedores y personas, todos ellos sujetos a errores, cambios y nuevas amenazas. Además, reforzar un control puede tener coste económico o dificultar el uso de un servicio. Por este motivo, la seguridad se basa en la mejora continua: evaluar, proteger, comprobar los resultados y ajustar las medidas cuando cambie la organización o su entorno.
+```mermaid
+flowchart LR
+    A[Evaluar riesgos] --> B[Aplicar controles]
+    B --> C[Monitorizar y comprobar]
+    C --> D[Mejorar]
+    D --> A
+```
 
-En esta unidad se estudiarán los conceptos fundamentales que permitirán comprender el resto del módulo.
-
----
-
-![Paneles y códigos que representan la operación de seguridad informática](images/ud1/security-operations.jpg)
+![Paneles y códigos que representan la operación de seguridad informática](/images/ud1/security-operations.jpg)
 
 *Figura 1. La seguridad protege información, sistemas, redes y personas mediante controles coordinados.*
 
-### 1.2. Objetivos
+## 2. Objetivos
 
-Al finalizar esta unidad, el alumnado deberá ser capaz de:
+Al finalizar esta unidad serás capaz de:
 
-* Identificar los principales conceptos relacionados con la seguridad informática.
-* Diferenciar activo, amenaza, vulnerabilidad y riesgo.
-* Comprender los principios fundamentales de la seguridad de la información.
-* Identificar amenazas físicas y lógicas.
-* Reconocer diferentes tipos de ataques informáticos.
-* Analizar vulnerabilidades de sistemas y aplicaciones.
-* Identificar medidas de seguridad preventivas y correctivas.
-* Comprender la importancia de las políticas de seguridad.
-* Analizar riesgos básicos de una infraestructura informática.
-* Conocer las fases generales de actuación ante un incidente.
-* Introducirse en las auditorías y el análisis forense.
-* Valorar la importancia de la seguridad desde el punto de vista técnico, organizativo y legal.
+- Explicar los principios de la seguridad de la información (CIA, autenticidad, trazabilidad y no repudio) con ejemplos reales.
+- Diferenciar **activo**, **amenaza**, **vulnerabilidad**, **riesgo**, **impacto** y **salvaguarda**.
+- Distinguir la seguridad **física** de la **lógica**, y la **activa** de la **pasiva**.
+- Clasificar vulnerabilidades por su tipología y su origen, e interpretar identificadores **CVE** y puntuaciones **CVSS**.
+- Reconocer los ataques más habituales: *malware*, ingeniería social, *phishing*, fuerza bruta y denegación de servicio.
+- Diseñar una **política de contraseñas** actual y valorar los sistemas **biométricos** y la **autenticación multifactor**.
+- Realizar un **análisis de riesgos** básico.
+- Identificar las **fases de gestión de un incidente** y del **análisis forense**.
+- Conocer la **legislación** y las **normas** sobre seguridad y protección de datos aplicables en España.
 
 ---
 
-### 1.3. Conceptos fundamentales
+## 3. Seguridad informática y seguridad de la información
 
-#### 1.3.1. Seguridad informática
+Aunque a menudo se usan como sinónimos, conviene distinguirlos:
 
-La seguridad informática es el conjunto de medidas destinadas a proteger los sistemas informáticos, las redes, los dispositivos, las aplicaciones y la información frente a accesos no autorizados, alteraciones, pérdidas o interrupciones.
+| Concepto | Qué protege | Ejemplo |
+| --- | --- | --- |
+| **Seguridad informática** | Los sistemas: equipos, redes, software, servicios | Configurar un cortafuegos en el servidor web |
+| **Seguridad de la información** | La información, **en cualquier formato** | Destruir con trituradora los contratos en papel |
+| **Ciberseguridad** | Sistemas e información frente a amenazas que llegan a través del ciberespacio | Detectar un ataque de fuerza bruta contra el servicio SSH |
 
-La seguridad no consiste únicamente en instalar un antivirus o un firewall.
+La información puede estar en muchos estados y en todos ellos debe protegerse:
 
-Una infraestructura segura requiere combinar:
-
-* Medidas técnicas.
-* Medidas físicas.
-* Medidas organizativas.
-* Formación de los usuarios.
-* Procedimientos de actuación.
-* Monitorización.
-* Copias de seguridad.
-* Actualizaciones.
-* Políticas de seguridad.
+| Estado | Ejemplo | Medida típica |
+| --- | --- | --- |
+| **En reposo** (*at rest*) | Base de datos en un disco, copia de seguridad en un NAS | Cifrado de disco, permisos, copias |
+| **En tránsito** (*in transit*) | Formulario web enviado al servidor | TLS/HTTPS, VPN |
+| **En uso** (*in use*) | Datos cargados en la memoria RAM mientras se procesan | Control de procesos, aislamiento, mínimo privilegio |
 
 ---
 
-#### 1.3.2. Seguridad de la información
+## 4. Principios de la seguridad
 
-La seguridad de la información busca proteger la información independientemente del formato en el que se encuentre.
-
-Una información puede estar:
-
-* Almacenada en un disco.
-* En una base de datos.
-* En un servidor.
-* En un ordenador personal.
-* En una copia de seguridad.
-* En papel.
-* En un dispositivo móvil.
-* Transmitiéndose por una red.
-
-Por tanto, la protección debe cubrir todo el ciclo de vida de la información.
-
----
-
-### 1.4. Principios básicos de seguridad
-
-![Infraestructura de servidores conectados en un centro de datos](images/ud1/server-infrastructure.jpg)
+![Infraestructura de servidores conectados en un centro de datos](/images/ud1/server-infrastructure.jpg)
 
 *Figura 2. La protección debe abarcar la infraestructura, los servicios y la información que alojan.*
 
-Los tres principios clásicos de la seguridad informática forman la denominada **triada CIA**:
+Los tres principios clásicos forman la **tríada CIA** (*Confidentiality, Integrity, Availability*). A ellos se añaden otros tres que se usan mucho en la práctica y en el Esquema Nacional de Seguridad: **autenticidad**, **trazabilidad** y **no repudio**.
 
-* Confidentiality → Confidencialidad.
-* Integrity → Integridad.
-* Availability → Disponibilidad.
-
----
-
-#### 1.4.1. Confidencialidad
-
-La confidencialidad garantiza que la información solamente pueda ser consultada por las personas o sistemas autorizados.
-
-Ejemplo:
-
-Un empleado del departamento de administración debe poder consultar las nóminas, pero un usuario del departamento de mantenimiento no debería tener acceso a ellas.
-
-Algunas medidas relacionadas con la confidencialidad son:
-
-* Contraseñas.
-* Control de permisos.
-* Cifrado.
-* Autenticación multifactor.
-* Segmentación de redes.
-* Control de acceso.
-
----
-
-#### 1.4.2. Integridad
-
-La integridad garantiza que la información no haya sido modificada de manera no autorizada.
-
-Por ejemplo, si una base de datos contiene:
-
-```text
-Saldo = 1.500 €
+```mermaid
+flowchart TB
+    CIA((Información))
+    C[Confidencialidad<br/>solo quien debe] --- CIA
+    I[Integridad<br/>sin cambios no autorizados] --- CIA
+    D[Disponibilidad<br/>cuando se necesita] --- CIA
 ```
 
-un atacante no debería poder modificarlo a:
+### 4.1. Confidencialidad
 
-```text
-Saldo = 15.000 €
+La **confidencialidad** garantiza que la información solo pueda ser consultada por las personas, procesos o sistemas **autorizados**.
+
+**Ejemplo.** Las nóminas deben poder verlas el personal de Recursos Humanos, pero no el de mantenimiento.
+
+En Linux, el mecanismo más básico de confidencialidad son los **permisos** de los ficheros. Observa este ejemplo:
+
+```bash
+# Creamos un fichero con datos de nóminas
+echo "Ana García;2.150 €" > nominas.csv
+
+# Vemos sus permisos actuales
+ls -l nominas.csv
+# -rw-r--r-- 1 ana ana 21 oct  6 10:00 nominas.csv
+#  ^^^ ^^^ ^^^
+#  |   |   └── otros usuarios: pueden LEER  -> ¡problema de confidencialidad!
+#  |   └────── grupo: puede leer
+#  └────────── propietario: lee y escribe
+
+# Dejamos el fichero accesible solo para su propietario
+chmod 600 nominas.csv
+ls -l nominas.csv
+# -rw------- 1 ana ana 21 oct  6 10:00 nominas.csv
 ```
 
-sin que el sistema pueda detectar la modificación.
+- `ls -l` muestra el listado largo, con los permisos en la primera columna.
+- `chmod 600` asigna lectura y escritura (6 = 4 + 2) al propietario y ningún permiso (0) al grupo ni a otros.
 
-Algunas técnicas relacionadas con la integridad son:
+Otras medidas de confidencialidad: cifrado (UD3), control de acceso, autenticación multifactor, segmentación de red (UD6), clasificación de la información y acuerdos de confidencialidad con el personal.
 
-* Hashes.
-* Firmas digitales.
-* Sistemas de control de versiones.
-* Permisos.
-* Auditorías.
-* Registros de actividad.
+### 4.2. Integridad
 
----
+La **integridad** garantiza que la información no ha sido **modificada** de forma no autorizada (ni por un atacante ni por un error) y, si lo ha sido, que podemos **detectarlo**.
 
-#### 1.4.3. Disponibilidad
+**Ejemplo.** En una base de datos aparece `Saldo = 1.500 €`. Un atacante no debe poder cambiarlo a `Saldo = 15.000 €` sin que el sistema lo detecte.
 
-La disponibilidad garantiza que los usuarios autorizados puedan utilizar la información y los servicios cuando los necesiten.
+La herramienta básica para comprobar la integridad es una **función hash**, que se estudia en profundidad en la UD3. Un hash es una «huella digital» del fichero: si cambia un solo bit del contenido, la huella cambia completamente.
 
-Un servidor puede ser muy seguro desde el punto de vista de la confidencialidad, pero si permanece apagado o inaccesible, no cumple adecuadamente su función.
+```bash
+# Creamos el fichero original y calculamos su huella SHA-256
+echo "Saldo = 1.500 €" > cuenta.txt
+sha256sum cuenta.txt > cuenta.sha256
+cat cuenta.sha256
+# 5f1c...e8a2  cuenta.txt
 
-Medidas relacionadas:
+# Comprobación: el fichero no ha cambiado
+sha256sum -c cuenta.sha256
+# cuenta.txt: La suma coincide
 
-* Redundancia.
-* RAID.
-* Copias de seguridad.
-* Alta disponibilidad.
-* Balanceadores.
-* Sistemas de alimentación ininterrumpida.
-* Monitorización.
-* Planes de recuperación.
+# Un «atacante» añade un cero
+sed -i 's/1.500/15.000/' cuenta.txt
 
----
-
-#### 1.4.4. Autenticidad
-
-La autenticidad permite comprobar que una persona, dispositivo o sistema es realmente quien dice ser.
-
-Ejemplos:
-
-* Usuario y contraseña.
-* Certificados digitales.
-* Claves criptográficas.
-* Biometría.
-* Autenticación multifactor.
-
----
-
-#### 1.4.5. Trazabilidad
-
-La trazabilidad permite conocer qué acciones se han realizado en un sistema y quién las ha realizado.
-
-Por ejemplo:
-
-```text
-10/09/2026 08:43
-Usuario: admin
-Acción: modificación de configuración
-Equipo: servidor01
+# Volvemos a comprobar
+sha256sum -c cuenta.sha256
+# cuenta.txt: FALLÓ
+# sha256sum: AVISO: 1 suma de verificación calculada NO coincide
 ```
 
-Los registros o logs son fundamentales para conseguir trazabilidad.
+- `sha256sum` calcula la huella SHA-256 del fichero.
+- La opción `-c` (*check*) lee un fichero de huellas y comprueba si coinciden con el contenido actual.
+
+> [!NOTE]
+> El hash **detecta** la modificación, pero no la **impide**. Para impedirla se combinan permisos, control de acceso y registros de auditoría. Para saber además **quién** generó la huella se usa la firma digital (UD3).
+
+Otras medidas de integridad: firmas digitales, control de versiones (Git), sistemas de detección de cambios en ficheros (AIDE, Wazuh), transacciones en bases de datos, RAID con comprobación de paridad.
+
+### 4.3. Disponibilidad
+
+La **disponibilidad** garantiza que los usuarios autorizados pueden acceder a la información y a los servicios **cuando los necesitan**.
+
+Un servidor apagado es muy confidencial (nadie puede leer sus datos)… pero completamente inútil. La disponibilidad es el principio que se trabaja en la UD2 (seguridad pasiva) y en la UD5 (alta disponibilidad).
+
+Un administrador comprueba la disponibilidad de un servicio con órdenes como estas:
+
+```bash
+# ¿Cuánto tiempo lleva el sistema encendido y cuál es su carga?
+uptime
+#  10:15:02 up 41 days,  3:12,  2 users,  load average: 0,08, 0,05, 0,01
+
+# ¿Está activo el servidor web?
+systemctl status nginx --no-pager
+# ● nginx.service - A high performance web server
+#      Active: active (running) since ...
+
+# ¿Responde por la red?
+curl -I http://localhost
+# HTTP/1.1 200 OK
+```
+
+- `uptime` muestra el tiempo que lleva encendido el equipo y la carga media de los últimos 1, 5 y 15 minutos.
+- `systemctl status` consulta el estado de un servicio gestionado por **systemd**, el gestor de servicios de la mayoría de distribuciones Linux actuales.
+- `curl -I` hace una petición HTTP y muestra solo las cabeceras de la respuesta; `200 OK` indica que el servicio responde.
+
+Medidas de disponibilidad: copias de seguridad, RAID, SAI, redundancia de servidores y enlaces, balanceadores de carga, monitorización y planes de recuperación.
+
+### 4.4. Autenticidad
+
+La **autenticidad** asegura que una entidad (persona, equipo, programa) **es quien dice ser**, y que la información procede de quien dice proceder.
+
+| Se autentica… | Ejemplo |
+| --- | --- |
+| Una persona | Usuario + contraseña + código del móvil |
+| Un servidor | Certificado TLS de `www.agenciatributaria.gob.es` |
+| Un equipo | Certificado de máquina en una red con 802.1X |
+| Un software | Paquete `.deb` o `.rpm` firmado por la distribución |
+
+No hay que confundir **autenticación** (comprobar la identidad) con **autorización** (decidir qué puede hacer esa identidad). Primero me autentico como `ana`; después el sistema me autoriza a leer `nominas.csv` porque soy su propietaria.
+
+### 4.5. Trazabilidad
+
+La **trazabilidad** permite saber **quién** hizo **qué**, **cuándo** y **desde dónde**. Se consigue con registros (*logs*) fiables, sincronizados en hora y protegidos frente a manipulación.
+
+En Linux, el diario de systemd (**journald**) registra, por ejemplo, todas las órdenes ejecutadas con `sudo`:
+
+```bash
+# Mostrar los últimos 5 usos de sudo
+sudo journalctl _COMM=sudo -n 5 --no-pager
+# oct 06 10:20:11 srv01 sudo[2210]: ana : TTY=pts/0 ; PWD=/home/ana ;
+#     USER=root ; COMMAND=/usr/bin/systemctl restart nginx
+
+# Últimos inicios de sesión en el sistema
+last -n 5
+# ana   pts/0   192.168.100.15  Mon Oct  6 10:18   still logged in
+```
+
+- `journalctl` consulta el diario del sistema. El filtro `_COMM=sudo` muestra solo los mensajes generados por el programa `sudo`; `-n 5` limita la salida a las cinco últimas entradas.
+- `last` lista los inicios de sesión registrados en `/var/log/wtmp`.
+
+> [!IMPORTANT]
+> Sin una hora correcta los registros pierden valor: no se pueden correlacionar eventos de varios equipos. Todos los servidores deben sincronizar su reloj con NTP (`timedatectl` muestra el estado de la sincronización).
+
+### 4.6. No repudio
+
+El **no repudio** impide que alguien pueda **negar** haber realizado una acción. Hay dos variantes:
+
+- **No repudio en origen**: el emisor no puede negar haber enviado un mensaje (por ejemplo, una factura electrónica firmada).
+- **No repudio en destino**: el receptor no puede negar haberlo recibido (por ejemplo, un acuse de recibo firmado, como en las notificaciones electrónicas de la Administración).
+
+La tecnología que lo hace posible es la **firma digital** basada en criptografía asimétrica (UD3).
+
+### 4.7. Ejercicio: identifica el principio
+
+Indica qué principio se ve comprometido en cada caso.
+
+1. Un alumno consigue la contraseña del profesor y consulta las notas.
+2. Un virus modifica el fichero `/etc/hosts` para redirigir el tráfico del banco.
+3. El servidor de correo se queda sin espacio en disco y deja de recibir mensajes.
+4. Un empleado niega haber enviado un correo con información confidencial y no hay forma de demostrar lo contrario.
+5. El servidor no guarda registros de quién borró un directorio compartido.
+
+{{% details "Solución" %}}
+1. Confidencialidad (y autenticidad, porque se suplanta una identidad).
+2. Integridad.
+3. Disponibilidad.
+4. No repudio.
+5. Trazabilidad.
+{{% /details %}}
 
 ---
 
-#### 1.4.6. No repudio
+## 5. Activos, amenazas, vulnerabilidades y riesgos
 
-El no repudio permite disponer de evidencias que dificulten que una persona pueda negar posteriormente una acción realizada.
-
-Las firmas digitales son una de las principales tecnologías relacionadas con este concepto.
-
----
-
-## 2. Activos, riesgos y tipos de seguridad
-
-### 2.1. Activos
-
-![Pantallas con métricas y gráficos para el análisis de riesgos](images/ud1/risk-analysis.jpg)
+![Pantallas con métricas y gráficos para el análisis de riesgos](/images/ud1/risk-analysis.jpg)
 
 *Figura 3. El análisis de riesgos permite priorizar la protección de los activos más importantes.*
 
-Un **activo** es cualquier elemento que tenga valor para una organización y que deba ser protegido.
+Estos conceptos son el vocabulario básico del análisis de riesgos. Es fundamental no confundirlos.
 
-Algunos ejemplos son:
+| Concepto | Definición | Ejemplo |
+| --- | --- | --- |
+| **Activo** | Cualquier elemento con valor para la organización | Servidor de base de datos de clientes |
+| **Amenaza** | Evento o agente que puede causar daño | Ciberdelincuente que busca robar datos |
+| **Vulnerabilidad** | Debilidad que puede ser aprovechada por una amenaza | MariaDB accesible desde Internet con contraseña débil |
+| **Exploit** | Técnica o programa que aprovecha una vulnerabilidad concreta | Script que prueba miles de contraseñas |
+| **Ataque** | Intento deliberado de materializar una amenaza | Ejecución del script contra el puerto 3306 |
+| **Incidente** | Evento que compromete realmente la seguridad | Se accede a la base de datos y se copian los datos |
+| **Impacto** | Daño producido por el incidente | 10 000 registros personales filtrados, multa, reputación |
+| **Riesgo** | Probabilidad de que una amenaza explote una vulnerabilidad combinada con su impacto | Alto |
+| **Salvaguarda o control** | Medida que reduce el riesgo | Cerrar el puerto, contraseña robusta, cortafuegos |
 
-* Servidores.
-* Ordenadores.
-* Routers.
-* Bases de datos.
-* Aplicaciones.
-* Sistemas operativos.
-* Información de clientes.
-* Contraseñas.
-* Certificados.
-* Copias de seguridad.
-* Instalaciones.
-* Personal.
+```mermaid
+flowchart LR
+    AM[Amenaza] -->|explota| VU[Vulnerabilidad]
+    VU -->|de un| AC[Activo]
+    AC -->|provoca| IM[Impacto]
+    SA[Salvaguarda] -.reduce.-> VU
+    SA -.reduce.-> IM
+```
 
-No todos los activos tienen el mismo valor.
+### 5.1. Activos
 
-Una base de datos con información de clientes puede tener una importancia mucho mayor que un ordenador utilizado únicamente para tareas administrativas.
+Un **activo** es cualquier recurso que tiene valor para la organización. La metodología **MAGERIT** (la metodología oficial de análisis de riesgos de la Administración española) los clasifica así:
 
----
+| Tipo de activo (MAGERIT) | Ejemplos |
+| --- | --- |
+| Información / datos | Base de datos de clientes, historiales, código fuente |
+| Servicios | Web corporativa, correo, ERP |
+| Software | Sistema operativo, aplicación de facturación |
+| Hardware | Servidores, portátiles, routers, cortafuegos |
+| Redes de comunicaciones | Red local, enlace a Internet, Wi-Fi |
+| Soportes de información | Discos, cintas, memorias USB, papel |
+| Equipamiento auxiliar | SAI, climatización, armarios rack |
+| Instalaciones | CPD, oficinas |
+| Personas | Administradores, usuarios, proveedores |
 
-### 2.2. Amenazas
+No todos los activos valen lo mismo. Para cada uno se valora qué pasaría si perdiese cada propiedad (las **dimensiones** de seguridad: C, I, D, autenticidad y trazabilidad).
 
-Una **amenaza** es cualquier circunstancia que puede provocar un daño sobre un activo.
+**Ejemplo de valoración (escala 0-10):**
 
-Las amenazas pueden ser accidentales o intencionadas.
+| Activo | C | I | D | Comentario |
+| --- | :-: | :-: | :-: | --- |
+| Base de datos de clientes | 9 | 9 | 7 | Datos personales: la filtración es lo más grave |
+| Web corporativa informativa | 2 | 6 | 5 | Es pública; preocupa que la desfiguren |
+| Tienda en línea | 8 | 9 | 10 | Si se cae, no hay ventas |
+| Impresora de la recepción | 3 | 2 | 3 | Bajo valor, salvo documentos impresos |
 
-#### 2.2.1. Amenazas accidentales
+### 5.2. Amenazas
 
-* Fallo eléctrico.
-* Error humano.
-* Borrado accidental.
-* Avería de hardware.
-* Incendio.
-* Inundación.
+Una **amenaza** es cualquier circunstancia o agente con capacidad de causar daño. Se clasifican según su origen:
 
-#### 2.2.2. Amenazas intencionadas
+| Origen | Ejemplos |
+| --- | --- |
+| **Naturales** | Inundación, incendio forestal, terremoto, tormenta eléctrica |
+| **Del entorno / industriales** | Corte eléctrico, fallo de climatización, avería de hardware |
+| **Humanas accidentales** | Borrado por error, configuración incorrecta, pérdida de un portátil |
+| **Humanas intencionadas** | *Malware*, robo, sabotaje, ataques de red, fraude, empleado descontento |
 
-* Robo.
-* Malware.
-* Ataques de red.
-* Phishing.
-* Robo de credenciales.
-* Sabotaje.
-* Acceso no autorizado.
+También se distinguen **amenazas internas** (personal, proveedores con acceso) y **externas**. Las internas son especialmente peligrosas porque el atacante ya tiene acceso y conoce la organización.
 
----
+### 5.3. Vulnerabilidades
 
-### 2.3. Vulnerabilidades
-
-Una **vulnerabilidad** es una debilidad técnica, física, organizativa o humana que puede ser aprovechada para provocar un daño. Puede estar presente en el diseño de una aplicación, en una configuración insegura, en un equipo sin actualizar o en un procedimiento que no define controles suficientes. Por sí sola no causa necesariamente un incidente, pero abre una posible vía de acceso o de alteración que debe identificarse, valorar y tratarse.
-
-Ejemplos:
-
-* Sistema operativo sin actualizar.
-* Contraseña débil.
-* Puerto innecesario abierto.
-* Servicio vulnerable.
-* Permisos excesivos.
-* Falta de copias de seguridad.
-* Configuración incorrecta.
-* Aplicación vulnerable.
-
-Una vulnerabilidad no implica necesariamente que exista un ataque.
-
-Por ejemplo:
+Una **vulnerabilidad** es una debilidad técnica, física, organizativa o humana que puede ser aprovechada. Por sí sola no causa daño, pero abre una puerta.
 
 ```text
 Servidor Linux
-     ↓
-SSH expuesto a Internet
-     ↓
-Contraseña débil
-     ↓
-Vulnerabilidad
+   └── SSH accesible desde Internet (puerto 22)
+          └── Usuario "admin" con contraseña "admin123"   ← VULNERABILIDAD
+                 └── Bot que prueba contraseñas            ← AMENAZA
+                        └── Acceso como "admin"            ← INCIDENTE
 ```
 
-Si un atacante aprovecha esa debilidad para acceder al servidor, estaríamos ante una explotación de la vulnerabilidad.
-
-#### 2.3.1. Amenaza y exploit
-
-Una **amenaza** es una persona, un proceso, un evento o una circunstancia con capacidad de causar daño a un activo. Puede ser intencionada, como un intento de robo de credenciales, o accidental, como un fallo eléctrico. Un **exploit** es la técnica, procedimiento o herramienta que aprovecha una vulnerabilidad concreta para convertir esa posibilidad en un ataque real.
-
-Por tanto, los tres conceptos se relacionan de esta forma:
-
-```text
-Vulnerabilidad: debilidad existente
-   ↓
-Amenaza: agente o circunstancia que puede aprovecharla
-   ↓
-Exploit: técnica utilizada para explotarla
-   ↓
-Incidente: daño o acceso no autorizado
-```
-
-Por ejemplo, una aplicación web que no valida correctamente los datos introducidos presenta una vulnerabilidad. Un atacante constituye la amenaza y podría utilizar una técnica de inyección como exploit para intentar acceder o alterar información. La protección no depende de una única medida: requiere desarrollo seguro, actualizaciones, configuraciones adecuadas y supervisión de los registros.
-
-#### 2.3.2. Clasificación por tipo
-
-Las vulnerabilidades pueden clasificarse por la naturaleza de la debilidad:
+#### 5.3.1. Clasificación por tipología
 
 | Tipo | Descripción | Ejemplo | Medida principal |
 | --- | --- | --- | --- |
-| Software | Errores de diseño, programación o validación de una aplicación. | Software sin parchear o validación de entradas deficiente. | Actualizaciones, desarrollo seguro y revisión de código. |
-| Configuración | Ajustes inseguros o servicios expuestos sin necesidad. | Credenciales por defecto o puerto de administración accesible desde Internet. | Hardening, mínimo privilegio y revisión periódica. |
-| Física | Falta de protección de equipos, instalaciones o soportes. | Acceso no controlado a un servidor o robo de un portátil. | Control de acceso, inventario y cifrado de dispositivos. |
-| Red | Debilidades en protocolos, segmentación o configuración de comunicaciones. | Wi-Fi mal protegido o tráfico sin cifrar. | Segmentación, cifrado y configuración segura. |
-| Hardware | Deficiencias en componentes físicos o firmware. | Vulnerabilidades conocidas de procesadores o firmware desactualizado. | Actualizaciones de firmware y medidas de mitigación del fabricante. |
-| Humana | Errores, falta de formación o procedimientos inadecuados. | Phishing, contraseñas débiles o envío erróneo de información. | Formación, MFA y procedimientos de verificación. |
+| **Software** | Errores de diseño o programación | Inyección SQL en un formulario; OpenSSH vulnerable | Actualizaciones, desarrollo seguro |
+| **Configuración** | Ajustes inseguros | Credenciales por defecto, puerto de administración abierto | *Hardening*, revisión periódica |
+| **Física** | Protección física insuficiente | CPD sin cerradura, portátil sin cifrar | Control de acceso físico, cifrado |
+| **Red** | Protocolos o diseño de red débiles | Wi-Fi con WEP, Telnet, red plana sin segmentar | Protocolos seguros, VLAN, cortafuegos |
+| **Hardware / firmware** | Fallos en componentes | Spectre/Meltdown, BIOS desactualizada | Microcódigo y firmware actualizados |
+| **Humana / organizativa** | Falta de formación o procedimientos | Usuario que reutiliza contraseñas; no hay procedimiento de bajas | Formación, políticas, MFA |
 
-#### 2.3.3. Clasificación por origen
+#### 5.3.2. Clasificación por origen
 
-- **Inherentes:** proceden del diseño o desarrollo original de un sistema; por ejemplo, un mecanismo de autenticación mal implementado.
-- **Introducidas:** aparecen durante la instalación, configuración, operación o mantenimiento; por ejemplo, un servicio innecesario habilitado o permisos excesivos.
-- **Derivadas:** surgen de la interacción entre componentes, versiones o dependencias; por ejemplo, una extensión incompatible con la aplicación principal.
-- **De terceros:** afectan a proveedores, bibliotecas, servicios cloud o cadenas de suministro. Deben gestionarse mediante evaluación de proveedores, inventario de dependencias y aplicación controlada de actualizaciones.
+| Origen | Cuándo aparece | Ejemplo |
+| --- | --- | --- |
+| **De diseño** (inherente) | En el diseño del protocolo o la aplicación | Telnet transmite las contraseñas en claro por diseño |
+| **De implementación** | Al programar | Desbordamiento de búfer en una librería |
+| **De configuración / uso** (introducida) | Al instalar, configurar u operar | Carpeta compartida con permiso de escritura para «Todos» |
+| **De terceros / cadena de suministro** | En dependencias, proveedores o servicios externos | La puerta trasera introducida en la librería `xz` (CVE-2024-3094) |
 
-También conviene diferenciar las vulnerabilidades conocidas con parche disponible, las conocidas sin corrección definitiva y las de tipo **zero-day**, que todavía no han sido reconocidas públicamente o no disponen de una solución del proveedor. Ante estas últimas se recurre a controles compensatorios, como restringir la exposición del servicio, segmentar la red y reforzar la monitorización.
+Según su estado de conocimiento:
 
----
+- **Vulnerabilidad conocida con parche**: hay que aplicarlo (la mayoría de incidentes reales se deben a parches no aplicados).
+- **Vulnerabilidad conocida sin parche**: se aplican **controles compensatorios** (desactivar el servicio, filtrar el acceso, vigilar).
+- **Día cero (*zero-day*)**: aún no conocida públicamente o sin solución del fabricante.
 
-### 2.4. Riesgo
+#### 5.3.3. CVE, CWE y CVSS
 
-El riesgo representa la posibilidad de que una amenaza aproveche una vulnerabilidad y provoque un impacto sobre un activo. Para gestionarlo no basta con enumerar problemas: es necesario identificar qué activos son importantes, qué amenazas les afectan, qué debilidades existen y qué consecuencias tendría un incidente. Esta valoración permite priorizar recursos, ya que no todos los riesgos requieren la misma respuesta.
+Para hablar con precisión de las vulnerabilidades se usan estándares públicos:
 
-De forma simplificada:
+| Estándar | Qué es | Ejemplo |
+| --- | --- | --- |
+| **CVE** (*Common Vulnerabilities and Exposures*) | Identificador único de una vulnerabilidad concreta | `CVE-2024-6387` («regreSSHion», ejecución remota de código en OpenSSH) |
+| **CWE** (*Common Weakness Enumeration*) | Catálogo de **tipos** de debilidad | `CWE-89`: inyección SQL; `CWE-798`: credenciales embebidas en el código |
+| **CVSS** (*Common Vulnerability Scoring System*) | Puntuación de gravedad de 0 a 10. La versión actual es la **4.0** | 9,8 → crítica |
+| **EPSS** | Probabilidad estimada de que una vulnerabilidad sea explotada en los próximos 30 días | 0,94 → muy probable |
+| **KEV** (catálogo de CISA) | Lista de vulnerabilidades que **se están explotando** en la realidad | Prioridad máxima de parcheo |
 
-```text
-AMENAZA + VULNERABILIDAD → INCIDENTE → IMPACTO
+Escala cualitativa de CVSS:
+
+| Puntuación | Gravedad |
+| --- | --- |
+| 0,0 | Ninguna |
+| 0,1 - 3,9 | Baja |
+| 4,0 - 6,9 | Media |
+| 7,0 - 8,9 | Alta |
+| 9,0 - 10,0 | Crítica |
+
+**Ejemplo práctico: consultar una CVE desde la terminal.** La base de datos NVD del NIST ofrece una API pública. El siguiente comando descarga la información de la CVE de la puerta trasera de `xz` y extrae su descripción y puntuación con `jq` (un procesador de JSON):
+
+```bash
+# Instalar jq si no está disponible
+sudo apt install -y jq curl      # Debian/Ubuntu
+# sudo dnf install -y jq curl    # AlmaLinux/Rocky
+
+curl -s "https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2024-3094" \
+  | jq -r '.vulnerabilities[0].cve |
+           .id,
+           .descriptions[0].value,
+           (.metrics.cvssMetricV31[0].cvssData | "\(.baseScore) \(.baseSeverity)")'
+# CVE-2024-3094
+# Malicious code was discovered in the upstream tarballs of xz, starting with version 5.6.0...
+# 10 CRITICAL
 ```
 
-Una forma sencilla de valorar el riesgo es:
+Y para saber si **nuestro** sistema está afectado, comprobamos la versión instalada:
+
+```bash
+# Debian/Ubuntu
+dpkg -l | grep -E '^ii\s+(xz-utils|liblzma5)'
+# AlmaLinux/Rocky
+rpm -q xz xz-libs
+```
+
+Las versiones afectadas eran la 5.6.0 y la 5.6.1. Si la versión instalada es otra, el sistema no está afectado por esta CVE.
+
+> [!TIP]
+> La prioridad real de una vulnerabilidad no depende solo del CVSS: una CVE crítica en un equipo aislado del laboratorio puede esperar; una CVE media en un servidor expuesto a Internet y presente en el catálogo KEV debe corregirse ya.
+
+### 5.4. Riesgo
+
+El **riesgo** es la estimación del daño que puede producirse. Se calcula combinando la **probabilidad** de que ocurra un incidente con el **impacto** que tendría:
 
 ```text
 Riesgo = Probabilidad × Impacto
 ```
 
-Por ejemplo:
+Usando una escala de 1 (bajo) a 3 (alto), se construye una **matriz de riesgos**:
 
-| Amenaza          | Probabilidad |  Impacto |   Riesgo |
-| ---------------- | -----------: | -------: | -------: |
-| Fallo de disco   |         Alta |    Medio |     Alto |
-| Robo de portátil |        Media |     Alto |     Alto |
-| Incendio         |         Baja | Muy alto |     Alto |
-| Phishing         |         Alta |     Alto | Muy alto |
+| Probabilidad ↓ / Impacto → | Bajo (1) | Medio (2) | Alto (3) |
+| --- | :-: | :-: | :-: |
+| **Alta (3)** | 3 Medio | 6 Alto | 9 Crítico |
+| **Media (2)** | 2 Bajo | 4 Medio | 6 Alto |
+| **Baja (1)** | 1 Bajo | 2 Bajo | 3 Medio |
 
-Esta valoración permite establecer prioridades. Una vez valorado, el riesgo puede reducirse aplicando controles, transferirse mediante un seguro o un servicio especializado, aceptarse de forma justificada cuando su coste sea desproporcionado o evitarse eliminando la actividad que lo origina. Las decisiones deben documentarse y revisarse cuando cambie la infraestructura, aparezcan nuevas amenazas o se produzca un incidente.
+**Ejemplo** para una pequeña tienda en línea:
+
+| Amenaza sobre el activo | Probabilidad | Impacto | Riesgo |
+| --- | :-: | :-: | :-: |
+| Fallo del disco del servidor (sin RAID) | 2 | 3 | 6 Alto |
+| *Phishing* al personal de administración | 3 | 3 | 9 Crítico |
+| Robo de un portátil sin cifrar | 2 | 3 | 6 Alto |
+| Incendio en la oficina | 1 | 3 | 3 Medio |
+| Caída de la impresora | 2 | 1 | 2 Bajo |
+
+Se distingue entre:
+
+- **Riesgo inherente** (o potencial): el que existe **antes** de aplicar salvaguardas.
+- **Riesgo residual**: el que queda **después** de aplicarlas. Nunca es cero.
+
+#### 5.4.1. Tratamiento del riesgo
+
+Una vez valorado, cada riesgo se trata con una de estas cuatro estrategias:
+
+| Estrategia | Significado | Ejemplo |
+| --- | --- | --- |
+| **Mitigar / reducir** | Aplicar controles | Instalar RAID 1 y hacer copias diarias |
+| **Transferir / compartir** | Trasladar parte del riesgo a un tercero | Contratar un ciberseguro o un hosting gestionado |
+| **Aceptar / asumir** | Asumirlo de forma consciente y documentada | La caída de la impresora no justifica una segunda impresora |
+| **Evitar / eliminar** | Eliminar la actividad que lo origina | Dejar de almacenar datos de tarjetas y usar una pasarela de pago |
+
+#### 5.4.2. Ejemplo: matriz de riesgos automatizada
+
+Este pequeño script en Python calcula y ordena los riesgos a partir de un fichero CSV. Es una forma sencilla de mantener el análisis actualizado.
+
+Fichero `riesgos.csv`:
+
+```text
+activo,amenaza,probabilidad,impacto
+Servidor web,Fallo de disco,2,3
+Correo,Phishing,3,3
+Portátil comercial,Robo,2,3
+Oficina,Incendio,1,3
+Impresora,Avería,2,1
+```
+
+Script `matriz_riesgos.py`:
+
+```python
+#!/usr/bin/env python3
+"""Calcula el nivel de riesgo (probabilidad x impacto) y lo ordena de mayor a menor."""
+import csv
+
+NIVELES = {range(1, 3): "Bajo", range(3, 5): "Medio", range(5, 7): "Alto", range(7, 10): "Crítico"}
+
+def nivel(valor: int) -> str:
+    for rango, texto in NIVELES.items():
+        if valor in rango:
+            return texto
+    return "Desconocido"
+
+with open("riesgos.csv", newline="", encoding="utf-8") as f:
+    filas = list(csv.DictReader(f))
+
+for fila in filas:
+    fila["riesgo"] = int(fila["probabilidad"]) * int(fila["impacto"])
+
+for fila in sorted(filas, key=lambda r: r["riesgo"], reverse=True):
+    print(f'{fila["riesgo"]:>2} {nivel(fila["riesgo"]):<8} {fila["activo"]:<20} {fila["amenaza"]}')
+```
+
+Ejecución:
+
+```bash
+python3 matriz_riesgos.py
+#  9 Crítico  Correo               Phishing
+#  6 Alto     Servidor web         Fallo de disco
+#  6 Alto     Portátil comercial   Robo
+#  3 Medio    Oficina              Incendio
+#  2 Bajo     Impresora            Avería
+```
+
+### 5.5. Metodologías de análisis de riesgos
+
+| Metodología / norma | Ámbito | Aportación |
+| --- | --- | --- |
+| **MAGERIT v3** | Administración pública española (CCN/MINHAP) | Catálogo de activos, amenazas y salvaguardas; herramienta **PILAR** |
+| **ISO 31000** | Cualquier organización | Principios generales de gestión del riesgo |
+| **ISO/IEC 27005** | Seguridad de la información | Gestión del riesgo dentro de un SGSI ISO 27001 |
+| **NIST SP 800-30** | Estados Unidos, uso internacional | Guía de evaluación de riesgos |
+
+Las fases generales de un análisis de riesgos son:
+
+```mermaid
+flowchart LR
+    A[1. Inventario<br/>de activos] --> B[2. Valoración<br/>de activos]
+    B --> C[3. Identificación<br/>de amenazas]
+    C --> D[4. Identificación<br/>de vulnerabilidades]
+    D --> E[5. Cálculo del<br/>riesgo]
+    E --> F[6. Tratamiento<br/>y salvaguardas]
+    F --> G[7. Riesgo residual<br/>y revisión]
+```
+
+### 5.6. Ejercicio: clasifica los conceptos
+
+Una academia tiene un servidor Windows con las notas del alumnado. El servidor tiene el escritorio remoto (RDP) abierto a Internet y la cuenta `Administrador` usa la contraseña `Academia2024`. Un grupo criminal está lanzando campañas de *ransomware* contra centros educativos.
+
+Identifica: activo, amenaza, vulnerabilidad(es), posible incidente, impacto y dos salvaguardas.
+
+{{% details "Solución" %}}
+- **Activo**: servidor con las notas (y la propia información de las notas).
+- **Amenaza**: grupo criminal de *ransomware*.
+- **Vulnerabilidades**: RDP expuesto a Internet; contraseña débil y predecible; cuenta con nombre conocido (`Administrador`).
+- **Incidente**: acceso por RDP con la contraseña adivinada y cifrado de los datos.
+- **Impacto**: pérdida de disponibilidad de las notas, posible filtración (confidencialidad), sanción RGPD, daño reputacional.
+- **Salvaguardas**: cerrar RDP a Internet y acceder por VPN con MFA; contraseña robusta y renombrar/deshabilitar la cuenta por defecto; copias de seguridad desconectadas (regla 3-2-1-1-0).
+{{% /details %}}
 
 ---
 
-### 2.5. Tipos de seguridad
+## 6. Tipos de seguridad
 
-#### 2.5.1. Seguridad física
+### 6.1. Seguridad física y seguridad lógica
 
-Protege los elementos físicos de la infraestructura.
+| | Seguridad **física** | Seguridad **lógica** |
+| --- | --- | --- |
+| Qué protege | El hardware, las instalaciones y los soportes | El software, los datos y el acceso a ellos |
+| Frente a qué | Robo, incendio, inundación, cortes eléctricos, acceso físico no autorizado | *Malware*, accesos no autorizados, errores de software, ataques de red |
+| Ejemplos | Cerraduras, tarjetas de acceso, cámaras, SAI, extinción por gas, climatización, ubicación del CPD | Usuarios y contraseñas, permisos, cortafuegos, antivirus, cifrado, copias de seguridad, actualizaciones |
 
-Ejemplos:
+Una idea clave: **quien tiene acceso físico a un equipo, puede llegar a controlarlo**. Arrancando desde un USB, por ejemplo, se puede leer un disco sin cifrar sin conocer ninguna contraseña. Por eso la seguridad física y la lógica se complementan (cifrado de disco, contraseña de UEFI, arranque seguro).
 
-* Cerraduras.
-* Cámaras.
-* Control de acceso.
-* SAI.
-* Sistemas contra incendios.
-* Control de temperatura.
-* Sistemas de detección de humo.
+### 6.2. Seguridad activa y seguridad pasiva
+
+| | Seguridad **activa** | Seguridad **pasiva** |
+| --- | --- | --- |
+| Objetivo | **Prevenir y detectar** incidentes | **Minimizar las consecuencias** cuando ya han ocurrido |
+| Cuándo actúa | Antes y durante | Después |
+| Ejemplos | Contraseñas, cortafuegos, antivirus, IDS/IPS, cifrado, actualizaciones, formación | Copias de seguridad, RAID, SAI, redundancia, plan de recuperación |
+| Unidades del módulo | UD3, UD4, UD6, UD7 | UD2, UD5 |
+
+### 6.3. Medidas físicas, técnicas y organizativas
+
+El RGPD y el ENS hablan de **medidas técnicas y organizativas**. Una defensa eficaz combina tres tipos de control:
+
+| Tipo de control | Ejemplos |
+| --- | --- |
+| **Físico** | Control de acceso al CPD, armarios cerrados, destructora de papel |
+| **Técnico (lógico)** | Cortafuegos, MFA, cifrado, copias, registros |
+| **Organizativo (administrativo)** | Políticas, procedimientos de altas/bajas, formación, contratos de confidencialidad, clasificación de la información |
+
+### 6.4. Defensa en profundidad
+
+Ninguna medida es perfecta. La **defensa en profundidad** consiste en superponer varias capas de protección, de forma que si una falla, la siguiente detenga o detecte el ataque.
+
+```text
+┌──────────────────────────────────────────────────────── Políticas y formación
+│ ┌────────────────────────────────────────────────────── Seguridad física
+│ │ ┌──────────────────────────────────────────────────── Perímetro (cortafuegos, proxy) — UD7
+│ │ │ ┌────────────────────────────────────────────────── Red interna (VLAN, IDS, VPN) — UD6
+│ │ │ │ ┌──────────────────────────────────────────────── Host (hardening, antimalware) — UD4
+│ │ │ │ │ ┌────────────────────────────────────────────── Aplicación (validación, WAF)
+│ │ │ │ │ │ ┌──────────────────────────────────────────── Datos (cifrado, copias) — UD2, UD3
+│ │ │ │ │ │ │                  ACTIVO
+```
+
+### 6.5. Ejercicio: clasifica las medidas
+
+Clasifica cada medida como **física o lógica** y como **activa o pasiva**: RAID 1, cortafuegos, SAI, antivirus, copia de seguridad, lector de tarjetas en la puerta del CPD, IDS, cifrado de disco, extintor de gas, actualización del sistema operativo.
+
+{{% details "Solución" %}}
+| Medida | Física / lógica | Activa / pasiva |
+| --- | --- | --- |
+| RAID 1 | Física (hardware de almacenamiento) / lógica si es RAID software | Pasiva |
+| Cortafuegos | Lógica | Activa |
+| SAI | Física | Pasiva |
+| Antivirus | Lógica | Activa |
+| Copia de seguridad | Lógica | Pasiva |
+| Lector de tarjetas | Física | Activa |
+| IDS | Lógica | Activa (detecta) |
+| Cifrado de disco | Lógica | Activa |
+| Extintor de gas | Física | Pasiva |
+| Actualización del SO | Lógica | Activa |
+
+Algunas medidas admiten matices (por ejemplo, el RAID se considera seguridad física cuando es una controladora hardware). Lo importante es justificar la respuesta.
+{{% /details %}}
 
 ---
 
-#### 2.5.2. Seguridad lógica
+## 7. Amenazas y ataques más habituales
 
-Protege los sistemas mediante mecanismos relacionados con software y configuración.
-
-Ejemplos:
-
-* Usuarios.
-* Contraseñas.
-* Permisos.
-* Firewalls.
-* Antivirus.
-* Cifrado.
-* Sistemas IDS/IPS.
-
----
-
-#### 2.5.3. Seguridad activa
-
-Busca prevenir, detectar o detener incidentes.
-
-Ejemplos:
-
-* Firewall.
-* IDS.
-* IPS.
-* Antivirus.
-* Sistemas de monitorización.
-* Autenticación.
-
----
-
-#### 2.5.4. Seguridad pasiva
-
-Su objetivo principal es reducir las consecuencias de un incidente.
-
-Ejemplos:
-
-* Copias de seguridad.
-* RAID.
-* SAI.
-* Sistemas redundantes.
-* Planes de recuperación.
-
----
-
-## 3. Amenazas y vulnerabilidades
-
-### 3.1. Principales amenazas informáticas
-
-#### 3.1.1. Malware
-
-![Representación visual de un candado digital para proteger una red](images/ud1/network-protection.jpg)
+![Representación visual de un candado digital para proteger una red](/images/ud1/network-protection.jpg)
 
 *Figura 4. La protección frente a amenazas combina controles técnicos, actualización y vigilancia.*
 
-Malware es un término general utilizado para referirse a software malicioso diseñado para alterar el funcionamiento de un equipo, obtener información o facilitar un acceso no autorizado. Puede llegar mediante adjuntos de correo, descargas no verificadas, soportes extraíbles, páginas comprometidas o la explotación de programas vulnerables. Su impacto depende de los permisos obtenidos y del acceso del equipo a otros sistemas de la organización.
+### 7.1. Anatomía de un ataque
 
-Entre sus principales tipos encontramos:
+Los ataques dirigidos suelen seguir una secuencia de fases. El modelo **Cyber Kill Chain** de Lockheed Martin es una forma sencilla de explicarlo; el marco **MITRE ATT&CK** detalla cientos de técnicas concretas organizadas en tácticas.
 
-##### Virus
+| Fase | Qué hace el atacante | Ejemplo | Cómo se defiende |
+| --- | --- | --- | --- |
+| 1. Reconocimiento | Recopila información | Busca empleados en LinkedIn, escanea puertos | Minimizar la información pública, detectar escaneos |
+| 2. Preparación (*weaponization*) | Prepara el arma | Documento con macro maliciosa | Inteligencia de amenazas |
+| 3. Entrega | Hace llegar el arma | Correo de *phishing* | Filtro de correo, formación |
+| 4. Explotación | Aprovecha una vulnerabilidad | La macro se ejecuta | Bloqueo de macros, parches |
+| 5. Instalación | Se instala de forma persistente | Crea una tarea programada | EDR, control de aplicaciones |
+| 6. Mando y control (C2) | Conecta con su servidor | Tráfico HTTPS a un dominio extraño | Proxy, filtrado DNS, IDS |
+| 7. Acciones sobre objetivos | Cumple su objetivo | Roba datos y cifra servidores | Segmentación, copias, DLP |
 
-Programa capaz de propagarse infectando otros archivos.
+Romper **cualquier** eslabón de la cadena detiene el ataque. Esta idea justifica la defensa en profundidad.
 
-##### Gusanos
+### 7.2. Tipos de ataque según su efecto
 
-Programas capaces de propagarse automáticamente a través de redes.
+Una clasificación clásica, útil para relacionar ataques con los principios de seguridad:
 
-##### Troyanos
+| Tipo | Qué hace | Principio afectado | Ejemplo |
+| --- | --- | --- | --- |
+| **Interrupción** | Inutiliza un recurso | Disponibilidad | DDoS, borrar un fichero |
+| **Interceptación** | Accede a información sin autorización | Confidencialidad | Captura de tráfico (*sniffing*) |
+| **Modificación** | Altera información | Integridad | Cambiar el importe de una transferencia |
+| **Fabricación** | Crea información falsa | Autenticidad | Correo con remitente suplantado |
 
-Programas que aparentan realizar una función legítima pero incorporan funcionalidades maliciosas.
+### 7.3. Malware
 
-##### Ransomware
+**Malware** (*malicious software*) es cualquier software diseñado para dañar, espiar o tomar el control de un sistema sin el consentimiento del usuario.
 
-Malware que cifra o bloquea información para exigir posteriormente un pago.
+| Tipo | Característica principal | Ejemplo de comportamiento |
+| --- | --- | --- |
+| **Virus** | Se adjunta a otros ficheros y necesita que se ejecuten | Infecta ejecutables o documentos |
+| **Gusano** (*worm*) | Se propaga solo por la red aprovechando vulnerabilidades | WannaCry (2017) usó una vulnerabilidad de SMBv1 |
+| **Troyano** | Aparenta ser legítimo, pero incluye funciones maliciosas | «Crack» de un programa que abre una puerta trasera |
+| **Puerta trasera** (*backdoor*) | Permite acceso remoto oculto | El código introducido en `xz` permitía acceso por SSH |
+| **Ransomware** | Cifra datos y pide un rescate; hoy suele robar los datos antes (doble extorsión) | LockBit, Akira |
+| **Spyware / infostealer** | Roba información (contraseñas guardadas, cookies de sesión) | Robo de credenciales del navegador |
+| **Keylogger** | Registra las pulsaciones del teclado | Captura la contraseña del banco |
+| **Rootkit** | Se oculta en el sistema con privilegios elevados | Modifica el núcleo para esconder procesos |
+| **Botnet** | Red de equipos infectados controlados remotamente | Cámaras IP usadas para DDoS (Mirai) |
+| **Cryptojacking** | Usa los recursos del equipo para minar criptomonedas | Servidor con CPU al 100 % sin motivo |
+| **Adware / PUP** | Publicidad o programas no deseados | Barras de herramientas en el navegador |
 
-##### Spyware
+**Indicios técnicos de infección** que un administrador puede observar en Linux:
 
-Software diseñado para obtener información sobre las actividades del usuario.
+```bash
+# Procesos que más CPU consumen (cryptojacking)
+ps aux --sort=-%cpu | head -5
 
-##### Keylogger
+# Conexiones de red establecidas y programa que las abre
+sudo ss -tupn state established
 
-Herramienta que registra las pulsaciones del teclado.
+# Tareas programadas sospechosas (persistencia)
+sudo crontab -l -u root
+ls -la /etc/cron.d/ /etc/systemd/system/
 
-La protección frente a malware combina medidas preventivas y de detección: mantener el sistema operativo y las aplicaciones actualizados, utilizar protección antimalware, limitar privilegios, filtrar el correo, mantener copias de seguridad verificadas y analizar alertas o comportamientos anómalos. Ninguna de estas medidas es suficiente de forma aislada; la defensa mejora al aplicar varias capas.
-
----
-
-### 3.2. Ingeniería social
-
-La ingeniería social consiste en manipular a las personas para conseguir información o provocar determinadas acciones. En lugar de atacar directamente un sistema, el atacante explota la confianza, la urgencia, la curiosidad o la falta de procedimientos de verificación. Puede presentarse por correo electrónico, llamada telefónica, mensajería, redes sociales o incluso mediante acceso físico a instalaciones.
-
-El atacante puede intentar conseguir:
-
-* Contraseñas.
-* Información personal.
-* Códigos de autenticación.
-* Acceso físico.
-* Información empresarial.
-
-La principal característica de estos ataques es que aprovechan el comportamiento humano. Para reducir el riesgo, el personal debe verificar solicitudes inusuales por un canal alternativo, evitar compartir credenciales o códigos MFA, y comunicar de inmediato cualquier intento sospechoso. Las políticas claras y la formación periódica son controles tan importantes como las herramientas técnicas.
-
----
-
-### 3.3. Phishing
-
-El phishing consiste en intentar engañar al usuario utilizando comunicaciones fraudulentas que aparentan proceder de una entidad conocida. Su objetivo puede ser robar credenciales, inducir una transferencia, instalar malware o conseguir información personal. Aunque el correo electrónico es el canal más habitual, también pueden utilizarse mensajes SMS, llamadas telefónicas o redes sociales.
-
-Ejemplo:
-
-```text
-AVISO DE SEGURIDAD
-
-Su cuenta será bloqueada.
-
-Acceda al siguiente enlace para verificar sus datos:
-https://ejemplo-falso.com
+# Ficheros modificados en los últimos 2 días en rutas de binarios
+sudo find /usr/bin /usr/sbin -mtime -2 -type f
 ```
 
-El objetivo puede ser obtener:
+- `ps aux --sort=-%cpu` lista todos los procesos ordenados de mayor a menor uso de CPU.
+- `ss -tupn` muestra sockets TCP (`t`) y UDP (`u`), el proceso asociado (`p`) y direcciones numéricas (`n`). `ss` es la herramienta actual; sustituye a `netstat`, que está obsoleta.
+- `find -mtime -2` busca ficheros modificados hace menos de 2 días.
 
-* Usuario.
-* Contraseña.
-* Datos bancarios.
-* Códigos MFA.
-* Información personal.
+**Medidas de protección**: actualizaciones, antimalware/EDR, mínimo privilegio, filtrado de correo y web, bloqueo de macros, control de aplicaciones, segmentación de red y copias de seguridad **desconectadas** y verificadas.
 
-Para reducir el riesgo es importante comprobar:
+### 7.4. Ingeniería social
 
-* Remitente.
-* Dominio.
-* Enlaces.
-* Ortografía.
-* Contexto del mensaje.
-* Solicitudes urgentes o inesperadas.
+La **ingeniería social** manipula a las personas para que revelen información o realicen acciones que benefician al atacante. En vez de atacar la tecnología, ataca la confianza, el miedo, la urgencia, la curiosidad o el deseo de ayudar.
 
-Además, las organizaciones pueden aplicar filtros de correo, autenticación de dominio, MFA, bloqueo de enlaces maliciosos y un procedimiento sencillo para informar de mensajes sospechosos. Antes de facilitar información o acceder a un enlace, debe verificarse la petición a través de la web oficial o un contacto conocido, no mediante los datos incluidos en el mensaje.
+| Técnica | Descripción |
+| --- | --- |
+| ***Phishing*** | Correo fraudulento masivo que suplanta a una entidad conocida |
+| ***Spear phishing*** | *Phishing* dirigido a una persona concreta, con información personalizada |
+| ***Whaling*** | *Spear phishing* contra directivos |
+| ***Smishing*** | Por SMS («Su paquete está retenido, pague 1,99 €») |
+| ***Vishing*** | Por llamada telefónica («Le llamo del soporte de Microsoft») |
+| **Fraude del CEO / BEC** | Suplanta a un directivo para ordenar una transferencia urgente |
+| ***Pretexting*** | El atacante inventa un pretexto creíble («Soy el técnico de la impresora») |
+| ***Baiting*** | Deja un USB «olvidado» con un nombre atractivo (`Nóminas_2026.xlsx`) |
+| ***Tailgating*** | Entra detrás de un empleado por una puerta con control de acceso |
+| ***Quishing*** | Código QR que lleva a una web fraudulenta |
+| ***Deepfake*** | Voz o vídeo generados con IA para suplantar a una persona |
 
----
+Según INCIBE, la mayoría de los incidentes que gestiona tienen un componente humano. Por eso la **formación y la concienciación** son una medida de seguridad tan importante como las técnicas.
 
-### 3.4. Ataques de fuerza bruta
+### 7.5. Phishing: cómo analizar un correo sospechoso
 
-Un ataque de fuerza bruta consiste en probar diferentes combinaciones hasta encontrar una contraseña válida. También puede reutilizar contraseñas filtradas previamente en otros servicios, práctica conocida como *credential stuffing*. Estos ataques son más eficaces cuando se usan contraseñas cortas, predecibles o compartidas entre distintos sistemas.
-
-Por ejemplo:
+Ejemplo de mensaje:
 
 ```text
-0000
-0001
-0002
-0003
-...
-9999
+De: Servicio de Seguridad <seguridad@bancosantandr-verify.com>
+Asunto: URGENTE: su cuenta será bloqueada en 24 horas
+
+Estimado cliente:
+Hemos detectado un acceso no autorizado. Para evitar el bloqueo,
+verifique sus datos inmediatamente en el siguiente enlace:
+https://bancosantandr-verify.com/login
 ```
 
-La resistencia puede mejorarse mediante:
+Indicadores de *phishing*:
 
-* Contraseñas largas.
-* Bloqueo temporal.
-* Limitación de intentos.
-* MFA.
-* Políticas de contraseñas.
-* Monitorización.
+1. **Dominio del remitente** que imita al real (`bancosantandr-verify.com`).
+2. **Urgencia** y amenaza («24 horas», «bloqueo»).
+3. Saludo **genérico** («Estimado cliente»).
+4. **Enlace** a un dominio que no es el oficial.
+5. Solicitud de **credenciales** o datos (un banco nunca los pide por correo).
 
-También es recomendable revisar los intentos fallidos de inicio de sesión, impedir el uso de contraseñas conocidas como comprometidas y separar las cuentas de administración de las cuentas de uso diario. La MFA reduce de forma significativa el impacto de una contraseña robada, aunque no sustituye una buena gestión de identidades.
+Las cabeceras técnicas del correo también aportan información. Los servidores de correo añaden el resultado de las comprobaciones **SPF**, **DKIM** y **DMARC**, tres mecanismos que verifican si el remitente está autorizado a enviar correo en nombre de ese dominio:
+
+```text
+Authentication-Results: mx.ejemplo.es;
+   spf=fail (sender IP is 203.0.113.50) smtp.mailfrom=bancosantandr-verify.com;
+   dkim=none;
+   dmarc=fail header.from=bancosantandr-verify.com
+Received: from mail.servidor-desconocido.ru (203.0.113.50)
+```
+
+- `spf=fail`: la IP que envió el correo no está autorizada por el dominio.
+- `dkim=none`: el mensaje no está firmado.
+- `dmarc=fail`: no supera la política del dominio.
+
+> [!TIP]
+> Ante la duda, no se pulsa el enlace: se accede a la entidad **escribiendo su dirección** en el navegador o llamando a un teléfono conocido. Y se avisa al equipo de seguridad: un aviso a tiempo puede proteger a toda la organización.
+
+### 7.6. Ataques a contraseñas
+
+| Ataque | Descripción | Contramedida |
+| --- | --- | --- |
+| **Fuerza bruta** | Probar todas las combinaciones posibles | Longitud, bloqueo tras intentos fallidos, MFA |
+| **Diccionario** | Probar palabras y contraseñas habituales | Rechazar contraseñas conocidas o filtradas |
+| ***Password spraying*** | Probar una contraseña común (`Verano2026!`) contra muchas cuentas | Detección de intentos distribuidos, MFA |
+| ***Credential stuffing*** | Usar pares usuario/contraseña filtrados de otros servicios | No reutilizar contraseñas, MFA |
+| **Ataque *offline* al hash** | Si se roba el fichero de hashes, se prueban contraseñas sin límite de intentos | Algoritmos lentos con sal (yescrypt, Argon2) — UD3 |
+
+¿Por qué es tan importante la **longitud**? El número de combinaciones posibles es `N^L`, siendo `N` el número de símbolos posibles y `L` la longitud. Este script lo calcula:
+
+```python
+#!/usr/bin/env python3
+"""Tiempo estimado para recorrer todas las combinaciones de una contraseña."""
+import math
+
+INTENTOS_POR_SEGUNDO = 1e10   # equipo con varias GPU contra un hash rápido
+
+casos = {
+    "8 minúsculas":                  (26, 8),
+    "8 caracteres (may, min, num, sím)": (94, 8),
+    "12 caracteres (may, min, num, sím)": (94, 12),
+    "16 minúsculas":                 (26, 16),
+    "Frase de 5 palabras (lista de 7776)": (7776, 5),
+}
+
+for nombre, (simbolos, longitud) in casos.items():
+    combinaciones = simbolos ** longitud
+    bits = math.log2(combinaciones)
+    segundos = combinaciones / INTENTOS_POR_SEGUNDO
+    anios = segundos / (3600 * 24 * 365)
+    print(f"{nombre:<38} {bits:5.1f} bits  {anios:12.2e} años")
+```
+
+```text
+8 minúsculas                            37.6 bits      6.62e-07 años   (≈ 21 segundos)
+8 caracteres (may, min, num, sím)       52.4 bits      1.93e-02 años   (≈ 7 días)
+12 caracteres (may, min, num, sím)      78.7 bits      1.51e+06 años
+16 minúsculas                           75.2 bits      1.38e+05 años
+Frase de 5 palabras (lista de 7776)     64.6 bits      9.02e+01 años
+```
+
+La conclusión es clara: **la longitud aporta más seguridad que la complejidad**. Una frase de paso larga y fácil de recordar es mejor que una contraseña corta y complicada.
+
+### 7.7. Denegación de servicio (DoS y DDoS)
+
+Un ataque de **denegación de servicio** intenta que un servicio deje de estar disponible agotando sus recursos (ancho de banda, CPU, memoria, conexiones). Cuando el tráfico procede de miles de equipos (normalmente una *botnet*), se denomina **DDoS** (*Distributed Denial of Service*).
+
+| Tipo | Capa | Ejemplo |
+| --- | --- | --- |
+| Volumétrico | Red | Inundación UDP, amplificación DNS o NTP |
+| De protocolo | Transporte | Inundación SYN que agota la tabla de conexiones |
+| De aplicación | Aplicación | Miles de peticiones HTTP a una búsqueda costosa |
+
+Contramedidas: limitación de peticiones (*rate limiting*), SYN cookies, servicios de mitigación DDoS del proveedor o de una CDN, redundancia y balanceo (UD5), y un plan de respuesta con contactos del proveedor.
+
+### 7.8. Otros ataques que estudiaremos
+
+| Ataque | Breve descripción | Unidad |
+| --- | --- | --- |
+| *Sniffing* / MITM | Captura o intercepción del tráfico entre dos equipos | UD6 |
+| *Spoofing* (ARP, DNS, IP) | Suplantación de direcciones o nombres | UD6 |
+| Inyección SQL / XSS | Ataques a aplicaciones web por falta de validación | UD7 (WAF) |
+| Escalada de privilegios | Pasar de usuario normal a administrador | UD4 |
+| Ataques a la cadena de suministro | Comprometer un proveedor o una dependencia | UD4 |
 
 ---
 
-### 3.5. Denegación de servicio
+## 8. Autenticación y control de acceso
 
-Un ataque de denegación de servicio busca impedir o dificultar que un servicio pueda ser utilizado. El atacante intenta agotar recursos de un servidor, una aplicación o una conexión de red para que los usuarios legítimos no puedan utilizarlo. En un ataque distribuido, denominado **DDoS**, el tráfico puede proceder de numerosos dispositivos, lo que hace más difícil distinguir las peticiones legítimas de las maliciosas.
-
-El objetivo es consumir recursos como:
-
-* CPU.
-* Memoria.
-* Ancho de banda.
-* Conexiones.
-* Procesos.
-
-Las medidas de protección incluyen filtrado y limitación de tráfico, monitorización, servicios especializados de mitigación, redundancia y distribución de los servicios. Un plan de respuesta debe definir quién recibe las alertas, cómo se escala el incidente y qué proveedores pueden intervenir cuando el ataque supera la capacidad de la infraestructura propia.
-
----
-
-### 3.6. Vulnerabilidades de software
-
-Los programas pueden contener errores de programación, fallos de diseño o dependencias inseguras que permitan realizar acciones no previstas. Una actualización no aplicada, una biblioteca obsoleta o una validación insuficiente de datos pueden exponer aplicaciones, servicios y sistemas operativos. Por ello, la gestión de vulnerabilidades debe formar parte del mantenimiento ordinario y no limitarse a actuar cuando aparece un incidente.
-
-Las vulnerabilidades pueden identificarse mediante identificadores como los **CVE**.
-
-La valoración de una vulnerabilidad puede complementarse mediante sistemas como **CVSS**, que ayuda a estimar su gravedad teniendo en cuenta factores como el acceso necesario, los privilegios requeridos y el impacto sobre confidencialidad, integridad y disponibilidad. El identificador no sustituye el análisis propio: una vulnerabilidad crítica puede tener poca exposición en un sistema aislado, mientras que una de gravedad media puede ser prioritaria en un servicio expuesto a Internet.
-
-Por ello es importante:
-
-1. Mantener actualizado el sistema.
-2. Aplicar parches.
-3. Eliminar software innecesario.
-4. Monitorizar vulnerabilidades.
-5. Revisar configuraciones.
-
-El ciclo de gestión debe incluir inventario de activos y software, consulta de avisos del fabricante, evaluación de la exposición, pruebas antes de desplegar parches críticos y verificación posterior. Cuando no existe parche, se aplican medidas temporales como deshabilitar el servicio afectado, restringir el acceso de red, limitar permisos o aumentar la monitorización.
-
----
-
-## 4. Medidas de protección y políticas
-
-### 4.1. Gestión de usuarios y contraseñas
-
-![Candado digital que representa el control de acceso y la autenticación](images/ud1/secure-access.jpg)
+![Candado digital que representa el control de acceso y la autenticación](/images/ud1/secure-access.jpg)
 
 *Figura 5. Las identidades, contraseñas y factores adicionales de autenticación controlan el acceso.*
 
-Una política de seguridad debe establecer criterios para las cuentas de usuario.
+### 8.1. Identificación, autenticación, autorización y auditoría
 
-Algunas medidas:
+El control de acceso se apoya en cuatro pasos, a veces resumidos como **IAAA**:
 
-* Cada usuario debe tener su propia cuenta.
-* Evitar cuentas compartidas.
-* Aplicar el principio de mínimo privilegio.
-* Utilizar contraseñas robustas.
-* Utilizar MFA cuando sea posible.
-* Bloquear cuentas inactivas.
-* Revisar periódicamente los permisos.
+| Paso | Pregunta | Ejemplo |
+| --- | --- | --- |
+| **Identificación** | ¿Quién dices ser? | Escribo el usuario `ana` |
+| **Autenticación** | ¿Cómo lo demuestras? | Introduzco la contraseña y el código del móvil |
+| **Autorización** | ¿Qué puedes hacer? | Puedo leer `/srv/rrhh` pero no `/srv/direccion` |
+| **Auditoría** (*accounting*) | ¿Qué has hecho? | El sistema registra que abrí `nominas.csv` a las 10:20 |
 
----
+### 8.2. Factores de autenticación
 
-### 4.2. Principio de mínimo privilegio
+| Factor | Basado en | Ejemplos |
+| --- | --- | --- |
+| **Algo que sabes** | Conocimiento | Contraseña, PIN, frase de paso |
+| **Algo que tienes** | Posesión | Móvil con app TOTP, llave FIDO2, tarjeta inteligente, DNIe |
+| **Algo que eres** | Inherencia (biometría) | Huella, rostro, iris, voz |
 
-Cada usuario o proceso debe disponer únicamente de los permisos necesarios para realizar su trabajo.
+La **autenticación multifactor (MFA)** combina al menos **dos factores de tipos distintos**. Usuario + contraseña + PIN **no** es MFA (son dos factores del mismo tipo).
 
-Por ejemplo:
+No todos los segundos factores son igual de robustos:
+
+| Método | Resistencia al *phishing* | Comentario |
+| --- | --- | --- |
+| SMS | Baja | Vulnerable a duplicado de SIM y a *phishing* |
+| Código TOTP (app) | Media | El usuario puede teclearlo en una web falsa |
+| Notificación *push* | Media | Riesgo de «fatiga de MFA» si se aprueba sin mirar |
+| **Llave FIDO2 / *passkey*** | **Alta** | La credencial está ligada al dominio real: no funciona en una web falsa |
+
+### 8.3. Políticas de contraseñas
+
+Las recomendaciones han cambiado mucho en los últimos años. La guía **NIST SP 800-63B** (revisión 4, 2025) y las guías del CCN e INCIBE coinciden en las ideas principales:
+
+| Recomendación actual | Por qué |
+| --- | --- |
+| **Longitud mínima** de 15 caracteres si la contraseña es el único factor (8 si forma parte de un sistema MFA) y permitir al menos 64 | La longitud es lo que más aumenta la resistencia |
+| Permitir **todos los caracteres**, incluidos espacios | Facilita las frases de paso |
+| **No imponer reglas de composición** (obligar a mayúscula + número + símbolo) | Generan patrones previsibles: `Verano2026!` |
+| **No obligar a cambiarla periódicamente**; cambiarla solo si hay indicios de compromiso | Los cambios forzados llevan a `Verano2026!` → `Otoño2026!` |
+| Comparar con **listas de contraseñas filtradas** y comunes | Evita `123456`, `password`, `Admin2026` |
+| **Limitar los intentos** fallidos | Frena la fuerza bruta en línea |
+| Permitir **gestores de contraseñas** y pegar | Fomenta contraseñas largas y únicas |
+| Usar **MFA** siempre que sea posible, y obligatoriamente en cuentas privilegiadas y accesos remotos | Una contraseña robada deja de ser suficiente |
+| Almacenar las contraseñas con un **hash lento y con sal** | Dificulta los ataques *offline* (UD3) |
+
+Ejemplo de **política de contraseñas** para una pyme:
 
 ```text
-Usuario: alumno
-Permisos:
-- Leer documentos de clase
-- Ejecutar aplicaciones
-
-No debería disponer de:
-- Administrar usuarios
-- Modificar configuración del sistema
-- Instalar software sin autorización
+POLÍTICA DE CONTRASEÑAS - Versión 1.0
+1. Cada persona usa una cuenta individual; se prohíben las cuentas compartidas.
+2. Longitud mínima: 12 caracteres para cuentas con MFA y 15 sin MFA.
+3. Se recomiendan frases de paso (p. ej. "tostada-azul-mochila-trueno").
+4. Se rechazan contraseñas presentes en listas de contraseñas filtradas.
+5. La cuenta se bloquea 15 minutos tras 5 intentos fallidos.
+6. MFA obligatorio en correo, VPN y cuentas de administración.
+7. Las contraseñas se cambian solo ante sospecha de compromiso.
+8. Se usará el gestor de contraseñas corporativo (Bitwarden/KeePassXC).
+9. Las cuentas de administración son distintas de las de uso diario.
+10. Las cuentas se deshabilitan el mismo día de la baja del empleado.
 ```
 
-Este principio reduce el impacto de una cuenta comprometida.
+En Linux esta política se implanta con **PAM** (`pam_pwquality`, `pam_faillock`) y con la orden `chage`. Lo veremos en detalle en la UD4; como anticipo:
+
+```bash
+# Ver la caducidad de la contraseña del usuario ana
+sudo chage -l ana
+# Última modificación de contraseña              : oct 06, 2026
+# La contraseña caduca                           : nunca
+# Número máximo de días entre cambio de contraseña : 99999
+
+# Comprobar la calidad de una contraseña (paquete libpwquality-tools / libpwquality)
+echo "Verano2026!" | pwscore
+# Password quality check failed: ... (o una puntuación baja)
+```
+
+### 8.4. Sistemas biométricos
+
+La **biometría** autentica a una persona por sus características físicas (huella, rostro, iris, geometría de la mano, venas) o de comportamiento (voz, forma de teclear, firma manuscrita).
+
+**Funcionamiento**: en el **registro** (*enrolment*) se captura la característica y se guarda una **plantilla** matemática (no la imagen). En cada **verificación** se compara la nueva captura con la plantilla y se calcula una puntuación de similitud. Si supera un **umbral**, se acepta.
+
+Los errores se miden con dos tasas:
+
+| Tasa | Significado | Consecuencia |
+| --- | --- | --- |
+| **FAR** (*False Acceptance Rate*) | Porcentaje de impostores aceptados | Problema de **seguridad** |
+| **FRR** (*False Rejection Rate*) | Porcentaje de usuarios legítimos rechazados | Problema de **comodidad** |
+| **EER** (*Equal Error Rate*) | Punto en que FAR = FRR | Cuanto más bajo, mejor es el sistema |
+
+Si subimos el umbral, baja la FAR pero sube la FRR, y viceversa. Un CPD prioriza una FAR muy baja; un móvil busca un equilibrio.
+
+| Ventajas | Inconvenientes |
+| --- | --- |
+| No se olvida ni se presta | **No se puede cambiar** si se compromete la plantilla |
+| Difícil de transferir a otra persona | Falsos positivos y negativos |
+| Cómoda y rápida | Posibles ataques de suplantación (huellas de silicona, fotos, *deepfakes*); se requiere detección de vida |
+| Buena como segundo factor | Son **datos de categoría especial** según el art. 9 del RGPD: su tratamiento está muy restringido |
+
+> [!IMPORTANT]
+> En el ámbito laboral, la Agencia Española de Protección de Datos considera que el uso de biometría para el control horario es, con carácter general, desproporcionado si existen alternativas menos intrusivas (Guía de la AEPD sobre tratamientos de control de presencia mediante sistemas biométricos, 2023). Antes de implantar biometría hay que hacer un análisis de necesidad y proporcionalidad y una evaluación de impacto (EIPD).
+
+### 8.5. Principio de mínimo privilegio y otros principios de diseño
+
+| Principio | Significado | Ejemplo |
+| --- | --- | --- |
+| **Mínimo privilegio** | Cada usuario o proceso solo tiene los permisos imprescindibles | El servidor web se ejecuta como `www-data`, no como `root` |
+| **Necesidad de saber** | Solo se accede a la información necesaria para el trabajo | Comercial ve sus clientes, no los de toda la empresa |
+| **Segregación de funciones** | Las tareas críticas requieren a más de una persona | Quien crea un proveedor no puede aprobar sus pagos |
+| **Denegación por defecto** | Lo que no está permitido explícitamente, está prohibido | Política `DROP` en el cortafuegos (UD7) |
+| **Seguridad por diseño y por defecto** | La seguridad se incorpora desde el inicio y la configuración inicial es la más segura | Art. 25 del RGPD |
+| **Zero Trust** | No se confía por estar «dentro» de la red; se verifica siempre | Autenticación y autorización en cada acceso (UD6) |
+
+```bash
+# Ejemplo: comprobar con qué usuario se ejecutan los procesos del servidor web
+ps -o user,pid,cmd -C nginx
+# USER       PID CMD
+# root       812 nginx: master process /usr/sbin/nginx
+# www-data   813 nginx: worker process      ← los procesos que atienden peticiones no son root
+```
+
+### 8.6. Políticas de seguridad
+
+Una **política de seguridad** es un documento aprobado por la dirección que establece los objetivos y las normas de seguridad de la organización. Se desarrolla en distintos niveles:
+
+| Nivel | Contenido | Ejemplo |
+| --- | --- | --- |
+| **Política** | Qué se quiere conseguir y por qué. Breve y general | «La información de clientes se protegerá frente a accesos no autorizados» |
+| **Normas** | Reglas obligatorias | «Todos los portátiles estarán cifrados» |
+| **Procedimientos** | Pasos detallados | «Cómo cifrar un portátil con BitLocker» |
+| **Guías / instrucciones técnicas** | Recomendaciones y configuraciones | «Configuración segura de OpenSSH» |
+
+Una política de seguridad típica incluye: uso aceptable de los equipos, contraseñas y MFA, control de acceso, copias de seguridad, actualizaciones, teletrabajo y acceso remoto, uso del correo y de Internet, dispositivos móviles y BYOD, clasificación de la información, gestión de incidentes, y protección de datos.
 
 ---
 
-### 4.3. Políticas de seguridad
+## 9. Gestión de incidentes
 
-Una política de seguridad establece las normas que deben seguir los usuarios y administradores.
-
-Puede incluir:
-
-* Gestión de contraseñas.
-* Uso de dispositivos.
-* Acceso remoto.
-* Copias de seguridad.
-* Actualizaciones.
-* Uso del correo electrónico.
-* Navegación web.
-* Gestión de incidentes.
-* Control de accesos.
-* Protección de datos.
-
-Una política debe ser conocida por los usuarios y revisarse periódicamente.
-
----
-
-## 5. Gestión, respuesta y cumplimiento
-
-### 5.1. Auditorías de seguridad
-
-![Equipo trabajando ante una incidencia de seguridad](images/ud1/incident-response.jpg)
+![Equipo trabajando ante una incidencia de seguridad](/images/ud1/incident-response.jpg)
 
 *Figura 6. Las auditorías, la monitorización y la respuesta documentada permiten mejorar la seguridad de forma continua.*
 
-Una auditoría de seguridad es un proceso sistemático que analiza una infraestructura, sus políticas y sus controles para comprobar su nivel de protección. No busca únicamente fallos técnicos: también revisa si existen procedimientos, si los permisos son adecuados y si se cumplen los requisitos legales y organizativos.
+Un **incidente de seguridad** es un suceso que compromete (o puede comprometer) la confidencialidad, integridad o disponibilidad de la información. Un **evento** es cualquier suceso observable; solo algunos eventos son incidentes.
 
-Puede revisar:
+```text
+Evento:     Un usuario introduce mal su contraseña.             → normal
+Evento:     50 intentos fallidos en 1 minuto desde una IP rusa. → sospechoso (alerta)
+Incidente:  Inicio de sesión correcto tras esos 50 intentos.    → INCIDENTE
+```
 
-* Usuarios.
-* Permisos.
-* Servicios.
-* Puertos.
-* Actualizaciones.
-* Configuración.
-* Vulnerabilidades.
-* Logs.
-* Copias de seguridad.
+### 9.1. Fases de la gestión de un incidente
 
-Herramientas habituales en entornos ASIR incluyen:
+Siguiendo la guía **NIST SP 800-61** y la *Guía nacional de notificación y gestión de ciberincidentes*:
 
-* Lynis.
-* OpenVAS/GVM.
-* Nmap.
-* Wazuh.
-* Herramientas propias del sistema operativo.
+```mermaid
+flowchart LR
+    P[Preparación] --> D[Detección<br/>y análisis]
+    D --> C[Contención]
+    C --> E[Erradicación]
+    E --> R[Recuperación]
+    R --> L[Lecciones<br/>aprendidas]
+    L --> P
+```
 
-El resultado debe ser un informe priorizado que describa el hallazgo, el activo afectado, el riesgo, la evidencia obtenida y una recomendación viable. Por ejemplo, una auditoría puede detectar que un servidor conserva una cuenta administrativa sin uso: la medida adecuada sería validar que no es necesaria, deshabilitarla y comprobar después que el servicio continúa funcionando.
+| Fase | Qué se hace | Ejemplo con un servidor comprometido |
+| --- | --- | --- |
+| **Preparación** | Procedimientos, contactos, herramientas, copias, formación | Hay un plan escrito y copias verificadas |
+| **Detección y análisis** | Identificar el incidente, su alcance y gravedad | Wazuh alerta de un inicio de sesión de `root` desde una IP extranjera |
+| **Contención** | Limitar el daño **sin destruir evidencias** | Aislar el servidor de la red (no apagarlo) |
+| **Erradicación** | Eliminar la causa | Eliminar la puerta trasera, cambiar credenciales, parchear |
+| **Recuperación** | Restaurar el servicio y vigilar | Reinstalar desde una imagen limpia y restaurar datos de la copia |
+| **Lecciones aprendidas** | Revisar qué falló y mejorar | Se implanta MFA en SSH y se cierra el puerto a Internet |
 
-#### 5.1.1. Equipos de ciberseguridad
+Ejemplo de **recogida inicial de información** en un servidor Linux sospechoso, guardando la salida y su hora:
 
-Las auditorías y los ejercicios de seguridad requieren roles definidos y autorización previa. En una organización pueden intervenir los siguientes equipos:
+```bash
+#!/usr/bin/env bash
+# recogida_inicial.sh - Recoge información volátil de un sistema Linux
+# Uso: sudo ./recogida_inicial.sh /ruta/a/soporte_externo
+set -euo pipefail
+DESTINO="${1:?Indica el directorio de destino}"
+SALIDA="$DESTINO/$(hostname)_$(date +%Y%m%d_%H%M%S)"
+mkdir -p "$SALIDA"
+
+date -u                  > "$SALIDA/00_fecha_utc.txt"
+who -a                   > "$SALIDA/01_usuarios_conectados.txt"
+ps auxf                  > "$SALIDA/02_procesos.txt"
+ss -tupan                > "$SALIDA/03_conexiones.txt"
+ip addr; ip route        > "$SALIDA/04_red.txt" 2>&1
+lsmod                    > "$SALIDA/05_modulos.txt"
+last -F                  > "$SALIDA/06_sesiones.txt"
+journalctl --since "-24h" --no-pager > "$SALIDA/07_journal_24h.txt"
+
+# Huella de todo lo recogido para garantizar su integridad
+sha256sum "$SALIDA"/* > "$SALIDA/HASHES.sha256"
+echo "Información guardada en $SALIDA"
+```
+
+- `set -euo pipefail` hace que el script se detenga ante cualquier error, en lugar de continuar con datos incompletos.
+- La información se guarda en un **soporte externo** para no alterar el disco del sistema investigado.
+- Al final se calcula el hash de cada fichero para demostrar después que no se han modificado.
+
+### 9.2. Notificación de incidentes en España
+
+| Organismo | Ámbito |
+| --- | --- |
+| **INCIBE-CERT** | Ciudadanos, empresas y operadores privados. Línea de ayuda **017** |
+| **CCN-CERT** | Sector público y Esquema Nacional de Seguridad |
+| **ESPDEF-CERT** | Ministerio de Defensa |
+| **AEPD** | Brechas de datos personales: notificación **en 72 horas** (art. 33 RGPD) |
+| Policía Nacional / Guardia Civil | Denuncia de delitos informáticos |
+
+---
+
+## 10. Auditoría de seguridad y equipos de ciberseguridad
+
+Una **auditoría de seguridad** es una revisión sistemática e independiente para comprobar si los controles existen, están bien configurados y son eficaces.
+
+| Tipo de auditoría | Qué revisa | Herramientas o técnicas |
+| --- | --- | --- |
+| De cumplimiento | Requisitos legales y normativos (RGPD, ENS, ISO 27001) | Entrevistas, revisión documental |
+| De configuración | *Hardening* de sistemas | Lynis, CIS-CAT, OpenSCAP |
+| De vulnerabilidades | Fallos conocidos en sistemas y servicios | Greenbone/OpenVAS, Nmap |
+| Test de intrusión (*pentesting*) | Explotación controlada de vulnerabilidades | Metasploit, Burp Suite (con autorización) |
+| Forense | Investigación tras un incidente | Autopsy, Volatility |
+
+Ejemplo de **auditoría local** rápida con Lynis (se verá en la UD4):
+
+```bash
+sudo apt install -y lynis       # Debian/Ubuntu
+# sudo dnf install -y lynis     # AlmaLinux/Rocky (repositorio EPEL)
+sudo lynis audit system --quick
+# ...
+#   Hardening index : 62 [############        ]
+#   Tests performed : 268
+```
+
+El resultado de una auditoría es un **informe** que, para cada hallazgo, indica: descripción, activo afectado, evidencia, riesgo y recomendación priorizada.
+
+### 10.1. Equipos de ciberseguridad
 
 | Equipo | Misión | Ejemplo de actividad |
 | --- | --- | --- |
-| Red Team | Simula técnicas de un adversario para comprobar la resistencia de sistemas y procesos. | Ejecutar una prueba autorizada sobre una aplicación de entorno de pruebas e informar de las debilidades encontradas. |
-| Blue Team | Protege, monitoriza, detecta y responde a incidentes. | Analizar alertas de un SIEM, aplicar un parche y mejorar una regla de detección. |
-| Purple Team | Coordina al Red Team y al Blue Team para convertir los hallazgos en mejoras defensivas. | Verificar que una técnica simulada genera una alerta y ajustar la detección si no lo hace. |
-| White Team | Define el alcance, las reglas y la supervisión de un ejercicio. | Establecer qué sistemas pueden analizarse, el horario y los criterios de parada. |
-| Green Team | Implanta y mantiene las mejoras derivadas de los ejercicios. | Aplicar una configuración segura y documentar el cambio. |
+| **Red Team** | Simula a un adversario real para poner a prueba la defensa | Intento autorizado de acceso a la red interna |
+| **Blue Team** | Defiende, monitoriza, detecta y responde | Analiza alertas del SIEM y contiene incidentes |
+| **Purple Team** | Coordina Red y Blue para convertir ataques en mejoras de detección | Comprueba que una técnica simulada genera alerta |
+| **White Team** | Define reglas, alcance y arbitra el ejercicio | Decide qué sistemas pueden atacarse y cuándo parar |
 
-En el aula, cualquier práctica ofensiva debe realizarse solo sobre máquinas virtuales propias o sistemas autorizados. El valor de un ejercicio no está en causar impacto, sino en aprender a detectar, documentar y corregir una debilidad.
+> [!CAUTION]
+> Cualquier prueba ofensiva requiere **autorización previa por escrito** con alcance, fechas y responsables. Sin ella es un delito (art. 197 bis del Código Penal), aunque la intención sea buena.
 
 ---
 
-### 5.2. Gestión de incidentes
+## 11. Introducción al análisis forense
 
-Un incidente de seguridad es un acontecimiento que puede afectar a la confidencialidad, integridad o disponibilidad de un sistema. Puede originarse en un ataque malicioso, un fallo técnico o un error humano. Una respuesta rápida, coordinada y documentada reduce el impacto y permite aprender de lo ocurrido.
+El **análisis forense informático** consiste en identificar, adquirir, preservar, analizar y presentar evidencias digitales de forma que tengan **validez** en un procedimiento interno o judicial.
 
-Ejemplos:
+### 11.1. Principios
 
-* Cuenta comprometida.
-* Infección por malware.
-* Robo de información.
-* Ataque de ransomware.
-* Acceso no autorizado.
-* Caída provocada por un ataque.
+- **No alterar la evidencia original**: se trabaja siempre sobre **copias**.
+- **Cadena de custodia**: documento que registra quién ha tenido la evidencia, cuándo, dónde y para qué.
+- **Integridad demostrable**: se calcula el **hash** del original y de la copia; deben coincidir.
+- **Orden de volatilidad** (RFC 3227): se recoge primero lo que antes desaparece.
 
-Una actuación básica puede dividirse en:
+| Orden | Fuente de evidencia | Volatilidad |
+| :-: | --- | --- |
+| 1 | Registros de CPU, caché | Nanosegundos |
+| 2 | Memoria RAM, tabla de procesos, conexiones de red | Se pierde al apagar |
+| 3 | Ficheros temporales, *swap* | Minutos-horas |
+| 4 | Disco | Persistente |
+| 5 | Logs remotos, copias de seguridad | Persistente |
+| 6 | Soportes de archivo, documentación física | Muy persistente |
 
-```text
-Detección
-   ↓
-Análisis
-   ↓
-Contención
-   ↓
-Erradicación
-   ↓
-Recuperación
-   ↓
-Lecciones aprendidas
+### 11.2. Fases del análisis forense
+
+| Fase | Descripción |
+| --- | --- |
+| 1. **Identificación** | Determinar qué equipos y soportes pueden contener evidencias |
+| 2. **Adquisición / preservación** | Copia bit a bit, cálculo de hashes, bloqueo de escritura, cadena de custodia |
+| 3. **Análisis** | Línea temporal, ficheros borrados, registros, artefactos del navegador, memoria |
+| 4. **Documentación** | Registrar cada acción, herramienta y versión utilizadas |
+| 5. **Presentación** | Informe pericial claro para personas no técnicas |
+
+### 11.3. Ejemplo: adquisición de una imagen de disco
+
+> [!WARNING]
+> Ejemplo para laboratorio: se trabaja sobre un **disco virtual secundario** (`/dev/sdb`) de una máquina virtual. Equivocarse de dispositivo en `dd` puede destruir datos.
+
+```bash
+# 1. Identificar el dispositivo que se va a copiar
+lsblk -o NAME,SIZE,MODEL,SERIAL
+
+# 2. Hash del dispositivo ORIGINAL
+sudo sha256sum /dev/sdb | tee original.sha256
+
+# 3. Copia bit a bit a un fichero de imagen
+sudo dd if=/dev/sdb of=/evidencias/caso01_sdb.img bs=4M conv=noerror,sync status=progress
+
+# 4. Hash de la IMAGEN: debe coincidir con el del original
+sha256sum /evidencias/caso01_sdb.img | tee imagen.sha256
+
+# 5. Analizar la imagen montándola en SOLO LECTURA
+sudo mkdir -p /mnt/caso01
+sudo mount -o ro,loop,noexec,nodev /evidencias/caso01_sdb.img /mnt/caso01
 ```
 
-Durante la detección deben registrarse la fecha, los sistemas afectados, los síntomas observados y las acciones realizadas. La contención busca limitar la propagación sin destruir evidencias; por ejemplo, aislar una estación de trabajo comprometida de la red puede ser preferible a apagarla sin analizar su estado. Tras la recuperación se revisan las causas, los controles fallidos y las mejoras necesarias.
+- `dd` copia bloque a bloque: `if` es el origen (*input file*), `of` el destino (*output file*), `bs=4M` el tamaño de bloque y `conv=noerror,sync` hace que continúe ante sectores defectuosos rellenándolos con ceros.
+- `mount -o ro,loop` monta el fichero de imagen como si fuera un disco, en **solo lectura** (`ro`); `noexec` impide ejecutar programas de la imagen y `nodev` ignora ficheros de dispositivo.
 
-En España, las administraciones públicas cuentan con el apoyo del **CCN-CERT**, mientras que ciudadanos y empresas pueden recurrir a **INCIBE-CERT**. Cuando el incidente supera la capacidad interna de la organización, la notificación debe incluir información verificable y actualizada, evitando compartir datos sensibles por canales no autorizados.
-
----
-
-### 5.3. Introducción al análisis forense
-
-El análisis forense informático busca obtener y analizar evidencias relacionadas con un incidente de forma que puedan ser revisadas y, cuando proceda, tener validez en un procedimiento interno o judicial. La prioridad es no alterar la evidencia original y mantener una cadena de custodia que documente quién accede a cada elemento, cuándo y para qué.
-
-Es importante preservar la información correctamente para evitar alterar las evidencias.
-
-Algunas fuentes de información:
-
-* Discos.
-* Memoria RAM.
-* Logs.
-* Tráfico de red.
-* Registros de aplicaciones.
-* Historiales.
-* Metadatos.
-
-El análisis forense requiere procedimientos rigurosos y documentación de las actuaciones. Sus fases habituales son la adquisición de copias de trabajo, la preservación de los originales, el análisis de registros y artefactos, la documentación de herramientas y resultados, y la presentación de un informe comprensible. Por ejemplo, antes de investigar una posible intrusión en un servidor, se puede crear una copia forense, calcular su hash y analizar la copia, manteniendo el soporte original protegido.
-
-#### 5.3.1. CVE, CVSS y fuentes de información
-
-Una **CVE** (*Common Vulnerabilities and Exposures*) es un identificador público para una vulnerabilidad conocida. Facilita que fabricantes, administradores y equipos de seguridad hablen del mismo problema. La puntuación **CVSS** ayuda a estimar la gravedad técnica en una escala de 0 a 10, pero la prioridad real también depende de la exposición del sistema y de los controles ya existentes.
-
-Por ejemplo, una CVE crítica en un servicio expuesto a Internet debe revisarse con urgencia; la misma vulnerabilidad en una máquina de entorno de pruebas aislada puede tener menor prioridad. Las fuentes habituales para mantenerse informado son la [NVD de NIST](https://nvd.nist.gov/), los avisos de fabricantes, [INCIBE-CERT](https://www.incibe.es/incibe-cert) y [CCN-CERT](https://www.ccn-cert.cni.es/). El procedimiento debe incluir inventario de versiones, evaluación, parche o medida compensatoria y verificación posterior.
+En entornos profesionales se usan bloqueadores de escritura por hardware y herramientas específicas (`dc3dd`, `ewfacquire`, FTK Imager) y normas como **ISO/IEC 27037** o **UNE 71506**.
 
 ---
 
-### 5.4. Cumplimiento, normas y gestión del riesgo
+## 12. Legislación y normativa
 
-El cumplimiento legal forma parte de la seguridad porque obliga a proteger la información, demostrar que se aplican controles adecuados y respetar los derechos de las personas. Cuando una organización trata datos personales debe considerar, entre otras normas, el **RGPD** y la **LOPDGDD**. Los datos personales incluyen identificadores, datos de contacto, localización, información económica o categorías especiales como datos de salud o biométricos.
+El cumplimiento legal forma parte de la seguridad: obliga a proteger la información, a demostrar que se protege y a respetar los derechos de las personas.
 
-El responsable del tratamiento determina para qué y cómo se usan los datos; el encargado los trata por cuenta del responsable. Algunas organizaciones deben designar un delegado de protección de datos (DPO), que asesora y supervisa el cumplimiento. Las medidas técnicas y organizativas, como el control de acceso, el cifrado, las copias de seguridad y los registros, ayudan a aplicar estos principios en la práctica.
+### 12.1. Protección de datos personales: RGPD y LOPDGDD
 
-#### 5.4.1. Marcos de referencia
+- **Reglamento (UE) 2016/679**, Reglamento General de Protección de Datos (**RGPD**). Aplicable desde el 25 de mayo de 2018 en toda la UE.
+- **Ley Orgánica 3/2018**, de Protección de Datos Personales y garantía de los derechos digitales (**LOPDGDD**). Adapta el RGPD a España y añade derechos digitales (desconexión digital, intimidad frente a videovigilancia en el trabajo, etc.).
 
-| Marco | Aplicación principal | Aportación |
+**Dato personal**: cualquier información sobre una persona física identificada o identificable (nombre, DNI, correo, IP, matrícula, imagen, voz…).
+
+**Categorías especiales** (art. 9 RGPD): origen étnico, opiniones políticas, religión, afiliación sindical, datos genéticos, **biométricos**, de salud, vida y orientación sexual. Su tratamiento está prohibido salvo excepciones.
+
+#### Principios del tratamiento (art. 5 RGPD)
+
+| Principio | Significado |
+| --- | --- |
+| Licitud, lealtad y transparencia | Tratar con una base legal e informar al interesado |
+| Limitación de la finalidad | Usar los datos solo para el fin para el que se recogieron |
+| Minimización | Recoger solo los datos necesarios |
+| Exactitud | Mantenerlos actualizados |
+| Limitación del plazo de conservación | No guardarlos más tiempo del necesario |
+| **Integridad y confidencialidad** | **Protegerlos con medidas técnicas y organizativas apropiadas** |
+| Responsabilidad proactiva | Ser capaz de **demostrar** el cumplimiento |
+
+#### Figuras que intervienen
+
+| Figura | Función | Ejemplo |
 | --- | --- | --- |
-| ISO 31000 | Gestión general del riesgo. | Proporciona principios para identificar, valorar, tratar y revisar riesgos. |
-| ISO/IEC 27001 | Sistemas de Gestión de Seguridad de la Información (SGSI). | Define requisitos certificables para organizar la seguridad de la información. |
-| ISO/IEC 27002 | Controles de seguridad. | Ofrece buenas prácticas para seleccionar e implantar controles. |
-| ENS | Administraciones públicas españolas y proveedores afectados. | Establece principios y requisitos de seguridad para sistemas del sector público. |
-| NIST Cybersecurity Framework | Gestión de ciberseguridad. | Organiza el trabajo en identificar, proteger, detectar, responder y recuperar. |
+| **Interesado** | Persona cuyos datos se tratan | Cliente de la tienda |
+| **Responsable del tratamiento** | Decide para qué y cómo se tratan los datos | La tienda en línea |
+| **Encargado del tratamiento** | Trata los datos por cuenta del responsable | Empresa de hosting o de nóminas |
+| **Delegado de Protección de Datos (DPD/DPO)** | Asesora y supervisa el cumplimiento; obligatorio en algunos casos (administraciones, centros educativos, tratamiento a gran escala…) | DPD del centro educativo |
+| **Autoridad de control** | Supervisa y sanciona | **AEPD** (Agencia Española de Protección de Datos) |
 
-La gestión del riesgo es un ciclo continuo: identificar los activos y amenazas, analizar probabilidad e impacto, decidir un tratamiento, implantar controles y revisar los resultados. Un centro educativo, por ejemplo, puede proteger los datos del alumnado mediante cuentas individuales, permisos por rol, MFA para cuentas administrativas, cifrado de portátiles, copias verificadas y un procedimiento de notificación de incidencias.
+Responsable y encargado deben firmar un **contrato de encargo** (art. 28 RGPD).
 
-## 6. Resumen
+#### Derechos de los interesados
 
-La seguridad informática combina personas, procesos y tecnología para proteger los activos de una organización. El análisis de riesgos permite priorizar controles; la auditoría verifica su eficacia; los equipos de seguridad y la gestión de incidentes ayudan a detectar y mejorar; y el cumplimiento normativo garantiza que la protección respete obligaciones legales y derechos de las personas.
+Acceso, rectificación, supresión («derecho al olvido»), oposición, limitación del tratamiento, portabilidad y derecho a no ser objeto de decisiones automatizadas. El responsable debe **responder en el plazo de un mes** (ampliable dos meses en casos complejos) y facilitar el ejercicio de los derechos de forma gratuita.
 
-Los conceptos de activo, amenaza, vulnerabilidad, exploit, riesgo y control servirán de base para el resto del módulo. Una defensa eficaz no se basa en una única herramienta: aplica capas de protección, supervisión constante y mejora continua.
+#### Obligaciones relacionadas con la seguridad
+
+| Obligación | Artículo RGPD |
+| --- | --- |
+| Protección de datos desde el diseño y por defecto | 25 |
+| Registro de actividades de tratamiento | 30 |
+| **Seguridad del tratamiento**: cifrado, seudonimización, capacidad de garantizar C, I, D y resiliencia, restauración rápida, verificación periódica | **32** |
+| **Notificación de brechas** a la AEPD en **72 horas** | **33** |
+| Comunicación de la brecha a los afectados si hay alto riesgo | 34 |
+| Evaluación de impacto (EIPD) para tratamientos de alto riesgo | 35 |
+
+Las sanciones pueden alcanzar **20 millones de euros o el 4 % de la facturación anual global**.
+
+> [!NOTE]
+> El artículo 32 del RGPD es la conexión directa entre la ley y este módulo: cifrado (UD3), copias y restauración (UD2), disponibilidad y resiliencia (UD5), control de acceso (UD4), y verificación periódica de las medidas (auditorías).
+
+### 12.2. Servicios de la sociedad de la información y comercio electrónico: LSSI-CE
+
+La **Ley 34/2002**, de servicios de la sociedad de la información y de comercio electrónico (**LSSI-CE**) regula las actividades económicas por Internet:
+
+- **Información obligatoria** en la web del prestador: denominación, NIF, domicilio, correo, inscripción registral.
+- **Comunicaciones comerciales** (art. 21): prohibido enviar publicidad por correo electrónico o SMS sin consentimiento previo, salvo relación contractual previa; obligación de ofrecer un medio sencillo de baja.
+- ***Cookies*** (art. 22.2): se necesita **consentimiento informado** para instalar *cookies* no técnicas (analíticas, publicitarias).
+- **Contratación electrónica**: validez de los contratos celebrados por vía electrónica e información previa obligatoria.
+- Obligaciones de colaboración de los prestadores de servicios de intermediación.
+
+Relacionadas: la **Ley 6/2020** de servicios electrónicos de confianza y el **Reglamento eIDAS** (UE 910/2014, actualizado por el Reglamento (UE) 2024/1183), que regulan la firma electrónica y los certificados (UD3).
+
+### 12.3. Esquema Nacional de Seguridad (ENS)
+
+El **Real Decreto 311/2022** regula el **ENS**, obligatorio para el sector público y para las empresas que le prestan servicios. Establece:
+
+- **Principios básicos**: seguridad como proceso integral, gestión basada en riesgos, prevención-detección-respuesta-conservación, líneas de defensa, vigilancia continua, reevaluación periódica y diferenciación de responsabilidades.
+- **Dimensiones**: confidencialidad, integridad, trazabilidad, autenticidad y disponibilidad.
+- **Categorías de los sistemas**: **BÁSICA**, **MEDIA** y **ALTA**, que determinan las medidas a aplicar.
+- Medidas en tres marcos: organizativo, operacional y de protección.
+- Las guías **CCN-STIC** del Centro Criptológico Nacional desarrollan su aplicación técnica.
+
+### 12.4. Directiva NIS2
+
+La **Directiva (UE) 2022/2555 (NIS2)** amplía las obligaciones de ciberseguridad a muchos sectores (energía, transporte, salud, agua, infraestructura digital, administración, fabricación, servicios postales, proveedores de servicios gestionados…). Exige:
+
+- Medidas de gestión de riesgos (incluida la seguridad de la cadena de suministro, MFA, cifrado, continuidad de negocio y copias).
+- **Notificación de incidentes significativos**: alerta temprana en **24 horas**, notificación en **72 horas** e informe final en **un mes**.
+- **Responsabilidad de la dirección**, que debe aprobar las medidas y formarse.
+
+En España su transposición se realiza mediante la futura **Ley de Coordinación y Gobernanza de la Ciberseguridad**, cuyo anteproyecto aprobó el Consejo de Ministros en enero de 2025. Consulta el BOE para conocer su estado de tramitación.
+
+### 12.5. Código Penal: delitos informáticos
+
+| Artículo | Delito |
+| --- | --- |
+| 197 | Descubrimiento y revelación de secretos (apoderarse de correos, datos personales) |
+| **197 bis** | **Acceso ilegal** a un sistema vulnerando medidas de seguridad e **interceptación** de transmisiones |
+| 197 ter | Producir, adquirir o facilitar programas o contraseñas para cometer los delitos anteriores |
+| **264** | **Daños informáticos**: borrar, dañar, alterar o hacer inaccesibles datos o programas ajenos |
+| 264 bis | Obstaculizar o interrumpir el funcionamiento de un sistema ajeno (DoS) |
+| 249 | Estafa informática |
+
+### 12.6. Normas de gestión de la seguridad de la información
+
+| Norma / marco | Aplicación | Aportación |
+| --- | --- | --- |
+| **ISO/IEC 27001:2022** | Sistemas de Gestión de Seguridad de la Información (**SGSI**) | Requisitos **certificables** para gestionar la seguridad con un ciclo de mejora continua (PDCA) |
+| **ISO/IEC 27002:2022** | Controles de seguridad | Guía de 93 controles organizados en 4 temas: organizativos, de personas, físicos y tecnológicos |
+| **ISO 22301** | Continuidad de negocio | Requisitos para un sistema de gestión de la continuidad (UD2, UD5) |
+| **ISO 31000** | Gestión del riesgo | Principios y proceso general |
+| **ENS** | Sector público español | Marco obligatorio y certificable |
+| **NIST CSF 2.0** (2024) | Gestión de la ciberseguridad | Seis funciones: **Gobernar, Identificar, Proteger, Detectar, Responder y Recuperar** |
+
+El ciclo **PDCA** (*Plan-Do-Check-Act*) de ISO 27001:
+
+```mermaid
+flowchart LR
+    P[Planificar<br/>análisis de riesgos, políticas] --> D[Hacer<br/>implantar controles]
+    D --> C[Verificar<br/>auditorías, métricas]
+    C --> A[Actuar<br/>corregir y mejorar]
+    A --> P
+```
+
+### 12.7. Ejercicio: caso legal
+
+Una academia de idiomas detecta que un portátil robado contenía, sin cifrar, una hoja de cálculo con nombre, DNI, teléfono y notas de 300 alumnos, algunos menores de edad.
+
+1. ¿Es una brecha de datos personales? ¿Qué principio del RGPD se ha incumplido?
+2. ¿Hay que notificarla? ¿A quién y en qué plazo?
+3. ¿Hay que comunicarla a los afectados?
+4. ¿Qué medida técnica habría evitado gran parte del riesgo?
+
+{{% details "Solución" %}}
+1. Sí, es una brecha de confidencialidad. Se ha incumplido el principio de integridad y confidencialidad (art. 5.1.f) y la obligación de seguridad del art. 32.
+2. Sí, a la AEPD, sin dilación indebida y como máximo en 72 horas desde que se tuvo conocimiento (art. 33).
+3. Probablemente sí: hay datos de menores y DNI, lo que supone un alto riesgo para sus derechos (art. 34). Si los datos hubieran estado cifrados con una clave no comprometida, la comunicación a los afectados podría no ser necesaria (art. 34.3.a).
+4. El cifrado del disco del portátil (BitLocker, LUKS, FileVault). También la minimización (¿era necesario guardar el DNI en ese portátil?).
+{{% /details %}}
 
 ---
 
-## 7. Recursos
+## 13. Buenas prácticas de seguridad
 
-- [Nmap](https://nmap.org/)
-- [Lynis](https://cisofy.com/lynis/)
-- [Wazuh](https://wazuh.com/)
-- [OWASP](https://owasp.org/)
+1. Inventariar los activos: no se puede proteger lo que no se conoce.
+2. Aplicar el **mínimo privilegio** y separar cuentas de uso diario y de administración.
+3. Usar **MFA** en todos los accesos remotos y cuentas privilegiadas.
+4. **Actualizar** sistemas y aplicaciones de forma planificada; priorizar las vulnerabilidades explotadas activamente.
+5. Hacer **copias de seguridad** siguiendo la regla 3-2-1-1-0 y **probar la restauración**.
+6. **Cifrar** portátiles, soportes extraíbles y comunicaciones.
+7. **Registrar** y **monitorizar** la actividad, con relojes sincronizados.
+8. **Formar** periódicamente al personal frente a la ingeniería social.
+9. Tener un **plan de respuesta** a incidentes y probarlo.
+10. Revisar las medidas periódicamente: la seguridad es un proceso continuo.
+
+## 14. Ejercicios de repaso
+
+1. Explica con tus palabras la diferencia entre amenaza, vulnerabilidad, riesgo, ataque e incidente. Pon un ejemplo de cada uno relacionado con un servidor de correo.
+2. Calcula el riesgo (escala 1-3) de cinco amenazas sobre la red de tu casa y propón una salvaguarda para cada una.
+3. Busca en la NVD la CVE-2024-6387. Indica qué software afecta, su puntuación CVSS, qué versiones son vulnerables y cómo comprobarías si tu máquina virtual está afectada.
+4. Analiza la contraseña `empresa2026`: estima su resistencia y redacta una política de contraseñas mejor para esa empresa.
+5. Redacta cinco indicadores que permitan reconocer un correo de *phishing* y explica qué significan `spf=fail` y `dmarc=fail`.
+6. Compara la seguridad de un SMS, una app TOTP y una llave FIDO2 como segundo factor.
+7. Ordena según el orden de volatilidad: disco duro, memoria RAM, copia de seguridad en cinta, conexiones de red activas, *swap*.
+8. ¿Qué diferencia hay entre el responsable y el encargado del tratamiento? Pon un ejemplo de cada uno en un instituto.
+9. ¿Qué tienen en común el art. 32 del RGPD, el ENS y la ISO 27001? ¿En qué se diferencian?
+10. Una empresa quiere controlar el horario de los empleados con huella dactilar. ¿Qué aspectos técnicos y legales le recomendarías valorar?
+
+## 15. Resumen
+
+- La seguridad de la información protege la **confidencialidad**, **integridad** y **disponibilidad**, junto con la **autenticidad**, **trazabilidad** y **no repudio**.
+- El **riesgo** combina la probabilidad de que una **amenaza** explote una **vulnerabilidad** de un **activo** con el **impacto** resultante. Se trata mitigando, transfiriendo, aceptando o evitando.
+- Las vulnerabilidades se clasifican por **tipología** y **origen**, y se identifican con **CVE** y se valoran con **CVSS**.
+- La seguridad **física** y **lógica**, y la **activa** y **pasiva**, se combinan en una **defensa en profundidad**.
+- El factor humano es clave: **ingeniería social** y **contraseñas** débiles están detrás de la mayoría de incidentes. La **MFA** y la **formación** son esenciales.
+- Ante un incidente se sigue un proceso ordenado y, si hay que investigar, se aplican los principios del **análisis forense**.
+- La **legislación** (RGPD, LOPDGDD, LSSI-CE, ENS, NIS2, Código Penal) y las **normas** (ISO 27001/27002, NIST CSF) marcan qué hay que proteger y cómo demostrarlo.
+
+## 16. Referencias y documentación oficial
+
+- [Real Decreto 1629/2009, título de Técnico Superior en ASIR (BOE)](https://www.boe.es/buscar/act.php?id=BOE-A-2009-18355)
+- [Reglamento (UE) 2016/679 (RGPD)](https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32016R0679)
+- [Ley Orgánica 3/2018 (LOPDGDD)](https://www.boe.es/buscar/act.php?id=BOE-A-2018-16673)
+- [Ley 34/2002 (LSSI-CE)](https://www.boe.es/buscar/act.php?id=BOE-A-2002-13758)
+- [Real Decreto 311/2022 (ENS)](https://www.boe.es/buscar/act.php?id=BOE-A-2022-7191)
+- [Directiva (UE) 2022/2555 (NIS2)](https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32022L2555)
+- [Agencia Española de Protección de Datos](https://www.aepd.es/)
+- [INCIBE](https://www.incibe.es/) · [INCIBE-CERT](https://www.incibe.es/incibe-cert) · [CCN-CERT](https://www.ccn-cert.cni.es/)
+- [MAGERIT v3 (PAe)](https://administracionelectronica.gob.es/pae_Home/pae_Documentacion/pae_Metodolog/pae_Magerit.html)
+- [NIST Cybersecurity Framework 2.0](https://www.nist.gov/cyberframework)
+- [NIST SP 800-63B: Digital Identity Guidelines](https://pages.nist.gov/800-63-4/sp800-63b.html)
+- [NIST SP 800-61: Incident Handling Guide](https://csrc.nist.gov/pubs/sp/800/61/r3/final)
+- [RFC 3227: Guidelines for Evidence Collection and Archiving](https://www.rfc-editor.org/rfc/rfc3227)
+- [National Vulnerability Database (NVD)](https://nvd.nist.gov/) · [CVE](https://www.cve.org/) · [CWE](https://cwe.mitre.org/) · [FIRST CVSS v4.0](https://www.first.org/cvss/v4-0/)
+- [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
 - [MITRE ATT&CK](https://attack.mitre.org/)
-- [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
-- [INCIBE](https://www.incibe.es/)
-- [Material de apoyo: vulnerabilidades y amenazas](https://fperezies.github.io/seguridad/UD1/slides/2.amenazas.html)
-- [Guías para empresas de INCIBE](https://www.incibe.es/empresas/guias)
-- [Guías CCN-STIC](https://www.ccn-cert.cni.es/es/guias.html)
-
----
-
-## 8. Relación con los resultados de aprendizaje
-
-Esta unidad contribuye principalmente al:
-
-**RA1. Adopta prácticas seguras de utilización y trabajo con sistemas informáticos, reconociendo las vulnerabilidades y las necesidades de aseguramiento de los sistemas.**
-
-También introduce contenidos relacionados con:
-
-**RA7. Reconoce la legislación y normativa sobre seguridad y protección de datos.**
