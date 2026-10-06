@@ -1,6 +1,6 @@
 ---
 title: "UD4. Fortificación de hosts (hardening)"
-weight: 4
+weight: 3
 bookCollapseSection: true
 ---
 
