@@ -4,7 +4,7 @@ weight: 1
 bookToc: true
 ---
 
-# UD4 · Fortificación de sistemas (*hardening*) y seguridad activa en el host
+# UD04 · Fortificación de sistemas (*hardening*) y seguridad activa en el host
 
 ## Resumen del tema
 
@@ -17,7 +17,7 @@ En esta unidad aprendes a hacerlo sobre un servidor Linux (Debian 13 «trixie» 
 Primero se entiende **qué amenaza** al sistema y cómo es un ataque por dentro (*Cyber Kill Chain*, MITRE ATT&CK); después se controla **quién entra** (autenticación, MFA, permisos, `sudo`), se **reduce lo expuesto** (arranque, servicios, cortafuegos, SSH, actualizaciones), se **confina y vigila** lo que queda (SELinux/AppArmor, antimalware, integridad, auditoría) y, si algo falla, se **responde** con método (análisis forense). Todo se mide: antes y después de cada cambio, con herramientas como Lynis u OpenSCAP.
 
 > [!NOTE]
-> Esta unidad es la primera del bloque de **seguridad activa** y es la más extensa del módulo (22 h). En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) aplicarás todo a `srv-gestion`, el servidor con los historiales clínicos (datos de salud, categoría especial del RGPD). Lo que fortificas aquí se vigila en la [UD5](/ud05-seguridad-redes/ud05-teoria/), se protege con el perímetro de la UD6 y se hace redundante en la UD7.
+> Esta unidad es la primera del bloque de **seguridad activa** y es la más extensa del módulo (22 h). En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) aplicarás todo a `srv-gestion`, el servidor con los historiales clínicos (datos de salud, categoría especial del RGPD). Lo que fortificas aquí se complementa con la [seguridad en redes (UD5)](/ud05-seguridad-redes/ud05-teoria/), el perímetro (UD6) y la alta disponibilidad (UD7).
 
 {{< ra "RA1:c,e,f,i" "RA2:a,b,c,d,e,h" "RA7:b" >}}
 
@@ -26,7 +26,7 @@ Primero se entiende **qué amenaza** al sistema y cómo es un ataque por dentro 
 | Bloque | Horas |
 |---|--:|
 | Teoría (este documento) | 8 h |
-| [Prácticas](/ud04-fortificacion-hosts/ud04-practicas/) (diez prácticas y la Tarea del proyecto) | 12 h |
+| [Prácticas](/ud04/ud04-practicas/) (diez prácticas y la Tarea del proyecto, hito de la [INT-2](/guia/practicas-integradoras/)) | 12 h |
 | Evaluación (prueba teórico-práctica y entrega del informe de bastionado) | 2 h |
 | **Total** | **22 h** |
 
@@ -354,6 +354,10 @@ POLÍTICA DE CONTRASEÑAS - Versión 1.0
 
 > [!NOTE]
 > Los sistemas operativos no aplican «las recomendaciones del NIST» por sí solos: hay que traducir cada punto a una configuración concreta (PAM en Linux, directivas de cuenta en Windows). Eso es lo que haces en el apartado 3.6.
+
+#### Explora: cuánto tarda en romperse una contraseña
+
+{{< explora "contrasena" >}}
 
 ### 3.4 Autenticación multifactor (MFA)
 
@@ -1281,7 +1285,7 @@ KbdInteractiveAuthentication yes
 AuthenticationMethods publickey,keyboard-interactive
 ```
 
-La coma significa «**y**»: hay que superar ambos métodos en ese orden (un espacio significaría «o»). El procedimiento completo, con comprobaciones y vuelta atrás, está en la [práctica 4.2](/ud04-fortificacion-hosts/ud04-practicas/#práctica-42--ssh-con-clave-ed25519-y-segundo-factor-totp).
+La coma significa «**y**»: hay que superar ambos métodos en ese orden (un espacio significaría «o»). El procedimiento completo, con comprobaciones y vuelta atrás, está en la [práctica 4.2](/ud04/ud04-practicas/#práctica-42--ssh-con-clave-ed25519-y-segundo-factor-totp).
 
 > [!IMPORTANT]
 > Un TOTP depende de la hora: comprueba con `timedatectl` que el reloj del servidor está sincronizado. Y guarda los **códigos de emergencia** que genera `google-authenticator`: si pierdes el móvil, son tu única vía de entrada además de la consola de la máquina.
@@ -1679,7 +1683,7 @@ sudo mount -o ro,loop,noexec,nodev /evidencias/caso01_sdb.img /mnt/caso01
 - `dd` copia bloque a bloque: `if` es el origen (*input file*), `of` el destino (*output file*), `bs=4M` el tamaño de bloque y `conv=noerror,sync` hace que continúe ante sectores defectuosos rellenándolos con ceros.
 - `mount -o ro,loop` monta el fichero de imagen como si fuera un disco, en **solo lectura** (`ro`); `noexec` impide ejecutar programas de la imagen y `nodev` ignora ficheros de dispositivo.
 
-La práctica guiada ([4.9](/ud04-fortificacion-hosts/ud04-practicas/#práctica-49--adquisición-forense-con-verificación-hash-y-análisis-con-autopsy)) repite este procedimiento sobre una «memoria USB» simulada, recupera un fichero borrado y abre la imagen en Autopsy.
+La práctica guiada ([4.9](/ud04/ud04-practicas/#práctica-49--adquisición-forense-con-verificación-hash-y-análisis-con-autopsy)) repite este procedimiento sobre una «memoria USB» simulada, recupera un fichero borrado y abre la imagen en Autopsy.
 
 ---
 
@@ -1718,12 +1722,6 @@ Método de diagnóstico en tres pasos cuando algo deja de funcionar tras endurec
 - **Repite la auditoría** (Lynis, OpenSCAP) tras los cambios y de forma periódica.
 - **Pruebas solo en el laboratorio**: escaneos, ataques de contraseñas y *malware* de prueba, únicamente sobre tus máquinas y con intentos mínimos.
 - **Preserva antes de limpiar**: ante un incidente, copia y calcula el *hash* de las evidencias antes de reinstalar o borrar nada.
-
----
-
-## Explora: cuánto tarda en romperse una contraseña
-
-{{< explora "contrasena" >}}
 
 ---
 
@@ -1786,7 +1784,7 @@ Aplica primero lo que **más reduce el riesgo con menos probabilidad de dejarte 
 | 8 | `lynis audit system` («después») y `nmap` («después») | Comparación del índice y de los puertos | — |
 {{% /details %}}
 
-La Tarea del proyecto de esta unidad ([Bastionado de `srv-gestion`](/ud04-fortificacion-hosts/ud04-practicas/#proyecto-mediterránea-dental--ud4-bastionado-de-srv-gestion)) es la versión evaluable de este supuesto.
+La Tarea del proyecto de esta unidad ([Bastionado de `srv-gestion`](/ud04/ud04-practicas/#proyecto-mediterránea-dental--ud4-bastionado-de-srv-gestion)) es la versión evaluable de este supuesto.
 
 ---
 

@@ -18,7 +18,7 @@ Cada vez que entras en la web de tu banco, te conectas por SSH a un servidor, pr
 | Que el autor **no pueda negar** lo que firmó (no repudio) | **Firma digital** | Presentar impuestos con certificado |
 | **Acordar** una clave secreta por una red insegura | **Intercambio de claves** (Diffie-Hellman) | El inicio de una conexión HTTPS |
 
-Esta unidad conecta con todas las demás: las copias cifradas ([UD2](/ud02-seguridad-pasiva/)), el cifrado de disco y SSH ([UD4](/ud04-fortificacion-hosts/)), las VPN y los certificados de cliente ([UD6](/ud06-seguridad-perimetral/)) y el *proxy* inverso con TLS ([UD7](/ud07-alta-disponibilidad/)).
+Esta unidad conecta con todas las demás: las copias cifradas ([UD2](/ud02-seguridad-pasiva/)), el cifrado de disco y SSH ([UD4](/UD04/)), las VPN y los certificados de cliente ([UD6](/ud06-seguridad-perimetral/)) y el *proxy* inverso con TLS ([UD7](/ud07-alta-disponibilidad/)).
 
 {{< ra "RA1:g" "RA2:f" "RA3:c" >}}
 
@@ -493,7 +493,7 @@ En Windows, PowerShell incluye `Get-FileHash .\fichero.iso -Algorithm SHA256`.
 | Uso | Ejemplo |
 |---|---|
 | **Verificar la integridad** de descargas | Comparar el *hash* de una ISO con el publicado |
-| Detectar cambios en ficheros | Línea base de integridad (AIDE, Wazuh) en la [UD4](/ud04-fortificacion-hosts/) |
+| Detectar cambios en ficheros | Línea base de integridad (AIDE, Wazuh) en la [UD4](/UD04/) |
 | **Almacenar contraseñas** | `/etc/shadow` (con sal y algoritmo lento; apartado 4.5) |
 | **Firma digital** | Se firma el *hash* del documento, no el documento entero |
 | Cadena de custodia forense | *Hash* de una evidencia ([UD1](/ud01-seguridad-informatica/)) |
@@ -530,7 +530,7 @@ Un servidor debe comprobar contraseñas **sin guardarlas en claro**: si se roba 
 | **Vulnerabilidad** | Las contraseñas se guardan en claro, con cifrado reversible o con un *hash* rápido y sin sal |
 | **Ataque** | Fuerza bruta o diccionario con GPU: miles de millones de intentos por segundo contra un SHA-256 simple; tablas *rainbow* precalculadas si no hay sal |
 | **Detección** | Auditoría de robustez de las contraseñas propias en laboratorio (práctica 3.4); alertas ante accesos anómalos |
-| **Mitigación** | *Hash* **lento y con sal** (yescrypt, Argon2id), contraseñas largas, segundo factor ([UD4](/ud04-fortificacion-hosts/)) |
+| **Mitigación** | *Hash* **lento y con sal** (yescrypt, Argon2id), contraseñas largas, segundo factor ([UD4](/UD04/)) |
 | **Comprobación** | Medir el coste por intento y comprobar que dos contraseñas iguales dan *hashes* distintos |
 
 | Método | ¿Seguro? | Problema |
@@ -562,7 +562,7 @@ fperez:$y$j9T$Fq1HcMv0...$Vb9w0Tz...:20367:0:99999:7:::
 | `$1$` | MD5-crypt (**obsoleto**) |
 | `!` o `*` al principio del campo | Cuenta bloqueada o sin contraseña utilizable |
 
-Los campos numéricos posteriores indican la fecha del último cambio y la política de caducidad (orden `chage`). La política de contraseñas (longitud frente a complejidad forzada, NIST SP 800-63B) se trata en la [UD4](/ud04-fortificacion-hosts/).
+Los campos numéricos posteriores indican la fecha del último cambio y la política de caducidad (orden `chage`). La política de contraseñas (longitud frente a complejidad forzada, NIST SP 800-63B) se trata en la [UD4](/UD04/).
 
 > [!WARNING]
 > **Guardar contraseñas con MD5 o SHA-256 simples es un error grave**, y desarrollar tu propio sistema de contraseñas también. Usa las bibliotecas del sistema o del *framework* con yescrypt, Argon2id o bcrypt.
@@ -877,7 +877,7 @@ Buenas prácticas de un servidor HTTPS:
 
 ### 7.4 Otros protocolos seguros y sus equivalentes inseguros
 
-RA3.c pide identificar los protocolos seguros y sus ámbitos de uso. Estos protocolos se configuran en la [UD4](/ud04-fortificacion-hosts/) (SSH) y la [UD6](/ud06-seguridad-perimetral/) (acceso remoto y VPN).
+RA3.c pide identificar los protocolos seguros y sus ámbitos de uso. Estos protocolos se configuran en la [UD4](/UD04/) (SSH) y la [UD6](/ud06-seguridad-perimetral/) (acceso remoto y VPN).
 
 | Inseguro (texto en claro) | Seguro | Ámbito | Puerto seguro |
 |---|---|---|---|
@@ -970,12 +970,12 @@ En la [práctica 3.9](/ud03-criptografia/ud03-practicas/#práctica-39--cifrado-d
 
 | Aplicación | Tecnología | Unidad |
 |---|---|---|
-| Cifrado de volúmenes | LUKS2, BitLocker | UD3 y [UD4](/ud04-fortificacion-hosts/) |
-| Acceso remoto | SSH con claves Ed25519 | [UD4](/ud04-fortificacion-hosts/), [UD6](/ud06-seguridad-perimetral/) |
+| Cifrado de volúmenes | LUKS2, BitLocker | UD3 y [UD4](/UD04/) |
+| Acceso remoto | SSH con claves Ed25519 | [UD4](/UD04/), [UD6](/ud06-seguridad-perimetral/) |
 | Redes privadas virtuales | WireGuard, IPsec, OpenVPN | [UD6](/ud06-seguridad-perimetral/) |
 | Copias de seguridad | `restic`, BorgBackup (AES-256, cifradas por defecto) | [UD2](/ud02-seguridad-pasiva/) |
-| Paquetes de software | Firmas de repositorios `apt`/`dnf` | [UD4](/ud04-fortificacion-hosts/) |
-| Arranque | UEFI *Secure Boot* | [UD4](/ud04-fortificacion-hosts/) |
+| Paquetes de software | Firmas de repositorios `apt`/`dnf` | [UD4](/UD04/) |
+| Arranque | UEFI *Secure Boot* | [UD4](/UD04/) |
 | Servicios web y balanceadores | TLS en Nginx, HAProxy | UD3, [UD7](/ud07-alta-disponibilidad/) |
 
 ### 8.4 Gestión de claves

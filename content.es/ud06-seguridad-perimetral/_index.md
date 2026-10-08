@@ -15,6 +15,6 @@ La red de una organización ya no termina en las paredes de la oficina: la web s
 | [Prácticas](/ud06-seguridad-perimetral/ud06-practicas/) | Diez prácticas guiadas, autónomas y de reto (diseño de zonas, cortafuegos con `nftables`, OPNsense, diagnóstico, Squid, proxy inverso, WireGuard, SSH avanzado, FreeRADIUS y comprobación con Nmap) y la Tarea del proyecto «Perímetro de Mediterránea Dental» con rúbrica |
 
 > [!NOTE]
-> Esta unidad se apoya en las anteriores: el cifrado y los certificados de la [UD3](/ud03-criptografia/ud03-teoria/), el bastionado de la [UD4](/ud04-fortificacion-hosts/ud04-teoria/) y la segmentación y la detección de la [UD5](/ud05-seguridad-redes/ud05-teoria/). La redundancia del propio cortafuegos se desarrolla en la [UD7](/ud07-alta-disponibilidad/ud07-teoria/).
+> Esta unidad se apoya en las anteriores: el cifrado y los certificados de la [UD3](/ud03-criptografia/ud03-teoria/), el bastionado de la [UD4](/ud04/ud04-teoria/) y la segmentación y la detección de la [UD5](/ud05-seguridad-redes/ud05-teoria/). La redundancia del propio cortafuegos se desarrolla en la [UD7](/ud07-alta-disponibilidad/ud07-teoria/).
 
 **Duración:** 25 horas (9 h teoría · 14 h prácticas · 2 h evaluación)

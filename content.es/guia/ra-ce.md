@@ -35,26 +35,26 @@ flowchart LR
 |---|---|---|
 | RA1.a | Se ha valorado la importancia de asegurar la privacidad, coherencia y disponibilidad de la información en los sistemas informáticos. | [UD1](/ud01-seguridad-informatica/), [UD2](/ud02-seguridad-pasiva/) ○ |
 | RA1.b | Se han descrito las diferencias entre seguridad física y lógica. | [UD1](/ud01-seguridad-informatica/), [UD2](/ud02-seguridad-pasiva/) |
-| RA1.c | Se han clasificado las principales vulnerabilidades de un sistema informático, según su tipología y origen. | [UD1](/ud01-seguridad-informatica/), [UD4](/ud04-fortificacion-hosts/) ○ |
+| RA1.c | Se han clasificado las principales vulnerabilidades de un sistema informático, según su tipología y origen. | [UD1](/ud01-seguridad-informatica/), [UD4](/ud04/) ○ |
 | RA1.d | Se ha contrastado la incidencia de las técnicas de ingeniería social en los fraudes informáticos. | [UD1](/ud01-seguridad-informatica/) |
-| RA1.e | Se han adoptado políticas de contraseñas. | [UD4](/ud04-fortificacion-hosts/) |
-| RA1.f | Se han valorado las ventajas que supone la utilización de sistemas biométricos. | [UD4](/ud04-fortificacion-hosts/) |
+| RA1.e | Se han adoptado políticas de contraseñas. | [UD4](/ud04/) |
+| RA1.f | Se han valorado las ventajas que supone la utilización de sistemas biométricos. | [UD4](/ud04/) |
 | RA1.g | Se han aplicado técnicas criptográficas en el almacenamiento y transmisión de la información. | [UD3](/ud03-criptografia/) |
 | RA1.h | Se ha reconocido la necesidad de establecer un plan integral de protección perimetral, especialmente en sistemas conectados a redes públicas. | [UD1](/ud01-seguridad-informatica/) ○, [UD6](/ud06-seguridad-perimetral/) |
-| RA1.i | Se han identificado las fases del análisis forense ante ataques a un sistema. | [UD4](/ud04-fortificacion-hosts/) |
+| RA1.i | Se han identificado las fases del análisis forense ante ataques a un sistema. | [UD4](/ud04/) |
 
 ## RA2. Implanta mecanismos de seguridad activa, seleccionando y ejecutando contramedidas ante amenazas o ataques al sistema.
 
 | CE | Criterio de evaluación | Unidades |
 |---|---|---|
-| RA2.a | Se han clasificado los principales tipos de amenazas lógicas contra un sistema informático. | [UD4](/ud04-fortificacion-hosts/), [UD5](/ud05-seguridad-redes/) ○ |
-| RA2.b | Se ha verificado el origen y la autenticidad de las aplicaciones instaladas en un equipo, así como el estado de actualización del sistema operativo. | [UD4](/ud04-fortificacion-hosts/) |
-| RA2.c | Se han identificado la anatomía de los ataques más habituales, así como las medidas preventivas y paliativas disponibles. | [UD4](/ud04-fortificacion-hosts/), [UD5](/ud05-seguridad-redes/) |
-| RA2.d | Se han analizado diversos tipos de amenazas, ataques y software malicioso, en entornos de ejecución controlados. | [UD4](/ud04-fortificacion-hosts/), [UD5](/ud05-seguridad-redes/) |
-| RA2.e | Se han implantado aplicaciones específicas para la detección de amenazas y la eliminación de software malicioso. | [UD4](/ud04-fortificacion-hosts/) |
+| RA2.a | Se han clasificado los principales tipos de amenazas lógicas contra un sistema informático. | [UD4](/ud04/), [UD5](/ud05-seguridad-redes/) ○ |
+| RA2.b | Se ha verificado el origen y la autenticidad de las aplicaciones instaladas en un equipo, así como el estado de actualización del sistema operativo. | [UD4](/ud04/) |
+| RA2.c | Se han identificado la anatomía de los ataques más habituales, así como las medidas preventivas y paliativas disponibles. | [UD4](/ud04/), [UD5](/ud05-seguridad-redes/) |
+| RA2.d | Se han analizado diversos tipos de amenazas, ataques y software malicioso, en entornos de ejecución controlados. | [UD4](/ud04/), [UD5](/ud05-seguridad-redes/) |
+| RA2.e | Se han implantado aplicaciones específicas para la detección de amenazas y la eliminación de software malicioso. | [UD4](/ud04/) |
 | RA2.f | Se han utilizado técnicas de cifrado, firmas y certificados digitales en un entorno de trabajo basado en el uso de redes públicas. | [UD3](/ud03-criptografia/) |
 | RA2.g | Se han evaluado las medidas de seguridad de los protocolos usados en redes inalámbricas. | [UD5](/ud05-seguridad-redes/) |
-| RA2.h | Se ha reconocido la necesidad de inventariar y controlar los servicios de red que se ejecutan en un sistema. | [UD4](/ud04-fortificacion-hosts/) ○, [UD5](/ud05-seguridad-redes/) |
+| RA2.h | Se ha reconocido la necesidad de inventariar y controlar los servicios de red que se ejecutan en un sistema. | [UD4](/ud04/) ○, [UD5](/ud05-seguridad-redes/) |
 | RA2.i | Se han descrito los tipos y características de los sistemas de detección de intrusiones. | [UD5](/ud05-seguridad-redes/) |
 
 ## RA3. Implanta técnicas seguras de acceso remoto a un sistema informático, interpretando y aplicando el plan de seguridad.
@@ -115,9 +115,9 @@ flowchart LR
 | CE | Criterio de evaluación | Unidades |
 |---|---|---|
 | RA7.a | Se ha descrito la legislación sobre protección de datos de carácter personal. | [UD1](/ud01-seguridad-informatica/) |
-| RA7.b | Se ha determinado la necesidad de controlar el acceso a la información personal almacenada. | [UD1](/ud01-seguridad-informatica/), [UD4](/ud04-fortificacion-hosts/) ○ |
+| RA7.b | Se ha determinado la necesidad de controlar el acceso a la información personal almacenada. | [UD1](/ud01-seguridad-informatica/), [UD4](/ud04/) ○ |
 | RA7.c | Se han identificado las figuras legales que intervienen en el tratamiento y mantenimiento de los ficheros de datos. | [UD1](/ud01-seguridad-informatica/) |
 | RA7.d | Se ha contrastado el deber de poner a disposición de las personas los datos personales que les conciernen. | [UD1](/ud01-seguridad-informatica/) |
 | RA7.e | Se ha descrito la legislación actual sobre los servicios de la sociedad de la información y comercio electrónico. | [UD1](/ud01-seguridad-informatica/) |
 | RA7.f | Se han contrastado las normas sobre gestión de seguridad de la información. | [UD1](/ud01-seguridad-informatica/) |
-| RA7.g | Se ha comprendido la necesidad de conocer y respetar la normativa legal aplicable. | [UD1](/ud01-seguridad-informatica/), [UD2](/ud02-seguridad-pasiva/) ○, [UD3](/ud03-criptografia/) ○, [UD4](/ud04-fortificacion-hosts/) ○, [UD5](/ud05-seguridad-redes/) ○, [UD6](/ud06-seguridad-perimetral/) ○, [UD7](/ud07-alta-disponibilidad/) ○ |
+| RA7.g | Se ha comprendido la necesidad de conocer y respetar la normativa legal aplicable. | [UD1](/ud01-seguridad-informatica/), [UD2](/ud02-seguridad-pasiva/) ○, [UD3](/ud03-criptografia/) ○, [UD4](/ud04/) ○, [UD5](/ud05-seguridad-redes/) ○, [UD6](/ud06-seguridad-perimetral/) ○, [UD7](/ud07-alta-disponibilidad/) ○ |

@@ -124,7 +124,7 @@ Las dos son **complementarias**: sin seguridad física, la lógica se puede esqu
 | Arrancar el equipo con un USB ajeno | Sala cerrada, candado en el chasis | Contraseña de UEFI, orden de arranque fijo, *Secure Boot* |
 | Extraer el disco y leerlo en otro equipo | Armario con llave, inventario de soportes | **Cifrado de disco** con LUKS ([UD3](/ud03-criptografia/ud03-teoria/)) |
 | Robo de un portátil | Candado Kensington, política de no dejarlo en el coche | Cifrado completo del disco, borrado remoto |
-| Conectar un dispositivo USB malicioso | Tapones o bloqueo de puertos | Políticas de dispositivos extraíbles ([UD4](/ud04-fortificacion-hosts/ud04-teoria/)) |
+| Conectar un dispositivo USB malicioso | Tapones o bloqueo de puertos | Políticas de dispositivos extraíbles ([UD4](/ud04/ud04-teoria/)) |
 
 > [!NOTE]
 > **Dónde encaja cada medida de esta unidad.** Físicas: CPD, climatización, extinción, SAI, fuentes redundantes, armarios para copias. Lógicas: RAID por software, LVM, `restic`, políticas de copia, borrado criptográfico. Algunas son **mixtas**: el RAID por *hardware* es físico (controladora) y el RAID por *software* es lógico, pero ambos persiguen lo mismo, la disponibilidad.
@@ -1378,7 +1378,7 @@ Un plan de contingencia concreto, para el escenario más frecuente, sigue estos 
 |---|---|---|
 | 1. **Aislar** | Desconectar de la red los equipos afectados (sin apagarlos si se quiere conservar evidencias en memoria) y parar los trabajos de copia | Evita que el cifrado se propague y que las copias buenas se sustituyan por datos cifrados |
 | 2. **Evaluar** | Determinar el alcance (qué equipos y ficheros) y la hora del inicio | Fija el último punto bueno para restaurar |
-| 3. **Preservar** | Guardar notas de rescate, muestras y registros para el análisis forense ([UD4](/ud04-fortificacion-hosts/ud04-teoria/)) | Se necesitan para entender la causa y para posibles denuncias |
+| 3. **Preservar** | Guardar notas de rescate, muestras y registros para el análisis forense ([UD4](/ud04/ud04-teoria/)) | Se necesitan para entender la causa y para posibles denuncias |
 | 4. **Erradicar** | Reinstalar o limpiar los equipos y cambiar **todas** las credenciales | Si se restaura sobre un sistema aún comprometido, el ataque se repite |
 | 5. **Restaurar** | Desde la **última copia anterior al ataque**, en un entorno limpio y verificando antes de poner en producción | Es el momento en que se cumple (o no) el RTO |
 | 6. **Notificar** | Si hay datos personales afectados con riesgo para las personas, notificar a la **AEPD** en un máximo de **72 horas** (art. 33 del RGPD); denunciar; consultar a **INCIBE-CERT** (línea 017) | Obligación legal y apoyo técnico |
@@ -1434,7 +1434,7 @@ sudo cryptsetup erase /dev/sdX
 > [!CAUTION]
 > Estos comandos son **irreversibles**. En el laboratorio se practican solo sobre ficheros de imagen o discos virtuales dedicados. Comprueba siempre el dispositivo con `lsblk` antes de ejecutarlos.
 
-`shred` sobre **ficheros** individuales no es fiable en sistemas de ficheros con *journaling*, copia en escritura (Btrfs, ZFS) o en SSD. La mejor estrategia para soportes que contienen información sensible es **cifrarlos desde el principio** ([UD3](/ud03-criptografia/ud03-teoria/) y [UD4](/ud04-fortificacion-hosts/ud04-teoria/)): así, al final de su vida, basta con destruir la clave.
+`shred` sobre **ficheros** individuales no es fiable en sistemas de ficheros con *journaling*, copia en escritura (Btrfs, ZFS) o en SSD. La mejor estrategia para soportes que contienen información sensible es **cifrarlos desde el principio** ([UD3](/ud03-criptografia/ud03-teoria/) y [UD4](/ud04/ud04-teoria/)): así, al final de su vida, basta con destruir la clave.
 
 En una organización, la **retirada de equipos** debe seguir un procedimiento documentado: inventario, borrado o destrucción según la clasificación de la información, **certificado de destrucción** del proveedor (norma UNE-EN 15713 para la destrucción de material confidencial) y actualización del inventario. El RGPD obliga a poder acreditar que los datos personales se eliminaron de forma segura.
 

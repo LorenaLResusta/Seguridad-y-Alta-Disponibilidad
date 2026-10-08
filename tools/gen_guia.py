@@ -14,7 +14,7 @@ R = pathlib.Path(__file__).resolve().parents[1]
 cur = yaml.safe_load(open(R / "data/curriculo.yaml", encoding="utf8"))
 mat = json.load(open(R / "tools/matriz_ra_ce.json", encoding="utf8"))
 SLUG = {"UD1": "ud01-seguridad-informatica", "UD2": "ud02-seguridad-pasiva", "UD3": "ud03-criptografia",
-        "UD4": "ud04-fortificacion-hosts", "UD5": "ud05-seguridad-redes", "UD6": "ud06-seguridad-perimetral",
+        "UD4": "ud04", "UD5": "ud05-seguridad-redes", "UD6": "ud06-seguridad-perimetral",
         "UD7": "ud07-alta-disponibilidad"}
 UDS = [u[0] for u in cal.UNIDADES]
 DIAS = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]

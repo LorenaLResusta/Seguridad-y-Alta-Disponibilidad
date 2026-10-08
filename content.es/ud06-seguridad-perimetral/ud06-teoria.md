@@ -86,7 +86,7 @@ Proteger el perímetro no es instalar «un cortafuegos». Un **plan integral** r
 6. **Quién es responsable** y cómo se documenta.
 
 > [!IMPORTANT]
-> El perímetro es **una capa** de la defensa en profundidad, no la única. Lo que protege dentro de la LAN (bastionado de [UD4](/ud04-fortificacion-hosts/ud04-teoria/), segmentación de [UD5](/ud05-seguridad-redes/ud05-teoria/)) sigue siendo imprescindible: un perímetro perfecto no sirve si un portátil infectado entra por la puerta de delante.
+> El perímetro es **una capa** de la defensa en profundidad, no la única. Lo que protege dentro de la LAN (bastionado de [UD4](/ud04/ud04-teoria/), segmentación de [UD5](/ud05-seguridad-redes/ud05-teoria/)) sigue siendo imprescindible: un perímetro perfecto no sirve si un portátil infectado entra por la puerta de delante.
 
 ### 1.3 Caso de estudio: Mediterránea Dental
 
@@ -558,7 +558,7 @@ sequenceDiagram
 
 ### 4.7 Fortificación de la pila TCP/IP del cortafuegos
 
-Un equipo que **reenvía** paquetes necesita ajustes de red distintos de los de un servidor normal (que viste en la [UD4](/ud04-fortificacion-hosts/ud04-teoria/): allí se desactivaba el reenvío; aquí se activa). Se hacen con `sysctl`, que lee y escribe parámetros del núcleo; el fichero va en `/etc/sysctl.d/`:
+Un equipo que **reenvía** paquetes necesita ajustes de red distintos de los de un servidor normal (que viste en la [UD4](/ud04/ud04-teoria/): allí se desactivaba el reenvío; aquí se activa). Se hacen con `sysctl`, que lee y escribe parámetros del núcleo; el fichero va en `/etc/sysctl.d/`:
 
 ```bash
 sudo tee /etc/sysctl.d/90-perimetro.conf >/dev/null <<'EOF'
@@ -1368,7 +1368,7 @@ kill %1                                             # cierra el túnel
 ```
 
 > [!WARNING]
-> Los túneles **pueden saltarse el cortafuegos**: un empleado podría exponer un servicio interno a Internet con `-R`. Por eso en los servidores se deja `AllowTcpForwarding no` ([UD4](/ud04-fortificacion-hosts/ud04-teoria/)) y se habilita solo para quien lo necesita (apartado 9.2).
+> Los túneles **pueden saltarse el cortafuegos**: un empleado podría exponer un servicio interno a Internet con `-R`. Por eso en los servidores se deja `AllowTcpForwarding no` ([UD4](/ud04/ud04-teoria/)) y se habilita solo para quien lo necesita (apartado 9.2).
 
 ---
 

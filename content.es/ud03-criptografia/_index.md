@@ -21,7 +21,7 @@ En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) esta 
 **Duración:** 18 horas (7 h teoría · 9 h prácticas · 2 h evaluación)
 
 > [!NOTE]
-> Esta unidad es la «caja de herramientas» del resto del módulo: el cifrado de disco y el acceso por clave SSH se refuerzan en la [UD4](/ud04-fortificacion-hosts/), las VPN y los certificados de cliente en la [UD6](/ud06-seguridad-perimetral/) y los certificados del *proxy* inverso y del balanceador en la [UD7](/ud07-alta-disponibilidad/).
+> Esta unidad es la «caja de herramientas» del resto del módulo: el cifrado de disco y el acceso por clave SSH se refuerzan en la [UD4](/UD04/), las VPN y los certificados de cliente en la [UD6](/ud06-seguridad-perimetral/) y los certificados del *proxy* inverso y del balanceador en la [UD7](/ud07-alta-disponibilidad/).
 
 ## Cómo estudiar esta unidad
 

@@ -13,7 +13,7 @@ A las 9:00 de un lunes la web de citas de una clínica deja de responder. Cada h
 
 La **alta disponibilidad** (HA, *High Availability*) es el conjunto de técnicas de diseño que permite que un servicio siga prestándose, con una interrupción mínima o nula, cuando un componente falla. No consiste en evitar los fallos, sino en **diseñar el sistema para que los fallos no se noten** (o se noten muy poco). Cuando el fallo es tan grave que ninguna redundancia local lo absorbe (un incendio, un *ransomware*, la pérdida del centro de datos), entra en juego la **continuidad de negocio**: planes, procedimientos y un centro de respaldo para recuperar la actividad en un plazo asumible.
 
-En esta unidad cierras el círculo del módulo. En la [UD2](/ud02-seguridad-pasiva/ud02-teoria/) viste cómo proteger los datos con RAID y copias de seguridad; en la [UD4](/ud04-fortificacion-hosts/ud04-teoria/) cómo fortificar un servidor; en la [UD6](/ud06-seguridad-perimetral/ud06-teoria/) cómo publicar servicios detrás de un cortafuegos y un *proxy* inverso. Aquí aprenderás a que **el servicio sobreviva** cuando un servidor, un disco, una red o un centro de datos entero se caen, y a **demostrarlo con una prueba de fallo**.
+En esta unidad cierras el círculo del módulo. En la [UD2](/ud02-seguridad-pasiva/ud02-teoria/) viste cómo proteger los datos con RAID y copias de seguridad; en la [UD4](/ud04/ud04-teoria/) cómo fortificar un servidor; en la [UD6](/ud06-seguridad-perimetral/ud06-teoria/) cómo publicar servicios detrás de un cortafuegos y un *proxy* inverso. Aquí aprenderás a que **el servicio sobreviva** cuando un servidor, un disco, una red o un centro de datos entero se caen, y a **demostrarlo con una prueba de fallo**.
 
 {{< ra "RA6" "RA5:h" >}}
 
