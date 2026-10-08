@@ -2,6 +2,10 @@
 title: "UD4. Fortificación de hosts (hardening)"
 weight: 3
 bookCollapseSection: true
+cascade:
+  build:
+    render: never
+    list: never
 ---
 
 # UD4. Fortificación de hosts (hardening)

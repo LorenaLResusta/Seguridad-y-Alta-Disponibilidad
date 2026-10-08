@@ -1,0 +1,318 @@
+/*
+  Estilos propios de los apuntes de Seguridad y Alta Disponibilidad (0378).
+  Se cargan después de los del tema hugo-book y usan sus variables,
+  por lo que funcionan en modo claro y oscuro.
+*/
+
+:root {
+  --sad-accent: #0f766e;
+  --sad-guiada: var(--color-accent-tip);
+  --sad-autonoma: var(--color-accent-note);
+  --sad-reto: var(--color-accent-caution);
+  --sad-proyecto: var(--color-accent-important);
+}
+
+/* ---------- Tablas más legibles ---------- */
+.markdown table { display: table; width: 100%; font-size: var(--font-size-smaller); }
+.markdown table th { background: var(--gray-200); }
+.markdown table tr:nth-child(2n) td { background: var(--gray-100); }
+
+/* ---------- Bloque RA / CE ---------- */
+.sad-ra {
+  border: 1px solid var(--gray-200);
+  border-left: 4px solid var(--color-accent-important);
+  border-radius: var(--border-radius);
+  padding: .5rem 1rem .25rem;
+  margin: 1rem 0 1.5rem;
+  background: color-mix(in srgb, var(--color-accent-important) 6%, transparent);
+}
+.sad-ra-head {
+  font-size: var(--font-size-smallest);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 700;
+  color: var(--color-accent-important);
+  margin-bottom: .25rem;
+}
+.sad-ra-item { margin: .35rem 0; }
+.sad-ra-item summary { cursor: pointer; line-height: 1.5; }
+.sad-ra-item ul { margin: .4rem 0 .6rem; padding-left: 1.25rem; font-size: var(--font-size-smaller); }
+.sad-ra-code, .sad-ce-code {
+  display: inline-block;
+  font-weight: 700;
+  font-size: var(--font-size-smallest);
+  padding: 0 .4rem;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--color-accent-important);
+  margin-right: .25rem;
+}
+.sad-ce-code { background: transparent; color: var(--color-accent-important); border: 1px solid var(--color-accent-important); }
+.sad-ra-count { font-size: var(--font-size-smallest); opacity: .7; margin-left: .25rem; }
+
+/* ---------- Ficha de práctica ---------- */
+.sad-practica {
+  --c: var(--sad-guiada);
+  border: 1px solid var(--gray-200);
+  border-top: 5px solid var(--c);
+  border-radius: var(--border-radius);
+  margin: .75rem 0 1.25rem;
+  padding: .75rem 1rem;
+  background: color-mix(in srgb, var(--c) 5%, transparent);
+}
+.sad-practica--autonoma { --c: var(--sad-autonoma); }
+.sad-practica--reto { --c: var(--sad-reto); }
+.sad-practica--proyecto { --c: var(--sad-proyecto); }
+.sad-practica-top { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.sad-practica-num { font-weight: 700; font-size: 1.05rem; }
+.sad-pill {
+  font-size: var(--font-size-smallest);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: .1rem .55rem;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--sad-guiada);
+}
+.sad-pill--autonoma { background: var(--sad-autonoma); }
+.sad-pill--reto { background: var(--sad-reto); }
+.sad-pill--proyecto { background: var(--sad-proyecto); }
+.sad-practica-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: .5rem 1rem;
+  margin: .6rem 0 0;
+}
+.sad-practica-meta dt { font-size: var(--font-size-smallest); text-transform: uppercase; opacity: .7; margin: 0; }
+.sad-practica-meta dd { margin: 0; font-size: var(--font-size-smaller); font-weight: 600; }
+.sad-nivel i {
+  display: inline-block; width: .7rem; height: .7rem; margin-right: .2rem;
+  border-radius: 50%; border: 1px solid var(--c); vertical-align: middle;
+}
+.sad-nivel i.on { background: var(--c); }
+
+/* ---------- Etiqueta de software y versión ---------- */
+.sad-sw {
+  display: inline-block;
+  font-size: var(--font-size-smallest);
+  font-weight: 700;
+  padding: .05rem .5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid currentColor;
+  vertical-align: middle;
+  color: #0f766e;
+}
+.sad-sw::before { content: "Software · "; font-weight: 400; opacity: .8; }
+.sad-sw--win { color: #13aa52; }
+.sad-sw--pve { color: #00758f; }
+.sad-sw--fw { color: #b45309; }
+.sad-sw--alt { color: var(--color-accent-default); }
+
+/* ---------- Autoevaluación ---------- */
+.sad-quiz {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+.sad-quiz-head { font-weight: 700; margin-bottom: .75rem; }
+.sad-quiz-head span { font-weight: 400; font-size: var(--font-size-smaller); opacity: .7; margin-left: .5rem; }
+.sad-quiz-q {
+  border: 1px solid var(--gray-200);
+  border-left: 4px solid var(--gray-500);
+  border-radius: var(--border-radius);
+  margin: 0 0 .75rem;
+  padding: .5rem .75rem;
+}
+.sad-quiz-q.ok { border-left-color: var(--color-accent-tip); }
+.sad-quiz-q.ko { border-left-color: var(--color-accent-caution); }
+.sad-quiz-q legend { font-weight: 600; padding: 0; float: left; width: 100%; margin-bottom: .4rem; }
+.sad-quiz-q legend + label { clear: both; }
+.sad-quiz-q legend p, .sad-quiz-q label p { display: inline; margin: 0; }
+.sad-quiz-n {
+  display: inline-block; min-width: 1.5rem; text-align: center;
+  border-radius: 999px; background: var(--gray-200); margin-right: .25rem;
+}
+.sad-quiz-q label { display: block; padding: .2rem .35rem; border-radius: var(--border-radius); cursor: pointer; }
+.sad-quiz-q label:hover { background: var(--gray-100); }
+.sad-quiz-q label.correct { background: color-mix(in srgb, var(--color-accent-tip) 18%, transparent); }
+.sad-quiz-q label.wrong { background: color-mix(in srgb, var(--color-accent-caution) 18%, transparent); text-decoration: line-through; }
+.sad-quiz-explain {
+  margin-top: .4rem; font-size: var(--font-size-smaller);
+  padding: .4rem .6rem; border-radius: var(--border-radius); background: var(--gray-100);
+}
+.sad-quiz-actions { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+.sad-btn {
+  font: inherit; font-size: var(--font-size-smaller); font-weight: 600;
+  padding: .35rem 1rem; border-radius: var(--border-radius);
+  border: 1px solid var(--color-link); background: var(--color-link); color: #fff; cursor: pointer;
+}
+.sad-btn--ghost { background: transparent; color: var(--color-link); }
+.sad-quiz-score { font-weight: 700; }
+
+/* ---------- Tarjetas de unidades en portada ---------- */
+.sad-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; margin: 1rem 0; }
+.sad-card {
+  border: 1px solid var(--gray-200); border-radius: var(--border-radius);
+  padding: .75rem 1rem; display: flex; flex-direction: column; gap: .35rem;
+}
+.sad-card h3 { margin: 0; font-size: 1rem; }
+.sad-card p { margin: 0; font-size: var(--font-size-smaller); }
+.sad-card .sad-card-ra { font-size: var(--font-size-smallest); font-weight: 700; color: var(--color-accent-important); }
+.sad-card .sad-card-links { margin-top: auto; font-size: var(--font-size-smaller); }
+
+/* Listas de comprobación (task lists) */
+.markdown ul li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.2rem; }
+
+/* Bloques <details> de soluciones */
+.markdown details > summary { font-weight: 600; }
+
+/* Diagramas EER en notación de Chen (soluciones de la UD02) */
+.sad-chen { margin: 1rem 0; }
+.sad-chen a { display: block; line-height: 0; }
+.sad-chen img { width: 100%; height: auto; border-radius: var(--border-radius); border: 1px solid var(--gray-200); background: #0f172a; }
+.sad-chen figcaption { font-size: var(--font-size-smaller); opacity: .75; margin-top: .35rem; line-height: 1.4; }
+
+/* ---- Figuras (diagramas EER de solución) ---- */
+.sad-figura { margin: 1rem 0 1.25rem; text-align: center; }
+.sad-figura a { display: block; }
+.sad-figura img { width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(148, 163, 184, .35); }
+.sad-figura figcaption { margin-top: .5rem; font-size: .85rem; opacity: .85; }
+.sad-figura figcaption span { display: block; font-size: .78rem; opacity: .7; }
+
+/* =====================================================================
+   Widgets interactivos, sesiones y calendario
+   ===================================================================== */
+.sad-w {
+  --c: var(--color-accent-note);
+  border: 1px solid var(--gray-200);
+  border-top: 4px solid var(--c);
+  border-radius: var(--border-radius);
+  margin: 1.25rem 0 1.5rem;
+  background: color-mix(in srgb, var(--c) 4%, transparent);
+}
+.sad-w-head {
+  display: flex; align-items: center; gap: .6rem; flex-wrap: wrap;
+  padding: .55rem .9rem; border-bottom: 1px solid var(--gray-200);
+  font-weight: 700;
+}
+.sad-w-tag {
+  font-size: var(--font-size-smallest); text-transform: uppercase; letter-spacing: .06em;
+  color: #fff; background: var(--c); border-radius: 999px; padding: .05rem .55rem;
+}
+.sad-w-sub { font-weight: 400; font-size: var(--font-size-smaller); opacity: .8; margin-left: auto; }
+.sad-w-body { padding: .8rem .9rem; }
+.sad-w-row { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: flex-end; margin-bottom: .6rem; }
+.sad-w label.sad-f { display: flex; flex-direction: column; gap: .15rem; font-size: var(--font-size-smaller); font-weight: 600; }
+.sad-w select, .sad-w input[type=text], .sad-w input[type=number] {
+  font: inherit; font-size: var(--font-size-smaller); padding: .25rem .4rem;
+  border: 1px solid var(--gray-500); border-radius: var(--border-radius);
+  background: var(--body-background); color: var(--body-font-color); min-width: 6rem;
+}
+.sad-w button {
+  font: inherit; font-size: var(--font-size-smaller); font-weight: 600; cursor: pointer;
+  padding: .3rem .8rem; border-radius: var(--border-radius);
+  border: 1px solid var(--color-link); background: var(--color-link); color: #fff;
+}
+.sad-w button.ghost { background: transparent; color: var(--color-link); }
+.sad-w button:disabled { opacity: .45; cursor: not-allowed; }
+.sad-w-out {
+  border: 1px dashed var(--gray-500); border-radius: var(--border-radius);
+  padding: .6rem .75rem; margin-top: .4rem; background: var(--body-background);
+  font-size: var(--font-size-smaller);
+}
+.sad-w-out p { margin: .25rem 0; }
+.sad-w pre { margin: .4rem 0; padding: .55rem .7rem; overflow-x: auto; font-size: .8rem;
+  border-radius: var(--border-radius); background: var(--gray-100); border: 1px solid var(--gray-200); }
+.sad-w table { display: table; width: 100%; font-size: var(--font-size-smaller); margin: .3rem 0; }
+.sad-w table td, .sad-w table th { padding: .25rem .5rem; }
+.sad-w .ok { color: var(--color-accent-tip); font-weight: 700; }
+.sad-w .ko { color: var(--color-accent-caution); font-weight: 700; }
+.sad-w .warn { color: var(--color-accent-warning); font-weight: 700; }
+.sad-w tr.sel td { background: color-mix(in srgb, var(--color-accent-note) 18%, transparent) !important; }
+.sad-w tr.dup td { background: color-mix(in srgb, var(--color-accent-caution) 18%, transparent) !important; }
+.sad-w tr.gone td { opacity: .35; text-decoration: line-through; }
+.sad-w tr.chg td { background: color-mix(in srgb, var(--color-accent-warning) 25%, transparent) !important; }
+.sad-w td.null { font-style: italic; opacity: .6; }
+.sad-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: .35rem 0; }
+.sad-chip {
+  font-size: var(--font-size-smaller); font-weight: 600; cursor: pointer; user-select: none;
+  padding: .15rem .65rem; border-radius: 999px; border: 1px solid var(--color-link);
+  background: transparent; color: var(--color-link);
+}
+.sad-chip.on { background: var(--color-link); color: #fff; }
+.sad-w-note { font-size: var(--font-size-smaller); opacity: .85; margin: .4rem 0 0; }
+.sad-w svg text { fill: currentColor; font-family: inherit; }
+.sad-w-log { max-height: 11rem; overflow-y: auto; font-family: ui-monospace, monospace; font-size: .78rem; }
+.sad-w-log div { padding: .1rem 0; border-bottom: 1px solid var(--gray-200); }
+.sad-w-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: .8rem; }
+.sad-pipe { display: flex; flex-wrap: wrap; gap: .35rem; margin: .4rem 0; }
+.sad-pipe span { font-size: var(--font-size-smallest); font-weight: 700; padding: .15rem .55rem; border-radius: var(--border-radius);
+  background: var(--gray-200); }
+.sad-pipe span.cur { background: var(--color-accent-note); color: #fff; }
+.sad-pipe span.done { background: color-mix(in srgb, var(--color-accent-tip) 35%, transparent); }
+
+/* ---------- Sesiones de clase ---------- */
+.sad-ses {
+  --c: var(--color-accent-note);
+  display: flex; align-items: center; gap: .7rem; flex-wrap: wrap;
+  margin: 2rem 0 1rem; padding: .5rem .8rem;
+  border: 1px solid var(--gray-200); border-left: 6px solid var(--c);
+  border-radius: var(--border-radius);
+  background: color-mix(in srgb, var(--c) 7%, transparent);
+}
+.sad-ses--p { --c: var(--color-accent-tip); }
+.sad-ses--e { --c: var(--color-accent-caution); }
+.sad-ses-n { font-weight: 800; }
+.sad-ses-h { font-size: var(--font-size-smaller); font-weight: 700; color: #fff; background: var(--c);
+  border-radius: 999px; padding: .05rem .6rem; }
+.sad-ses-t { font-size: var(--font-size-smaller); opacity: .85; }
+.sad-ses-x { margin-left: auto; font-size: var(--font-size-smaller); }
+
+.sad-temp { border: 1px solid var(--gray-200); border-radius: var(--border-radius); margin: 1rem 0 1.5rem; }
+.sad-temp-head { display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; align-items: baseline; padding: .6rem .9rem;
+  border-bottom: 1px solid var(--gray-200); }
+.sad-temp-head strong { font-size: 1.05rem; }
+.sad-temp-bar { display: flex; height: .7rem; border-radius: 999px; overflow: hidden; margin: .5rem .9rem; background: var(--gray-200); }
+.sad-temp-bar i { display: block; height: 100%; }
+.sad-temp-bar i.t { background: var(--color-accent-note); }
+.sad-temp-bar i.p { background: var(--color-accent-tip); }
+.sad-temp-bar i.e { background: var(--color-accent-caution); }
+.sad-temp table { margin: 0; }
+.sad-pilltp { font-size: var(--font-size-smallest); font-weight: 700; padding: 0 .45rem; border-radius: 999px; color: #fff; }
+.sad-pilltp.t { background: var(--color-accent-note); }
+.sad-pilltp.p { background: var(--color-accent-tip); }
+.sad-pilltp.e { background: var(--color-accent-caution); }
+
+/* ---------- Calendario ---------- */
+.sad-cal-tabs { display: flex; gap: .4rem; flex-wrap: wrap; margin: .4rem 0 .8rem; }
+.sad-cal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr)); gap: 1rem; }
+.sad-month { border: 1px solid var(--gray-200); border-radius: var(--border-radius); padding: .4rem .5rem .6rem; }
+.sad-month h4 { margin: .1rem 0 .35rem; font-size: .95rem; text-transform: capitalize; }
+.sad-month-g { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; font-size: .72rem; text-align: center; }
+.sad-month-g b { opacity: .6; font-weight: 600; }
+.sad-day { padding: .22rem 0; border-radius: 3px; border: 1px solid transparent; cursor: default; background: transparent; }
+.sad-day[data-k] { cursor: pointer; color: #fff; font-weight: 700; }
+.sad-day[data-k=festivo] { background: var(--color-accent-caution); }
+.sad-day[data-k=vacaciones] { background: var(--color-accent-warning); }
+.sad-day[data-k=fe] { background: var(--color-accent-default); }
+.sad-day[data-k=lectivo] { background: var(--u, var(--color-accent-note)); }
+.sad-day.sel { outline: 2px solid var(--body-font-color); outline-offset: 1px; }
+.sad-day.hito { box-shadow: inset 0 0 0 2px #facc15; }
+.sad-cal-legend { display: flex; flex-wrap: wrap; gap: .3rem .9rem; font-size: var(--font-size-smaller); margin: .5rem 0; }
+.sad-cal-legend i { display: inline-block; width: .8rem; height: .8rem; border-radius: 3px; margin-right: .3rem; vertical-align: middle; }
+.sad-cal-info { min-height: 3.2rem; }
+@media print { .sad-w button, .sad-cal-tabs { display: none; } }
+.sad-w-log div { white-space: pre-wrap; }
+
+/* ---------- Resumen del plan (modalidad a distancia) ---------- */
+.sad-ses--d { --c: var(--color-accent-note); }
+.sad-ses--o { --c: var(--color-accent-important); }
+.sad-pilltp.d { background: var(--color-accent-note); }
+.sad-pilltp.o { background: var(--color-accent-important); }
+.sad-cal-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: .6rem; margin: .2rem 0 .8rem; }
+.sad-cal-stats div { border: 1px solid var(--gray-200); border-radius: var(--border-radius); padding: .4rem .6rem; }
+.sad-cal-stats b { display: block; font-size: 1.35rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.sad-cal-stats span { font-size: var(--font-size-smaller); opacity: .8; }
+.sad-day.dir::after { content: ""; display: block; width: 4px; height: 4px; margin: 1px auto -3px; border-radius: 50%; background: #fff; }

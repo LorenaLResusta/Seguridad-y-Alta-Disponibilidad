@@ -2,20 +2,21 @@
 # En GitHub Pages la Action sobrescribe baseURL con la URL real del sitio.
 baseURL = "https://lorenalresusta.github.io/Seguridad-y-Alta-Disponibilidad/"
 locale = "es-es"
-title = "Seguridad y Alta Disponibilidad"
+title = "Seguridad y Alta Disponibilidad · 2.º ASIR"
 theme = "hugo-book"
+copyright = "Apuntes del módulo 0378 Seguridad y Alta Disponibilidad · Curso 2026/27"
 
 # Idioma por defecto
 defaultContentLanguage = "es"
 
 [languages]
   [languages.es]
-    languageName = "Castellano"
+    label = "Castellano"
     weight = 1
     contentDir = "content.es"
 
   [languages.val]
-    languageName = "Valencià"
+    label = "Valencià"
     weight = 2
     contentDir = "content.val"
 
@@ -26,6 +27,11 @@ defaultContentLanguage = "es"
   BookToC = true
   # Buscador integrado
   BookSearch = true
+  # light | dark | auto (sigue el tema del sistema operativo)
+  BookTheme = 'auto'
+  BookComments = false
+  BookPortableLinks = 'warning'
+  BookDateFormat = '02/01/2006'
   # Enlace al repositorio
   BookRepo = 'https://github.com/LorenaLResusta/Seguridad-y-Alta-Disponibilidad'
 
@@ -33,6 +39,9 @@ defaultContentLanguage = "es"
   [markup.goldmark.renderer]
     # Necesario para Mermaid y algunos bloques HTML de los apuntes
     unsafe = true
+  [markup.highlight]
+    style = "github"
+    noClasses = true
   [markup.tableOfContents]
     startLevel = 2
     endLevel = 3
@@ -40,3 +49,21 @@ defaultContentLanguage = "es"
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
+
+[menu]
+  [[menu.after]]
+    name = "RD 1629/2009 (BOE)"
+    url = "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18355"
+    weight = 10
+  [[menu.after]]
+    name = "Decreto 114/2025 (DOGV)"
+    url = "https://dogv.gva.es/datos/2025/08/04/pdf/2025_29742_es.pdf"
+    weight = 20
+  [[menu.after]]
+    name = "INCIBE"
+    url = "https://www.incibe.es/"
+    weight = 30
+  [[menu.after]]
+    name = "Debian Security"
+    url = "https://www.debian.org/security/"
+    weight = 40

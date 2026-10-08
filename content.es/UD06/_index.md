@@ -2,6 +2,10 @@
 title: "UD6. Seguridad en redes y acceso remoto"
 weight: 6
 bookCollapseSection: true
+cascade:
+  build:
+    render: never
+    list: never
 ---
 
 # UD6. Seguridad en redes y acceso remoto

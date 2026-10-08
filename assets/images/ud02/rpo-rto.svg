@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 260" width="640" height="260" role="img" aria-labelledby="t">
+<title id="t">RPO y RTO sobre una línea de tiempo</title>
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#57606a"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="258" rx="10" fill="#ffffff" stroke="#d0d7de"/>
+<g font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif" fill="#1f2328">
+<text x="320" y="26" font-size="15" text-anchor="middle" font-weight="700">RPO y RTO</text>
+<line x1="30" y1="120" x2="615" y2="120" stroke="#57606a" stroke-width="2" marker-end="url(#a)"/>
+<text x="612" y="140" font-size="12" text-anchor="end" fill="#57606a">tiempo</text>
+<circle cx="110" cy="120" r="9" fill="#1a7f37"/>
+<circle cx="320" cy="120" r="9" fill="#cf222e"/>
+<circle cx="530" cy="120" r="9" fill="#0969da"/>
+<text x="110" y="95" font-size="13" text-anchor="middle" font-weight="700">Última copia válida</text>
+<text x="320" y="95" font-size="13" text-anchor="middle" font-weight="700">Incidente</text>
+<text x="530" y="95" font-size="13" text-anchor="middle" font-weight="700">Servicio restaurado</text>
+<rect x="110" y="150" width="210" height="34" rx="6" fill="#fff1e5" stroke="#bc4c00" stroke-width="1.5"/>
+<text x="215" y="172" font-size="13" text-anchor="middle" font-weight="700">RPO: datos que se pierden</text>
+<rect x="320" y="150" width="210" height="34" rx="6" fill="#ddf4ff" stroke="#0969da" stroke-width="1.5"/>
+<text x="425" y="172" font-size="13" text-anchor="middle" font-weight="700">RTO: tiempo sin servicio</text>
+<text x="215" y="206" font-size="12" text-anchor="middle" fill="#57606a">fija la frecuencia de las copias</text>
+<text x="425" y="206" font-size="12" text-anchor="middle" fill="#57606a">fija la tecnología y el procedimiento</text>
+<text x="320" y="238" font-size="12" text-anchor="middle" fill="#57606a">Cuanto menores son ambos valores, más cara es la solución</text>
+</g>
+</svg>

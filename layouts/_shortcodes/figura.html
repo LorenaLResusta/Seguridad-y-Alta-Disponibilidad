@@ -1,0 +1,18 @@
+{{- /*
+  Imagen con enlace para verla a tamaño completo (útil en diagramas grandes).
+  Uso: {{< figura src="ud02/ej01.svg" alt="Texto alternativo" caption="Pie de figura" >}}
+  src: ruta dentro de assets/images
+*/ -}}
+{{- $src := .Get "src" -}}
+{{- with resources.Get (printf "images/%s" $src) -}}
+<figure class="sad-figura">
+  <a href="{{ .RelPermalink }}" target="_blank" rel="noopener" title="Abrir a tamaño completo">
+    <img src="{{ .RelPermalink }}" alt="{{ $.Get "alt" }}" loading="lazy">
+  </a>
+  {{- with $.Get "caption" }}
+  <figcaption>{{ . }} <span>Pulsa la imagen para verla a tamaño completo.</span></figcaption>
+  {{- end }}
+</figure>
+{{- else -}}
+{{- errorf "figura: no existe assets/images/%s" $src -}}
+{{- end -}}

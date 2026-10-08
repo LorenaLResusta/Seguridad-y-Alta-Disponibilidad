@@ -1,0 +1,64 @@
+{{- /*
+  Test de autoevaluación interactivo. El contenido es YAML:
+  {{< quiz >}}
+  - q: "Pregunta (admite **markdown**)"
+    options: ["Opción A", "Opción B", "Opción C"]
+    answer: 1          # índice empezando en 0
+    explain: "Explicación que se muestra al corregir"
+  {{< /quiz >}}
+*/ -}}
+{{- $items := .Inner | transform.Unmarshal -}}
+{{- $qid := printf "quiz-%d" .Ordinal -}}
+{{- $page := .Page -}}
+<form class="sad-quiz" id="{{ $qid }}" onsubmit="return false;">
+  <div class="sad-quiz-head">Autoevaluación <span>{{ len $items }} preguntas</span></div>
+  {{- range $i, $it := $items -}}
+  <fieldset class="sad-quiz-q" data-answer="{{ $it.answer }}">
+    <legend><span class="sad-quiz-n">{{ add $i 1 }}</span> {{ $page.RenderString $it.q }}</legend>
+    {{- range $j, $op := $it.options -}}
+    <label><input type="radio" name="{{ $qid }}-{{ $i }}" value="{{ $j }}"> <span>{{ $page.RenderString $op }}</span></label>
+    {{- end -}}
+    <div class="sad-quiz-explain" hidden>{{ $page.RenderString (default "" $it.explain) }}</div>
+  </fieldset>
+  {{- end -}}
+  <div class="sad-quiz-actions">
+    <button type="button" class="sad-btn" data-quiz-check>Corregir</button>
+    <button type="button" class="sad-btn sad-btn--ghost" data-quiz-reset>Reiniciar</button>
+    <output class="sad-quiz-score" aria-live="polite"></output>
+  </div>
+</form>
+{{- if not ($page.Store.Get "bdQuizJS") -}}
+{{- $page.Store.Set "bdQuizJS" true -}}
+<script>
+document.addEventListener('click', function (ev) {
+  var b = ev.target.closest('[data-quiz-check],[data-quiz-reset]');
+  if (!b) return;
+  var form = b.closest('.sad-quiz');
+  var qs = form.querySelectorAll('.sad-quiz-q');
+  var out = form.querySelector('.sad-quiz-score');
+  if (b.hasAttribute('data-quiz-reset')) {
+    form.reset();
+    qs.forEach(function (q) { q.classList.remove('ok', 'ko'); q.querySelector('.sad-quiz-explain').hidden = true;
+      q.querySelectorAll('label').forEach(function (l) { l.classList.remove('correct', 'wrong'); }); });
+    out.textContent = '';
+    return;
+  }
+  var ok = 0;
+  qs.forEach(function (q) {
+    var ans = q.getAttribute('data-answer');
+    var sel = q.querySelector('input:checked');
+    q.querySelectorAll('label').forEach(function (l) {
+      var v = l.querySelector('input').value;
+      l.classList.toggle('correct', v === ans);
+      l.classList.toggle('wrong', !!sel && sel.value === v && v !== ans);
+    });
+    var good = !!sel && sel.value === ans;
+    if (good) ok++;
+    q.classList.toggle('ok', good); q.classList.toggle('ko', !good);
+    q.querySelector('.sad-quiz-explain').hidden = false;
+  });
+  var nota = (ok * 10 / qs.length).toFixed(1).replace('.', ',');
+  out.textContent = 'Aciertos: ' + ok + ' / ' + qs.length + ' · Nota: ' + nota;
+});
+</script>
+{{- end -}}

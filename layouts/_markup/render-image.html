@@ -1,10 +1,15 @@
 {{- /*
-  Hook de imágenes: las rutas que empiezan por "/" (por ejemplo /images/ud1/x.jpg)
-  se resuelven respecto a baseURL, de modo que funcionan también cuando el sitio
-  se publica en un subdirectorio de GitHub Pages.
+  Hook de imágenes: las rutas que empiezan por "/images/" se resuelven desde assets/images
+  (con huella y sin depender de baseURL); el resto de rutas absolutas se resuelven respecto a baseURL.
 */ -}}
 {{- $dest := .Destination -}}
-{{- if and (hasPrefix $dest "/") (not (hasPrefix $dest "//")) -}}
+{{- $res := "" -}}
+{{- if hasPrefix $dest "/images/" -}}
+  {{- $res = resources.Get (strings.TrimPrefix "/" $dest) -}}
+{{- end -}}
+{{- if $res -}}
+  {{- $dest = $res.RelPermalink -}}
+{{- else if and (hasPrefix $dest "/") (not (hasPrefix $dest "//")) -}}
   {{- $dest = relURL (strings.TrimPrefix "/" $dest) -}}
 {{- end -}}
 <img src="{{ $dest | safeURL }}" alt="{{ .Text }}" {{ with .Title }}title="{{ . }}"{{ end }} loading="lazy" style="max-width:100%;height:auto;"/>

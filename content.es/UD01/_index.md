@@ -2,6 +2,10 @@
 title: "UD1. Introducción a la seguridad informática"
 weight: 1
 bookCollapseSection: true
+cascade:
+  build:
+    render: never
+    list: never
 ---
 
 # UD1. Introducción a la seguridad informática

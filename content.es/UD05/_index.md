@@ -2,6 +2,10 @@
 title: "UD5. Alta disponibilidad"
 weight: 5
 bookCollapseSection: true
+cascade:
+  build:
+    render: never
+    list: never
 ---
 
 # UD5. Alta disponibilidad
