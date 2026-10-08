@@ -1,0 +1,6 @@
+{{- /* Etiqueta que indica el software y la versión de un ejemplo.  Uso: {{< sw "Debian 13" >}} */ -}}
+{{- $v := .Get 0 | default "Debian 13" -}}
+{{- $c := "linux" -}}
+{{- if in (lower $v) "windows" }}{{ $c = "win" }}{{ else if or (in (lower $v) "pfsense") (in (lower $v) "opnsense") }}{{ $c = "fw" }}{{ else if in (lower $v) "proxmox" }}{{ $c = "pve" }}{{ else if or (in (lower $v) "ubuntu") (in (lower $v) "alma") }}{{ $c = "alt" }}{{ end -}}
+<span class="sad-sw sad-sw--{{ $c }}">{{ $v }}</span>
+{{- /**/ -}}

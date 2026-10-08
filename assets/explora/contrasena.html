@@ -1,0 +1,17 @@
+<div class="sad-w" style="--c: var(--color-accent-warning)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Fortaleza de una contraseña <span class="sad-w-sub">No se envía a ningún sitio</span></div>
+  <div class="sad-w-body">
+    <div class="sad-w-row"><label class="sad-f" style="flex:1;min-width:14rem">Contraseña de prueba (no uses una real)<input type="text" data-r="i" value="Clinica2026" autocomplete="off"></label>
+      <label class="sad-f">Ataque<select data-r="a"><option value="100">En línea limitado (100 intentos/s)</option><option value="1e4" selected>Hash lento tipo bcrypt (10⁴/s)</option><option value="1e10">Hash rápido con GPU (10¹⁰/s)</option></select></label></div>
+    <div class="sad-chips"><button type="button" class="sad-chip" data-p="Clinica2026">Clinica2026</button><button type="button" class="sad-chip" data-p="Xk9#vR2$mLp7!qZ4">aleatoria de 16</button><button type="button" class="sad-chip" data-p="caballo azul pizarra nube tostada">5 palabras</button></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+function t(s){var u=[['años',31557600],['días',86400],['horas',3600],['minutos',60],['segundos',1]];if(s<1)return 'menos de un segundo';if(s>3.15e9)return 'más de mil millones de años'.replace('mil millones','mil millones');for(var i=0;i<u.length;i++)if(s>=u[i][1])return Math.round(s/u[i][1]).toLocaleString('es-ES')+' '+u[i][0]}
+function go(){var p=q('i').value,cs=0;if(/[a-z]/.test(p))cs+=26;if(/[A-Z]/.test(p))cs+=26;if(/\d/.test(p))cs+=10;if(/[^A-Za-z0-9]/.test(p))cs+=33;if(/ /.test(p)&&/[a-z]{3}/.test(p)&&p.split(' ').length>=4)cs=Math.max(cs,7776);
+ var words=p.split(' ').length>=4,bits=words?Math.log2(7776)*p.split(' ').length:p.length*Math.log2(cs||1);
+ if(/^[A-ZÁÉÍÓÚ][a-záéíóúñ]+\d{2,4}[!.]?$/.test(p))bits=Math.min(bits,28);var rate=+q('a').value,s=Math.pow(2,bits-1)/rate,lv=bits<40?['Débil','ko']:bits<60?['Aceptable','warn']:['Fuerte','ok'];
+ q('o').innerHTML='<p><strong>Entropía estimada:</strong> '+bits.toFixed(0)+' bits · <span class="'+lv[1]+'">'+lv[0]+'</span></p><p><strong>Tiempo medio para adivinarla por fuerza bruta:</strong> '+t(s)+'.</p><p class="sad-w-note">Es una cota optimista: un diccionario con variantes habituales («Clinica2026») la rompe mucho antes. Longitud, aleatoriedad, gestor de contraseñas y doble factor pesan más que los símbolos.</p>'}
+q('i').oninput=go;q('a').onchange=go;r.querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){q('i').value=b.dataset.p;go()}});go()})();</script>

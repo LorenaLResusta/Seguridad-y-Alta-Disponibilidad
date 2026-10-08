@@ -16,15 +16,15 @@
 <line x1="177" y1="130" x2="393" y2="130" stroke="#1a7f37" stroke-width="9" stroke-linecap="round" opacity="0.8"/>
 <text x="285" y="74" font-size="12" text-anchor="middle" font-weight="700" fill="#1a7f37">túnel cifrado UDP/51820</text>
 <rect x="395" y="90" width="170" height="80" rx="8" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
-<text x="480.0" y="126.0" font-size="13" text-anchor="middle" font-weight="700">gw-vpn</text>
+<text x="480.0" y="126.0" font-size="13" text-anchor="middle" font-weight="700">fw01</text>
 <text x="480.0" y="143.1" font-size="12" text-anchor="middle" font-weight="400">wg0 · 10.99.0.1</text>
 <line x1="567" y1="130" x2="603" y2="130" stroke="#57606a" stroke-width="2" marker-end="url(#a)"/>
 <rect x="605" y="90" width="145" height="80" rx="8" fill="#fff1e5" stroke="#bc4c00" stroke-width="1.5"/>
 <text x="677.5" y="126.0" font-size="13" text-anchor="middle" font-weight="700">LAN corporativa</text>
-<text x="677.5" y="143.1" font-size="12" text-anchor="middle" font-weight="400">10.10.10.0/24</text>
+<text x="677.5" y="143.1" font-size="12" text-anchor="middle" font-weight="400">192.168.10.0/24</text>
 <rect x="15" y="205" width="735" height="70" rx="8" fill="#f6f8fa" stroke="#57606a" stroke-width="1.5"/>
 <text x="382.5" y="228.2" font-size="12" text-anchor="middle" font-weight="700">AllowedIPs: qué se enruta por el túnel y qué se acepta de cada par</text>
-<text x="382.5" y="244.2" font-size="11" text-anchor="middle" font-weight="400">El cliente envía por wg0 solo 10.10.10.0/24 y 10.99.0.1/32 (split tunneling); el servidor acepta solo 10.99.0.2/32</text>
+<text x="382.5" y="244.2" font-size="11" text-anchor="middle" font-weight="400">El cliente envía por wg0 solo 192.168.10.0/24 y 10.99.0.1/32 (split tunneling); el servidor acepta solo 10.99.0.2/32</text>
 <text x="382.5" y="260.2" font-size="11" text-anchor="middle" font-weight="400">Autenticación por pares de claves pública/privada: sin contraseñas ni certificados</text>
 <text x="380" y="308" font-size="12" text-anchor="middle" font-weight="400" fill="#57606a">Si se pierde un portátil: se elimina su bloque [Peer] del servidor y deja de poder conectarse</text>
 

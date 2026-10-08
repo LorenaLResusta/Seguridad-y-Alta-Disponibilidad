@@ -2,6 +2,10 @@
 title: "UD7. Seguridad perimetral: cortafuegos y proxy"
 weight: 7
 bookCollapseSection: true
+cascade:
+  build:
+    render: never
+    list: never
 ---
 
 # UD7. Seguridad perimetral: cortafuegos y proxy

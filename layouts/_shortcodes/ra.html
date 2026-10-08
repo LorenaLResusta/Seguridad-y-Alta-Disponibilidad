@@ -1,0 +1,32 @@
+{{- /*
+  Muestra los Resultados de Aprendizaje y Criterios de Evaluación oficiales
+  (data/curriculo.yaml, RD 405/2023) que trabaja una página.
+  Uso:  {{< ra "RA6:a,b,c" "RA2:b,d" >}}
+        {{< ra "RA1" >}}            (todos los CE del RA)
+*/ -}}
+{{- $cur := hugo.Data.curriculo -}}
+<div class="sad-ra">
+  <div class="sad-ra-head">Resultados de aprendizaje y criterios de evaluación</div>
+  {{- range .Params -}}
+    {{- $parts := split . ":" -}}
+    {{- $ra := trim (index $parts 0) " " -}}
+    {{- $info := index $cur $ra -}}
+    {{- if not $info -}}{{- errorf "Shortcode ra: resultado de aprendizaje desconocido '%s'" $ra -}}{{- end -}}
+    {{- $keys := slice -}}
+    {{- if gt (len $parts) 1 -}}
+      {{- range split (index $parts 1) "," -}}{{- $keys = $keys | append (trim . " ") -}}{{- end -}}
+    {{- else -}}
+      {{- range $k, $v := $info.ce -}}{{- $keys = $keys | append $k -}}{{- end -}}
+    {{- end -}}
+    <details class="sad-ra-item">
+      <summary><span class="sad-ra-code">{{ $ra }}</span> {{ $info.titulo }} <span class="sad-ra-count">{{ len $keys }} CE</span></summary>
+      <ul>
+      {{- range $keys -}}
+        {{- $txt := index $info.ce . -}}
+        {{- if not $txt -}}{{- errorf "Shortcode ra: criterio '%s' inexistente en %s" . $ra -}}{{- end -}}
+        <li><span class="sad-ce-code">{{ $ra }}.{{ . }}</span> {{ $txt }}</li>
+      {{- end -}}
+      </ul>
+    </details>
+  {{- end -}}
+</div>

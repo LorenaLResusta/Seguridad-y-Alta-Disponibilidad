@@ -2,6 +2,10 @@
 title: "UD3. Criptografía"
 weight: 3
 bookCollapseSection: true
+cascade:
+  build:
+    render: never
+    list: never
 ---
 
 # UD3. Criptografía

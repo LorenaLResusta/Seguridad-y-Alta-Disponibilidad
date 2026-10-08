@@ -1,0 +1,24 @@
+<div class="sad-w" style="--c: var(--color-accent-caution)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Probador de reglas de un cortafuegos <span class="sad-w-sub">Gana la primera regla que coincide</span></div>
+  <div class="sad-w-body">
+    <div style="overflow-x:auto"><table><thead><tr><th>#</th><th>Activa</th><th>Origen</th><th>Destino</th><th>Protocolo/puerto</th><th>Acción</th></tr></thead><tbody data-r="t"></tbody></table></div>
+    <div class="sad-w-row"><label class="sad-f">Política por defecto<select data-r="pol"><option>DROP</option><option>ACCEPT</option></select></label>
+      <label class="sad-f">Origen<select data-r="o1"><option>Internet</option><option>LAN</option><option>DMZ</option></select></label>
+      <label class="sad-f">Destino<select data-r="d1"><option>DMZ</option><option>LAN</option><option>Cortafuegos</option></select></label>
+      <label class="sad-f">Puerto TCP<select data-r="pt"><option>22</option><option selected>443</option><option>80</option><option>3306</option><option>23</option></select></label></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var R=[{o:'LAN',d:'Cortafuegos',p:'22',a:'ACCEPT',on:true},{o:'Internet',d:'DMZ',p:'443',a:'ACCEPT',on:true},{o:'LAN',d:'DMZ',p:'80',a:'ACCEPT',on:true},{o:'DMZ',d:'LAN',p:'3306',a:'DROP',on:true},{o:'Internet',d:'DMZ',p:'23',a:'DROP',on:true}];
+function ev(){var o=q('o1').value,d=q('d1').value,p=q('pt').value,hit=-1;R.forEach(function(x,i){if(hit<0&&x.on&&x.o===o&&x.d===d&&x.p===p)hit=i});
+ var act=hit>=0?R[hit].a:q('pol').value,why=hit>=0?'Coincide con la regla '+(hit+1)+'.':'Ninguna regla coincide: se aplica la política por defecto ('+q('pol').value+').';
+ var c=act==='ACCEPT'?'ok':'ko',extra='';
+ if(act==='ACCEPT'&&hit<0)extra='<p class="ko">Con política ACCEPT, todo lo que no prohíbas expresamente pasa. Es lo contrario del mínimo privilegio.</p>';
+ if(act==='DROP'&&hit<0)extra='<p class="ok">Con política DROP solo pasa lo que has permitido de forma explícita.</p>';
+ q('o').innerHTML='<p>'+o+' → '+d+' TCP/'+p+': <span class="'+c+'">'+act+'</span></p><p>'+why+'</p>'+extra;
+ q('t').querySelectorAll('tr').forEach(function(tr,i){tr.classList.toggle('sel',i===hit)})}
+function draw(){var t=q('t');t.textContent='';R.forEach(function(x,i){var tr=document.createElement('tr');tr.innerHTML='<td>'+(i+1)+'</td><td></td><td>'+x.o+'</td><td>'+x.d+'</td><td>TCP/'+x.p+'</td><td><b class="'+(x.a==='ACCEPT'?'ok':'ko')+'">'+x.a+'</b></td>';
+ var cb=document.createElement('input');cb.type='checkbox';cb.checked=x.on;cb.setAttribute('aria-label','Regla '+(i+1)+' activa');cb.onchange=function(){x.on=cb.checked;ev()};tr.children[1].appendChild(cb);t.appendChild(tr)});ev()}
+['pol','o1','d1','pt'].forEach(function(k){q(k).onchange=ev});draw()})();</script>

@@ -2,6 +2,10 @@
 title: "UD2. Seguridad pasiva: almacenamiento y copias de seguridad"
 weight: 2
 bookCollapseSection: true
+cascade:
+  build:
+    render: never
+    list: never
 ---
 
 # UD2. Seguridad pasiva: almacenamiento y copias de seguridad
