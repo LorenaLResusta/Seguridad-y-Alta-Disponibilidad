@@ -1,0 +1,18 @@
+<div class="sad-w" style="--c: var(--color-accent-important)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Efecto avalancha de una función hash <span class="sad-w-sub">Se calcula en tu navegador</span></div>
+  <div class="sad-w-body">
+    <div class="sad-w-row"><label class="sad-f" style="flex:1;min-width:14rem">Mensaje<input type="text" data-r="i" value="Pagar 100 EUR a Ana"></label><label class="sad-f">Algoritmo<select data-r="a"><option>SHA-256</option><option>SHA-384</option><option>SHA-512</option><option>SHA-1</option></select></label><button type="button" data-r="c">Cambiar un carácter</button></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')},prev=null,pm='';
+async function h(a,m){var b=await crypto.subtle.digest(a,new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')}
+function bits(a,b){var c=0;for(var i=0;i<a.length;i++){var x=parseInt(a[i],16)^parseInt(b[i],16);while(x){c+=x&1;x>>=1}}return c}
+async function go(){var m=q('i').value,a=q('a').value,x=await h(a,m),html='';
+ if(prev&&prev.a===a&&prev.h.length===x.length&&prev.m!==m){var d=bits(prev.h,x),s='';for(var i=0;i<x.length;i++)s+=x[i]===prev.h[i]?x[i]:'<mark>'+x[i]+'</mark>';
+  html='<p><strong>Antes</strong> («'+prev.m.replace(/</g,'&lt;')+'»):</p><pre>'+prev.h+'</pre><p><strong>Ahora</strong>:</p><pre>'+s+'</pre><p>Han cambiado <span class="warn">'+d+' de '+x.length*4+' bits</span> ('+Math.round(d*100/(x.length*4))+' %): con un solo carácter distinto, el resumen es completamente otro.</p>'}
+ else html='<pre>'+x+'</pre><p>Longitud fija de '+x.length*4+' bits, sea cual sea el tamaño del mensaje. Modifica el mensaje para ver el efecto avalancha.</p>';
+ if(a==='SHA-1')html+='<p class="ko">SHA-1 está obsoleto: se conocen colisiones. No lo uses para firmas ni integridad.</p>';
+ q('o').innerHTML=html;prev={a:a,m:m,h:x}}
+q('i').oninput=go;q('a').onchange=function(){prev=null;go()};q('c').onclick=function(){var m=q('i').value;q('i').value=m.length?m.slice(0,-1)+(m.slice(-1)==='a'?'b':'a'):'a';go()};go()})();</script>

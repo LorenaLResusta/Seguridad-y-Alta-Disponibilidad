@@ -1,0 +1,20 @@
+<div class="sad-w" style="--c: var(--color-accent-tip)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Disponibilidad de la web de citas <span class="sad-w-sub">Componentes en serie, nodos en paralelo</span></div>
+  <div class="sad-w-body">
+    <div class="sad-w-row"><label class="sad-f">Disponibilidad de un nodo<select data-r="a"><option value="0.99">99 %</option><option value="0.995">99,5 %</option><option value="0.999" selected>99,9 %</option><option value="0.9999">99,99 %</option></select></label>
+      <label class="sad-f">Balanceador<select data-r="n0"><option>1</option><option>2</option><option>3</option></select></label>
+      <label class="sad-f">Servidores web<select data-r="n1"><option>1</option><option selected>2</option><option>3</option></select></label>
+      <label class="sad-f">Base de datos<select data-r="n2"><option selected>1</option><option>2</option><option>3</option></select></label></div>
+    <div data-r="g" style="display:grid;gap:.4rem"></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')},NM=['Balanceador','Servidores web','Base de datos'];
+function par(a,n){return 1-Math.pow(1-a,n)}
+function dt(f){var m=(1-f)*525960;if(m<1)return Math.round(m*60)+' segundos';if(m<120)return m.toFixed(1)+' minutos';if(m<2880)return (m/60).toFixed(1)+' horas';return (m/1440).toFixed(1)+' días'}
+function go(){var a=+q('a').value,tot=1,w=1,wi=0,g=q('g');g.textContent='';
+ for(var i=0;i<3;i++){var n=+q('n'+i).value,c=par(a,n);tot*=c;if(c<w){w=c;wi=i}
+  var row=document.createElement('div');row.innerHTML='<span style="display:inline-block;min-width:9rem">'+NM[i]+' × '+n+'</span> <b>'+(c*100).toFixed(4)+' %</b> '+(n===1?'<span class="warn">· punto único de fallo</span>':'');g.appendChild(row)}
+ q('o').innerHTML='<p><strong>Disponibilidad total (en serie):</strong> '+(tot*100).toFixed(4)+' % → parada esperada de <strong>'+dt(tot)+' al año</strong>.</p><p>El eslabón más débil es <strong>'+NM[wi].toLowerCase()+'</strong>: duplicar un componente que ya es redundante apenas mejora el total.</p><p class="sad-w-note">Modelo simplificado: fallos independientes y conmutación instantánea. En la práctica, el tiempo de <em>failover</em> y los fallos de causa común (energía, red, error humano) reducen estas cifras.</p>'}
+['a','n0','n1','n2'].forEach(function(k){q(k).onchange=go});go()})();</script>

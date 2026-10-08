@@ -896,6 +896,9 @@ Requiere dos pasarelas (`gw-sede` y `gw-oficina`, cada una con una LAN interna).
 
 ## Tarea del proyecto · Seguridad perimetral del Colegio San Jorge
 
+> [!IMPORTANT]
+> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-2** (entrega: 22/03/2027). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+
 {{< practica etiqueta="Tarea" num="6.13" tipo="Proyecto" duracion="2 h" nivel="3" ra="RA1:h;RA3;RA4;RA5" entorno="Debian 13 · VirtualBox 7" entrega="informe técnico del perímetro" >}}
 
 **Entrega** (PDF o Markdown con capturas y ficheros de configuración sin secretos), basada en el supuesto de la teoría:

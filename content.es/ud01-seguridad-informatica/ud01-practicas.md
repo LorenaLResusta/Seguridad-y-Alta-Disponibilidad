@@ -952,6 +952,9 @@ El Blue Team defiende, monitoriza y responde. El Purple Team coordina a los equi
 
 ## Tarea evaluable de la unidad
 
+> [!IMPORTANT]
+> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-1** (entrega: 27/11/2026). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+
 Entrega un informe en PDF o Markdown que incluya:
 
 1. **Evidencias de las prácticas 1 a 6** (inventario, línea base e incidente simulado, detección de fuerza bruta, análisis de *phishing*, tabla de CVE, informe forense con cadena de custodia).

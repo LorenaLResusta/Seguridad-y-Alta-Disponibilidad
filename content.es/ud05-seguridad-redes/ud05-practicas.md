@@ -379,6 +379,9 @@ Filtros de visualización muy útiles en Wireshark: `dns`, `http`, `tcp.flags.sy
 
 ## Tarea del proyecto · Diseño y validación de una red segura
 
+> [!IMPORTANT]
+> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-2** (entrega: 22/03/2027). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+
 {{< practica etiqueta="Tarea" num="5.5" tipo="Proyecto" duracion="2 h" nivel="3" ra="RA2:c,d,h,i" entorno="Debian 13 · VirtualBox 7" entrega="informe de red segura" >}}
 
 Para una empresa de 50 usuarios con una sede secundaria, teletrabajo, un servicio web publicado y Wi-Fi para invitados (ver supuesto de la teoría), entrega una memoria (PDF o Markdown) con:

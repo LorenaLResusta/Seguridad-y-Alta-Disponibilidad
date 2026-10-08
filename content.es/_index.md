@@ -89,3 +89,8 @@ Los sistemas se indican con etiquetas: {{< sw "Debian 13" >}}. Consulta también
 
 - [Real Decreto 1629/2009 (BOE)](https://www.boe.es/buscar/act.php?id=BOE-A-2009-18355) y [Decreto 114/2025 (DOGV)](https://dogv.gva.es/datos/2025/08/04/pdf/2025_29742_es.pdf).
 - [INCIBE](https://www.incibe.es/) y [Debian Security](https://www.debian.org/security/).
+
+
+## Prácticas integradoras obligatorias
+
+Una por trimestre: **INT-1** (UD1–UD3, 27/11/2026), **INT-2** (UD4–UD6, 22/03/2027) e **INT-3** (UD7, 30/04/2027). Consulta [las condiciones, el informe y la rúbrica](/guia/practicas-integradoras/).

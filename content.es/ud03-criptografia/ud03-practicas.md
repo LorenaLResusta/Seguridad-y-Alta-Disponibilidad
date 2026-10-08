@@ -913,6 +913,9 @@ Para que nunca tenga que viajar por la red ni salir del equipo que la usa. A la 
 
 ## Tarea evaluable de la unidad
 
+> [!IMPORTANT]
+> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-1** (entrega: 27/11/2026). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+
 **Supuesto**: la empresa *Construcciones Mediterráneo* necesita publicar internamente su intranet (`intranet.cmed.lab`) y su aplicación de fichajes (`fichajes.cmed.lab`) con HTTPS, y que la dirección pueda enviar documentos firmados y cifrados al departamento jurídico.
 
 Entrega un informe con:

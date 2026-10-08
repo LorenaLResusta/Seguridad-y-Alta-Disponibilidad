@@ -1072,3 +1072,10 @@ Material complementario de la unidad (ver también la sección [Recursos de la u
 - Imagen: [Optimización de la computación privada](/recursos/ud03/Optimización_de_la_computación_privada.png) (PNG).
 
 ---
+
+
+## Explora: el efecto avalancha
+
+{{< explora "hash" >}}
+
+---

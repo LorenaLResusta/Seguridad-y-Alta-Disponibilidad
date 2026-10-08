@@ -1339,6 +1339,12 @@ Una academia de idiomas detecta que un portátil robado contenía, sin cifrar, u
 > [!NOTE]
 > Los controles se clasifican con dos ejes que no hay que mezclar: **cuándo actúan** (preventivo, detectivo, correctivo) y **qué naturaleza tienen** (físico, técnico, organizativo).
 
+## Explora: calcula el riesgo residual
+
+{{< explora "riesgo" >}}
+
+---
+
 ## 14. Ejercicios de repaso
 
 1. Explica con tus palabras la diferencia entre amenaza, vulnerabilidad, riesgo, ataque e incidente. Pon un ejemplo de cada uno relacionado con un servidor de correo.

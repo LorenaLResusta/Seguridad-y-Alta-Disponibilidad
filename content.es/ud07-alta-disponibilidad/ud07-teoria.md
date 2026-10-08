@@ -657,3 +657,10 @@ Un *clúster* aumenta la **fiabilidad** (tolera fallos) y la **productividad** (
 
 ---
 
+
+
+## Explora: disponibilidad y puntos únicos de fallo
+
+{{< explora "disponibilidad" >}}
+
+---

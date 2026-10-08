@@ -33,7 +33,9 @@ def main():
                 for c, n, t, p, e in UNIDADES]
     hitos = [{"d": INICIO.isoformat(), "n": "Inicio del curso"}]
     hitos += [{"d": u["fin"], "n": f"Prueba y entrega de la {u['c']}"} for u in unidades]
+    hitos += [{"d": "2026-11-27", "n": "Entrega obligatoria INT-1 (UD1–UD3)"}, {"d": "2027-03-22", "n": "Entrega obligatoria INT-2 (UD4–UD6)"}, {"d": "2027-04-30", "n": "Entrega obligatoria INT-3 (UD7)"}]
     hitos.append({"d": FIN.isoformat(), "n": "Fin del curso"})
+    hitos.sort(key=lambda h: h["d"])
     out = {"oficial": HORAS_OFICIALES, "semanal": sum(HORARIO.values()), "capacidad": capacidad,
            "reserva": capacidad - HORAS_OFICIALES, "finPlan": fin_plan, "unidades": unidades,
            "dias": sorted(dias + festivos, key=lambda x: x["d"]), "hitos": hitos}

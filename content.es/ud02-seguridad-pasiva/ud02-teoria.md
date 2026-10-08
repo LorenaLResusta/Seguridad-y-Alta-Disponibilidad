@@ -1473,6 +1473,12 @@ En una organización, la **retirada de equipos** debe seguir un procedimiento do
 
 ---
 
+## Explora: qué aguanta cada nivel RAID
+
+{{< explora "raid" >}}
+
+---
+
 ## Ejercicios
 
 1. Calcula la capacidad útil y los fallos tolerados de 8 discos de 2 TB en RAID 0, 1, 5, 6 y 10.

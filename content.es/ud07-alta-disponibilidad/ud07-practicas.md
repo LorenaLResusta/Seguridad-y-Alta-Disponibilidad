@@ -682,6 +682,9 @@ Requiere tres nodos Proxmox VE 9 (VM con **virtualización anidada** habilitada)
 
 ## Tarea del proyecto · Arquitectura de alta disponibilidad para *Librería Pilar*
 
+> [!IMPORTANT]
+> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-3** (entrega: 30/04/2027). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+
 {{< practica etiqueta="Tarea" num="7.10" tipo="Proyecto" duracion="2 h" nivel="3" ra="RA6" entorno="Debian 13 · VirtualBox 7" entrega="informe de arquitectura de alta disponibilidad" >}}
 
 **Entrega** (PDF o Markdown con capturas y evidencias propias, redactado con tus palabras):

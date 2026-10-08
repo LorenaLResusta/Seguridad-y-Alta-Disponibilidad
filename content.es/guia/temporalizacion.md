@@ -114,3 +114,14 @@ Hasta el 18 de junio hay **174 horas** posibles. Se necesitan 133: el plan termi
 
 > [!TIP]
 > En las unidades de red, perímetro y alta disponibilidad conviene dejar las **instantáneas** de las máquinas virtuales preparadas al final de cada sesión: la siguiente práctica parte del estado en que terminó la anterior.
+
+
+## Entregas obligatorias
+
+| Práctica | Unidades | Fecha |
+|---|---|---|
+| INT-1 | UD1–UD3 | 27/11/2026 |
+| INT-2 | UD4–UD6 | 22/03/2027 (propuesta) |
+| INT-3 | UD7 | 30/04/2027 (propuesta) |
+
+Detalle en [Prácticas integradoras](/guia/practicas-integradoras/).

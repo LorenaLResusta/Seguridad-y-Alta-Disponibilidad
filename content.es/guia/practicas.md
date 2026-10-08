@@ -54,7 +54,7 @@ Cada informe técnico incluye: **objetivo**, **topología** o esquema, **procedi
 
 ## Evaluación
 
-La evaluación es **continua** y se basa en las evidencias que demuestran los [criterios de evaluación](/guia/ra-ce/). Cada unidad termina con una **prueba teórico-práctica** y la entrega de la **tarea del proyecto**.
+La evaluación es **continua** y se basa en las evidencias que demuestran los [criterios de evaluación](/guia/ra-ce/). Cada unidad termina con una **prueba teórico-práctica** y alimenta una de las tres [prácticas integradoras obligatorias](/guia/practicas-integradoras/) (una por trimestre; la primera se entrega el **27/11/2026**). Las tareas del proyecto de cada unidad son hitos de esas prácticas, no entregas aparte.
 
 > [!NOTE]
 > La ponderación siguiente es una **propuesta** que debe concretar la programación didáctica del departamento. El módulo se supera cuando se alcanzan **todos** los resultados de aprendizaje.

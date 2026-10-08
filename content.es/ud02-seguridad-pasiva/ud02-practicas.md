@@ -998,6 +998,9 @@ Investiga `nvme format` y `hdparm --security-erase` para un borrado real de SSD 
 
 ## Tarea del proyecto
 
+> [!IMPORTANT]
+> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-1** (entrega: 27/11/2026). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+
 {{< practica etiqueta="Tarea" num="2.7" tipo="Proyecto" duracion="1 h" nivel="3" ra="RA1: b; RA6: b, f, i" entorno="Debian 13" entrega="informe técnico con evidencias" >}}
 
 #### Objetivo

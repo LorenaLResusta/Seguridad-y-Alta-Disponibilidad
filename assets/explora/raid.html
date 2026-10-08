@@ -1,0 +1,23 @@
+<div class="sad-w" style="--c: var(--color-accent-tip)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Simulador de RAID <span class="sad-w-sub">Discos de 1 TB · pulsa un disco para averiarlo</span></div>
+  <div class="sad-w-body">
+    <div class="sad-w-row"><label class="sad-f">Nivel<select data-r="l"><option value="0">RAID 0</option><option value="1">RAID 1</option><option value="5" selected>RAID 5</option><option value="6">RAID 6</option><option value="10">RAID 10</option></select></label><button type="button" data-r="rep" class="ghost">Reemplazar discos averiados</button></div>
+    <div data-r="d" style="display:flex;gap:.6rem;flex-wrap:wrap;margin:.4rem 0"></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var N={0:4,1:2,5:4,6:4,10:4},CAP={0:4,1:1,5:3,6:2,10:2},TOL={0:'ninguno',1:'1 disco',5:'1 disco',6:'2 discos cualesquiera',10:'1 por pareja (hasta 2 si son de parejas distintas)'};
+var F=[];
+function estado(l,f){var k=f.length;if(!k)return 0;
+ if(l==0)return 2;if(l==1)return k>=2?2:1;if(l==5)return k>=2?2:1;if(l==6)return k>=3?2:1;
+ if(l==10)return (f.indexOf(0)>=0&&f.indexOf(1)>=0)||(f.indexOf(2)>=0&&f.indexOf(3)>=0)?2:1}
+function draw(){var l=+q('l').value,n=N[l];F=F.filter(function(x){return x<n});var s=estado(l,F),d=q('d');d.textContent='';
+ for(var i=0;i<n;i++){(function(i){var b=document.createElement('button');b.type='button';var bad=F.indexOf(i)>=0;
+  b.style.cssText='min-width:5.2rem;padding:.6rem .4rem;border-radius:6px;border:2px solid '+(bad?'var(--color-accent-caution)':'var(--color-accent-tip)')+';background:'+(bad?'color-mix(in srgb,var(--color-accent-caution) 25%,transparent)':'transparent')+';color:inherit';
+  b.innerHTML='Disco '+(i+1)+'<br>'+(bad?'✖ averiado':'✔ activo');b.setAttribute('aria-pressed',bad);
+  b.onclick=function(){var j=F.indexOf(i);if(j>=0)F.splice(j,1);else F.push(i);draw()};d.appendChild(b)})(i)}
+ var t=['<span class="ok">Funcionando con normalidad.</span>','<span class="warn">Degradado: el servicio continúa, pero sin protección. Reemplaza el disco y reconstruye cuanto antes.</span>','<span class="ko">Datos perdidos: hay que restaurar desde la copia de seguridad.</span>'][s];
+ q('o').innerHTML='<p><strong>Capacidad útil:</strong> '+CAP[l]+' TB de '+n+' TB brutos · <strong>Tolera el fallo de:</strong> '+TOL[l]+'.</p><p>'+t+'</p><p class="sad-w-note">RAID protege frente a la avería de un disco, no frente a un borrado accidental ni al ransomware: no sustituye a la copia de seguridad.</p>'}
+q('l').onchange=function(){F=[];draw()};q('rep').onclick=function(){F=[];draw()};draw()})();</script>

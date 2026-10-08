@@ -817,6 +817,9 @@ Comprueba cada medida (con el cmdlet `Get-` o la consola «Directiva de segurida
 
 ## Tarea del proyecto · Fortificación de un servidor
 
+> [!IMPORTANT]
+> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-2** (entrega: 22/03/2027). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+
 {{< practica etiqueta="Tarea" num="4.11" tipo="Proyecto" duracion="1 h" nivel="3" ra="RA1:e,f,i;RA2" entorno="Debian 13 · VirtualBox 7" entrega="informe antes/después" >}}
 
 **Escenario.** Eres administrador/a de sistemas en *Textiles del Ebro*. Recibes un servidor Debian 13 (o AlmaLinux 10) con un servidor web instalado y debes entregarlo fortificado y documentado.

@@ -1585,3 +1585,10 @@ La persona debe tener además una **cuenta local** (`ana`): PAM autentica, pero 
 
 ---
 
+
+
+## Explora: cómo decide un cortafuegos
+
+{{< explora "firewall" >}}
+
+---

@@ -1721,6 +1721,12 @@ Método de diagnóstico en tres pasos cuando algo deja de funcionar tras endurec
 
 ---
 
+## Explora: cuánto tarda en romperse una contraseña
+
+{{< explora "contrasena" >}}
+
+---
+
 ## Ejercicios
 
 1. Explica con tus palabras la diferencia entre *deshabilitar* (`disable`) y *enmascarar* (`mask`) un servicio. ¿Cuándo preferirías `mask`?

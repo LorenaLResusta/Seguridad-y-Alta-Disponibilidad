@@ -1,0 +1,26 @@
+<div class="sad-w" style="--c: var(--color-accent-caution)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Matriz de riesgos de Mediterránea Dental <span class="sad-w-sub">Riesgo = probabilidad × impacto</span></div>
+  <div class="sad-w-body">
+    <p class="sad-w-note">Ajusta la probabilidad y el impacto (1 a 5) de cada activo y activa la salvaguarda para ver cómo baja el riesgo residual.</p>
+    <div style="overflow-x:auto"><table data-r="t"><thead><tr><th>Activo y amenaza</th><th>Probabilidad</th><th>Impacto</th><th>Riesgo</th><th>Salvaguarda</th></tr></thead><tbody></tbody></table></div>
+    <div data-r="m" style="display:grid;grid-template-columns:auto repeat(5,minmax(2.2rem,3.2rem));gap:2px;margin:.6rem 0;font-size:.75rem;text-align:center;max-width:22rem"></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var A=[['Historiales clínicos · ransomware',4,5,'Copias 3-2-1 verificadas'],['Servidor de gestión · fallo de disco',3,4,'RAID 5 + disco de reserva'],['Web de citas · caída del único servidor',3,3,'Dos nodos con balanceador'],['Recepción · phishing al personal',4,4,'Formación + MFA'],['Intranet · tráfico sin cifrar',3,3,'HTTPS con PKI propia']];
+var st=A.map(function(a){return{p:a[1],i:a[2],s:false}});
+function lvl(v){return v<=4?['Bajo','var(--color-accent-tip)']:v<=9?['Medio','var(--color-accent-note)']:v<=16?['Alto','var(--color-accent-warning)']:['Crítico','var(--color-accent-caution)']}
+function sel(v,f){var s=document.createElement('select');for(var k=1;k<=5;k++){var o=document.createElement('option');o.value=k;o.textContent=k;if(k==v)o.selected=true;s.appendChild(o)}s.onchange=function(){f(+s.value)};s.setAttribute('aria-label','valor 1 a 5');return s}
+function draw(){var tb=q('t').tBodies[0];tb.textContent='';var tot=0,tot0=0;
+ A.forEach(function(a,k){var x=st[k],p=x.s?Math.max(1,x.p-2):x.p,v=p*x.i,L=lvl(v);tot+=v;tot0+=x.p*x.i;
+  var tr=document.createElement('tr'),c=function(n){var d=document.createElement('td');tr.appendChild(d);return d};
+  c().textContent=a[0];c().appendChild(sel(x.p,function(n){x.p=n;draw()}));c().appendChild(sel(x.i,function(n){x.i=n;draw()}));
+  var d=c();d.innerHTML='<b style="color:'+L[1]+'">'+v+' · '+L[0]+'</b>';
+  var d2=c(),l=document.createElement('label'),cb=document.createElement('input');cb.type='checkbox';cb.checked=x.s;cb.onchange=function(){x.s=cb.checked;draw()};l.appendChild(cb);l.appendChild(document.createTextNode(' '+a[3]));d2.appendChild(l);tb.appendChild(tr)});
+ var m=q('m');m.textContent='';var e=document.createElement('span');m.appendChild(e);for(var i=1;i<=5;i++){var h=document.createElement('b');h.textContent='I'+i;m.appendChild(h)}
+ for(var p=5;p>=1;p--){var h=document.createElement('b');h.textContent='P'+p;m.appendChild(h);for(var i=1;i<=5;i++){var c=document.createElement('span'),L=lvl(p*i);c.style.cssText='aspect-ratio:1;display:grid;place-items:center;border-radius:3px;background:color-mix(in srgb,'+L[1]+' 30%,transparent)';
+  var n=A.reduce(function(a,_,k){var y=st[k],pp=y.s?Math.max(1,y.p-2):y.p;return a+(pp===p&&y.i===i?1:0)},0);c.textContent=n?'●'.repeat(n):'';m.appendChild(c)}}
+ var red=Math.round((1-tot/tot0)*100);q('o').innerHTML='<p><strong>Riesgo total:</strong> '+tot+' (inicial '+tot0+').</p><p>'+(red>0?'Las salvaguardas activadas reducen el riesgo un <span class="ok">'+red+' %</span>. Lo que queda es el <strong>riesgo residual</strong>: debe ser aceptado por la dirección.':'Sin salvaguardas, todo el riesgo es inherente. Activa alguna para ver el riesgo residual.')+'</p>'}
+draw()})();</script>
