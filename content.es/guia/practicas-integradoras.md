@@ -10,12 +10,12 @@ En el módulo hay **una única práctica obligatoria por trimestre**. Es **integ
 
 | Trimestre | Práctica integradora | Unidades que integra | Entrega | RA |
 |---|---|---|---|---|
-| 1.º | [INT-1 · Cimientos seguros](#int-1--cimientos-seguros-de-mediterránea-dental) | UD1, UD2, UD3 | **viernes 27 de noviembre de 2026** | RA1, RA2, RA3, RA6, RA7 |
-| 2.º | [INT-2 · Servidor fortificado y red segmentada](#int-2--servidor-fortificado-y-red-segmentada) | UD4, UD5, UD6 | lunes 22 de marzo de 2027 *(propuesta)* | RA1 a RA5 |
-| 3.º | [INT-3 · Servicio crítico sin parada](#int-3--servicio-crítico-sin-parada) | UD7 y todo lo anterior | viernes 30 de abril de 2027 *(propuesta)* | RA1 a RA7 |
+| 1.º | [INT-1 · Cimientos seguros](#int-1--cimientos-seguros-de-mediterránea-dental) | UD01, UD02, UD03 | **viernes 27 de noviembre de 2026** | RA1, RA2, RA3, RA6, RA7 |
+| 2.º | [INT-2 · Servidor fortificado y red segmentada](#int-2--servidor-fortificado-y-red-segmentada) | UD04, UD05, UD06 | lunes 22 de marzo de 2027 *(propuesta)* | RA1 a RA5 |
+| 3.º | [INT-3 · Servicio crítico sin parada](#int-3--servicio-crítico-sin-parada) | UD07 y todo lo anterior | viernes 30 de abril de 2027 *(propuesta)* | RA1 a RA7 |
 
 > [!NOTE]
-> La fecha de **INT-1 es la fijada para el curso**. Las de INT-2 e INT-3 son una propuesta calculada sobre el [calendario](/guia/temporalizacion/) (INT-2 tras terminar la UD6 el 10 de marzo; INT-3 una semana después de terminar la UD7 el 22 de abril). Se pueden mover cambiando una línea en `tools/planificacion.py`.
+> La fecha de **INT-1 es la fijada para el curso**. Las de INT-2 e INT-3 son una propuesta calculada sobre el [calendario](/guia/temporalizacion/) (INT-2 tras terminar la UD06 el 10 de marzo; INT-3 una semana después de terminar la UD07 el 22 de abril). Se pueden mover cambiando una línea en `tools/planificacion.py`.
 
 > [!IMPORTANT]
 > **Las tareas de proyecto de cada unidad ya no se entregan por separado.** Son **hitos** de la práctica integradora del trimestre: las haces en clase, las compruebas y las incorporas a tu informe. Así, cada trimestre entregas **un solo trabajo**, más completo.
@@ -60,7 +60,7 @@ En el módulo hay **una única práctica obligatoria por trimestre**. Es **integ
 
 #### Objetivo
 
-Dejar los datos de la clínica **identificados, protegidos frente a pérdida y cifrados**: diagnosticas el riesgo (UD1), proteges el almacenamiento y demuestras la recuperación (UD2) y montas una PKI propia con servicio HTTPS (UD3).
+Dejar los datos de la clínica **identificados, protegidos frente a pérdida y cifrados**: diagnosticas el riesgo (UD01), proteges el almacenamiento y demuestras la recuperación (UD02) y montas una PKI propia con servicio HTTPS (UD03).
 
 #### Contexto
 
@@ -68,15 +68,15 @@ La clínica guarda historiales clínicos (datos de salud, categoría especial de
 
 #### Requisitos previos
 
-Laboratorio de la UD1 (práctica 1.1), `srv-ficheros` con cuatro discos de 1 GB y `srv-copias` de la UD2, y las dos máquinas de la UD3. Haz una instantánea de cada máquina antes de empezar cada fase.
+Laboratorio de la UD01 (práctica 1.1), `srv-ficheros` con cuatro discos de 1 GB y `srv-copias` de la UD02, y las dos máquinas de la UD03. Haz una instantánea de cada máquina antes de empezar cada fase.
 
 #### Fases y hitos
 
 | Fase | Unidad | Qué haces | Hito en clase |
 |---|---|---|---|
-| A. Diagnóstico | UD1 | Inventario de activos de `srv-ficheros`. Matriz de riesgos con **al menos 8 riesgos** (probabilidad × impacto, tratamiento y riesgo residual). Registro de actividades de tratamiento y política de contraseñas | 1.8 Plan de gestión de riesgos |
-| B. Protección | UD2 | RAID 5 con disco de reserva en `srv-ficheros`. **Fallo provocado** de un disco y reconstrucción. Copias cifradas con `restic` a `srv-copias` siguiendo 3-2-1. **Restauración tras un *ransomware* simulado**, con el tiempo medido | 2.7 Plan de almacenamiento y copias |
-| C. Cifrado | UD3 | CA raíz propia, certificado de servidor, HTTPS con Nginx (TLS 1.2 y 1.3). Resumen SHA-256 y **firma GPG** del informe de riesgos. **Revocación** de un certificado y comprobación | Práctica 3.8 y tarea de la unidad |
+| A. Diagnóstico | UD01 | Inventario de activos de `srv-ficheros`. Matriz de riesgos con **al menos 8 riesgos** (probabilidad × impacto, tratamiento y riesgo residual). Registro de actividades de tratamiento y política de contraseñas | 1.8 Plan de gestión de riesgos |
+| B. Protección | UD02 | RAID 5 con disco de reserva en `srv-ficheros`. **Fallo provocado** de un disco y reconstrucción. Copias cifradas con `restic` a `srv-copias` siguiendo 3-2-1. **Restauración tras un *ransomware* simulado**, con el tiempo medido | 2.7 Plan de almacenamiento y copias |
+| C. Cifrado | UD03 | CA raíz propia, certificado de servidor, HTTPS con Nginx (TLS 1.2 y 1.3). Resumen SHA-256 y **firma GPG** del informe de riesgos. **Revocación** de un certificado y comprobación | Práctica 3.8 y tarea de la unidad |
 
 > [!TIP]
 > Trabaja por fases y haz una instantánea al terminar cada una. Si la fase C falla, no pierdes la B.
@@ -141,9 +141,9 @@ Tras INT-1, la clínica quiere abrir la web de citas a Internet y permitir que d
 
 | Fase | Unidad | Qué haces | Hito en clase |
 |---|---|---|---|
-| A. Fortificación | UD4 | Puntuación de **Lynis antes y después** (mejora de al menos 10 puntos). SSH solo con clave y Fail2ban. Cortafuegos local. `auditd` y antimalware | 4.11 Fortificación de un servidor |
-| B. Red | UD5 | VLAN y ACL entre LAN y DMZ. Suricata con una **regla propia** que detecte un escaneo desde `atacante` | 5.5 Red segura |
-| C. Perímetro | UD6 | `fw01` con nftables (`drop` por defecto), NAT y publicación de la web en la DMZ. *Proxy* inverso con TLS. VPN WireGuard para teletrabajo | 6.13 Perímetro |
+| A. Fortificación | UD04 | Puntuación de **Lynis antes y después** (mejora de al menos 10 puntos). SSH solo con clave y Fail2ban. Cortafuegos local. `auditd` y antimalware | 4.11 Fortificación de un servidor |
+| B. Red | UD05 | VLAN y ACL entre LAN y DMZ. Suricata con una **regla propia** que detecte un escaneo desde `atacante` | 5.5 Red segura |
+| C. Perímetro | UD06 | `fw01` con nftables (`drop` por defecto), NAT y publicación de la web en la DMZ. *Proxy* inverso con TLS. VPN WireGuard para teletrabajo | 6.13 Perímetro |
 
 #### Comprobaciones obligatorias
 

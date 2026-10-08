@@ -4,7 +4,7 @@ weight: 1
 bookToc: true
 ---
 
-# UD6 · Seguridad perimetral: cortafuegos, *proxy*, VPN y acceso remoto
+# UD06 · Seguridad perimetral: cortafuegos, *proxy*, VPN y acceso remoto
 
 ## Resumen del tema
 
@@ -24,7 +24,7 @@ El hilo conductor es el proyecto transversal [Mediterránea Dental](/guia/proyec
 | Bloque | Horas |
 |---|---|
 | Teoría | 9 h |
-| [Prácticas](/ud06-seguridad-perimetral/ud06-practicas/) | 14 h |
+| [Prácticas](/ud06/ud06-practicas/) | 14 h |
 | Evaluación (prueba escrita y entrega de la Tarea del proyecto) | 2 h |
 | **Total** | **25 h** |
 
@@ -78,15 +78,15 @@ Una pequeña clínica tiene una única conexión de fibra con una IP pública, u
 
 Proteger el perímetro no es instalar «un cortafuegos». Un **plan integral** responde, por escrito, a estas preguntas:
 
-1. **Qué hay que proteger** y qué zonas existen (inventario y análisis de riesgos de la [UD1](/ud01-seguridad-informatica/ud01-teoria/)).
+1. **Qué hay que proteger** y qué zonas existen (inventario y análisis de riesgos de la [UD01](/ud01/ud01-teoria/)).
 2. **Qué tráfico debe poder cruzar cada frontera** (matriz de flujos).
 3. **Con qué elementos** se controla: cortafuegos, *proxy*, VPN, IDS/IPS, registros.
-4. **Cómo se detecta** un fallo o un ataque (registros, alertas, [UD5](/ud05-seguridad-redes/ud05-teoria/)).
-5. **Cómo se cambia y se recupera** (gestión de cambios, copias, redundancia, [UD7](/ud07-alta-disponibilidad/ud07-teoria/)).
+4. **Cómo se detecta** un fallo o un ataque (registros, alertas, [UD05](/ud05/ud05-teoria/)).
+5. **Cómo se cambia y se recupera** (gestión de cambios, copias, redundancia, [UD07](/ud07/ud07-teoria/)).
 6. **Quién es responsable** y cómo se documenta.
 
 > [!IMPORTANT]
-> El perímetro es **una capa** de la defensa en profundidad, no la única. Lo que protege dentro de la LAN (bastionado de [UD4](/ud04-fortificacion-hosts/ud04-teoria/), segmentación de [UD5](/ud05-seguridad-redes/ud05-teoria/)) sigue siendo imprescindible: un perímetro perfecto no sirve si un portátil infectado entra por la puerta de delante.
+> El perímetro es **una capa** de la defensa en profundidad, no la única. Lo que protege dentro de la LAN (bastionado de [UD04](/ud04/ud04-teoria/), segmentación de [UD05](/ud05/ud05-teoria/)) sigue siendo imprescindible: un perímetro perfecto no sirve si un portátil infectado entra por la puerta de delante.
 
 ### 1.3 Caso de estudio: Mediterránea Dental
 
@@ -103,9 +103,9 @@ Hoy la clínica tiene una red plana detrás de un *router* doméstico, con un pu
 | ***Router* frontera** | Conecta con el proveedor; primer filtrado grueso (ACL, antifalsificación de origen) | Este apartado |
 | **Cortafuegos** (*firewall*) | Decide qué tráfico cruza cada frontera según reglas | Apartados 3 a 6 |
 | ***Proxy*** | Intermedia la navegación (directo) o la publicación (inverso) | Apartado 7 |
-| **IDS/IPS** | Detecta (o bloquea) tráfico malicioso | [UD5](/ud05-seguridad-redes/ud05-teoria/) |
+| **IDS/IPS** | Detecta (o bloquea) tráfico malicioso | [UD05](/ud05/ud05-teoria/) |
 | **Pasarela VPN / de acceso remoto** | Termina túneles cifrados del personal remoto y de las delegaciones | Apartados 8 y 9 |
-| **Servidor de registros / SIEM** | Centraliza y correlaciona los eventos | [UD5](/ud05-seguridad-redes/ud05-teoria/) |
+| **Servidor de registros / SIEM** | Centraliza y correlaciona los eventos | [UD05](/ud05/ud05-teoria/) |
 
 En una organización pequeña, varias funciones comparten máquina (un único equipo hace de *router*, cortafuegos, VPN y *proxy*). En una grande se reparten en equipos y fabricantes distintos. El **papel** de cada elemento es el mismo.
 
@@ -159,7 +159,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> **Débil o fuerte no significa «mala» o «buena»**: es una cuestión de proporcionalidad. Para Mediterránea Dental, con un solo equipo de perímetro, la subred protegida débil (un cortafuegos de tres patas) es razonable **si** se vigila y se hace redundante ([UD7](/ud07-alta-disponibilidad/ud07-teoria/)). Dos cortafuegos de fabricantes distintos se justifican cuando un fallo de implementación de uno de ellos no debe dejar pasar el tráfico (infraestructuras críticas, ENS de categoría alta).
+> **Débil o fuerte no significa «mala» o «buena»**: es una cuestión de proporcionalidad. Para Mediterránea Dental, con un solo equipo de perímetro, la subred protegida débil (un cortafuegos de tres patas) es razonable **si** se vigila y se hace redundante ([UD07](/ud07/ud07-teoria/)). Dos cortafuegos de fabricantes distintos se justifican cuando un fallo de implementación de uno de ellos no debe dejar pasar el tráfico (infraestructuras críticas, ENS de categoría alta).
 
 ### 2.4 Del modelo perimetral al modelo de confianza cero (*Zero Trust*)
 
@@ -178,7 +178,7 @@ La **confianza cero** (*Zero Trust*, NIST SP 800-207) parte de «**nunca confíe
 | Asumir la brecha | Segmentar, cifrar y registrar como si el atacante ya estuviera dentro |
 | Microsegmentación | Reglas entre cargas de trabajo, no solo en el borde |
 
-El perímetro **sigue siendo útil**, pero se complementa: VPN con segundo factor (apartado 8), RADIUS (apartado 9), segmentación y ACL ([UD5](/ud05-seguridad-redes/ud05-teoria/)) y registros centralizados.
+El perímetro **sigue siendo útil**, pero se complementa: VPN con segundo factor (apartado 8), RADIUS (apartado 9), segmentación y ACL ([UD05](/ud05/ud05-teoria/)) y registros centralizados.
 
 ---
 
@@ -558,7 +558,7 @@ sequenceDiagram
 
 ### 4.7 Fortificación de la pila TCP/IP del cortafuegos
 
-Un equipo que **reenvía** paquetes necesita ajustes de red distintos de los de un servidor normal (que viste en la [UD4](/ud04-fortificacion-hosts/ud04-teoria/): allí se desactivaba el reenvío; aquí se activa). Se hacen con `sysctl`, que lee y escribe parámetros del núcleo; el fichero va en `/etc/sysctl.d/`:
+Un equipo que **reenvía** paquetes necesita ajustes de red distintos de los de un servidor normal (que viste en la [UD04](/ud04/ud04-teoria/): allí se desactivaba el reenvío; aquí se activa). Se hacen con `sysctl`, que lee y escribe parámetros del núcleo; el fichero va en `/etc/sysctl.d/`:
 
 ```bash
 sudo tee /etc/sysctl.d/90-perimetro.conf >/dev/null <<'EOF'
@@ -734,7 +734,7 @@ sudo conntrack -L | head                         # conexiones en seguimiento (pa
 sudo conntrack -L | grep 172.16.10.11            # las de un servidor concreto, con la traducción NAT
 ```
 
-Estos registros se envían a un servidor central o SIEM ([UD5](/ud05-seguridad-redes/ud05-teoria/)); como mínimo, los cambios de reglas, los accesos administrativos, los bloqueos repetidos, los intentos DMZ → LAN y las alertas del IDS.
+Estos registros se envían a un servidor central o SIEM ([UD05](/ud05/ud05-teoria/)); como mínimo, los cambios de reglas, los accesos administrativos, los bloqueos repetidos, los intentos DMZ → LAN y las alertas del IDS.
 
 ### 6.2 Seguimiento de un paquete (`nftrace`)
 
@@ -1052,20 +1052,20 @@ sudo sarg -l /var/log/squid/access.log -o /var/lib/sarg-reports   # genera los i
 Un **proxy inverso** se sitúa **delante de los servidores web**: los clientes de Internet hablan con él y él, internamente, con los servidores reales. Aporta:
 
 - **Un único punto de entrada**: los servidores internos no se exponen.
-- **Terminación TLS**: gestiona los certificados ([UD3](/ud03-criptografia/ud03-teoria/)) en un solo sitio; los *backends* pueden hablar HTTP interno.
+- **Terminación TLS**: gestiona los certificados ([UD03](/ud03/ud03-teoria/)) en un solo sitio; los *backends* pueden hablar HTTP interno.
 - **Publicación de varias aplicaciones** bajo un mismo dominio y puerto (por ruta o por nombre).
-- **Balanceo** entre servidores y comprobaciones de salud ([UD7](/ud07-alta-disponibilidad/ud07-teoria/)).
+- **Balanceo** entre servidores y comprobaciones de salud ([UD07](/ud07/ud07-teoria/)).
 - **Protección**: limitación de peticiones, cabeceras de seguridad, filtrado (WAF), ocultación de versiones.
 - **Caché** de contenido estático.
 
-En el laboratorio, el *proxy* inverso es **`web02`** (`172.16.10.12`, actúa de `rp01`) y el servidor real es **`web01`** (`172.16.10.11`). El cortafuegos publica el *proxy*, no el servidor real. En producción, el *proxy* inverso es un equipo propio de la DMZ (o HAProxy en la [UD7](/ud07-alta-disponibilidad/ud07-teoria/)).
+En el laboratorio, el *proxy* inverso es **`web02`** (`172.16.10.12`, actúa de `rp01`) y el servidor real es **`web01`** (`172.16.10.11`). El cortafuegos publica el *proxy*, no el servidor real. En producción, el *proxy* inverso es un equipo propio de la DMZ (o HAProxy en la [UD07](/ud07/ud07-teoria/)).
 
 ```bash
 sudo apt install -y nginx                      # AlmaLinux: sudo dnf install -y nginx
 nginx -v                                       # Nginx 1.26 en Debian 13
 ```
 
-Certificado de laboratorio (en la unidad de proyecto se usa el de la PKI de la [UD3](/ud03-criptografia/ud03-teoria/)): `openssl req -x509` crea un certificado autofirmado; `-newkey ec -pkeyopt ec_paramgen_curve:prime256v1` genera una clave de curva elíptica P-256; `-nodes` la deja sin contraseña (para que Nginx arranque solo; protégela con permisos `600`); `-addext` añade el nombre alternativo (SAN) que exigen los navegadores.
+Certificado de laboratorio (en la unidad de proyecto se usa el de la PKI de la [UD03](/ud03/ud03-teoria/)): `openssl req -x509` crea un certificado autofirmado; `-newkey ec -pkeyopt ec_paramgen_curve:prime256v1` genera una clave de curva elíptica P-256; `-nodes` la deja sin contraseña (para que Nginx arranque solo; protégela con permisos `600`); `-addext` añade el nombre alternativo (SAN) que exigen los navegadores.
 
 ```bash
 sudo mkdir -p /etc/ssl/lab && cd /etc/ssl/lab
@@ -1179,7 +1179,7 @@ Según el **nivel** al que operan, las VPN se clasifican (RA3.d):
 | Nivel | Tecnologías | Característica |
 |---|---|---|
 | **Red** (capa 3) | **WireGuard**, **IPsec/IKEv2** | Transportan paquetes IP; transparentes para las aplicaciones |
-| **Transporte / sesión** (TLS) | **OpenVPN** | Usa TLS ([UD3](/ud03-criptografia/ud03-teoria/)); atraviesa casi cualquier cortafuegos |
+| **Transporte / sesión** (TLS) | **OpenVPN** | Usa TLS ([UD03](/ud03/ud03-teoria/)); atraviesa casi cualquier cortafuegos |
 | **Aplicación** | **Túneles SSH** (`-L`, `-R`, `-D`) | Protegen un único servicio o puerto |
 
 ### 8.2 Comparativa de tecnologías
@@ -1286,7 +1286,7 @@ sudo tcpdump -ni wg0 -c 5 icmp                 # dentro del túnel: el ping se v
 
 **IPsec** es el estándar para unir redes entre fabricantes distintos. Funciona en dos fases: **IKEv2** (RFC 7296) autentica a los extremos y negocia las claves (UDP 500 y 4500) y **ESP** (RFC 4303) cifra el tráfico. Por cada túnel se crea una **SA** (*Security Association*) que indica qué redes protege (*selectores de tráfico*).
 
-Ejemplo con **strongSwan 6.x** y su interfaz moderna `swanctl` (el antiguo `ipsec.conf` está en desuso): unión de la sede (`192.168.10.0/24`, `fw01` en 10.0.2.10) y la delegación (`192.168.20.0/24`, `fw-deleg` en 10.0.2.20). La clave precompartida (PSK) es **solo para laboratorio**: en producción se usan **certificados** de la PKI de la [UD3](/ud03-criptografia/ud03-teoria/).
+Ejemplo con **strongSwan 6.x** y su interfaz moderna `swanctl` (el antiguo `ipsec.conf` está en desuso): unión de la sede (`192.168.10.0/24`, `fw01` en 10.0.2.10) y la delegación (`192.168.20.0/24`, `fw-deleg` en 10.0.2.20). La clave precompartida (PSK) es **solo para laboratorio**: en producción se usan **certificados** de la PKI de la [UD03](/ud03/ud03-teoria/).
 
 ```bash
 sudo apt install -y strongswan-swanctl charon-systemd   # AlmaLinux: sudo dnf install -y strongswan (EPEL)
@@ -1335,7 +1335,7 @@ Notas de cortafuegos: hay que permitir en `entrada` el **UDP 500 y 4500** y el p
 
 ### 8.5 VPN sobre TLS: OpenVPN
 
-**OpenVPN** utiliza TLS ([UD3](/ud03-criptografia/ud03-teoria/)) para autenticar con **certificados**, se ejecuta en espacio de usuario y atraviesa casi cualquier cortafuegos (UDP o TCP/443). Requiere una **PKI** (por ejemplo, con `easy-rsa`) y un servidor con su fichero de configuración. Su ventaja es la flexibilidad (usuario, contraseña y certificado a la vez; integración con RADIUS y LDAP); su inconveniente, más complejidad y menor rendimiento que WireGuard. Para instalarlo, consulta la documentación oficial de OpenVPN y usa siempre `tls-crypt` y cifrados AEAD.
+**OpenVPN** utiliza TLS ([UD03](/ud03/ud03-teoria/)) para autenticar con **certificados**, se ejecuta en espacio de usuario y atraviesa casi cualquier cortafuegos (UDP o TCP/443). Requiere una **PKI** (por ejemplo, con `easy-rsa`) y un servidor con su fichero de configuración. Su ventaja es la flexibilidad (usuario, contraseña y certificado a la vez; integración con RADIUS y LDAP); su inconveniente, más complejidad y menor rendimiento que WireGuard. Para instalarlo, consulta la documentación oficial de OpenVPN y usa siempre `tls-crypt` y cifrados AEAD.
 
 ### 8.6 VPN a nivel de aplicación: túneles SSH
 
@@ -1368,7 +1368,7 @@ kill %1                                             # cierra el túnel
 ```
 
 > [!WARNING]
-> Los túneles **pueden saltarse el cortafuegos**: un empleado podría exponer un servicio interno a Internet con `-R`. Por eso en los servidores se deja `AllowTcpForwarding no` ([UD4](/ud04-fortificacion-hosts/ud04-teoria/)) y se habilita solo para quien lo necesita (apartado 9.2).
+> Los túneles **pueden saltarse el cortafuegos**: un empleado podría exponer un servicio interno a Internet con `-R`. Por eso en los servidores se deja `AllowTcpForwarding no` ([UD04](/ud04/ud04-teoria/)) y se habilita solo para quien lo necesita (apartado 9.2).
 
 ---
 
@@ -1429,7 +1429,7 @@ Match Group saltadores
     AllowAgentForwarding no
 ```
 
-**Certificados SSH.** Con claves públicas, cada servidor debe tener las `authorized_keys` de cada usuario: no escala. Los **certificados SSH** usan una **autoridad certificadora (CA) de SSH**, mucho más sencilla que la PKI de la UD3: la CA **firma** las claves de los usuarios (y de los servidores) con una validez limitada.
+**Certificados SSH.** Con claves públicas, cada servidor debe tener las `authorized_keys` de cada usuario: no escala. Los **certificados SSH** usan una **autoridad certificadora (CA) de SSH**, mucho más sencilla que la PKI de la UD03: la CA **firma** las claves de los usuarios (y de los servidores) con una validez limitada.
 
 ```bash
 # En la máquina de la CA (protegida)
@@ -1463,7 +1463,7 @@ Para el **acceso remoto** de personas se combinan métodos:
 |---|---|---|
 | Clave precompartida | Un secreto común a todos | Bajo (solo laboratorio) |
 | Clave pública (WireGuard, SSH) | Un par de claves por equipo o persona | Alto |
-| Certificado de cliente | Emitido por la PKI ([UD3](/ud03-criptografia/ud03-teoria/)) | Alto |
+| Certificado de cliente | Emitido por la PKI ([UD03](/ud03/ud03-teoria/)) | Alto |
 | Usuario y contraseña (EAP o RADIUS) | Contra un servidor RADIUS o LDAP | Medio |
 | Clave + contraseña | Dos elementos | Alto |
 | **MFA** (TOTP, FIDO2) | Segundo factor independiente | **Recomendado** |

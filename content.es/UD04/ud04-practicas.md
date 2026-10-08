@@ -1,25 +1,34 @@
 ---
-title: "Prácticas"
-slug: "practicas"
+title: "UD04 · Prácticas"
 weight: 2
+bookToc: true
 ---
 
-# UD4. Prácticas: fortificación de hosts
+# UD04 · Prácticas
 
-> Inventario, usuarios y sudo, contraseñas, SSH con claves y Fail2ban, cortafuegos, cifrado LUKS, control de acceso obligatorio, auditoría, integridad, antimalware, Lynis y Wazuh sobre máquinas virtuales propias.
+{{< ra "RA1:c,e,f,g,i" "RA2" >}}
 
-| Datos de las prácticas | Información |
-| --- | --- |
-| Módulo | 0378. Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Duración estimada | 10 horas |
-| Entorno | Red `SAD-NAT` (192.168.100.0/24): `sad-web` (.30) como servidor a fortificar y `sad-cli` (.10) como cliente |
-| Sistemas | Debian 13 (principal) y AlmaLinux 10 (donde se indica) |
-| Teoría asociada | [Teoría de la UD4](../teoria/) |
+Inventario, usuarios y sudo, contraseñas, SSH con claves y Fail2ban, cortafuegos, cifrado LUKS, control de acceso obligatorio, auditoría, integridad, antimalware, Lynis y Wazuh sobre máquinas virtuales propias.
 
----
+| Práctica | Tipo | Nivel | Horas | CE principales |
+|---|---|---|--:|---|
+| [4.1 Inventario y línea base](#práctica-41--inventario-y-línea-base) | Guiada | ●○○ | 1 | RA1: c · RA2: h |
+| [4.2 Usuarios, sudo, ACL y contraseñas](#práctica-42--usuarios-sudo-acl-y-contraseñas) | Guiada | ●●○ | 2 | RA1: e |
+| [4.3 SSH seguro y Fail2ban](#práctica-43--ssh-seguro-y-fail2ban) | Guiada | ●●○ | 2 | RA2: c |
+| [4.4 Cortafuegos local y verificación con Nmap](#práctica-44--cortafuegos-local-y-verificación-con-nmap) | Guiada | ●●○ | 1 | RA2: c, h |
+| [4.5 Cifrado de datos con LUKS](#práctica-45--cifrado-de-datos-con-luks) | Guiada | ●●○ | 1 | RA1: g · RA2: f |
+| [4.6 Control de acceso obligatorio](#práctica-46--control-de-acceso-obligatorio) | Guiada | ●●● | 1 | RA2: c |
+| [4.7 Auditoría, integridad y antimalware](#práctica-47--auditoría-integridad-y-antimalware) | Guiada | ●●○ | 1 | RA2: d, e · RA1: i |
+| [4.8 Auditoría con Lynis (antes y después)](#práctica-48--auditoría-con-lynis-antes-y-después) | Guiada | ●●○ | 1 | RA2: b |
+| [4.9 Monitorización centralizada con Wazuh](#práctica-49--monitorización-centralizada-con-wazuh) | Guiada | ●●● | 1 | RA2: e, i |
+| [4.10 Windows Server 2025 (opcional)](#práctica-410--windows-server-2025-opcional) | Autónoma | ●●● | — | RA2: c |
+| [4.11 Fortificación de un servidor](#tarea-del-proyecto--fortificación-de-un-servidor) | Proyecto | ●●● | 1 | RA1: e, f, i · RA2: a-e |
+| **Total** | | | **12 h** | |
 
-## 1. Objetivos
+> [!NOTE]
+> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 12 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
+
+## Objetivos
 
 - Inventariar servicios, puertos, usuarios y permisos de un host Linux y guardarlo como línea base.
 - Aplicar mínimo privilegio con usuarios, `sudo` y ACL, y una política de contraseñas con PAM.
@@ -33,13 +42,11 @@ weight: 2
 > [!IMPORTANT]
 > **Alcance ético y legal.** Todas las pruebas se hacen **solo** sobre tus máquinas virtuales de `SAD-NAT`. No escanees, ataques ni pruebes credenciales en equipos de terceros, ni en la red del centro. Los «intentos fallidos» de estas prácticas son pocos y controlados, contra tus propias cuentas, para comprobar que las defensas funcionan.
 
----
+## Preparación
 
-## 2. Preparación
+#### Máquinas y *snapshots*
 
-### 2.1. Máquinas y *snapshots*
-
-1. `sad-web` (Debian 13) y `sad-cli` (Debian 13 o AlmaLinux 10), con IP fijas en `SAD-NAT` (UD1).
+1. `sad-web` (Debian 13) y `sad-cli` (Debian 13 o AlmaLinux 10), con IP fijas en `SAD-NAT` (UD01).
 2. Crea una *snapshot* de cada máquina llamada `ud4-inicio`. Si algo sale mal, vuelves al estado inicial.
 3. Abre **dos terminales** contra `sad-web`: una para trabajar y otra de seguridad (para corregir errores sin perder el acceso). La consola de VirtualBox también sirve como acceso de emergencia.
 
@@ -47,7 +54,7 @@ weight: 2
 > [!TIP]
 > Haz una instantánea **antes de empezar cada práctica** (nómbrala `pre-P3`, `pre-P4`, …). El hardening cambia SSH, PAM y el cortafuegos: si te quedas sin acceso, volver atrás en VirtualBox es instantáneo.
 
-### 2.2. Directorio de evidencias
+#### Directorio de evidencias
 
 En `sad-web`:
 
@@ -59,7 +66,7 @@ date | tee ~/ud4-evidencias/00-fecha.txt
 
 `tee` muestra la salida en pantalla **y** la guarda en el fichero: así documentas sin repetir el comando.
 
-### 2.3. Paquetes
+#### Paquetes
 
 {{< tabs >}}
 {{% tab "Debian / Ubuntu" %}}
@@ -85,11 +92,13 @@ sudo dnf install -y openssh-server nmap lynis cryptsetup acl libpwquality \
 
 ---
 
-## 3. Práctica 1 · Inventario y línea base
+## Práctica 4.1 · Inventario y línea base
+
+{{< practica num="4.1" tipo="Guiada" duracion="1 h" nivel="1" ra="RA1:c;RA2:h" entorno="Debian 13 · VirtualBox 7" entrega="inventario y línea base" >}}
 
 **Objetivo:** documentar el estado inicial (y medir la superficie de ataque) antes de cambiar nada.
 
-### 3.1. Inventario local (en `sad-web`)
+#### Inventario local (en `sad-web`)
 
 ```bash
 { hostnamectl; echo ---; ip -br a; echo ---; uname -r; } | tee ~/ud4-evidencias/01-sistema.txt
@@ -99,7 +108,7 @@ getent passwd | awk -F: '$3>=1000 && $3<65000 {print $1, $3, $7}' | tee ~/ud4-ev
 sudo find / -xdev -perm -4000 -type f 2>/dev/null | tee ~/ud4-evidencias/01-suid.txt
 ```
 
-### 3.2. Inventario desde el exterior (en `sad-cli`)
+#### Inventario desde el exterior (en `sad-cli`)
 
 ```bash
 nmap -sV -p- 192.168.100.30 | tee ~/nmap-antes.txt
@@ -109,10 +118,10 @@ Copia el resultado a `sad-web` o consérvalo para el informe. `-sV` intenta iden
 
 <!-- hint:h2 -->
 {{% details title="💡 Pista" open=false %}}
-Guarda la salida (`nmap-antes.txt`): en la práctica 4 volverás a ejecutar el mismo escaneo y **compararás** el antes y el después. Sin un «antes» no puedes demostrar que la medida ha servido.
+Guarda la salida (`nmap-antes.txt`): en la práctica 4.4 volverás a ejecutar el mismo escaneo y **compararás** el antes y el después. Sin un «antes» no puedes demostrar que la medida ha servido.
 {{% /details %}}
 
-### 3.3. Análisis
+#### Análisis
 
 Rellena esta tabla en tu informe:
 
@@ -126,11 +135,13 @@ Rellena esta tabla en tu informe:
 
 ---
 
-## 4. Práctica 2 · Usuarios, sudo, ACL y contraseñas
+## Práctica 4.2 · Usuarios, sudo, ACL y contraseñas
+
+{{< practica num="4.2" tipo="Guiada" duracion="2 h" nivel="2" ra="RA1:e" entorno="Debian 13 · VirtualBox 7" entrega="usuarios, sudo y política de contraseñas" >}}
 
 **Objetivo:** aplicar mínimo privilegio y una política de contraseñas.
 
-### 4.1. Usuarios y grupo de administración web
+#### Usuarios y grupo de administración web
 
 ```bash
 sudo groupadd webadmins
@@ -141,7 +152,7 @@ sudo passwd luis
 id ana; id luis | tee ~/ud4-evidencias/02-usuarios.txt
 ```
 
-### 4.2. sudo restringido
+#### sudo restringido
 
 ```bash
 sudo visudo -f /etc/sudoers.d/10-webadmins
@@ -169,7 +180,7 @@ Revisa el registro: `sudo journalctl _COMM=sudo --since "10 min ago"`. Los inten
 > [!WARNING]
 > Mantén **una segunda terminal con `root` abierta** (`sudo -i`) mientras editas `sudoers`. Si cometes un error de sintaxis y pierdes `sudo`, podrás corregirlo desde esa sesión. Usa siempre `visudo` y valida con `sudo visudo -c`.
 
-### 4.3. ACL
+#### ACL
 
 ```bash
 sudo mkdir -p /srv/proyecto
@@ -180,7 +191,7 @@ su - luis -c 'touch /srv/proyecto/prueba'      # esperado: Permission denied (lu
 su - ana  -c 'touch /srv/proyecto/prueba && echo "ana escribe"'
 ```
 
-### 4.4. Política de contraseñas (pwquality)
+#### Política de contraseñas (pwquality)
 
 Haz una copia y edita el fichero:
 
@@ -220,7 +231,7 @@ BAD PASSWORD: The password contains less than 1 digits
 Pruébalo con `123456`, con una palabra del diccionario y con una frase larga (esta última sí debe aceptarse).
 {{% /details %}}
 
-### 4.5. Bloqueo por intentos fallidos (opcional, con precaución)
+#### Bloqueo por intentos fallidos (opcional, con precaución)
 
 Sigue el apartado 4.3 de la teoría (AlmaLinux: `authselect enable-feature with-faillock`; Debian: edición de `common-auth`). **Mantén abierta una sesión de `root`** durante la prueba.
 
@@ -239,11 +250,13 @@ sudo faillock --user luis --reset              # desbloquear
 
 ---
 
-## 5. Práctica 3 · SSH seguro y Fail2ban
+## Práctica 4.3 · SSH seguro y Fail2ban
+
+{{< practica num="4.3" tipo="Guiada" duracion="2 h" nivel="2" ra="RA2:c" entorno="Debian 13 · VirtualBox 7" entrega="SSH por clave y registro de Fail2ban" >}}
 
 **Objetivo:** cerrar la puerta más usada. Ciclo: amenaza (acceso remoto) → vulnerabilidad (contraseñas y `root`) → ataque (intentos repetidos) → detección (registros) → mitigación (claves y Fail2ban) → comprobación.
 
-### 5.1. Claves en el cliente
+#### Claves en el cliente
 
 En `sad-cli`:
 
@@ -256,7 +269,7 @@ ssh ana@192.168.100.30 'hostname; id'                        # entra con la clav
 > [!IMPORTANT]
 > `ssh-copy-id` necesita que, en ese momento, el servidor aún acepte contraseña. Hazlo **antes** de desactivarla.
 
-### 5.2. Configuración endurecida (en `sad-web`)
+#### Configuración endurecida (en `sad-web`)
 
 Con la sesión de seguridad abierta:
 
@@ -291,7 +304,7 @@ sudo systemctl reload ssh        # Debian   ·   AlmaLinux: sudo systemctl reloa
 > [!WARNING]
 > **Sigue siempre este orden:** (1) copia del fichero, (2) `sudo sshd -t` para validar la sintaxis, (3) `sudo systemctl reload ssh` (en AlmaLinux, `sshd`), (4) **sin cerrar la sesión actual**, abre otra terminal y comprueba que entras con clave. Solo entonces cierra la primera. Si desactivas la contraseña antes de comprobar la clave, te quedas fuera.
 
-### 5.3. Comprobación (desde `sad-cli`)
+#### Comprobación (desde `sad-cli`)
 
 ```bash
 ssh ana@192.168.100.30 'echo acceso con clave OK'                      # debe funcionar
@@ -313,7 +326,7 @@ sudo journalctl -u ssh --since "10 min ago" --no-pager | tail -20     # AlmaLinu
 - Como `root`: `Permission denied` aunque la contraseña fuera correcta (`PermitRootLogin no`).
 {{% /details %}}
 
-### 5.4. Fail2ban
+#### Fail2ban
 
 En `sad-web`, crea `/etc/fail2ban/jail.local`:
 
@@ -366,7 +379,7 @@ Tras desbloquear, vuelve a entrar desde `sad-cli` para comprobar la recuperació
 Para provocar el bloqueo, haz varios intentos fallidos desde `sad-cli` y mira el estado con `sudo fail2ban-client status sshd`. Para **desbloquear** tu IP de laboratorio: `sudo fail2ban-client set sshd unbanip 192.168.100.10`. Si algo no funciona, el diagnóstico está en `journalctl -u fail2ban`.
 {{% /details %}}
 
-### 5.5. Solución de problemas
+#### Solución de problemas
 
 | Problema | Qué mirar |
 | --- | --- |
@@ -376,11 +389,13 @@ Para provocar el bloqueo, haz varios intentos fallidos desde `sad-cli` y mira el
 
 ---
 
-## 6. Práctica 4 · Cortafuegos local y verificación con Nmap
+## Práctica 4.4 · Cortafuegos local y verificación con Nmap
+
+{{< practica num="4.4" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:c,h" entorno="Debian 13 · VirtualBox 7" entrega="reglas del cortafuegos y escaneo" >}}
 
 **Objetivo:** que el servidor solo ofrezca los puertos imprescindibles y comprobarlo desde fuera.
 
-### 6.1. Red de seguridad
+#### Red de seguridad
 
 Programa un «deshacer» por si te quedas sin acceso:
 
@@ -389,7 +404,7 @@ sudo systemd-run --on-active=180 --unit=deshacer-fw systemctl stop ufw        # 
 # AlmaLinux:  sudo systemd-run --on-active=180 --unit=deshacer-fw systemctl stop firewalld
 ```
 
-### 6.2. Reglas
+#### Reglas
 
 {{< tabs >}}
 {{% tab "Debian / Ubuntu (UFW)" %}}
@@ -418,7 +433,7 @@ sudo firewall-cmd --list-all | tee ~/ud4-evidencias/04-firewalld.txt
 > [!WARNING]
 > Permite SSH **antes** de activar el cortafuegos con `default deny incoming`: `sudo ufw allow 22/tcp` y solo después `sudo ufw enable`. La «red de seguridad» del apartado 6.1 (apagado automático a los 3 minutos) existe precisamente por si te equivocas.
 
-### 6.3. Comprobación
+#### Comprobación
 
 Desde `sad-cli`:
 
@@ -441,7 +456,9 @@ Compara los dos ficheros de Nmap: de **todos** los puertos abiertos del «antes�
 
 ---
 
-## 7. Práctica 5 · Cifrado de datos con LUKS
+## Práctica 4.5 · Cifrado de datos con LUKS
+
+{{< practica num="4.5" tipo="Guiada" duracion="1 h" nivel="2" ra="RA1:g;RA2:f" entorno="Debian 13 · VirtualBox 7" entrega="volumen cifrado y prueba de apertura" >}}
 
 **Objetivo:** proteger datos en reposo y comprobar que sin la clave son ilegibles. Se usa un fichero como disco virtual: **no se toca ningún disco real**.
 
@@ -484,7 +501,9 @@ sudo umount /mnt/seguro && sudo cryptsetup close seguro
 
 ---
 
-## 8. Práctica 6 · Control de acceso obligatorio
+## Práctica 4.6 · Control de acceso obligatorio
+
+{{< practica num="4.6" tipo="Guiada" duracion="1 h" nivel="3" ra="RA2:c" entorno="Debian 13 · VirtualBox 7" entrega="perfil de control de acceso y denegación" >}}
 
 {{< tabs >}}
 {{% tab "AlmaLinux / Rocky (SELinux)" %}}
@@ -587,9 +606,11 @@ sudo aa-enforce /usr/local/bin/leer-config.sh
 
 ---
 
-## 9. Práctica 7 · Auditoría, integridad y antimalware
+## Práctica 4.7 · Auditoría, integridad y antimalware
 
-### 9.1. Registros persistentes
+{{< practica num="4.7" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:d,e;RA1:i" entorno="Debian 13 · VirtualBox 7" entrega="reglas de auditoría y análisis antimalware" >}}
+
+#### Registros persistentes
 
 ```bash
 sudo mkdir -p /etc/systemd/journald.conf.d
@@ -603,7 +624,7 @@ journalctl --disk-usage | tee ~/ud4-evidencias/07-journal.txt
 ls /var/log/journal                         # existe el directorio: ya es persistente
 ```
 
-### 9.2. auditd
+#### auditd
 
 ```bash
 sudo systemctl enable --now auditd
@@ -634,7 +655,7 @@ Anota para cada evento: **quién** (`auid`), **qué** (ruta, acción), **cuándo
 Para consultar los eventos de una regla con su etiqueta: `sudo ausearch -k <etiqueta> -i` (la opción `-i` interpreta los números en nombres de usuario y de llamada al sistema). `sudo aureport --summary` ofrece un resumen general.
 {{% /details %}}
 
-### 9.3. AIDE
+#### AIDE
 
 {{< tabs >}}
 {{% tab "Debian / Ubuntu" %}}
@@ -664,7 +685,7 @@ El informe de AIDE debe mostrar `/etc/hosts` en «Changed entries», con el hash
 Tras un cambio **legítimo** (una actualización, por ejemplo), AIDE avisará de diferencias hasta que actualices la base de datos de referencia (`aide --update` y copiar la base nueva sobre la anterior). Una base de datos de referencia **debe guardarse en un lugar protegido** (solo lectura o fuera del equipo); si el atacante la modifica, el control deja de servir.
 {{% /details %}}
 
-### 9.4. ClamAV con el fichero EICAR
+#### ClamAV con el fichero EICAR
 
 ```bash
 sudo systemctl stop clamav-freshclam 2>/dev/null; sudo freshclam; sudo systemctl start clamav-freshclam 2>/dev/null
@@ -683,7 +704,9 @@ El fichero EICAR es una cadena de texto **inofensiva** reconocida por todos los 
 
 ---
 
-## 10. Práctica 8 · Auditoría con Lynis (antes y después)
+## Práctica 4.8 · Auditoría con Lynis (antes y después)
+
+{{< practica num="4.8" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:b" entorno="Debian 13 · VirtualBox 7" entrega="informe de Lynis antes y después" >}}
 
 ```bash
 sudo lynis audit system --quiet | tee ~/ud4-evidencias/08-lynis-despues.txt >/dev/null
@@ -709,14 +732,16 @@ No intentes llegar a 100 puntos en el índice de Lynis a toda costa: muchas suge
 
 ---
 
-## 11. Práctica 9 · Monitorización centralizada con Wazuh
+## Práctica 4.9 · Monitorización centralizada con Wazuh
+
+{{< practica num="4.9" tipo="Guiada" duracion="1 h" nivel="3" ra="RA2:e,i" entorno="Debian 13 · VirtualBox 7" entrega="agente enrolado y alerta recibida" >}}
 
 **Objetivo:** ver el estado de seguridad de varias máquinas en un único panel.
 
 > [!NOTE]
 > Wazuh evoluciona con frecuencia. Sigue la **guía de instalación oficial** de la versión vigente (<https://documentation.wazuh.com>) y anota la versión usada. Si tu docente ya ofrece un servidor Wazuh, salta al apartado 11.2.
 
-### 11.1. Servidor (máquina nueva `sad-wazuh`, Debian o Ubuntu compatible, 4 GB RAM, 2 vCPU, 50 GB)
+#### Servidor (máquina nueva `sad-wazuh`, Debian o Ubuntu compatible, 4 GB RAM, 2 vCPU, 50 GB)
 
 1. Crea la VM en `SAD-NAT` con IP `192.168.100.40` y una *snapshot* inicial.
 2. Descarga el instalador asistido desde la documentación oficial («Quickstart») y **revisa el script antes de ejecutarlo**:
@@ -735,7 +760,7 @@ sudo bash wazuh-install.sh -a              # instalación todo en uno (servidor,
 - Los comandos de instalación y las versiones cambian con frecuencia: **contrasta siempre con la guía oficial** (`documentation.wazuh.com`) antes de ejecutarlos.
 {{% /details %}}
 
-### 11.2. Agente en `sad-web`
+#### Agente en `sad-web`
 
 1. En el panel: *Agents → Deploy new agent*; elige el sistema operativo, introduce la IP del servidor y el nombre `sad-web`. El asistente genera los comandos de instalación.
 2. Ejecútalos en `sad-web` y comprueba:
@@ -748,11 +773,11 @@ sudo systemctl status wazuh-agent --no-pager | tee ~/ud4-evidencias/09-wazuh-age
 3. El agente debe aparecer como **Active** en el panel. Anota nombre, IP, versión del agente y hora de la última conexión.
 
 > [!WARNING]
-> Si usas el cortafuegos de la práctica 4, el agente necesita llegar al servidor (salida) y el servidor recibir en los puertos 1514/tcp y 1515/tcp. Revisa las reglas si el agente no se conecta.
+> Si usas el cortafuegos de la práctica 4.4, el agente necesita llegar al servidor (salida) y el servidor recibir en los puertos 1514/tcp y 1515/tcp. Revisa las reglas si el agente no se conecta.
 
-### 11.3. Eventos y supervisión de integridad
+#### Eventos y supervisión de integridad
 
-1. **Intentos fallidos de SSH**: desde `sad-cli`, genera 3 intentos erróneos con un usuario inexistente (como en la práctica 3). Localiza en *Threat Hunting / Events* las alertas de autenticación fallida: anota regla, nivel, hora, usuario y host de origen.
+1. **Intentos fallidos de SSH**: desde `sad-cli`, genera 3 intentos erróneos con un usuario inexistente (como en la práctica 4.3). Localiza en *Threat Hunting / Events* las alertas de autenticación fallida: anota regla, nivel, hora, usuario y host de origen.
 2. **Integridad (FIM)**: en `sad-web` crea y modifica un fichero en un directorio supervisado por defecto (por ejemplo, `/etc`):
 
 ```bash
@@ -767,7 +792,9 @@ sudo rm /etc/prueba-wazuh.conf
 
 ---
 
-## 12. Práctica 10 · Windows Server 2025 (opcional)
+## Práctica 4.10 · Windows Server 2025 (opcional)
+
+{{< practica num="4.10" tipo="Autónoma" duracion="0 h · trabajo autónomo" nivel="3" ra="RA2:c" entorno="Debian 13 · VirtualBox 7" entrega="informe comparativo con Linux" >}}
 
 Con una máquina de evaluación y una *snapshot*:
 
@@ -788,53 +815,12 @@ Comprueba cada medida (con el cmdlet `Get-` o la consola «Directiva de segurida
 
 ---
 
-## 13. Problemas habituales
+## Tarea del proyecto · Fortificación de un servidor
 
-| Síntoma | Causa probable | Solución |
-| --- | --- | --- |
-| Sin acceso SSH tras la práctica 3 | Error en `10-hardening.conf` o sin clave | Consola de VirtualBox: borra el fichero y `systemctl reload ssh` |
-| `ssh-copy-id` falla | Ya desactivaste la contraseña | Restaura temporalmente `PasswordAuthentication yes` o usa la consola |
-| UFW bloquea SSH | Regla mal escrita o `enable` sin regla | Consola: `sudo ufw disable`, corrige y vuelve a activar |
-| Fail2ban no arranca | Error de sintaxis en `jail.local` | `sudo fail2ban-client -t` y `journalctl -u fail2ban` |
-| `cryptsetup: device busy` | El volumen sigue montado | `umount /mnt/seguro` y después `cryptsetup close` |
-| 403 persistente en SELinux | Contexto no aplicado | `ls -Zd /srv/web`, repite `restorecon -Rv` |
-| `augenrules` sin efecto | Reglas inmutables (`-e 2`) o servicio parado | Reinicia el sistema; revisa `systemctl status auditd` |
-| AIDE no encuentra la base | No se copió `aide.db.new` | Repite el paso de copia (Debian) o `mv` (AlmaLinux) |
-| El agente Wazuh no conecta | Cortafuegos o IP del servidor incorrecta | Revisa 1514/1515 y `/var/ossec/etc/ossec.conf` |
+> [!IMPORTANT]
+> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-2** (entrega: 22/03/2027). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
 
----
-
-## 14. Buenas prácticas de seguridad aplicadas
-
-- Una medida cada vez, con su comprobación y su forma de revertirla.
-- Copia (`.bak`) antes de editar; validación (`visudo -c`, `sshd -t`, `httpd -t`, `nft -c`) antes de aplicar.
-- Segunda sesión abierta y *snapshot* antes de tocar SSH, PAM o el cortafuegos.
-- Pruebas siempre sobre equipos propios y con intentos mínimos.
-- Evidencias guardadas en `~/ud4-evidencias` con fecha, sin contraseñas ni claves privadas.
-
----
-
-## 15. Autoevaluación
-
-1. ¿Qué objetivo principal tiene el hardening y qué es la superficie de ataque?
-2. ¿Qué principio establece que un usuario debe disponer solo de los permisos necesarios?
-3. ¿Por qué se edita `sudoers` con `visudo`?
-4. ¿Qué diferencia hay entre autenticación y autorización? Pon un ejemplo con SSH.
-5. ¿Qué riesgo mitiga Secure Boot y cuál la contraseña de GRUB?
-6. ¿Qué protege el cifrado de disco y qué **no** protege (por ejemplo, con el equipo encendido y la sesión abierta)?
-7. ¿Por qué una clave privada SSH no debe compartirse y cómo se protege?
-8. ¿Qué diferencia hay entre `reload` y `restart` al cambiar `sshd_config`?
-9. ¿Qué diferencia hay entre un puerto `closed` y uno `filtered` en Nmap?
-10. ¿Para qué sirve Lynis y por qué no basta con maximizar su puntuación?
-11. ¿Qué detecta AIDE que no detecta un antivirus?
-12. ¿Qué diferencia hay entre un IDS y un IPS? ¿Cuál es Fail2ban?
-13. ¿Por qué no se debe desactivar SELinux para «arreglar» un error?
-14. ¿Qué información proporciona un evento de `auditd` y en qué se diferencia de un mensaje de `journald`?
-15. ¿Por qué un análisis de vulnerabilidades requiere autorización previa?
-
----
-
-## 16. Tarea evaluable: fortificación de un servidor
+{{< practica etiqueta="Tarea" num="4.11" tipo="Proyecto" duracion="1 h" nivel="3" ra="RA1:e,f,i;RA2" entorno="Debian 13 · VirtualBox 7" entrega="informe antes/después" >}}
 
 **Escenario.** Eres administrador/a de sistemas en *Textiles del Ebro*. Recibes un servidor Debian 13 (o AlmaLinux 10) con un servidor web instalado y debes entregarlo fortificado y documentado.
 
@@ -856,13 +842,51 @@ Comprueba cada medida (con el cmdlet `Get-` o la consola «Directiva de segurida
 
 ---
 
-## 17. Resumen
+## Problemas habituales
+
+| Síntoma | Causa probable | Solución |
+| --- | --- | --- |
+| Sin acceso SSH tras la práctica 3 | Error en `10-hardening.conf` o sin clave | Consola de VirtualBox: borra el fichero y `systemctl reload ssh` |
+| `ssh-copy-id` falla | Ya desactivaste la contraseña | Restaura temporalmente `PasswordAuthentication yes` o usa la consola |
+| UFW bloquea SSH | Regla mal escrita o `enable` sin regla | Consola: `sudo ufw disable`, corrige y vuelve a activar |
+| Fail2ban no arranca | Error de sintaxis en `jail.local` | `sudo fail2ban-client -t` y `journalctl -u fail2ban` |
+| `cryptsetup: device busy` | El volumen sigue montado | `umount /mnt/seguro` y después `cryptsetup close` |
+| 403 persistente en SELinux | Contexto no aplicado | `ls -Zd /srv/web`, repite `restorecon -Rv` |
+| `augenrules` sin efecto | Reglas inmutables (`-e 2`) o servicio parado | Reinicia el sistema; revisa `systemctl status auditd` |
+| AIDE no encuentra la base | No se copió `aide.db.new` | Repite el paso de copia (Debian) o `mv` (AlmaLinux) |
+| El agente Wazuh no conecta | Cortafuegos o IP del servidor incorrecta | Revisa 1514/1515 y `/var/ossec/etc/ossec.conf` |
+
+## Buenas prácticas de seguridad aplicadas
+
+- Una medida cada vez, con su comprobación y su forma de revertirla.
+- Copia (`.bak`) antes de editar; validación (`visudo -c`, `sshd -t`, `httpd -t`, `nft -c`) antes de aplicar.
+- Segunda sesión abierta y *snapshot* antes de tocar SSH, PAM o el cortafuegos.
+- Pruebas siempre sobre equipos propios y con intentos mínimos.
+- Evidencias guardadas en `~/ud4-evidencias` con fecha, sin contraseñas ni claves privadas.
+
+## Preguntas de autoevaluación
+
+1. ¿Qué objetivo principal tiene el hardening y qué es la superficie de ataque?
+2. ¿Qué principio establece que un usuario debe disponer solo de los permisos necesarios?
+3. ¿Por qué se edita `sudoers` con `visudo`?
+4. ¿Qué diferencia hay entre autenticación y autorización? Pon un ejemplo con SSH.
+5. ¿Qué riesgo mitiga Secure Boot y cuál la contraseña de GRUB?
+6. ¿Qué protege el cifrado de disco y qué **no** protege (por ejemplo, con el equipo encendido y la sesión abierta)?
+7. ¿Por qué una clave privada SSH no debe compartirse y cómo se protege?
+8. ¿Qué diferencia hay entre `reload` y `restart` al cambiar `sshd_config`?
+9. ¿Qué diferencia hay entre un puerto `closed` y uno `filtered` en Nmap?
+10. ¿Para qué sirve Lynis y por qué no basta con maximizar su puntuación?
+11. ¿Qué detecta AIDE que no detecta un antivirus?
+12. ¿Qué diferencia hay entre un IDS y un IPS? ¿Cuál es Fail2ban?
+13. ¿Por qué no se debe desactivar SELinux para «arreglar» un error?
+14. ¿Qué información proporciona un evento de `auditd` y en qué se diferencia de un mensaje de `journald`?
+15. ¿Por qué un análisis de vulnerabilidades requiere autorización previa?
+
+## Resumen
 
 Has partido de un servidor con configuración por defecto y lo has llevado a un estado verificable: mínimo privilegio, acceso remoto con claves y bloqueo de abusos, cortafuegos con denegación por defecto, datos cifrados, procesos confinados, cambios auditados y visibilidad centralizada. La clave del proceso es **medir antes, cambiar con red de seguridad, comprobar y documentar**.
 
----
-
-## 18. Referencias
+## Referencias y documentación oficial
 
 - OpenSSH, *sshd_config(5)*: <https://man.openbsd.org/sshd_config>
 - Debian, *Securing Debian Manual*: <https://www.debian.org/doc/manuals/securing-debian-manual/>

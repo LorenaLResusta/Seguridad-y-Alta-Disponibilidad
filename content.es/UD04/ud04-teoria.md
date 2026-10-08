@@ -4,7 +4,7 @@ weight: 1
 bookToc: true
 ---
 
-# UD4 · Fortificación de sistemas (*hardening*) y seguridad activa en el host
+# UD04 · Fortificación de sistemas (*hardening*) y seguridad activa en el host
 
 ## Resumen del tema
 
@@ -17,7 +17,7 @@ En esta unidad aprendes a hacerlo sobre un servidor Linux (Debian 13 «trixie» 
 Primero se entiende **qué amenaza** al sistema y cómo es un ataque por dentro (*Cyber Kill Chain*, MITRE ATT&CK); después se controla **quién entra** (autenticación, MFA, permisos, `sudo`), se **reduce lo expuesto** (arranque, servicios, cortafuegos, SSH, actualizaciones), se **confina y vigila** lo que queda (SELinux/AppArmor, antimalware, integridad, auditoría) y, si algo falla, se **responde** con método (análisis forense). Todo se mide: antes y después de cada cambio, con herramientas como Lynis u OpenSCAP.
 
 > [!NOTE]
-> Esta unidad es la primera del bloque de **seguridad activa** y es la más extensa del módulo (22 h). En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) aplicarás todo a `srv-gestion`, el servidor con los historiales clínicos (datos de salud, categoría especial del RGPD). Lo que fortificas aquí se vigila en la [UD5](/ud05-seguridad-redes/ud05-teoria/), se protege con el perímetro de la UD6 y se hace redundante en la UD7.
+> Esta unidad es la primera del bloque de **seguridad activa** y es la más extensa del módulo (22 h). En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) aplicarás todo a `srv-gestion`, el servidor con los historiales clínicos (datos de salud, categoría especial del RGPD). Lo que fortificas aquí se complementa con la [seguridad en redes (UD05)](/ud05/ud05-teoria/), el perímetro (UD06) y la alta disponibilidad (UD07).
 
 {{< ra "RA1:c,e,f,i" "RA2:a,b,c,d,e,h" "RA7:b" >}}
 
@@ -26,7 +26,7 @@ Primero se entiende **qué amenaza** al sistema y cómo es un ataque por dentro 
 | Bloque | Horas |
 |---|--:|
 | Teoría (este documento) | 8 h |
-| [Prácticas](/ud04-fortificacion-hosts/ud04-practicas/) (diez prácticas y la Tarea del proyecto) | 12 h |
+| [Prácticas](/ud04/ud04-practicas/) (diez prácticas y la Tarea del proyecto, hito de la [INT-2](/guia/practicas-integradoras/)) | 12 h |
 | Evaluación (prueba teórico-práctica y entrega del informe de bastionado) | 2 h |
 | **Total** | **22 h** |
 
@@ -132,7 +132,7 @@ Se pueden clasificar de dos formas complementarias: por **lo que son** (software
 | ***Malware*** (software malicioso) | Virus, gusanos, troyanos, *ransomware*, *spyware*, *rootkits*, *botnets* | Programa creado para dañar, espiar o tomar el control |
 | **Explotación de vulnerabilidades** | Desbordamiento de búfer, inyección SQL, fallos sin parchear | Se aprovecha un error de software o de configuración |
 | **Ataques a credenciales** | Fuerza bruta, diccionario, *password spraying*, *credential stuffing* | Se obtiene acceso legítimo sin romper nada |
-| **Ingeniería social** | *Phishing*, suplantación | Se engaña a la persona, no al sistema (UD1) |
+| **Ingeniería social** | *Phishing*, suplantación | Se engaña a la persona, no al sistema (UD01) |
 | **Denegación de servicio** | DoS, DDoS | Se agota un recurso para impedir el servicio |
 | **Amenazas internas** | Empleado descontento, error humano, cuenta olvidada | El riesgo viene de dentro de la organización |
 | **Cadena de suministro** | Paquete o dependencia comprometidos | La entrada es *software* de confianza |
@@ -197,7 +197,7 @@ Los ataques dirigidos suelen seguir una secuencia de fases. El modelo ***Cyber K
 | 3. Entrega | Hace llegar el arma | Correo de *phishing*; paquete trampa | Filtro de correo, formación, repositorios firmados |
 | 4. Explotación | Aprovecha una vulnerabilidad | Se ejecuta la macro; se explota un servicio sin parchear | Actualizaciones, bloqueo de macros, AppArmor/SELinux |
 | 5. Instalación | Se instala de forma persistente | Tarea `cron`, servicio `systemd` o clave en `authorized_keys` | AIDE, `auditd`, EDR |
-| 6. Mando y control (C2) | Conecta con su servidor | Tráfico HTTPS a un dominio extraño | Cortafuegos de salida, *proxy*, IDS (UD5) |
+| 6. Mando y control (C2) | Conecta con su servidor | Tráfico HTTPS a un dominio extraño | Cortafuegos de salida, *proxy*, IDS (UD05) |
 | 7. Acciones sobre objetivos | Cumple su objetivo | Roba historiales clínicos y cifra el servidor | Segmentación, copias de seguridad, cifrado |
 
 ### 2.4 MITRE ATT&CK: el catálogo de técnicas
@@ -235,7 +235,7 @@ Algunas técnicas relacionadas con esta unidad, y la defensa que practicarás:
 | T1014 *Rootkit* | Evasión de defensas | `rkhunter`, AIDE, Secure Boot (P4.7) |
 | T1070 Borrado de indicadores | Evasión de defensas | Registros remotos, `auditd` |
 | T1496 Secuestro de recursos (*cryptojacking*) | Impacto | Monitorización de CPU y conexiones |
-| T1486 Datos cifrados para impacto (*ransomware*) | Impacto | Copias 3-2-1 (UD2), mínimo privilegio, antimalware |
+| T1486 Datos cifrados para impacto (*ransomware*) | Impacto | Copias 3-2-1 (UD02), mínimo privilegio, antimalware |
 
 > [!TIP]
 > **Cómo se usa en la práctica.** Cuando analices un incidente, localiza cada observación en una táctica: «el atacante hizo fuerza bruta (Acceso a credenciales), creó una clave en `authorized_keys` (Persistencia) y cifró la carpeta de pacientes (Impacto)». Después pregúntate qué control habría detenido cada paso. Es el método para decidir **qué medidas priorizar**.
@@ -250,7 +250,7 @@ Las credenciales son el objetivo más habitual. Estos son los ataques que debes 
 | **Diccionario** | Probar palabras y contraseñas habituales | Rechazar contraseñas conocidas o filtradas |
 | ***Password spraying*** | Probar una contraseña común (`Verano2026!`) contra muchas cuentas | Detección de intentos distribuidos, MFA |
 | ***Credential stuffing*** | Usar pares usuario/contraseña filtrados de otros servicios | No reutilizar contraseñas, MFA |
-| **Ataque *offline* al hash** | Si se roba el fichero de hashes, se prueban contraseñas sin límite de intentos | Algoritmos lentos con sal (yescrypt, Argon2): [UD3](/ud03-criptografia/ud03-teoria/) |
+| **Ataque *offline* al hash** | Si se roba el fichero de hashes, se prueban contraseñas sin límite de intentos | Algoritmos lentos con sal (yescrypt, Argon2): [UD03](/ud03/ud03-teoria/) |
 
 ¿Por qué es tan importante la **longitud**? El número de combinaciones posibles es `N^L`, siendo `N` el número de símbolos posibles y `L` la longitud. Este *script* estima cuánto tardaría un atacante con un equipo de varias GPU contra un *hash* rápido (10 000 millones de intentos por segundo):
 
@@ -334,7 +334,7 @@ Las recomendaciones han cambiado mucho en los últimos años. La guía **NIST SP
 | **Limitar los intentos** fallidos | Frena la fuerza bruta en línea |
 | Permitir **gestores de contraseñas** y pegar | Fomenta contraseñas largas y únicas |
 | Usar **MFA** siempre que sea posible, y obligatoriamente en cuentas privilegiadas y accesos remotos | Una contraseña robada deja de ser suficiente |
-| Almacenar las contraseñas con un **hash lento y con sal** | Dificulta los ataques *offline* (UD3) |
+| Almacenar las contraseñas con un **hash lento y con sal** | Dificulta los ataques *offline* (UD03) |
 
 Ejemplo de **política de contraseñas** para una pequeña empresa (la que adoptarás en la práctica 4.1 para Mediterránea Dental):
 
@@ -354,6 +354,10 @@ POLÍTICA DE CONTRASEÑAS - Versión 1.0
 
 > [!NOTE]
 > Los sistemas operativos no aplican «las recomendaciones del NIST» por sí solos: hay que traducir cada punto a una configuración concreta (PAM en Linux, directivas de cuenta en Windows). Eso es lo que haces en el apartado 3.6.
+
+#### Explora: cuánto tarda en romperse una contraseña
+
+{{< explora "contrasena" >}}
 
 ### 3.4 Autenticación multifactor (MFA)
 
@@ -774,7 +778,7 @@ sudo update-grub                 # Debian: regenera grub.cfg
 > [!CAUTION]
 > Con LUKS, si se corrompe la cabecera o se pierden todas las contraseñas, los datos son irrecuperables. Haz copia de la cabecera (`cryptsetup luksHeaderBackup`) y guárdala **fuera** del equipo y protegida.
 
-El funcionamiento interno de LUKS (algoritmos, *keyslots*, derivación de la clave) y la práctica completa de creación, apertura, copia de cabecera y recuperación se desarrollan en la [UD3. Criptografía](/ud03-criptografia/ud03-teoria/) y sus [prácticas](/ud03-criptografia/ud03-practicas/). En esta unidad solo debes recordar **dónde encaja** en el bastionado y comprobar si un servidor lo usa (`lsblk -f` muestra los volúmenes `crypto_LUKS`).
+El funcionamiento interno de LUKS (algoritmos, *keyslots*, derivación de la clave) y la práctica completa de creación, apertura, copia de cabecera y recuperación se desarrollan en la [UD03. Criptografía](/ud03/ud03-teoria/) y sus [prácticas](/ud03/ud03-practicas/). En esta unidad solo debes recordar **dónde encaja** en el bastionado y comprobar si un servidor lo usa (`lsblk -f` muestra los volúmenes `crypto_LUKS`).
 
 ### 5.4 Servicios, puertos y procesos
 
@@ -985,7 +989,7 @@ Las vulnerabilidades conocidas son la vía de entrada más habitual. Mantener el
 
 ### 6.1 Firmas de repositorios y verificación del origen
 
-Los gestores de paquetes verifican con criptografía (UD3) que los paquetes no han sido alterados:
+Los gestores de paquetes verifican con criptografía (UD03) que los paquetes no han sido alterados:
 
 - **APT**: los repositorios están firmados con claves GPG almacenadas en `/etc/apt/keyrings/` o `/usr/share/keyrings/`. Cada repositorio de terceros debe referenciar **su** clave con `signed-by=` (el antiguo `apt-key` está retirado).
 - **DNF/RPM**: `gpgcheck=1` en cada `.repo` y paquetes firmados.
@@ -1084,7 +1088,7 @@ flowchart LR
 | Corregir | `apt upgrade`; si no hay parche, mitigación (desactivar la función, regla de cortafuegos) | Un parche no aplicado por falta de reinicio **no** protege |
 | Verificar | Escaneo posterior y comprobación de la versión efectiva | `needrestart` indica qué procesos usan aún bibliotecas viejas |
 
-La detección centralizada de vulnerabilidades en toda la flota se estudia en la [UD5 (seguridad en redes y SIEM)](/ud05-seguridad-redes/ud05-teoria/).
+La detección centralizada de vulnerabilidades en toda la flota se estudia en la [UD05 (seguridad en redes y SIEM)](/ud05/ud05-teoria/).
 
 ---
 
@@ -1092,7 +1096,7 @@ La detección centralizada de vulnerabilidades en toda la flota se estudia en la
 
 ### 7.1 Cortafuegos local
 
-Un **cortafuegos de *host*** filtra el tráfico que entra y sale del propio equipo. Aunque haya un cortafuegos perimetral (UD6), el local aporta defensa en profundidad: protege frente a un atacante que ya está dentro de la red (movimiento lateral) y frente a errores del perímetro. Política recomendada: **denegar por defecto** el tráfico entrante y permitir solo lo necesario.
+Un **cortafuegos de *host*** filtra el tráfico que entra y sale del propio equipo. Aunque haya un cortafuegos perimetral (UD06), el local aporta defensa en profundidad: protege frente a un atacante que ya está dentro de la red (movimiento lateral) y frente a errores del perímetro. Política recomendada: **denegar por defecto** el tráfico entrante y permitir solo lo necesario.
 
 | Herramienta | Qué es | Cuándo usarla |
 |---|---|---|
@@ -1187,7 +1191,7 @@ sudo firewall-cmd --reload                            # aplica lo "permanent"
 
 ### 7.2 Cómo funciona SSH
 
-**SSH** (*Secure Shell*) da acceso remoto cifrado. Usa criptografía asimétrica (UD3): el servidor se identifica con su **clave de *host*** y el cliente con contraseña o, mejor, con un **par de claves**.
+**SSH** (*Secure Shell*) da acceso remoto cifrado. Usa criptografía asimétrica (UD03): el servidor se identifica con su **clave de *host*** y el cliente con contraseña o, mejor, con un **par de claves**.
 
 ```mermaid
 sequenceDiagram
@@ -1281,7 +1285,7 @@ KbdInteractiveAuthentication yes
 AuthenticationMethods publickey,keyboard-interactive
 ```
 
-La coma significa «**y**»: hay que superar ambos métodos en ese orden (un espacio significaría «o»). El procedimiento completo, con comprobaciones y vuelta atrás, está en la [práctica 4.2](/ud04-fortificacion-hosts/ud04-practicas/#práctica-42--ssh-con-clave-ed25519-y-segundo-factor-totp).
+La coma significa «**y**»: hay que superar ambos métodos en ese orden (un espacio significaría «o»). El procedimiento completo, con comprobaciones y vuelta atrás, está en la [práctica 4.2](/ud04/ud04-practicas/#práctica-42--ssh-con-clave-ed25519-y-segundo-factor-totp).
 
 > [!IMPORTANT]
 > Un TOTP depende de la hora: comprueba con `timedatectl` que el reloj del servidor está sincronizado. Y guarda los **códigos de emergencia** que genera `google-authenticator`: si pierdes el móvil, son tu única vía de entrada además de la consola de la máquina.
@@ -1470,7 +1474,7 @@ sudo less /var/log/rkhunter.log          # registro completo de la ejecución
 
 ### 9.3 Integridad con AIDE
 
-**AIDE** (*Advanced Intrusion Detection Environment*) guarda una «foto» (*hashes*, permisos, propietarios) de los ficheros importantes. Si luego alguien los modifica —por ejemplo, un atacante que sustituye `/bin/ls` o añade una clave en `authorized_keys`—, AIDE lo detecta al comparar. Usa las funciones *hash* vistas en la UD3.
+**AIDE** (*Advanced Intrusion Detection Environment*) guarda una «foto» (*hashes*, permisos, propietarios) de los ficheros importantes. Si luego alguien los modifica —por ejemplo, un atacante que sustituye `/bin/ls` o añade una clave en `authorized_keys`—, AIDE lo detecta al comparar. Usa las funciones *hash* vistas en la UD03.
 
 {{< tabs >}}
 {{% tab "Debian / Ubuntu" %}}
@@ -1503,7 +1507,7 @@ sudo rm /etc/fichero-sospechoso.conf
 
 ### 9.4 Microsoft Defender y EDR
 
-En Windows Server 2025, **Microsoft Defender Antivirus** viene incluido (apartado 5.6) y combina firmas, heurística y protección en la nube. Un **EDR** (*Endpoint Detection and Response*) va un paso más allá: recoge de forma continua la actividad del equipo (procesos, conexiones, cambios de ficheros) para detectar comportamientos y permitir la respuesta (aislar el equipo, matar un proceso). En el ámbito del software libre, **Wazuh** cumple esa función de forma centralizada; se estudia en la [UD5](/ud05-seguridad-redes/ud05-teoria/).
+En Windows Server 2025, **Microsoft Defender Antivirus** viene incluido (apartado 5.6) y combina firmas, heurística y protección en la nube. Un **EDR** (*Endpoint Detection and Response*) va un paso más allá: recoge de forma continua la actividad del equipo (procesos, conexiones, cambios de ficheros) para detectar comportamientos y permitir la respuesta (aislar el equipo, matar un proceso). En el ámbito del software libre, **Wazuh** cumple esa función de forma centralizada; se estudia en la [UD05](/ud05/ud05-teoria/).
 
 ---
 
@@ -1537,7 +1541,7 @@ sudo systemctl restart systemd-journald
 **`rsyslog`** es el servicio clásico de *syslog*: escribe los mensajes en ficheros de texto (`/var/log/auth.log`, `/var/log/syslog`) y, sobre todo, puede **reenviarlos a un servidor central** (por eso se sigue usando). En Debian 13 no se instala por defecto: el diario de `journald` es la fuente principal.
 
 > [!NOTE]
-> Los registros locales son lo primero que borra un atacante (técnica T1070). En entornos reales se **envían a un servidor central** (`rsyslog` con TLS o un agente de Wazuh) para conservarlos aunque el equipo caiga. La centralización y la correlación de eventos se estudian en la [UD5](/ud05-seguridad-redes/ud05-teoria/).
+> Los registros locales son lo primero que borra un atacante (técnica T1070). En entornos reales se **envían a un servidor central** (`rsyslog` con TLS o un agente de Wazuh) para conservarlos aunque el equipo caiga. La centralización y la correlación de eventos se estudian en la [UD05](/ud05/ud05-teoria/).
 
 En Windows, el equivalente es el **Visor de eventos** (*Event Viewer*): el registro *Seguridad* guarda los inicios de sesión (4624 correcto, 4625 fallido) si la auditoría está activada (apartado 5.6).
 
@@ -1589,7 +1593,7 @@ Un evento de `auditd` indica **quién** (`auid`, el usuario original aunque haya
 
 ### 10.3 Monitorización centralizada
 
-Reunir los registros y alertas de todos los equipos en un único panel (SIEM/XDR) corresponde a la [UD5. Seguridad en redes](/ud05-seguridad-redes/ud05-teoria/), donde se instala Wazuh. Aquí te interesa lo que cada *host* debe aportar: registros persistentes, auditoría y comprobaciones de integridad.
+Reunir los registros y alertas de todos los equipos en un único panel (SIEM/XDR) corresponde a la [UD05. Seguridad en redes](/ud05/ud05-teoria/), donde se instala Wazuh. Aquí te interesa lo que cada *host* debe aportar: registros persistentes, auditoría y comprobaciones de integridad.
 
 ---
 
@@ -1597,7 +1601,7 @@ Reunir los registros y alertas de todos los equipos en un único panel (SIEM/XDR
 
 ### 11.1 Fases de la gestión de un incidente
 
-Un **incidente** es un evento que compromete la confidencialidad, integridad o disponibilidad de un activo. Aunque el detalle de la gestión (notificación, roles, comunicación) se estudió en la [UD1](/ud01-seguridad-informatica/ud01-teoria/), recuerda el ciclo clásico de referencia (NIST SP 800-61, revisión 2; la revisión 3, de 2025, lo reorganiza según el marco NIST CSF 2.0, pero las actividades son las mismas):
+Un **incidente** es un evento que compromete la confidencialidad, integridad o disponibilidad de un activo. Aunque el detalle de la gestión (notificación, roles, comunicación) se estudió en la [UD01](/ud01/ud01-teoria/), recuerda el ciclo clásico de referencia (NIST SP 800-61, revisión 2; la revisión 3, de 2025, lo reorganiza según el marco NIST CSF 2.0, pero las actividades son las mismas):
 
 | Fase | Qué se hace | Ejemplo en `srv-gestion` |
 |---|---|---|
@@ -1679,7 +1683,7 @@ sudo mount -o ro,loop,noexec,nodev /evidencias/caso01_sdb.img /mnt/caso01
 - `dd` copia bloque a bloque: `if` es el origen (*input file*), `of` el destino (*output file*), `bs=4M` el tamaño de bloque y `conv=noerror,sync` hace que continúe ante sectores defectuosos rellenándolos con ceros.
 - `mount -o ro,loop` monta el fichero de imagen como si fuera un disco, en **solo lectura** (`ro`); `noexec` impide ejecutar programas de la imagen y `nodev` ignora ficheros de dispositivo.
 
-La práctica guiada ([4.9](/ud04-fortificacion-hosts/ud04-practicas/#práctica-49--adquisición-forense-con-verificación-hash-y-análisis-con-autopsy)) repite este procedimiento sobre una «memoria USB» simulada, recupera un fichero borrado y abre la imagen en Autopsy.
+La práctica guiada ([4.9](/ud04/ud04-practicas/#práctica-49--adquisición-forense-con-verificación-hash-y-análisis-con-autopsy)) repite este procedimiento sobre una «memoria USB» simulada, recupera un fichero borrado y abre la imagen en Autopsy.
 
 ---
 
@@ -1721,12 +1725,6 @@ Método de diagnóstico en tres pasos cuando algo deja de funcionar tras endurec
 
 ---
 
-## Explora: cuánto tarda en romperse una contraseña
-
-{{< explora "contrasena" >}}
-
----
-
 ## Ejercicios
 
 1. Explica con tus palabras la diferencia entre *deshabilitar* (`disable`) y *enmascarar* (`mask`) un servicio. ¿Cuándo preferirías `mask`?
@@ -1760,7 +1758,7 @@ Método de diagnóstico en tres pasos cuando algo deja de funcionar tras endurec
 ## Supuesto profesional
 
 > [!IMPORTANT]
-> **Supuesto.** Mediterránea Dental S. L. quiere publicar en Internet su **web de citas** en un servidor **Debian 13 recién instalado** por el proveedor (hasta que se monte la DMZ de la UD6, lo llamamos `srv-web-pre`). El servidor tiene SSH con contraseña y `root` permitido, una base de datos escuchando en todas las interfaces, sin cortafuegos, sin actualizaciones automáticas, registros volátiles y sin ninguna comprobación de integridad. Tu tarea es elaborar y ejecutar su **plan de bastionado**, documentando la puntuación de Lynis antes y después de aplicar las medidas.
+> **Supuesto.** Mediterránea Dental S. L. quiere publicar en Internet su **web de citas** en un servidor **Debian 13 recién instalado** por el proveedor (hasta que se monte la DMZ de la UD06, lo llamamos `srv-web-pre`). El servidor tiene SSH con contraseña y `root` permitido, una base de datos escuchando en todas las interfaces, sin cortafuegos, sin actualizaciones automáticas, registros volátiles y sin ninguna comprobación de integridad. Tu tarea es elaborar y ejecutar su **plan de bastionado**, documentando la puntuación de Lynis antes y después de aplicar las medidas.
 
 Entrega un informe breve con:
 
@@ -1782,11 +1780,11 @@ Aplica primero lo que **más reduce el riesgo con menos probabilidad de dejarte 
 | 4 | SSH: clave Ed25519, sin `root`, sin contraseña, TOTP | Prueba positiva y negativa desde otra sesión | Borrar `10-hardening.conf` |
 | 5 | Cortafuegos `nftables` con `policy drop` y Fail2ban | `nmap` desde fuera; fallos simulados bloqueados | «Deshacer» programado |
 | 6 | AppArmor en `enforce`, ClamAV sobre las subidas, AIDE y `auditd` | `aa-status`, EICAR, cambio simulado | Reglas `.bak` |
-| 7 | Registros persistentes y envío al servidor de monitorización (UD5) | `journalctl --disk-usage` | Quitar el fichero de `journald.conf.d` |
+| 7 | Registros persistentes y envío al servidor de monitorización (UD05) | `journalctl --disk-usage` | Quitar el fichero de `journald.conf.d` |
 | 8 | `lynis audit system` («después») y `nmap` («después») | Comparación del índice y de los puertos | — |
 {{% /details %}}
 
-La Tarea del proyecto de esta unidad ([Bastionado de `srv-gestion`](/ud04-fortificacion-hosts/ud04-practicas/#proyecto-mediterránea-dental--ud4-bastionado-de-srv-gestion)) es la versión evaluable de este supuesto.
+La Tarea del proyecto de esta unidad ([Bastionado de `srv-gestion`](/ud04/ud04-practicas/#proyecto-mediterránea-dental--ud4-bastionado-de-srv-gestion)) es la versión evaluable de este supuesto.
 
 ---
 
@@ -1797,7 +1795,7 @@ La Tarea del proyecto de esta unidad ([Bastionado de `srv-gestion`](/ud04-fortif
 - **Contraseñas**: la longitud pesa más que la complejidad (NIST SP 800-63B); se combinan con bloqueo (`faillock`) y **MFA** (TOTP, FIDO2/*passkeys*). La biometría se evalúa con FAR, FRR y EER.
 - **Permisos**: DAC, MAC y RBAC; `sudo` con `visudo`, ACL, `umask` y vigilancia de SUID; UAC en Windows.
 - **PAM** gestiona la autenticación en Linux (`pwquality`, `faillock`, TOTP); en Windows, directivas de cuenta y GPO.
-- **Arranque y disco**: Secure Boot, contraseña de GRUB y cifrado LUKS/BitLocker (la práctica de LUKS está en la UD3).
+- **Arranque y disco**: Secure Boot, contraseña de GRUB y cifrado LUKS/BitLocker (la práctica de LUKS está en la UD03).
 - **Servicios**: `ss`, `systemctl`, `systemd-analyze security`; verificación externa con Nmap.
 - **Actualizaciones y origen del software**: repositorios firmados, sumas de verificación, `unattended-upgrades` y ciclo de gestión de vulnerabilidades.
 - **Cortafuegos local** con política de denegación por defecto (nftables); **SSH** con claves Ed25519, sin `root` ni contraseñas, `sshd -t` antes de recargar; **Fail2ban** bloquea IP abusivas.

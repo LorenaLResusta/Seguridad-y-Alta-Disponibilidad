@@ -25,17 +25,17 @@ Todas las prácticas se realizan en **máquinas virtuales** sobre redes de labor
 | Función | Tecnología | Observaciones |
 |---|---|---|
 | Virtualización en tu equipo | VirtualBox 7.x o VMware Workstation | Hipervisor de tipo 2 |
-| Virtualización en el servidor del aula | Proxmox VE 9.x | Hipervisor de tipo 1; necesario para la práctica de clúster de la UD7 |
+| Virtualización en el servidor del aula | Proxmox VE 9.x | Hipervisor de tipo 1; necesario para la práctica de clúster de la UD07 |
 | Servidores Linux | **Debian 13 «trixie»** | Distribución de referencia de todos los apuntes |
 | Alternativas Linux | Ubuntu Server LTS, AlmaLinux | Cuando cambian rutas, paquetes u órdenes, se indica con pestañas |
 | Servidores Windows | Windows Server 2025 (versión de evaluación) | Directivas de grupo, Active Directory, Defender |
 | Clientes | Debian con escritorio y Windows 11 | |
-| Cortafuegos dedicado | OPNsense o pfSense CE | UD6 |
+| Cortafuegos dedicado | OPNsense o pfSense CE | UD06 |
 | Contenedores | Docker Engine | Servicios auxiliares de prácticas concretas |
 | Análisis y herramientas | Wireshark, Nmap, OpenSSH, OpenSSL, Lynis, Suricata, Wazuh | Se explican en la unidad donde se usan |
 
 > [!NOTE]
-> Cada práctica indica la versión exacta cuando importa para reproducirla. Descarga siempre las imágenes de la **web oficial** de cada proyecto y comprueba su suma de verificación (práctica de la UD1).
+> Cada práctica indica la versión exacta cuando importa para reproducirla. Descarga siempre las imágenes de la **web oficial** de cada proyecto y comprueba su suma de verificación (práctica de la UD01).
 
 ## Redes virtuales
 

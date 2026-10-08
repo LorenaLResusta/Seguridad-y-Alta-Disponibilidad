@@ -4,7 +4,7 @@ weight: 1
 bookToc: true
 ---
 
-# UD2 · Seguridad pasiva: seguridad física, almacenamiento y copias de seguridad
+# UD02 · Seguridad pasiva: seguridad física, almacenamiento y copias de seguridad
 
 ## Resumen del tema
 
@@ -20,7 +20,7 @@ En esta unidad estudias, de abajo arriba, las capas de la seguridad pasiva:
 {{< ra "RA1:a,b" "RA6:b,f" >}}
 
 > [!NOTE]
-> **Cómo se relaciona con otras unidades.** La UD1 identificó los activos y el riesgo; esta unidad protege el activo más valioso (la información) frente a la pérdida. La [UD3](/ud03-criptografia/ud03-teoria/) aporta el cifrado de copias y volúmenes, y la [UD7](/ud07-alta-disponibilidad/ud07-teoria/) lleva la redundancia un paso más allá: que el **servicio** no se detenga.
+> **Cómo se relaciona con otras unidades.** La UD01 identificó los activos y el riesgo; esta unidad protege el activo más valioso (la información) frente a la pérdida. La [UD03](/ud03/ud03-teoria/) aporta el cifrado de copias y volúmenes, y la [UD07](/ud07/ud07-teoria/) lleva la redundancia un paso más allá: que el **servicio** no se detenga.
 
 ### Planificación de la unidad
 
@@ -29,7 +29,7 @@ En esta unidad estudias, de abajo arriba, las capas de la seguridad pasiva:
 | Bloque | Horas |
 |---|--:|
 | Teoría (esta página) | 7 h |
-| Prácticas ([ver prácticas](/ud02-seguridad-pasiva/ud02-practicas/)) | 9 h |
+| Prácticas ([ver prácticas](/ud02/ud02-practicas/)) | 9 h |
 | Evaluación (prueba teórico-práctica y entrega de la Tarea del proyecto) | 2 h |
 | **Total** | **18 h** |
 
@@ -98,7 +98,7 @@ Un caso real ilustra la diferencia. Una gestoría sufre un ataque de *ransomware
 
 ### 1.2 Disponibilidad, integridad y confidencialidad (RA1.a)
 
-La seguridad de la información persigue tres propiedades (tríada **CID**, estudiada en la [UD1](/ud01-seguridad-informatica/ud01-teoria/)). La seguridad pasiva protege sobre todo las dos primeras:
+La seguridad de la información persigue tres propiedades (tríada **CID**, estudiada en la [UD01](/ud01/ud01-teoria/)). La seguridad pasiva protege sobre todo las dos primeras:
 
 | Propiedad | Qué significa | Cómo la protege la seguridad pasiva |
 |---|---|---|
@@ -122,9 +122,9 @@ Las dos son **complementarias**: sin seguridad física, la lógica se puede esqu
 | Riesgo por acceso físico | Medida física | Medida lógica que la complementa |
 |---|---|---|
 | Arrancar el equipo con un USB ajeno | Sala cerrada, candado en el chasis | Contraseña de UEFI, orden de arranque fijo, *Secure Boot* |
-| Extraer el disco y leerlo en otro equipo | Armario con llave, inventario de soportes | **Cifrado de disco** con LUKS ([UD3](/ud03-criptografia/ud03-teoria/)) |
+| Extraer el disco y leerlo en otro equipo | Armario con llave, inventario de soportes | **Cifrado de disco** con LUKS ([UD03](/ud03/ud03-teoria/)) |
 | Robo de un portátil | Candado Kensington, política de no dejarlo en el coche | Cifrado completo del disco, borrado remoto |
-| Conectar un dispositivo USB malicioso | Tapones o bloqueo de puertos | Políticas de dispositivos extraíbles ([UD4](/ud04-fortificacion-hosts/ud04-teoria/)) |
+| Conectar un dispositivo USB malicioso | Tapones o bloqueo de puertos | Políticas de dispositivos extraíbles ([UD04](/ud04/ud04-teoria/)) |
 
 > [!NOTE]
 > **Dónde encaja cada medida de esta unidad.** Físicas: CPD, climatización, extinción, SAI, fuentes redundantes, armarios para copias. Lógicas: RAID por software, LVM, `restic`, políticas de copia, borrado criptográfico. Algunas son **mixtas**: el RAID por *hardware* es físico (controladora) y el RAID por *software* es lógico, pero ambos persiguen lo mismo, la disponibilidad.
@@ -218,7 +218,7 @@ La seguridad física no se limita al CPD:
 
 ### 2.5 Soluciones *hardware* para la continuidad (RA6.b)
 
-Parte de la continuidad se consigue con componentes físicos **redundantes** que permiten que el equipo siga funcionando cuando falla una pieza. Eliminan **puntos únicos de fallo** (SPOF, *Single Point Of Failure*, concepto que se desarrolla en la [UD7](/ud07-alta-disponibilidad/ud07-teoria/)).
+Parte de la continuidad se consigue con componentes físicos **redundantes** que permiten que el equipo siga funcionando cuando falla una pieza. Eliminan **puntos únicos de fallo** (SPOF, *Single Point Of Failure*, concepto que se desarrolla en la [UD07](/ud07/ud07-teoria/)).
 
 | Componente | Solución *hardware* de continuidad | Qué ocurre si falla una pieza |
 |---|---|---|
@@ -229,7 +229,7 @@ Parte de la continuidad se consigue con componentes físicos **redundantes** que
 | Memoria | **ECC** (corrige errores de un bit y detecta los de dos) | Se corrige el error sin corromper datos |
 | Refrigeración | Ventiladores redundantes y CRAC/CRAH en N+1 | El resto mantiene la temperatura |
 | Red | Dos tarjetas agregadas (*bonding*/LACP), dos *switches* | El tráfico sigue por el enlace superviviente |
-| Servidores | *Clúster* y balanceo de carga | Otro nodo asume el servicio ([UD7](/ud07-alta-disponibilidad/ud07-teoria/)) |
+| Servidores | *Clúster* y balanceo de carga | Otro nodo asume el servicio ([UD07](/ud07/ud07-teoria/)) |
 | CPD | Centro de respaldo | Se conmuta a la segunda ubicación |
 
 > [!NOTE]
@@ -356,7 +356,7 @@ upsc sai01@localhost
 > **Seguridad de NUT.** Por defecto `upsd` solo escucha en `127.0.0.1`. Si abres el puerto 3493 a la red para que otros servidores se apaguen con el mismo SAI, limita el acceso con el cortafuegos a esas direcciones, usa contraseñas robustas en `upsd.users`, protege los ficheros de configuración (`chmod 640`, grupo `nut`) y valora cifrar la comunicación con TLS (consulta la documentación de NUT). Un atacante que controle `upsd` puede **apagar tus servidores**.
 
 > [!NOTE]
-> En la [práctica 2.1](/ud02-seguridad-pasiva/ud02-practicas/#práctica-21--sai-simulado-y-apagado-ordenado-con-nut) se simula un SAI con el driver `dummy-ups`, de modo que se puede probar el apagado automático sin *hardware* y sin cortar la luz del aula.
+> En la [práctica 2.1](/ud02/ud02-practicas/#práctica-21--sai-simulado-y-apagado-ordenado-con-nut) se simula un SAI con el driver `dummy-ups`, de modo que se puede probar el apagado automático sin *hardware* y sin cortar la luz del aula.
 
 ---
 
@@ -525,7 +525,7 @@ La **redundancia** consiste en duplicar componentes para que, si uno falla, otro
 | Fuentes de alimentación | Dos fuentes conectadas a dos líneas eléctricas distintas |
 | Alimentación | SAI + grupo electrógeno + doble acometida |
 | Red | Dos tarjetas de red agregadas (*bonding*), dos *switches* |
-| Servidores | *Clúster* y balanceo de carga ([UD7](/ud07-alta-disponibilidad/ud07-teoria/)) |
+| Servidores | *Clúster* y balanceo de carga ([UD07](/ud07/ud07-teoria/)) |
 | CPD | Centro de respaldo |
 
 ### 5.2 RAID: qué es y cómo funciona
@@ -972,7 +972,7 @@ Ambos valores se deciden con la dirección mediante un **análisis de impacto en
 | Web informativa | 24 h | 24 h | Copia diaria |
 | Ficheros compartidos | 4 h | 8 h | *Snapshots* cada 4 h + copia diaria externa |
 | ERP / tienda en línea | 15 min | 2 h | Replicación de la base de datos + copia horaria |
-| Sistema de pagos | ≈ 0 | Minutos | *Clúster* con replicación síncrona ([UD7](/ud07-alta-disponibilidad/ud07-teoria/)) |
+| Sistema de pagos | ≈ 0 | Minutos | *Clúster* con replicación síncrona ([UD07](/ud07/ud07-teoria/)) |
 
 {{% details title="Comprueba lo que has aprendido: RPO y RTO" %}}
 **Una empresa hace copia cada noche a las 02:00 y tarda 3 horas en restaurar. El servidor cae a las 17:00. ¿Cuánto trabajo puede perder como máximo y cuánto tardará en volver?**
@@ -1140,7 +1140,7 @@ restic check
 > Si se pierde la contraseña del repositorio de restic, **los datos son irrecuperables**. Guárdala en un gestor de secretos y en una copia física custodiada, **fuera** del servidor que se copia.
 
 > [!WARNING]
-> Quien tiene acceso de escritura al repositorio y su contraseña puede ejecutar `restic forget --prune` y **borrar todas las copias**. Un *ransomware* que se haga con las credenciales de copia puede hacerlo. Mitigación: un servidor `rest-server` con la opción `--append-only` (solo permite añadir), el modelo *pull*, o una copia adicional inmutable (ver [práctica 2.6](/ud02-seguridad-pasiva/ud02-practicas/#práctica-26--ransomware-simulado-detección-y-recuperación)).
+> Quien tiene acceso de escritura al repositorio y su contraseña puede ejecutar `restic forget --prune` y **borrar todas las copias**. Un *ransomware* que se haga con las credenciales de copia puede hacerlo. Mitigación: un servidor `rest-server` con la opción `--append-only` (solo permite añadir), el modelo *pull*, o una copia adicional inmutable (ver [práctica 2.6](/ud02/ud02-practicas/#práctica-26--ransomware-simulado-detección-y-recuperación)).
 
 ### 8.4 BorgBackup: alternativa a restic
 
@@ -1209,7 +1209,7 @@ proxmox-backup-client backup etc.pxar:/etc --repository copias@pbs@192.168.10.12
 ```
 
 > [!NOTE]
-> PBS se usa en la [UD7](/ud07-alta-disponibilidad/ud07-teoria/) junto con el *clúster* de Proxmox VE. En esta unidad se estudia a nivel conceptual y, opcionalmente, se instala en la ampliación de la práctica 2.5. La sintaxis exacta depende de la versión (PBS 4.x se basa en Debian 13): consulta siempre la documentación oficial.
+> PBS se usa en la [UD07](/ud07/ud07-teoria/) junto con el *clúster* de Proxmox VE. En esta unidad se estudia a nivel conceptual y, opcionalmente, se instala en la ampliación de la práctica 2.5. La sintaxis exacta depende de la versión (PBS 4.x se basa en Debian 13): consulta siempre la documentación oficial.
 
 ### 8.6 Imágenes de sistema: Clonezilla
 
@@ -1229,7 +1229,7 @@ Las herramientas anteriores copian **ficheros**. Si un servidor se pierde por co
 | Permite **cifrar** la imagen y **comprobar** que se puede restaurar | Poco granular: no sirve para recuperar un fichero suelto cómodamente |
 
 > [!TIP]
-> Se complementa con las copias de ficheros: la **imagen** (mensual o tras cambios importantes) restaura el sistema base; las copias de **ficheros** (cada pocas horas con `restic`) devuelven los datos más recientes. La [práctica 2.7](/ud02-seguridad-pasiva/ud02-practicas/#práctica-27--imagen-de-sistema-con-clonezilla) guía el proceso completo.
+> Se complementa con las copias de ficheros: la **imagen** (mensual o tras cambios importantes) restaura el sistema base; las copias de **ficheros** (cada pocas horas con `restic`) devuelven los datos más recientes. La [práctica 2.7](/ud02/ud02-practicas/#práctica-27--imagen-de-sistema-con-clonezilla) guía el proceso completo.
 
 ### 8.7 Otras herramientas
 
@@ -1378,7 +1378,7 @@ Un plan de contingencia concreto, para el escenario más frecuente, sigue estos 
 |---|---|---|
 | 1. **Aislar** | Desconectar de la red los equipos afectados (sin apagarlos si se quiere conservar evidencias en memoria) y parar los trabajos de copia | Evita que el cifrado se propague y que las copias buenas se sustituyan por datos cifrados |
 | 2. **Evaluar** | Determinar el alcance (qué equipos y ficheros) y la hora del inicio | Fija el último punto bueno para restaurar |
-| 3. **Preservar** | Guardar notas de rescate, muestras y registros para el análisis forense ([UD4](/ud04-fortificacion-hosts/ud04-teoria/)) | Se necesitan para entender la causa y para posibles denuncias |
+| 3. **Preservar** | Guardar notas de rescate, muestras y registros para el análisis forense ([UD04](/ud04/ud04-teoria/)) | Se necesitan para entender la causa y para posibles denuncias |
 | 4. **Erradicar** | Reinstalar o limpiar los equipos y cambiar **todas** las credenciales | Si se restaura sobre un sistema aún comprometido, el ataque se repite |
 | 5. **Restaurar** | Desde la **última copia anterior al ataque**, en un entorno limpio y verificando antes de poner en producción | Es el momento en que se cumple (o no) el RTO |
 | 6. **Notificar** | Si hay datos personales afectados con riesgo para las personas, notificar a la **AEPD** en un máximo de **72 horas** (art. 33 del RGPD); denunciar; consultar a **INCIBE-CERT** (línea 017) | Obligación legal y apoyo técnico |
@@ -1434,7 +1434,7 @@ sudo cryptsetup erase /dev/sdX
 > [!CAUTION]
 > Estos comandos son **irreversibles**. En el laboratorio se practican solo sobre ficheros de imagen o discos virtuales dedicados. Comprueba siempre el dispositivo con `lsblk` antes de ejecutarlos.
 
-`shred` sobre **ficheros** individuales no es fiable en sistemas de ficheros con *journaling*, copia en escritura (Btrfs, ZFS) o en SSD. La mejor estrategia para soportes que contienen información sensible es **cifrarlos desde el principio** ([UD3](/ud03-criptografia/ud03-teoria/) y [UD4](/ud04-fortificacion-hosts/ud04-teoria/)): así, al final de su vida, basta con destruir la clave.
+`shred` sobre **ficheros** individuales no es fiable en sistemas de ficheros con *journaling*, copia en escritura (Btrfs, ZFS) o en SSD. La mejor estrategia para soportes que contienen información sensible es **cifrarlos desde el principio** ([UD03](/ud03/ud03-teoria/) y [UD04](/ud04/ud04-teoria/)): así, al final de su vida, basta con destruir la clave.
 
 En una organización, la **retirada de equipos** debe seguir un procedimiento documentado: inventario, borrado o destrucción según la clasificación de la información, **certificado de destrucción** del proveedor (norma UNE-EN 15713 para la destrucción de material confidencial) y actualización del inventario. El RGPD obliga a poder acreditar que los datos personales se eliminaron de forma segura.
 

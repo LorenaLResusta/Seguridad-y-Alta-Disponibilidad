@@ -1,14 +1,14 @@
 ---
-title: "UD2 · Prácticas"
+title: "UD02 · Prácticas"
 weight: 2
 bookToc: true
 ---
 
-# UD2 · Prácticas
+# UD02 · Prácticas
 
 {{< ra "RA1:a,b,g" "RA6:b,f,i" >}}
 
-En estas prácticas aplicas la [teoría de la UD2](/ud02-seguridad-pasiva/ud02-teoria/) en un laboratorio virtual aislado: provocas un **corte eléctrico**, un **disco averiado** y un ***ransomware*** simulado, y compruebas que sabes **recuperar** el servicio y los datos. Cada práctica de fallo incluye la prueba explícita del fallo y la verificación de la recuperación.
+En estas prácticas aplicas la [teoría de la UD02](/ud02/ud02-teoria/) en un laboratorio virtual aislado: provocas un **corte eléctrico**, un **disco averiado** y un ***ransomware*** simulado, y compruebas que sabes **recuperar** el servicio y los datos. Cada práctica de fallo incluye la prueba explícita del fallo y la verificación de la recuperación.
 
 | Práctica | Tipo | Nivel | Horas | CE principales |
 |---|---|---|--:|---|
@@ -33,7 +33,7 @@ Todas las prácticas usan las mismas máquinas, que pertenecen a la infraestruct
 | `srv-ficheros` | {{< sw "Debian 13" >}} | LAN `192.168.10.11/24` | 2 GB RAM, 2 CPU | Disco del sistema + **4 discos de 1 GB** | RAID, LVM, NUT y origen de las copias |
 | `srv-copias` | {{< sw "Debian 13" >}} | LAN `192.168.10.12/24` | 1 GB RAM, 1 CPU | Disco del sistema de 20 GB | Destino de las copias |
 
-Las dos máquinas deben estar en una **red interna del hipervisor** (sin salida a Internet salvo para instalar paquetes). Puedes clonar la máquina base de la UD1 como **clon enlazado**, generando nuevas direcciones MAC, para ahorrar tiempo.
+Las dos máquinas deben estar en una **red interna del hipervisor** (sin salida a Internet salvo para instalar paquetes). Puedes clonar la máquina base de la UD01 como **clon enlazado**, generando nuevas direcciones MAC, para ahorrar tiempo.
 
 #### Añadir los discos de práctica
 
@@ -259,7 +259,7 @@ Identificar los dispositivos de almacenamiento, consultar su estado de salud, y 
 
 #### Contexto
 
-Los discos se averían y, si los datos viven en uno solo, esa avería es una pérdida. RAID 5 reparte los datos y la paridad entre varios discos y tolera la pérdida de uno; el disco de reserva inicia la reconstrucción automáticamente. Ciclo: *amenaza* (avería de un disco) → *vulnerabilidad* (datos en un único disco) → *fallo provocado* (`--fail`) → *detección* (`/proc/mdstat`, `mdadm --monitor`) → *mitigación* (RAID 5 + reserva) → *comprobación* (datos íntegros y array reconstruido). Es el almacenamiento redundante de `srv-ficheros` que se amplía en la [UD7](/ud07-alta-disponibilidad/).
+Los discos se averían y, si los datos viven en uno solo, esa avería es una pérdida. RAID 5 reparte los datos y la paridad entre varios discos y tolera la pérdida de uno; el disco de reserva inicia la reconstrucción automáticamente. Ciclo: *amenaza* (avería de un disco) → *vulnerabilidad* (datos en un único disco) → *fallo provocado* (`--fail`) → *detección* (`/proc/mdstat`, `mdadm --monitor`) → *mitigación* (RAID 5 + reserva) → *comprobación* (datos íntegros y array reconstruido). Es el almacenamiento redundante de `srv-ficheros` que se amplía en la [UD07](/ud07/).
 
 #### Requisitos previos
 
@@ -623,7 +623,7 @@ Implantar una copia diaria remota con **historial** mediante `rsync --link-dest`
    sudo chmod 700 /backups/srv-ficheros
    ```
 
-2. **Clave SSH en `srv-ficheros`**, como `root` (para poder leer todos los ficheros). `-t ed25519` es el tipo de clave (UD3); `-N ""` la deja sin frase de paso porque la usará un proceso automático; `ssh-copy-id` instala la clave pública en `~/.ssh/authorized_keys` del usuario remoto.
+2. **Clave SSH en `srv-ficheros`**, como `root` (para poder leer todos los ficheros). `-t ed25519` es el tipo de clave (UD03); `-N ""` la deja sin frase de paso porque la usará un proceso automático; `ssh-copy-id` instala la clave pública en `~/.ssh/authorized_keys` del usuario remoto.
 
    ```bash
    sudo ssh-keygen -t ed25519 -f /root/.ssh/id_backup -N "" -C "backup@srv-ficheros"
@@ -777,7 +777,7 @@ Implantar copias **cifradas y deduplicadas** con `restic`, automatizarlas, simul
    restic backup /srv/datos --tag manual
    ```
 
-5. **Automatiza con systemd.** Crea el script `/usr/local/sbin/backup-restic.sh`, el servicio y el temporizador del [apartado 8.8 de la teoría](/ud02-seguridad-pasiva/ud02-teoria/) cambiando `srv-copias` y la ruta del repositorio por las de esta práctica, y programa el temporizador cada 15 minutos para poder observarlo:
+5. **Automatiza con systemd.** Crea el script `/usr/local/sbin/backup-restic.sh`, el servicio y el temporizador del [apartado 8.8 de la teoría](/ud02/ud02-teoria/) cambiando `srv-copias` y la ruta del repositorio por las de esta práctica, y programa el temporizador cada 15 minutos para poder observarlo:
 
    ```ini
    [Timer]
@@ -902,7 +902,7 @@ Al borrar un fichero con `rm` solo se libera el espacio; los datos permanecen en
 
 #### Requisitos previos
 
-- `srv-ficheros` con `cryptsetup` instalado. Tener presente que LUKS se estudia a fondo en la UD4.
+- `srv-ficheros` con `cryptsetup` instalado. Tener presente que LUKS se estudia a fondo en la UD04.
 
 #### Desarrollo
 

@@ -1,10 +1,10 @@
 ---
-title: "UD6 · Prácticas"
+title: "UD06 · Prácticas"
 weight: 2
 bookToc: true
 ---
 
-# UD6 · Prácticas
+# UD06 · Prácticas
 
 {{< ra "RA1:h" "RA3" "RA4" "RA5" >}}
 
@@ -142,7 +142,7 @@ Los nombres de las interfaces pueden variar (`enp0s3`, `enp0s8`, `enp0s9`). Comp
 {{% /details %}}
 
 > [!NOTE]
-> Las prácticas **6.9 a 6.12** (SSH, WireGuard, RADIUS e IPsec) reutilizan las máquinas y redes de laboratorio de la [UD5](/ud05-seguridad-redes/ud05-practicas/#preparación-del-laboratorio). Si no las tienes, prepáralas primero.
+> Las prácticas **6.9 a 6.12** (SSH, WireGuard, RADIUS e IPsec) reutilizan las máquinas y redes de laboratorio de la [UD05](/ud05/ud05-practicas/#preparación-del-laboratorio). Si no las tienes, prepáralas primero.
 
 ---
 
@@ -189,7 +189,7 @@ sudo cp /etc/nftables.conf /etc/nftables.conf.bak                  # copia del f
 sudo systemctl disable --now firewalld 2>/dev/null; sudo systemctl disable --now ufw 2>/dev/null
 ```
 
-Crea `/etc/nftables.conf` con el **ruleset de tres zonas** del apartado 5.3 de la [teoría](/ud06-seguridad-perimetral/ud06-teoria/) (cópialo íntegro; ya incluye filtrado y NAT) y comprueba la sintaxis:
+Crea `/etc/nftables.conf` con el **ruleset de tres zonas** del apartado 5.3 de la [teoría](/ud06/ud06-teoria/) (cópialo íntegro; ya incluye filtrado y NAT) y comprueba la sintaxis:
 
 ```bash
 sudo nft -c -f /etc/nftables.conf && echo "SINTAXIS CORRECTA"
@@ -354,7 +354,7 @@ sudo journalctl -k --since "10 min ago" | grep -E 'FW-IN-DROP|FW-FWD-DROP|DMZ-A-
 | | | | | | | |
 
 3. Comprueba la **hora**: ¿están sincronizadas las cuatro VM? (`timedatectl`; instala `chrony` si no). Explica por qué es imprescindible para correlacionar eventos.
-4. Indica **qué eventos enviarías a un servidor de registros o SIEM** (UD4: Wazuh): cambios de reglas, autenticaciones administrativas, bloqueos repetidos, DMZ → LAN, alertas de IDS.
+4. Indica **qué eventos enviarías a un servidor de registros o SIEM** (UD04: Wazuh): cambios de reglas, autenticaciones administrativas, bloqueos repetidos, DMZ → LAN, alertas de IDS.
 
 #### Diagnóstico guiado: tres averías
 
@@ -512,7 +512,7 @@ curl -s http://localhost/app-a/ ; curl -s http://localhost/app-b/
 
 #### TLS y cabeceras de seguridad
 
-Usa un certificado de la **PKI de la UD3** (o genera uno de laboratorio) y configura el servidor HTTPS del apartado 12.3 de la teoría. Comprueba:
+Usa un certificado de la **PKI de la UD03** (o genera uno de laboratorio) y configura el servidor HTTPS del apartado 12.3 de la teoría. Comprueba:
 
 ```bash
 sudo nginx -t && sudo systemctl reload nginx
@@ -592,7 +592,7 @@ Redacta la propuesta de **HA del cortafuegos**: dos cortafuegos, IP virtual en c
 #### Implantación (si dispones de recursos)
 
 1. Clona `fw` como `fw2`, con IP propias en cada zona: WAN `.101`, LAN `.2`, DMZ `.2`.
-2. Instala Keepalived (ver UD5) en ambos, con una instancia VRRP por zona (VIP: WAN `192.168.100.100`, LAN `192.168.50.254`, DMZ `172.16.0.254`) agrupadas en un `vrrp_sync_group`. Los clientes pasan a usar la VIP como puerta de enlace (`cli-lan`: `192.168.50.254`).
+2. Instala Keepalived (ver UD05) en ambos, con una instancia VRRP por zona (VIP: WAN `192.168.100.100`, LAN `192.168.50.254`, DMZ `172.16.0.254`) agrupadas en un `vrrp_sync_group`. Los clientes pasan a usar la VIP como puerta de enlace (`cli-lan`: `192.168.50.254`).
 3. Cambia las reglas de `fw`/`fw2` a las nuevas direcciones y comprueba con las pruebas de aceptación de la práctica 2.
 4. **Prueba de fallo planificada:** con un `ping` continuo y una sesión SSH desde `cli-lan` hacia Internet, detén Keepalived en el principal:
 
@@ -626,9 +626,9 @@ Prueba la **restauración** en una VM de sustitución: instala nftables, descifr
 
 #### Lo que ve la red: protocolo en claro frente a cifrado
 
-Sigue el apartado 6.1 de la [teoría](/ud06-seguridad-perimetral/ud06-teoria/): instala la zona con autenticación básica en `sad-web`, captura tu propia petición con `tcpdump` y decodifica la cabecera `Authorization`.
+Sigue el apartado 6.1 de la [teoría](/ud06/ud06-teoria/): instala la zona con autenticación básica en `sad-web`, captura tu propia petición con `tcpdump` y decodifica la cabecera `Authorization`.
 
-Entrega: captura de pantalla de la cabecera, el resultado de `base64 -d` y una explicación de por qué es inseguro. Después repite la petición con **HTTPS** (certificado de la UD3, práctica 6) y comprueba que ya no se ve el contenido:
+Entrega: captura de pantalla de la cabecera, el resultado de `base64 -d` y una explicación de por qué es inseguro. Después repite la petición con **HTTPS** (certificado de la UD03, práctica 6) y comprueba que ya no se ve el contenido:
 
 ```bash
 sudo tcpdump -n -A -i enp0s3 'tcp port 443 and host 192.168.100.10' -c 20 | tee ~/ud6-evidencias/03-https.txt
@@ -636,7 +636,7 @@ sudo tcpdump -n -A -i enp0s3 'tcp port 443 and host 192.168.100.10' -c 20 | tee 
 
 #### Túnel SSH hacia la intranet
 
-`gw-vpn` es el único acceso desde fuera. Desde `sad-cli` (permitido por SSH a `gw-vpn`, con clave: UD4):
+`gw-vpn` es el único acceso desde fuera. Desde `sad-cli` (permitido por SSH a `gw-vpn`, con clave: UD04):
 
 ```bash
 ssh -N -L 8080:10.10.10.10:80 ana@192.168.100.90 &       # túnel local: localhost:8080 → srv-lan:80
@@ -669,7 +669,7 @@ Host srv-lan
 ssh srv-lan 'hostname; echo conectado vía bastión'
 ```
 
-Revisa en `gw-vpn` el registro de la conexión (`sudo journalctl -u ssh --since "5 min ago"`): el bastión **centraliza la auditoría**. Mejora de seguridad: en `srv-lan` permite SSH **solo** desde `10.10.10.1` (cortafuegos de la UD4).
+Revisa en `gw-vpn` el registro de la conexión (`sudo journalctl -u ssh --since "5 min ago"`): el bastión **centraliza la auditoría**. Mejora de seguridad: en `srv-lan` permite SSH **solo** desde `10.10.10.1` (cortafuegos de la UD04).
 
 #### Certificados SSH
 
@@ -884,13 +884,13 @@ Arranca FreeRADIUS en primer plano y en modo depuración (`sudo freeradius -X`) 
 
 {{< practica num="6.12" tipo="Autónoma" duracion="0 h · trabajo autónomo" nivel="3" ra="RA3:d" entorno="Debian 13 · VirtualBox 7" entrega="túnel IPsec sitio a sitio" >}}
 
-Requiere dos pasarelas (`gw-sede` y `gw-oficina`, cada una con una LAN interna). Sigue el apartado 8.4 de la [teoría](/ud06-seguridad-perimetral/ud06-teoria/) con **strongSwan**:
+Requiere dos pasarelas (`gw-sede` y `gw-oficina`, cada una con una LAN interna). Sigue el apartado 8.4 de la [teoría](/ud06/ud06-teoria/) con **strongSwan**:
 
 1. Instala `strongswan-swanctl` y `charon-systemd` en ambas.
 2. Crea `/etc/swanctl/conf.d/sede-oficina.conf` en cada extremo (invirtiendo los valores `local_*` y `remote_*`), con propuestas modernas (`aes256gcm16-prfsha384-ecp384`).
 3. Carga y comprueba: `sudo swanctl --load-all`, `sudo swanctl --list-sas` (IKE_SA y CHILD_SA en estado `ESTABLISHED/INSTALLED`) y `ping` entre equipos de las dos LAN.
 4. **Prueba de fallo:** detén `strongswan` en un extremo y comprueba la pérdida de conectividad; arráncalo de nuevo y mide el tiempo de recuperación. Captura con `tcpdump` y verifica que solo se ven paquetes ESP/UDP 4500 cifrados.
-5. **Mejora:** sustituye la clave precompartida por **certificados** firmados por la CA de la UD3 y justifica por qué es más seguro.
+5. **Mejora:** sustituye la clave precompartida por **certificados** firmados por la CA de la UD03 y justifica por qué es más seguro.
 
 ---
 

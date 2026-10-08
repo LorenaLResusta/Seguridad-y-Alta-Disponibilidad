@@ -24,12 +24,12 @@ Apuntes y prácticas del módulo profesional **0378. Seguridad y alta disponibil
 
 ```mermaid
 flowchart LR
-    A[Qué proteger<br/>UD1] --> B[Pérdida de datos<br/>UD2]
-    B --> C[Criptografía<br/>UD3]
-    C --> D[Hosts<br/>UD4]
-    D --> E[Red<br/>UD5]
-    E --> F[Perímetro<br/>UD6]
-    F --> G[Alta disponibilidad<br/>UD7]
+    A[Qué proteger<br/>UD01] --> B[Pérdida de datos<br/>UD02]
+    B --> C[Criptografía<br/>UD03]
+    C --> D[Hosts<br/>UD04]
+    D --> E[Red<br/>UD05]
+    E --> F[Perímetro<br/>UD06]
+    F --> G[Alta disponibilidad<br/>UD07]
 ```
 
 ## Unidades didácticas
@@ -37,13 +37,13 @@ flowchart LR
 Cada unidad tiene **teoría** (conceptos, ejemplos y ejercicios) y **prácticas** (fichas con duración, nivel, RA/CE y entrega, comprobaciones y problemas habituales). El reparto de horas es el de la [guía didáctica](/guia/temporalizacion/).
 
 <div class="sad-cards">
-  <div class="sad-card"><span class="sad-card-ra">RA1 · RA7 · 14 h</span><h3>UD1 · Introducción, riesgos y marco legal</h3><p>Principios, amenazas, vulnerabilidades, autenticación, incidentes, forense y legislación.</p><div class="sad-card-links"><a href="ud01-seguridad-informatica/ud01-teoria/">Teoría</a> · <a href="ud01-seguridad-informatica/ud01-practicas/">Prácticas</a></div></div>
-  <div class="sad-card"><span class="sad-card-ra">RA1 · RA6 · 18 h</span><h3>UD2 · Seguridad pasiva y copias</h3><p>CPD, SAI, RAID, LVM, copias 3-2-1-1-0, RPO/RTO y borrado seguro.</p><div class="sad-card-links"><a href="ud02-seguridad-pasiva/ud02-teoria/">Teoría</a> · <a href="ud02-seguridad-pasiva/ud02-practicas/">Prácticas</a></div></div>
-  <div class="sad-card"><span class="sad-card-ra">RA1 · RA2 · RA3 · 18 h</span><h3>UD3 · Criptografía</h3><p>Hash, cifrado, firma, certificados, PKI, TLS y cifrado de volúmenes.</p><div class="sad-card-links"><a href="ud03-criptografia/ud03-teoria/">Teoría</a> · <a href="ud03-criptografia/ud03-practicas/">Prácticas</a></div></div>
-  <div class="sad-card"><span class="sad-card-ra">RA1 · RA2 · 22 h</span><h3>UD4 · Fortificación de hosts</h3><p>Hardening, usuarios, SSH, cortafuegos local, LUKS, MAC, auditoría, Lynis y Wazuh.</p><div class="sad-card-links"><a href="ud04-fortificacion-hosts/ud04-teoria/">Teoría</a> · <a href="ud04-fortificacion-hosts/ud04-practicas/">Prácticas</a></div></div>
-  <div class="sad-card"><span class="sad-card-ra">RA2 · RA3 · 18 h</span><h3>UD5 · Seguridad en redes</h3><p>Amenazas por capas, VLAN y ACL, Wi-Fi, IDS/IPS con Suricata y análisis de tráfico.</p><div class="sad-card-links"><a href="ud05-seguridad-redes/ud05-teoria/">Teoría</a> · <a href="ud05-seguridad-redes/ud05-practicas/">Prácticas</a></div></div>
-  <div class="sad-card"><span class="sad-card-ra">RA1 · RA3 · RA4 · RA5 · 25 h</span><h3>UD6 · Seguridad perimetral</h3><p>DMZ, nftables, NAT, proxy directo e inverso, SSH, VPN y RADIUS.</p><div class="sad-card-links"><a href="ud06-seguridad-perimetral/ud06-teoria/">Teoría</a> · <a href="ud06-seguridad-perimetral/ud06-practicas/">Prácticas</a></div></div>
-  <div class="sad-card"><span class="sad-card-ra">RA6 · 18 h</span><h3>UD7 · Alta disponibilidad</h3><p>SPOF, RAID, balanceo, IP virtual, replicación, clústeres y pruebas de fallo.</p><div class="sad-card-links"><a href="ud07-alta-disponibilidad/ud07-teoria/">Teoría</a> · <a href="ud07-alta-disponibilidad/ud07-practicas/">Prácticas</a></div></div>
+  <div class="sad-card"><span class="sad-card-ra">RA1 · RA7 · 14 h</span><h3>UD01 · Introducción, riesgos y marco legal</h3><p>Principios, amenazas, vulnerabilidades, autenticación, incidentes, forense y legislación.</p><div class="sad-card-links"><a href="ud01/ud01-teoria/">Teoría</a> · <a href="ud01/ud01-practicas/">Prácticas</a></div></div>
+  <div class="sad-card"><span class="sad-card-ra">RA1 · RA6 · 18 h</span><h3>UD02 · Seguridad pasiva y copias</h3><p>CPD, SAI, RAID, LVM, copias 3-2-1-1-0, RPO/RTO y borrado seguro.</p><div class="sad-card-links"><a href="ud02/ud02-teoria/">Teoría</a> · <a href="ud02/ud02-practicas/">Prácticas</a></div></div>
+  <div class="sad-card"><span class="sad-card-ra">RA1 · RA2 · RA3 · 18 h</span><h3>UD03 · Criptografía</h3><p>Hash, cifrado, firma, certificados, PKI, TLS y cifrado de volúmenes.</p><div class="sad-card-links"><a href="ud03/ud03-teoria/">Teoría</a> · <a href="ud03/ud03-practicas/">Prácticas</a></div></div>
+  <div class="sad-card"><span class="sad-card-ra">RA1 · RA2 · 22 h</span><h3>UD04 · Fortificación de hosts</h3><p>Hardening, usuarios, SSH, cortafuegos local, LUKS, MAC, auditoría, Lynis y Wazuh.</p><div class="sad-card-links"><a href="ud04/ud04-teoria/">Teoría</a> · <a href="ud04/ud04-practicas/">Prácticas</a></div></div>
+  <div class="sad-card"><span class="sad-card-ra">RA2 · RA3 · 18 h</span><h3>UD05 · Seguridad en redes</h3><p>Amenazas por capas, VLAN y ACL, Wi-Fi, IDS/IPS con Suricata y análisis de tráfico.</p><div class="sad-card-links"><a href="ud05/ud05-teoria/">Teoría</a> · <a href="ud05/ud05-practicas/">Prácticas</a></div></div>
+  <div class="sad-card"><span class="sad-card-ra">RA1 · RA3 · RA4 · RA5 · 25 h</span><h3>UD06 · Seguridad perimetral</h3><p>DMZ, nftables, NAT, proxy directo e inverso, SSH, VPN y RADIUS.</p><div class="sad-card-links"><a href="ud06/ud06-teoria/">Teoría</a> · <a href="ud06/ud06-practicas/">Prácticas</a></div></div>
+  <div class="sad-card"><span class="sad-card-ra">RA6 · 18 h</span><h3>UD07 · Alta disponibilidad</h3><p>SPOF, RAID, balanceo, IP virtual, replicación, clústeres y pruebas de fallo.</p><div class="sad-card-links"><a href="ud07/ud07-teoria/">Teoría</a> · <a href="ud07/ud07-practicas/">Prácticas</a></div></div>
 </div>
 
 ## Calendario del curso
@@ -54,13 +54,13 @@ Cada unidad tiene **teoría** (conceptos, ejemplos y ejercicios) y **prácticas*
 
 | Unidad | RA1 | RA2 | RA3 | RA4 | RA5 | RA6 | RA7 | Horas |
 |---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|--:|
-| UD1 Introducción, riesgos y marco legal | ● | ○ | | | | | ● | 14 |
-| UD2 Seguridad pasiva y copias | ● | | | | | ● | | 18 |
-| UD3 Criptografía | ● | ● | ● | | | | | 18 |
-| UD4 Fortificación de hosts | ● | ● | | | | | | 22 |
-| UD5 Seguridad en redes | | ● | ○ | | | | | 18 |
-| UD6 Seguridad perimetral | ○ | | ● | ● | ● | | | 25 |
-| UD7 Alta disponibilidad | | | | | | ● | | 18 |
+| UD01 Introducción, riesgos y marco legal | ● | ○ | | | | | ● | 14 |
+| UD02 Seguridad pasiva y copias | ● | | | | | ● | | 18 |
+| UD03 Criptografía | ● | ● | ● | | | | | 18 |
+| UD04 Fortificación de hosts | ● | ● | | | | | | 22 |
+| UD05 Seguridad en redes | | ● | ○ | | | | | 18 |
+| UD06 Seguridad perimetral | ○ | | ● | ● | ● | | | 25 |
+| UD07 Alta disponibilidad | | | | | | ● | | 18 |
 | **Total** | | | | | | | | **133** |
 
 ● contribución principal · ○ contribución secundaria. El detalle por criterio está en [Resultados de aprendizaje y criterios de evaluación](/guia/ra-ce/).
@@ -93,4 +93,4 @@ Los sistemas se indican con etiquetas: {{< sw "Debian 13" >}}. Consulta también
 
 ## Prácticas integradoras obligatorias
 
-Una por trimestre: **INT-1** (UD1–UD3, 27/11/2026), **INT-2** (UD4–UD6, 22/03/2027) e **INT-3** (UD7, 30/04/2027). Consulta [las condiciones, el informe y la rúbrica](/guia/practicas-integradoras/).
+Una por trimestre: **INT-1** (UD01–UD03, 27/11/2026), **INT-2** (UD04–UD06, 22/03/2027) e **INT-3** (UD07, 30/04/2027). Consulta [las condiciones, el informe y la rúbrica](/guia/practicas-integradoras/).

@@ -13,7 +13,7 @@ A las 9:00 de un lunes la web de citas de una clínica deja de responder. Cada h
 
 La **alta disponibilidad** (HA, *High Availability*) es el conjunto de técnicas de diseño que permite que un servicio siga prestándose, con una interrupción mínima o nula, cuando un componente falla. No consiste en evitar los fallos, sino en **diseñar el sistema para que los fallos no se noten** (o se noten muy poco). Cuando el fallo es tan grave que ninguna redundancia local lo absorbe (un incendio, un *ransomware*, la pérdida del centro de datos), entra en juego la **continuidad de negocio**: planes, procedimientos y un centro de respaldo para recuperar la actividad en un plazo asumible.
 
-En esta unidad cierras el círculo del módulo. En la [UD2](/ud02-seguridad-pasiva/ud02-teoria/) viste cómo proteger los datos con RAID y copias de seguridad; en la [UD4](/ud04-fortificacion-hosts/ud04-teoria/) cómo fortificar un servidor; en la [UD6](/ud06-seguridad-perimetral/ud06-teoria/) cómo publicar servicios detrás de un cortafuegos y un *proxy* inverso. Aquí aprenderás a que **el servicio sobreviva** cuando un servidor, un disco, una red o un centro de datos entero se caen, y a **demostrarlo con una prueba de fallo**.
+En esta unidad cierras el círculo del módulo. En la [UD02](/ud02/ud02-teoria/) viste cómo proteger los datos con RAID y copias de seguridad; en la [UD04](/ud04/ud04-teoria/) cómo fortificar un servidor; en la [UD06](/ud06/ud06-teoria/) cómo publicar servicios detrás de un cortafuegos y un *proxy* inverso. Aquí aprenderás a que **el servicio sobreviva** cuando un servidor, un disco, una red o un centro de datos entero se caen, y a **demostrarlo con una prueba de fallo**.
 
 {{< ra "RA6" "RA5:h" >}}
 
@@ -87,7 +87,7 @@ La alta disponibilidad es la pieza **técnica** del problema; la continuidad de 
 > [!WARNING]
 > Tres confusiones que se pagan caras:
 >
-> - **RAID no es una copia de seguridad**: protege del fallo de un disco, no del borrado accidental ni del *ransomware* (UD2).
+> - **RAID no es una copia de seguridad**: protege del fallo de un disco, no del borrado accidental ni del *ransomware* (UD02).
 > - **La replicación no es una copia de seguridad**: un `DROP TABLE` o un cifrado malicioso se replican en milisegundos a todas las réplicas.
 > - **Una instantánea de la máquina virtual no es una copia de seguridad**: vive en el mismo almacenamiento que la máquina.
 
@@ -169,7 +169,7 @@ Un *script* en Python para calcularlo (guárdalo como `disp.py`; solo necesita P
 
 ```python
 #!/usr/bin/env python3
-"""Calculadora de disponibilidad (UD7). Requiere solo Python 3 (sin paquetes externos)."""
+"""Calculadora de disponibilidad (UD07). Requiere solo Python 3 (sin paquetes externos)."""
 import argparse
 
 HORAS_ANIO = 8760  # año de 365 días
@@ -318,7 +318,7 @@ flowchart LR
 | Entorno de desarrollo | 7 días | 3 días | Copia semanal |
 
 > [!NOTE]
-> Un RPO bajo se consigue **replicando** los datos con frecuencia; un RTO bajo, **automatizando la conmutación**. Cuanto más bajos, más caro. La UD2 (copias de seguridad) y la UD7 (HA) se complementan: la HA protege contra el fallo de un componente; la copia protege contra el borrado, la corrupción o el *ransomware*. Una buena práctica es **medir** el RTO y el RPO reales con una prueba de fallo y compararlos con los objetivos.
+> Un RPO bajo se consigue **replicando** los datos con frecuencia; un RTO bajo, **automatizando la conmutación**. Cuanto más bajos, más caro. La UD02 (copias de seguridad) y la UD07 (HA) se complementan: la HA protege contra el fallo de un componente; la copia protege contra el borrado, la corrupción o el *ransomware*. Una buena práctica es **medir** el RTO y el RPO reales con una prueba de fallo y compararlos con los objetivos.
 
 ---
 
@@ -387,7 +387,7 @@ Ante una demanda creciente, el orden habitual de soluciones es:
 
 1. **Medir** (monitorización y pruebas de carga) para saber dónde está el cuello de botella.
 2. **Optimizar** la aplicación y la base de datos (índices, consultas).
-3. Añadir **caché** (de página, de objetos con Redis o Memcached, y un *proxy* inverso con caché como el de la UD6).
+3. Añadir **caché** (de página, de objetos con Redis o Memcached, y un *proxy* inverso con caché como el de la UD06).
 4. Escalar **horizontalmente** la capa web detrás del balanceador.
 5. Separar **lecturas y escrituras** en la base de datos (réplicas de solo lectura, apartado 8.5).
 6. Mover contenido estático a una **red de distribución de contenidos** (CDN) o a almacenamiento de objetos.
@@ -467,17 +467,17 @@ Fíjate en `Requests per second` (rendimiento), `Time per request` (latencia) y 
 
 ## 4. Redundancia de hardware y de red
 
-El criterio RA6.b pide identificar las **soluciones hardware** que aseguran la continuidad. Las de alimentación, almacenamiento y centro de datos se estudiaron en la [UD2](/ud02-seguridad-pasiva/ud02-teoria/); aquí se resumen desde el punto de vista de la alta disponibilidad y se desarrolla la **redundancia de red**.
+El criterio RA6.b pide identificar las **soluciones hardware** que aseguran la continuidad. Las de alimentación, almacenamiento y centro de datos se estudiaron en la [UD02](/ud02/ud02-teoria/); aquí se resumen desde el punto de vista de la alta disponibilidad y se desarrolla la **redundancia de red**.
 
 ### 4.1 Alimentación
 
 - **Fuentes de alimentación redundantes** (en servidores): si una falla, la otra mantiene el equipo. Cada fuente se conecta a un **circuito o regleta distinto**; si ambas cuelgan del mismo enchufe, la redundancia es solo aparente.
-- **SAI** (UPS): mantiene la energía unos minutos y permite un apagado ordenado. Se monitoriza con **NUT** (*Network UPS Tools*) para apagar los servidores automáticamente (UD2).
+- **SAI** (UPS): mantiene la energía unos minutos y permite un apagado ordenado. Se monitoriza con **NUT** (*Network UPS Tools*) para apagar los servidores automáticamente (UD02).
 - **Generador** para cortes largos en centros de datos, y doble acometida eléctrica en los más exigentes.
 
 ### 4.2 Almacenamiento: RAID y discos de repuesto
 
-**RAID** combina varios discos para ganar rendimiento o tolerancia a fallos de disco. Resumen (detalle en la UD2):
+**RAID** combina varios discos para ganar rendimiento o tolerancia a fallos de disco. Resumen (detalle en la UD02):
 
 | Nivel | Discos mínimos | Tolera | Capacidad útil | Uso |
 |---|---|---|---|---|
@@ -490,7 +490,7 @@ El criterio RA6.b pide identificar las **soluciones hardware** que aseguran la c
 Otras medidas hardware: **discos *hot-spare*** que sustituyen automáticamente al que falla, **discos intercambiables en caliente** (*hot-swap*), controladoras con caché protegida por batería, **doble controladora** en las cabinas de almacenamiento y **doble ruta** (*multipath*) entre servidor y cabina.
 
 > [!WARNING]
-> **RAID no es una copia de seguridad.** Protege del fallo de un disco, pero **no** del borrado accidental, de un virus que cifre los ficheros, de la corrupción lógica ni de un incendio: todos esos errores se replican al instante en los discos espejo. Lo comprobarás en la [Práctica 7.1](/ud07-alta-disponibilidad/ud07-practicas/#práctica-71--disponibilidad-spof-y-raid-1).
+> **RAID no es una copia de seguridad.** Protege del fallo de un disco, pero **no** del borrado accidental, de un virus que cifre los ficheros, de la corrupción lógica ni de un incendio: todos esos errores se replican al instante en los discos espejo. Lo comprobarás en la [Práctica 7.1](/ud07/ud07-practicas/#práctica-71--disponibilidad-spof-y-raid-1).
 
 ### 4.3 Redundancia de red: *bonding*
 

@@ -1,10 +1,10 @@
 ---
-title: "UD7 · Prácticas"
+title: "UD07 · Prácticas"
 weight: 2
 bookToc: true
 ---
 
-# UD7 · Prácticas
+# UD07 · Prácticas
 
 {{< ra "RA6" >}}
 
@@ -85,7 +85,7 @@ mkdir -p ~/ud5-evidencias && chmod 700 ~/ud5-evidencias
 
 #### Puertos que deben estar abiertos
 
-Si usas cortafuegos en las VM (UD4), abre solo lo necesario:
+Si usas cortafuegos en las VM (UD04), abre solo lo necesario:
 
 | Máquina | Puerto | Para qué |
 | --- | --- | --- |
@@ -166,7 +166,7 @@ sudo rm /mnt/raid/dato.txt
 ls /mnt/raid                              # el fichero ha desaparecido de AMBOS discos
 ```
 
-**Preguntas para el informe:** ¿cuántos fallos de disco tolera RAID 1 con 2 discos? ¿Qué necesitarías para recuperar `dato.txt`? (Pista: UD2.) ¿Qué comando muestra que hay un disco degradado y cómo lo monitorizarías?
+**Preguntas para el informe:** ¿cuántos fallos de disco tolera RAID 1 con 2 discos? ¿Qué necesitarías para recuperar `dato.txt`? (Pista: UD02.) ¿Qué comando muestra que hay un disco degradado y cómo lo monitorizarías?
 
 Limpieza:
 
@@ -643,7 +643,7 @@ Abre tres terminales: (1) `ab` generando carga contra la VIP, (2) el bucle `curl
 
 **Objetivo:** gestionar IP + servicio como un grupo con quórum (RA6 d, g). Dos VM nuevas `nodo1` (192.168.100.81) y `nodo2` (192.168.100.82) con Debian 13 o AlmaLinux 10.
 
-Sigue el procedimiento del apartado 8.3 de la [teoría](/ud07-alta-disponibilidad/ud07-teoria/) completo (instalación, `hacluster`, `pcs cluster setup`, recursos `vip` y `web`, restricciones). Después:
+Sigue el procedimiento del apartado 8.3 de la [teoría](/ud07/ud07-teoria/) completo (instalación, `hacluster`, `pcs cluster setup`, recursos `vip` y `web`, restricciones). Después:
 
 1. Guarda `sudo pcs status` y `sudo pcs config` como evidencia.
 2. **Fallo ordenado:** `sudo pcs node standby nodo1`; verifica que `vip` y `web` pasan a `nodo2` y que `curl http://192.168.100.80/` sigue respondiendo. Después, `sudo pcs node unstandby nodo1`.
@@ -725,7 +725,7 @@ Requiere tres nodos Proxmox VE 9 (VM con **virtualización anidada** habilitada)
 - Panel de estadísticas de HAProxy accesible **solo** desde la red interna y con credenciales.
 - Usuarios de BD con **mínimos privilegios** y limitados por IP de origen.
 - La base de datos escucha solo en la **IP interna**, nunca en `0.0.0.0`.
-- Segmento de red dedicado para VRRP, replicación y Corosync (UD6: VLAN).
+- Segmento de red dedicado para VRRP, replicación y Corosync (UD06: VLAN).
 - Contraseñas de laboratorio **sustituidas** por secretos únicos en cualquier entorno real.
 - STONITH activo y quórum correcto en clústeres reales.
 - Copias de seguridad **además** de la replicación.
