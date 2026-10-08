@@ -23,8 +23,8 @@ OLD = {
     "UD6b": "UD06/UD6  Seguridad en Redes Practicas.md",     # SSH, VPN y RADIUS (antes UD6)
     "UD7": "UD05/UD5  Alta Disponibilidad Practicas.md",     # alta disponibilidad (antes UD5)
 }
-DEST = {"UD1": "ud01-seguridad-informatica", "UD3": "ud03-criptografia", "UD4": "ud04-fortificacion-hosts",
-        "UD5": "ud05-seguridad-redes", "UD6": "ud06-seguridad-perimetral", "UD7": "ud07-alta-disponibilidad"}
+DEST = {"UD1": "ud01", "UD3": "ud03", "UD4": "ud04",
+        "UD5": "ud05", "UD6": "ud06", "UD7": "ud07"}
 TITULO = {
     "UD1": ("Introducción a la seguridad, riesgos y marco legal", 5, 14),
     "UD3": ("Criptografía y aplicaciones criptográficas", 9, 18),
@@ -214,7 +214,7 @@ def build(ud):
             if key == "Objetivos" and ud == "UD6": cuerpo = cuerpo.replace("\n\n> [!", "\n- Configurar acceso remoto seguro: SSH avanzado, VPN con WireGuard y autenticación centralizada con RADIUS.\n\n> [!", 1)
             out.append(f"## {t}\n\n{cuerpo}\n")
     if ud == "UD6":
-        out.append("> [!NOTE]\n> Las prácticas **6.9 a 6.12** (SSH, WireGuard, RADIUS e IPsec) reutilizan las máquinas y redes de laboratorio de la [UD5](/ud05-seguridad-redes/ud05-practicas/#preparación-del-laboratorio). Si no las tienes, prepáralas primero.\n")
+        out.append("> [!NOTE]\n> Las prácticas **6.9 a 6.12** (SSH, WireGuard, RADIUS e IPsec) reutilizan las máquinas y redes de laboratorio de la [UD5](/ud05/ud05-practicas/#preparación-del-laboratorio). Si no las tienes, prepáralas primero.\n")
     # prácticas
     for src, n, tipo, h, niv, ra, ent, b, tit, head, k in rows:
         mapa = {}

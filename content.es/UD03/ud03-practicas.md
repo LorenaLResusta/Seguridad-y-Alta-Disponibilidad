@@ -1,20 +1,31 @@
 ---
-title: "Prácticas"
-slug: "practicas"
+title: "UD03 · Prácticas"
 weight: 2
+bookToc: true
 ---
 
-# UD3. Prácticas: criptografía
+# UD03 · Prácticas
 
-> Hashes e integridad, cifrado simétrico y autenticado, claves asimétricas y firma con GnuPG, almacenamiento seguro de contraseñas, creación de una PKI propia, publicación de un servicio HTTPS y análisis de TLS.
+{{< ra "RA1:e,g" "RA2:f" "RA3:c" >}}
 
-| Datos de las prácticas | Información |
-| --- | --- |
-| Duración estimada | 8 horas |
-| Entorno | 2 VM Linux (Debian 13 o AlmaLinux 10) en la red `SAD-NAT` |
-| Criterios de evaluación | RA1 g · RA2 f · RA3 c · RA7 e |
+Hashes e integridad, cifrado simétrico y autenticado, claves asimétricas y firma con GnuPG, almacenamiento seguro de contraseñas, creación de una PKI propia, publicación de un servicio HTTPS y análisis de TLS.
 
-## 1. Objetivos
+| Práctica | Tipo | Nivel | Horas | CE principales |
+|---|---|---|--:|---|
+| [3.1 Funciones hash e integridad](#práctica-31--funciones-hash-e-integridad) | Guiada | ●○○ | 1 | RA1: g |
+| [3.2 Cifrado simétrico](#práctica-32--cifrado-simétrico) | Guiada | ●●○ | 1 | RA1: g |
+| [3.3 Claves asimétricas, cifrado y firma con GnuPG](#práctica-33--claves-asimétricas-cifrado-y-firma-con-gnupg) | Guiada | ●●○ | 1 | RA2: f |
+| [3.4 Almacenamiento seguro de contraseñas](#práctica-34--almacenamiento-seguro-de-contraseñas) | Guiada | ●●○ | 1 | RA1: e, g |
+| [3.5 Autoridad de certificación propia](#práctica-35--autoridad-de-certificación-propia) | Guiada | ●●● | 2 | RA2: f · RA3: c |
+| [3.6 Servidor HTTPS con Nginx](#práctica-36--servidor-https-con-nginx) | Guiada | ●●○ | 2 | RA2: f · RA3: c |
+| [3.7 Análisis de la configuración TLS](#práctica-37--análisis-de-la-configuración-tls) | Autónoma | ●●○ | — | RA3: c |
+| [3.8 Revocación de un certificado](#práctica-38--revocación-de-un-certificado) | Guiada | ●●○ | 1 | RA2: f |
+| **Total** | | | **9 h** | |
+
+> [!NOTE]
+> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 9 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
+
+## Objetivos
 
 - Verificar la integridad y la autenticidad de ficheros descargados.
 - Cifrar y descifrar ficheros con algoritmos simétricos y comprobar el valor del cifrado autenticado.
@@ -23,23 +34,23 @@ weight: 2
 - Crear una autoridad de certificación, emitir y revocar certificados.
 - Publicar un servidor web HTTPS con TLS 1.2/1.3 y comprobar su configuración.
 
-## 2. Preparación
+## Preparación
 
-### 2.1. Máquinas virtuales
+#### Máquinas virtuales
 
 | VM | Nombre | IP de ejemplo | Función |
 | --- | --- | --- | --- |
 | Cliente | `sad-cli` | `192.168.100.10` | Usuarios, GnuPG, CA, cliente HTTPS |
 | Servidor web | `sad-web` | `192.168.100.30` | Nginx con HTTPS |
 
-Puedes reutilizar las VM de la UD2 (clonando `sad-cli` como `sad-web`; cambia el nombre con `sudo hostnamectl set-hostname sad-web`). Añade en `/etc/hosts` de ambas:
+Puedes reutilizar las VM de la UD02 (clonando `sad-cli` como `sad-web`; cambia el nombre con `sudo hostnamectl set-hostname sad-web`). Añade en `/etc/hosts` de ambas:
 
 ```text
 192.168.100.10  sad-cli
 192.168.100.30  sad-web  sad-web.lab  www.sad-web.lab
 ```
 
-### 2.2. Paquetes
+#### Paquetes
 
 {{< tabs >}}
 {{% tab "Debian / Ubuntu" %}}
@@ -63,9 +74,11 @@ mkdir -p ~/ud03 && cd ~/ud03
 
 ---
 
-## 3. Práctica 1 - Funciones hash e integridad
+## Práctica 3.1 · Funciones hash e integridad
 
-### 3.1. Propiedades de un hash
+{{< practica num="3.1" tipo="Guiada" duracion="1 h" nivel="1" ra="RA1:g" entorno="Debian 13 · VirtualBox 7" entrega="salidas de las órdenes" >}}
+
+#### Propiedades de un hash
 
 ```bash
 printf 'hola'  | sha256sum
@@ -84,7 +97,7 @@ head -c 100M /dev/urandom | sha256sum
 `echo` añade un **salto de línea** al final, así que `echo 'hola'` y `printf 'hola'` no producen el mismo hash. Este detalle causa muchos «el hash no coincide» en la vida real: asegúrate siempre de qué bytes estás calculando.
 {{% /details %}}
 
-### 3.2. Comparar algoritmos
+#### Comparar algoritmos
 
 ```bash
 for alg in md5sum sha1sum sha256sum sha512sum b2sum; do
@@ -101,7 +114,7 @@ rm grande.bin
 
 Completa una tabla con la longitud del resumen, el tiempo y si el algoritmo es recomendable.
 
-### 3.3. Verificar la autenticidad de una descarga
+#### Verificar la autenticidad de una descarga
 
 Descarga los ficheros de comprobación de la imagen de Debian (no hace falta descargar la ISO):
 
@@ -145,7 +158,7 @@ mv SHA256SUMS.original SHA256SUMS
 > [!IMPORTANT]
 > `Good signature` solo prueba que la firma es válida **para esa clave**. Debes comprobar además que la clave es la del proyecto, contrastando su **huella** (`gpg --fingerprint`) con la publicada en la web oficial. Si no, un atacante podría haber firmado un ISO falso con su propia clave.
 
-### 3.4. HMAC: integridad con clave
+#### HMAC: integridad con clave
 
 ```bash
 echo '{"pedido": 1234, "importe": 59.90}' > pedido.json
@@ -161,9 +174,11 @@ openssl dgst -sha256 -hmac "$CLAVE" pedido.json      # distinto del original
 
 ---
 
-## 4. Práctica 2 - Cifrado simétrico
+## Práctica 3.2 · Cifrado simétrico
 
-### 4.1. Cifrado con contraseña: OpenSSL, GnuPG y age
+{{< practica num="3.2" tipo="Guiada" duracion="1 h" nivel="2" ra="RA1:g" entorno="Debian 13 · VirtualBox 7" entrega="capturas y análisis del modo ECB" >}}
+
+#### Cifrado con contraseña: OpenSSL, GnuPG y age
 
 ```bash
 echo "Plan de expansión 2027 - CONFIDENCIAL" > plan.txt
@@ -188,7 +203,7 @@ age -d plan.txt.age
 
 **Pregunta**: introduce una contraseña incorrecta en cada herramienta. ¿Qué mensaje muestra cada una?
 
-### 4.2. ¿Por qué no usar ECB?
+#### ¿Por qué no usar ECB?
 
 Vamos a cifrar una imagen con AES en modo ECB y en modo CBC conservando la cabecera del fichero para poder visualizar el resultado.
 
@@ -219,7 +234,7 @@ Copia las tres imágenes a tu equipo (por ejemplo con `scp`) y ábrelas. En `log
 Compara la imagen cifrada con ECB y con un modo de cifrado de flujo/CBC/CTR. En ECB se **reconoce la silueta** del logotipo porque bloques iguales producen bloques cifrados iguales; en los otros modos solo se ve ruido. Conclusión: un buen algoritmo (AES) con un modo inadecuado (ECB) sigue siendo inseguro.
 {{% /details %}}
 
-### 4.3. Cifrado autenticado: detección de manipulaciones
+#### Cifrado autenticado: detección de manipulaciones
 
 Guarda el programa del apartado 4.4 de la teoría como `aes_gcm.py` y ejecútalo:
 
@@ -254,7 +269,9 @@ En modo CTR, cambiar un byte del cifrado cambia **exactamente ese byte** del tex
 
 ---
 
-## 5. Práctica 3 - Claves asimétricas, cifrado y firma con GnuPG
+## Práctica 3.3 · Claves asimétricas, cifrado y firma con GnuPG
+
+{{< practica num="3.3" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:f" entorno="Debian 13 · VirtualBox 7" entrega="claves, mensaje cifrado y firma verificada" >}}
 
 Trabajaremos con dos usuarios en `sad-cli`: **ana** y **bruno**.
 
@@ -266,7 +283,7 @@ sudo useradd -m -s /bin/bash bruno && sudo passwd bruno
 > [!TIP]
 > Abre dos terminales y entra en cada una con `ssh ana@sad-cli` y `ssh bruno@sad-cli`. GnuPG necesita que la sesión sea del propio usuario para pedir la frase de paso.
 
-### 5.1. Generar las claves
+#### Generar las claves
 
 Como **ana**:
 
@@ -301,7 +318,7 @@ Repite como **bruno**.
 - **Dos usuarios, dos llavero:** cada usuario (`ana`, `bruno`) tiene su propio `~/.gnupg`. Comprueba con `whoami` que estás en el usuario correcto.
 {{% /details %}}
 
-### 5.2. Intercambiar claves públicas y comprobar huellas
+#### Intercambiar claves públicas y comprobar huellas
 
 ```bash
 gpg --armor --export ana@sad.lab   > /tmp/ana.pub.asc     # como ana
@@ -328,7 +345,7 @@ gpg --sign-key bruno@sad.lab
 > [!WARNING]
 > Importar una clave pública **no equivale a confiar** en ella. Verifica la huella por un canal alternativo (en persona, por teléfono) antes de firmarla o de usarla para algo importante. Si no, un atacante que intercepte el intercambio puede sustituir la clave (ataque de hombre en el medio).
 
-### 5.3. Cifrar y firmar
+#### Cifrar y firmar
 
 Como **ana**:
 
@@ -355,7 +372,7 @@ gpg: Firma correcta de "Ana García <ana@sad.lab>" [total]
 
 ¿Puede **ana** descifrar el fichero que ella misma ha cifrado para Bruno? Pruébalo y explica el resultado.
 
-### 5.4. Firma separada y detección de manipulación
+#### Firma separada y detección de manipulación
 
 ```bash
 # ana firma un documento público (sin cifrarlo)
@@ -371,7 +388,7 @@ echo "Se aprueba un nuevo punto no acordado" >> /tmp/acta.txt
 gpg --verify /tmp/acta.txt.asc /tmp/acta.txt    # Firma INCORRECTA
 ```
 
-### 5.5. Lo mismo con OpenSSL
+#### Lo mismo con OpenSSL
 
 Repite el cifrado y la firma con OpenSSL y claves RSA de 3072 bits (apartados 5.4 y 8.2 de la teoría). Comprueba que:
 
@@ -379,7 +396,7 @@ Repite el cifrado y la firma con OpenSSL y claves RSA de 3072 bits (apartados 5.
 2. Una firma generada con la clave privada se verifica con la pública.
 3. Si cambias un byte del documento, la verificación falla.
 
-### 5.6. Preguntas
+#### Preguntas
 
 1. Para **cifrar** un mensaje a Bruno y para **firmarlo** como Ana, ¿qué clave usa cada uno?
 2. ¿Qué propiedades garantiza el mensaje cifrado y firmado?
@@ -387,11 +404,13 @@ Repite el cifrado y la firma con OpenSSL y claves RSA de 3072 bits (apartados 5.
 
 ---
 
-## 6. Práctica 4 - Almacenamiento seguro de contraseñas
+## Práctica 3.4 · Almacenamiento seguro de contraseñas
+
+{{< practica num="3.4" tipo="Guiada" duracion="1 h" nivel="2" ra="RA1:e,g" entorno="Debian 13 · VirtualBox 7" entrega="comparativa de costes y sales" >}}
 
 **Objetivo**: comprobar cómo guarda Linux las contraseñas, por qué la sal y el coste del algoritmo protegen frente al robo del fichero de hashes, y cómo se valora la calidad de una contraseña antes de aceptarla.
 
-### 6.1. Formato de `/etc/shadow`
+#### Formato de `/etc/shadow`
 
 ```bash
 sudo useradd -m prueba_ud03 && sudo passwd prueba_ud03
@@ -402,7 +421,7 @@ grep -E '^ENCRYPT_METHOD|^YESCRYPT_COST_FACTOR|^SHA_CRYPT' /etc/login.defs
 
 Identifica en la línea de `/etc/shadow` el **algoritmo** (`$y$`, `$6$`…), los **parámetros de coste**, la **sal** y el **hash**. Indica qué algoritmo usa tu distribución.
 
-### 6.2. El efecto de la sal
+#### El efecto de la sal
 
 ```bash
 # Dos usuarios con la MISMA contraseña
@@ -419,7 +438,7 @@ Los hashes son distintos porque cada uno tiene su propia sal. **Pregunta**: ¿qu
 Las dos cuentas tienen **la misma contraseña** pero hashes **distintos** en `/etc/shadow`. La diferencia está en la **sal** (el campo entre `$` y `$`). Así, aunque dos usuarios elijan la misma contraseña, no se nota, y no se pueden precalcular tablas de hashes para todos a la vez.
 {{% /details %}}
 
-### 6.3. El efecto del coste
+#### El efecto del coste
 
 Un hash de contraseñas debe ser **lento**. Mide cuánto tarda generar un hash con distintos algoritmos (`mkpasswd` está en el paquete `whois` de Debian; en AlmaLinux usa `openssl passwd`):
 
@@ -439,7 +458,7 @@ Completa la tabla y extrae una conclusión: si un sistema tarda 100 veces más e
 | yescrypt (coste por defecto) | | |
 | yescrypt (coste 9) | | |
 
-### 6.4. Calidad de las contraseñas
+#### Calidad de las contraseñas
 
 ```bash
 for p in "123456" "verano2026" "Barcelona1" "MismaClave2026" "tostada-azul-mochila-trueno"; do
@@ -447,9 +466,9 @@ for p in "123456" "verano2026" "Barcelona1" "MismaClave2026" "tostada-azul-mochi
 done
 ```
 
-Redacta qué contraseñas rechazarías y por qué, y relaciónalo con la política de contraseñas de la UD1.
+Redacta qué contraseñas rechazarías y por qué, y relaciónalo con la política de contraseñas de la UD01.
 
-### 6.5. Limpieza
+#### Limpieza
 
 ```bash
 sudo userdel -r prueba_ud03; sudo userdel -r prueba_ud03b
@@ -457,11 +476,13 @@ sudo userdel -r prueba_ud03; sudo userdel -r prueba_ud03b
 
 ---
 
-## 7. Práctica 5 - Autoridad de certificación propia
+## Práctica 3.5 · Autoridad de certificación propia
+
+{{< practica num="3.5" tipo="Guiada" duracion="2 h" nivel="3" ra="RA2:f;RA3:c" entorno="Debian 13 · VirtualBox 7" entrega="CA propia y certificados emitidos" >}}
 
 En el laboratorio no podemos usar Let's Encrypt porque no tenemos un dominio público. Crearemos una **CA raíz** propia con OpenSSL y la usaremos para emitir el certificado de `sad-web`. Este procedimiento es el mismo que usan muchas empresas para sus servicios internos.
 
-### 7.1. Estructura de la CA
+#### Estructura de la CA
 
 En `sad-cli`:
 
@@ -535,7 +556,7 @@ crlDistributionPoints  = URI:http://sad-web.lab/ca.crl
 | `[ v3_ca ]` | Extensiones del certificado raíz: puede firmar certificados y CRL |
 | `[ servidor ]` | Extensiones de los certificados de servidor: no es CA, solo autenticación de servidor TLS |
 
-### 7.2. Crear la CA raíz
+#### Crear la CA raíz
 
 ```bash
 # Clave privada de la CA (curva P-384), protegida con frase de paso
@@ -556,7 +577,7 @@ Observa que en un certificado raíz el **sujeto** y el **emisor** coinciden.
 > [!WARNING]
 > La clave privada de la CA (`private/ca.key`) es el activo más valioso de toda la PKI: quien la tenga puede emitir certificados «de confianza». En el laboratorio basta con `chmod 400` y una contraseña; en producción la CA raíz permanece **fuera de línea** (offline) y, si es posible, en un HSM.
 
-### 7.3. Solicitud del servidor (CSR)
+#### Solicitud del servidor (CSR)
 
 La clave del servidor se genera **en el servidor**: la clave privada no debe viajar. En `sad-web`:
 
@@ -572,7 +593,7 @@ openssl req -in sad-web.csr -noout -text | grep -A1 "Alternative"
 scp sad-web.csr USUARIO@sad-cli:~/ud03/ca/csr/
 ```
 
-### 7.4. Emitir el certificado
+#### Emitir el certificado
 
 En `sad-cli`, la CA revisa y firma la solicitud:
 
@@ -600,9 +621,11 @@ scp certs/sad-web.crt certs/ca.crt USUARIO@sad-web:/tmp/
 
 ---
 
-## 8. Práctica 6 - Servidor HTTPS con Nginx
+## Práctica 3.6 · Servidor HTTPS con Nginx
 
-### 8.1. Instalar Nginx
+{{< practica num="3.6" tipo="Guiada" duracion="2 h" nivel="2" ra="RA2:f;RA3:c" entorno="Debian 13 · VirtualBox 7" entrega="servidor HTTPS verificado" >}}
+
+#### Instalar Nginx
 
 En `sad-web`:
 
@@ -630,7 +653,7 @@ echo "<h1>sad-web: HTTPS funcionando</h1>" | sudo tee /var/www/html/index.html
 
 En AlmaLinux la raíz de documentos por defecto es `/usr/share/nginx/html`.
 
-### 8.2. Configuración del sitio
+#### Configuración del sitio
 
 Fichero `/etc/nginx/conf.d/sad-web.conf`:
 
@@ -676,7 +699,7 @@ server {
 
 En Debian, desactiva el sitio por defecto para evitar conflictos: `sudo rm /etc/nginx/sites-enabled/default`.
 
-### 8.3. Comprobar y aplicar
+#### Comprobar y aplicar
 
 ```bash
 sudo cp -a /etc/nginx /root/nginx.bak.$(date +%F)   # copia de la configuración
@@ -695,7 +718,7 @@ sudo ss -tlnp | grep nginx                          # escucha en 80 y 443
 - Si algo falla, restaura: `sudo rm -r /etc/nginx && sudo cp -a /root/nginx.bak.<fecha> /etc/nginx`.
 {{% /details %}}
 
-### 8.4. Probar desde el cliente
+#### Probar desde el cliente
 
 En `sad-cli`:
 
@@ -740,9 +763,11 @@ Para probarlo con un navegador del equipo anfitrión, añade `sad-web.lab` al fi
 
 ---
 
-## 9. Práctica 7 - Análisis de la configuración TLS
+## Práctica 3.7 · Análisis de la configuración TLS
 
-### 9.1. Con OpenSSL
+{{< practica num="3.7" tipo="Autónoma" duracion="0 h · trabajo autónomo" nivel="2" ra="RA3:c" entorno="Debian 13 · VirtualBox 7" entrega="informe de la configuración TLS" >}}
+
+#### Con OpenSSL
 
 ```bash
 # Versión y algoritmo negociados
@@ -763,7 +788,7 @@ curl -sI https://sad-web.lab | grep -i strict
 La conexión con **TLS 1.1 debe fallar** (`alert protocol version` o `handshake failure`) y las de TLS 1.2 y 1.3 deben funcionar mostrando el protocolo y la suite de cifrado negociados. Si TLS 1.0/1.1 funcionan, la configuración es insegura (ver 9.3).
 {{% /details %}}
 
-### 9.2. Con Nmap
+#### Con Nmap
 
 **Nmap** es un escáner de red; su *script* `ssl-enum-ciphers` enumera las versiones y algoritmos que acepta un servidor y les asigna una nota.
 
@@ -790,13 +815,13 @@ Resultado esperado (resumido):
 |_  least strength: A
 ```
 
-### 9.3. Configuración insegura y corrección
+#### Configuración insegura y corrección
 
 1. Haz una copia de `sad-web.conf`, añade `TLSv1 TLSv1.1` a `ssl_protocols`, comprueba con `nginx -t` y recarga.
 2. Repite el análisis con Nmap: ¿qué cambia en la nota y en los avisos?
 3. Restaura la configuración segura, recarga y vuelve a comprobar.
 
-### 9.4. Comparar con un servidor real
+#### Comparar con un servidor real
 
 ```bash
 curl -vI https://www.boe.es 2>&1 | grep -E "SSL connection|expire date|issuer"
@@ -807,7 +832,9 @@ Puedes analizar de forma pasiva un dominio público con [SSL Labs](https://www.s
 
 ---
 
-## 10. Práctica 8 - Revocación de un certificado
+## Práctica 3.8 · Revocación de un certificado
+
+{{< practica num="3.8" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:f" entorno="Debian 13 · VirtualBox 7" entrega="CRL y comprobación de la revocación" >}}
 
 **Escenario**: la clave privada de `sad-web` se ha copiado por error en un repositorio público. Hay que revocar el certificado y emitir uno nuevo.
 
@@ -838,7 +865,7 @@ Para comprobar que la revocación surte efecto: `openssl verify -crl_check -CAfi
 
 ---
 
-## 11. Problemas habituales
+## Problemas habituales
 
 | Problema | Causa | Solución |
 | --- | --- | --- |
@@ -850,7 +877,7 @@ Para comprobar que la revocación surte efecto: `openssl verify -crl_check -CAfi
 | `no alternative certificate subject name matches` | El nombre usado no está en el SAN | Acceder con un nombre incluido o reemitir el certificado |
 | `openssl ca: ... TXT_DB error number 2` | Ya existe un certificado válido con ese sujeto | `unique_subject = no` en la configuración o revocar el anterior |
 
-## 12. Actividades
+## Actividades
 
 1. Compara en una tabla OpenSSL `enc`, GnuPG y age: algoritmos, cifrado autenticado, facilidad de uso.
 2. Investiga qué es un HSM y un TPM y en qué casos usarías cada uno.
@@ -858,7 +885,7 @@ Para comprobar que la revocación surte efecto: `openssl verify -crl_check -CAfi
 4. Investiga cómo obtiene una empresa un certificado TLS público con Certbot y el desafío DNS-01.
 5. Comprueba si tu cliente OpenSSH usa un intercambio de claves post-cuántico (`ssh -Q kex`, `ssh -v`) y explica qué significa.
 
-## 13. Autoevaluación
+## Preguntas de autoevaluación
 
 {{% details "1. ¿Por qué es peligroso el modo ECB?" %}}
 Porque bloques de texto en claro iguales producen bloques cifrados iguales, lo que revela patrones del contenido.
@@ -884,7 +911,10 @@ La extensión SAN (*Subject Alternative Name*).
 Para que nunca tenga que viajar por la red ni salir del equipo que la usa. A la CA solo se envía la CSR, que contiene la clave pública.
 {{% /details %}}
 
-## 14. Tarea evaluable - PKI y servicio HTTPS para una empresa
+## Tarea evaluable de la unidad
+
+> [!IMPORTANT]
+> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-1** (entrega: 27/11/2026). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
 
 **Supuesto**: la empresa *Construcciones Mediterráneo* necesita publicar internamente su intranet (`intranet.cmed.lab`) y su aplicación de fichajes (`fichajes.cmed.lab`) con HTTPS, y que la dirección pueda enviar documentos firmados y cifrados al departamento jurídico.
 
@@ -906,7 +936,7 @@ Entrega un informe con:
 | Contraseñas y marco legal | 10 % |
 | Documentación | 10 % |
 
-## 15. Recursos
+## Referencias y documentación oficial
 
 - [OpenSSL: `openssl-ca`](https://docs.openssl.org/master/man1/openssl-ca/) · [`openssl-req`](https://docs.openssl.org/master/man1/openssl-req/) · [`openssl-s_client`](https://docs.openssl.org/master/man1/openssl-s_client/)
 - [GnuPG: manual de usuario](https://www.gnupg.org/gph/es/manual.html)

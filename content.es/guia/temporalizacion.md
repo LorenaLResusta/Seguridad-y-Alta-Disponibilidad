@@ -25,13 +25,13 @@ Estos apuntes cuentan **horas lectivas** (las del horario oficial del grupo). Ca
 
 | UD | Unidad | Teoría | Prácticas | Evaluación | Total | % | RA principales |
 |---|---|--:|--:|--:|--:|--:|---|
-| UD1 | [Introducción a la seguridad, riesgos y marco legal](/ud01-seguridad-informatica/) | 7 h | 5 h | 2 h | **14 h** | 11 % | RA1, RA7 |
-| UD2 | [Seguridad pasiva: almacenamiento y copias de seguridad](/ud02-seguridad-pasiva/) | 7 h | 9 h | 2 h | **18 h** | 14 % | RA1, RA6 |
-| UD3 | [Criptografía y aplicaciones criptográficas](/ud03-criptografia/) | 7 h | 9 h | 2 h | **18 h** | 14 % | RA1, RA2, RA3 |
+| UD1 | [Introducción a la seguridad, riesgos y marco legal](/ud01/) | 7 h | 5 h | 2 h | **14 h** | 11 % | RA1, RA7 |
+| UD2 | [Seguridad pasiva: almacenamiento y copias de seguridad](/ud02/) | 7 h | 9 h | 2 h | **18 h** | 14 % | RA1, RA6 |
+| UD3 | [Criptografía y aplicaciones criptográficas](/ud03/) | 7 h | 9 h | 2 h | **18 h** | 14 % | RA1, RA2, RA3 |
 | UD4 | [Fortificación de hosts y seguridad activa](/ud04/) | 8 h | 12 h | 2 h | **22 h** | 17 % | RA1, RA2 |
-| UD5 | [Seguridad en redes: monitorización, detección y respuesta](/ud05-seguridad-redes/) | 7 h | 9 h | 2 h | **18 h** | 14 % | RA2 |
-| UD6 | [Seguridad perimetral: cortafuegos, proxy, VPN y acceso remoto](/ud06-seguridad-perimetral/) | 9 h | 14 h | 2 h | **25 h** | 19 % | RA1, RA3, RA4, RA5 |
-| UD7 | [Alta disponibilidad, virtualización y continuidad de negocio](/ud07-alta-disponibilidad/) | 7 h | 9 h | 2 h | **18 h** | 14 % | RA6 |
+| UD5 | [Seguridad en redes: monitorización, detección y respuesta](/ud05/) | 7 h | 9 h | 2 h | **18 h** | 14 % | RA2 |
+| UD6 | [Seguridad perimetral: cortafuegos, proxy, VPN y acceso remoto](/ud06/) | 9 h | 14 h | 2 h | **25 h** | 19 % | RA1, RA3, RA4, RA5 |
+| UD7 | [Alta disponibilidad, virtualización y continuidad de negocio](/ud07/) | 7 h | 9 h | 2 h | **18 h** | 14 % | RA6 |
 | | **Total** | **52 h** | **67 h** | **14 h** | **133 h** | 100 % | RA1 a RA7 |
 > [!NOTE]
 > El **50 %** de las horas son de laboratorio. Esa proporción es intencionada: en seguridad y alta disponibilidad se aprende configurando, atacando en un entorno aislado, comprobando y recuperando.

@@ -4,25 +4,25 @@ weight: 1
 bookToc: true
 ---
 
-# UD5 · Seguridad en redes: monitorización, detección y respuesta
+# UD05 · Seguridad en redes: monitorización, detección y respuesta
 
 Cómo proteger la red interna y vigilarla: amenazas por capas, protección de la LAN, segmentación con VLAN y ACL, seguridad Wi-Fi, protocolos seguros, detección de intrusiones y análisis de tráfico.
 
 {{< ra "RA2:a,c,d,g,h,i" "RA3:c" >}}
 
 > [!NOTE]
-> SSH avanzado, redes privadas virtuales (VPN) y autenticación AAA/RADIUS se estudian en la [UD6. Seguridad perimetral](/ud06-seguridad-perimetral/ud06-teoria/).
+> SSH avanzado, redes privadas virtuales (VPN) y autenticación AAA/RADIUS se estudian en la [UD06. Seguridad perimetral](/ud06/ud06-teoria/).
 
 | Bloque | Horas |
 |---|--:|
 | Teoría (este documento) | 7 h |
-| [Prácticas](/ud05-seguridad-redes/ud05-practicas/) | 9 h |
+| [Prácticas](/ud05/ud05-practicas/) | 9 h |
 | Evaluación | 2 h |
 | **Total** | **18 h** |
 
 ## 1. Introducción
 
-Una empresa tiene un servidor muy bien fortificado (UD4), pero está conectado a una red donde cualquiera con un cable puede escuchar el tráfico, donde los portátiles de los visitantes comparten segmento con la contabilidad y donde los empleados en teletrabajo acceden por Internet con una contraseña. **La seguridad de un host no basta si la red que lo une al resto es insegura.**
+Una empresa tiene un servidor muy bien fortificado (UD04), pero está conectado a una red donde cualquiera con un cable puede escuchar el tráfico, donde los portátiles de los visitantes comparten segmento con la contabilidad y donde los empleados en teletrabajo acceden por Internet con una contraseña. **La seguridad de un host no basta si la red que lo une al resto es insegura.**
 
 Esta unidad se ocupa de la **seguridad en la red**: qué puede ir mal en cada capa, cómo **segmentar** y **controlar** el acceso, cómo **cifrar** las comunicaciones y cómo **detectar** lo que no se ha podido prevenir.
 
@@ -134,14 +134,14 @@ Las VLAN separan redes lógicas. En **VLAN hopping** el atacante consigue acceso
 
 El objetivo es **agotar** un recurso (ancho de banda, tabla de conexiones, CPU). Un ejemplo clásico es el **SYN flood**: inundar un servidor de peticiones TCP SYN sin completar el *handshake*, para saturar su cola de conexiones.
 
-**Medidas en el host (ya vistas en UD4):**
+**Medidas en el host (ya vistas en UD04):**
 
 ```bash
 sysctl net.ipv4.tcp_syncookies              # 1 = activo: mantiene el servicio ante SYN flood
 sudo ss -s                                  # resumen de conexiones (muchas en SYN-RECV = sospechoso)
 ```
 
-y limitación de tasa en el cortafuegos (UD7), CDN/anti-DDoS del proveedor, y balanceo/escalado (UD5).
+y limitación de tasa en el cortafuegos (UD07), CDN/anti-DDoS del proveedor, y balanceo/escalado (UD05).
 
 ---
 
@@ -242,7 +242,7 @@ Address=10.10.10.1/24
 
 ### 4.3. ACL: controlar qué se comunica con qué
 
-Una **ACL** (*Access Control List*) es una lista ordenada de reglas permitir/denegar. Entre VLAN, el router aplica ACL; en Linux se hace con **nftables** (que verás a fondo en la UD7). Ejemplo: un router Linux que une VLAN 20 (empleados), 30 (invitados) y 40 (servidores):
+Una **ACL** (*Access Control List*) es una lista ordenada de reglas permitir/denegar. Entre VLAN, el router aplica ACL; en Linux se hace con **nftables** (que verás a fondo en la UD07). Ejemplo: un router Linux que une VLAN 20 (empleados), 30 (invitados) y 40 (servidores):
 
 ```text
 # /etc/nftables.d/vlans.nft  (el cortafuegos del router)
@@ -390,7 +390,7 @@ Desde `sad-cli`, haz la petición:
 curl -u demo:ClaveDemo1 http://192.168.100.30/privado/
 ```
 
-Verás `Authorization: Basic ZGVtbzpDbGF2ZURlbW8x`. Eso es solo **Base64** (no cifrado): `echo ZGVtbzpDbGF2ZURlbW8x | base64 -d` devuelve `demo:ClaveDemo1`. **Cualquiera con acceso al medio la lee.** Repite con HTTPS (UD3, práctica 6): la cabecera ya no es legible. Ese es el valor del cifrado en tránsito.
+Verás `Authorization: Basic ZGVtbzpDbGF2ZURlbW8x`. Eso es solo **Base64** (no cifrado): `echo ZGVtbzpDbGF2ZURlbW8x | base64 -d` devuelve `demo:ClaveDemo1`. **Cualquiera con acceso al medio la lee.** Repite con HTTPS (UD03, práctica 6): la cabecera ya no es legible. Ese es el valor del cifrado en tránsito.
 
 ---
 
@@ -514,7 +514,7 @@ sudo suricata -c /etc/suricata/suricata.yaml -q 0       # modo nfqueue; las regl
 ```
 
 > [!WARNING]
-> Un IPS mal ajustado **corta tráfico legítimo** (falsos positivos). Empieza siempre en modo IDS (`alert`), revisa las alertas durante días y solo después pasa a `drop` las reglas de alta confianza. En un punto crítico, valora `bypass` para que un fallo del IPS no pare la red (disponibilidad frente a seguridad: UD5).
+> Un IPS mal ajustado **corta tráfico legítimo** (falsos positivos). Empieza siempre en modo IDS (`alert`), revisa las alertas durante días y solo después pasa a `drop` las reglas de alta confianza. En un punto crítico, valora `bypass` para que un fallo del IPS no pare la red (disponibilidad frente a seguridad: UD05).
 
 ---
 
@@ -616,7 +616,7 @@ Para integrar todo, un caso con el ciclo **amenaza → vulnerabilidad → ataque
 - **Autentica a quién y qué se conecta**: 802.1X, VPN con certificados + MFA.
 - **Mínimo privilegio en la VPN**: el cliente accede solo a lo que necesita (`AllowedIPs` y reglas `forward`).
 - **Wi-Fi**: WPA3 o WPA2-Enterprise, PMF, WPS desactivado, invitados aislados.
-- **Detecta**: IDS en los puntos de paso y registros centralizados (UD4: Wazuh).
+- **Detecta**: IDS en los puntos de paso y registros centralizados (UD04: Wazuh).
 - **Gestiona los secretos**: claves privadas con permisos `600`, rotación de PSK, revocación de claves y certificados.
 - **Documenta** el diseño de red y la matriz de flujos permitidos (quién → qué → por qué).
 - **Prueba** cada medida (captura de tráfico, intento de acceso no permitido) y conserva la evidencia.
@@ -664,7 +664,7 @@ Entrega un documento con:
 4. **Detección**: dónde colocarías Suricata y qué reglas/alertas priorizarías.
 5. **Plan de comprobación**: pruebas (capturas, intentos denegados) que demuestren cada medida.
 
-Las prácticas guiadas de la unidad están en [Prácticas](/ud05-seguridad-redes/ud05-practicas/).
+Las prácticas guiadas de la unidad están en [Prácticas](/ud05/ud05-practicas/).
 
 ---
 

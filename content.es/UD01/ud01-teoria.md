@@ -1,21 +1,21 @@
 ---
-title: "Teoría"
-slug: "teoria"
+title: "Introducción a la seguridad, riesgos y marco legal - Teoría"
 weight: 1
+bookToc: true
 ---
 
-# UD1. Introducción a la seguridad informática
+# UD01 · Introducción a la seguridad informática, gestión de riesgos y marco legal
 
-> Conceptos fundamentales para comprender, analizar y gestionar la seguridad de los sistemas de información.
+Conceptos fundamentales para comprender, analizar y gestionar la seguridad de los sistemas de información: principios, activos, amenazas, vulnerabilidades, riesgos, autenticación, incidentes, análisis forense y marco legal.
 
-| Datos de la unidad | Información |
-| --- | --- |
-| Módulo | 0378. Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR |
-| Duración | 14 horas |
-| Resultados de aprendizaje | RA1 (a, b, c, d, e, f, h, i) · RA7 (a-g) |
+{{< ra "RA1:a,b,c,d,e,f,h,i" "RA7" >}}
 
----
+| Bloque | Horas |
+|---|--:|
+| Teoría (este documento) | 7 h |
+| [Prácticas](/ud01/ud01-practicas/) | 5 h |
+| Evaluación | 2 h |
+| **Total** | **14 h** |
 
 ## 1. Introducción
 
@@ -45,7 +45,7 @@ flowchart LR
     D --> A
 ```
 
-![Paneles y códigos que representan la operación de seguridad informática](/images/ud1/security-operations.jpg)
+![Paneles y códigos que representan la operación de seguridad informática](/images/ud01/security-operations.jpg)
 
 *Figura 1. La seguridad protege información, sistemas, redes y personas mediante controles coordinados.*
 
@@ -66,7 +66,7 @@ Al finalizar esta unidad serás capaz de:
 ---
 
 <!-- enr:u1a -->
-![Tríada CID: confidencialidad, integridad y disponibilidad](/images/ud1/triada-cid.svg)
+![Tríada CID: confidencialidad, integridad y disponibilidad](/images/ud01/triada-cid.svg)
 *Figura 1.1. Los tres pilares de la seguridad de la información. Cada medida de seguridad protege, sobre todo, uno de ellos.*
 
 > [!TIP]
@@ -94,7 +94,7 @@ La información puede estar en muchos estados y en todos ellos debe protegerse:
 
 ## 4. Principios de la seguridad
 
-![Infraestructura de servidores conectados en un centro de datos](/images/ud1/server-infrastructure.jpg)
+![Infraestructura de servidores conectados en un centro de datos](/images/ud01/server-infrastructure.jpg)
 
 *Figura 2. La protección debe abarcar la infraestructura, los servicios y la información que alojan.*
 
@@ -137,7 +137,7 @@ ls -l nominas.csv
 - `ls -l` muestra el listado largo, con los permisos en la primera columna.
 - `chmod 600` asigna lectura y escritura (6 = 4 + 2) al propietario y ningún permiso (0) al grupo ni a otros.
 
-Otras medidas de confidencialidad: cifrado (UD3), control de acceso, autenticación multifactor, segmentación de red (UD6), clasificación de la información y acuerdos de confidencialidad con el personal.
+Otras medidas de confidencialidad: cifrado (UD03), control de acceso, autenticación multifactor, segmentación de red (UD06), clasificación de la información y acuerdos de confidencialidad con el personal.
 
 ### 4.2. Integridad
 
@@ -145,7 +145,7 @@ La **integridad** garantiza que la información no ha sido **modificada** de for
 
 **Ejemplo.** En una base de datos aparece `Saldo = 1.500 €`. Un atacante no debe poder cambiarlo a `Saldo = 15.000 €` sin que el sistema lo detecte.
 
-La herramienta básica para comprobar la integridad es una **función hash**, que se estudia en profundidad en la UD3. Un hash es una «huella digital» del fichero: si cambia un solo bit del contenido, la huella cambia completamente.
+La herramienta básica para comprobar la integridad es una **función hash**, que se estudia en profundidad en la UD03. Un hash es una «huella digital» del fichero: si cambia un solo bit del contenido, la huella cambia completamente.
 
 ```bash
 # Creamos el fichero original y calculamos su huella SHA-256
@@ -171,7 +171,7 @@ sha256sum -c cuenta.sha256
 - La opción `-c` (*check*) lee un fichero de huellas y comprueba si coinciden con el contenido actual.
 
 > [!NOTE]
-> El hash **detecta** la modificación, pero no la **impide**. Para impedirla se combinan permisos, control de acceso y registros de auditoría. Para saber además **quién** generó la huella se usa la firma digital (UD3).
+> El hash **detecta** la modificación, pero no la **impide**. Para impedirla se combinan permisos, control de acceso y registros de auditoría. Para saber además **quién** generó la huella se usa la firma digital (UD03).
 
 Otras medidas de integridad: firmas digitales, control de versiones (Git), sistemas de detección de cambios en ficheros (AIDE, Wazuh), transacciones en bases de datos, RAID con comprobación de paridad.
 
@@ -179,7 +179,7 @@ Otras medidas de integridad: firmas digitales, control de versiones (Git), siste
 
 La **disponibilidad** garantiza que los usuarios autorizados pueden acceder a la información y a los servicios **cuando los necesitan**.
 
-Un servidor apagado es muy confidencial (nadie puede leer sus datos)… pero completamente inútil. La disponibilidad es el principio que se trabaja en la UD2 (seguridad pasiva) y en la UD5 (alta disponibilidad).
+Un servidor apagado es muy confidencial (nadie puede leer sus datos)… pero completamente inútil. La disponibilidad es el principio que se trabaja en la UD02 (seguridad pasiva) y en la UD05 (alta disponibilidad).
 
 Un administrador comprueba la disponibilidad de un servicio con órdenes como estas:
 
@@ -247,11 +247,11 @@ El **no repudio** impide que alguien pueda **negar** haber realizado una acción
 - **No repudio en origen**: el emisor no puede negar haber enviado un mensaje (por ejemplo, una factura electrónica firmada).
 - **No repudio en destino**: el receptor no puede negar haberlo recibido (por ejemplo, un acuse de recibo firmado, como en las notificaciones electrónicas de la Administración).
 
-La tecnología que lo hace posible es la **firma digital** basada en criptografía asimétrica (UD3).
+La tecnología que lo hace posible es la **firma digital** basada en criptografía asimétrica (UD03).
 
 <!-- enr:u1b -->
 > [!WARNING]
-> **Error muy habitual en los exámenes:** confundir **integridad** con **confidencialidad**. Cifrar un fichero protege la confidencialidad, pero **no impide** que alguien lo borre o lo modifique. Para detectar modificaciones se usan *hashes* y firmas (UD3).
+> **Error muy habitual en los exámenes:** confundir **integridad** con **confidencialidad**. Cifrar un fichero protege la confidencialidad, pero **no impide** que alguien lo borre o lo modifique. Para detectar modificaciones se usan *hashes* y firmas (UD03).
 
 {{% details title="🧠 Comprueba lo que has aprendido: los principios" open=false %}}
 **1.** Un empleado envía por error una nómina a otra persona. ¿Qué principio se ha violado?
@@ -283,7 +283,7 @@ Indica qué principio se ve comprometido en cada caso.
 
 ## 5. Activos, amenazas, vulnerabilidades y riesgos
 
-![Pantallas con métricas y gráficos para el análisis de riesgos](/images/ud1/risk-analysis.jpg)
+![Pantallas con métricas y gráficos para el análisis de riesgos](/images/ud01/risk-analysis.jpg)
 
 *Figura 3. El análisis de riesgos permite priorizar la protección de los activos más importantes.*
 
@@ -591,7 +591,7 @@ Una idea clave: **quien tiene acceso físico a un equipo, puede llegar a control
 | Objetivo | **Prevenir y detectar** incidentes | **Minimizar las consecuencias** cuando ya han ocurrido |
 | Cuándo actúa | Antes y durante | Después |
 | Ejemplos | Contraseñas, cortafuegos, antivirus, IDS/IPS, cifrado, actualizaciones, formación | Copias de seguridad, RAID, SAI, redundancia, plan de recuperación |
-| Unidades del módulo | UD3, UD4, UD6, UD7 | UD2, UD5 |
+| Unidades del módulo | UD03, UD04, UD06, UD07 | UD02, UD05 |
 
 ### 6.3. Medidas físicas, técnicas y organizativas
 
@@ -610,16 +610,16 @@ Ninguna medida es perfecta. La **defensa en profundidad** consiste en superponer
 ```text
 ┌──────────────────────────────────────────────────────── Políticas y formación
 │ ┌────────────────────────────────────────────────────── Seguridad física
-│ │ ┌──────────────────────────────────────────────────── Perímetro (cortafuegos, proxy) — UD7
-│ │ │ ┌────────────────────────────────────────────────── Red interna (VLAN, IDS, VPN) — UD6
-│ │ │ │ ┌──────────────────────────────────────────────── Host (hardening, antimalware) — UD4
+│ │ ┌──────────────────────────────────────────────────── Perímetro (cortafuegos, proxy) — UD07
+│ │ │ ┌────────────────────────────────────────────────── Red interna (VLAN, IDS, VPN) — UD06
+│ │ │ │ ┌──────────────────────────────────────────────── Host (hardening, antimalware) — UD04
 │ │ │ │ │ ┌────────────────────────────────────────────── Aplicación (validación, WAF)
-│ │ │ │ │ │ ┌──────────────────────────────────────────── Datos (cifrado, copias) — UD2, UD3
+│ │ │ │ │ │ ┌──────────────────────────────────────────── Datos (cifrado, copias) — UD02, UD03
 │ │ │ │ │ │ │                  ACTIVO
 ```
 
 <!-- enr:u1c -->
-![Defensa en profundidad: capas concéntricas de protección](/images/ud1/defensa-profundidad.svg)
+![Defensa en profundidad: capas concéntricas de protección](/images/ud01/defensa-profundidad.svg)
 *Figura 1.2. Defensa en profundidad: el atacante debe superar varias capas, y cada capa detecta o frena lo que la anterior no ha parado.*
 
 > [!IMPORTANT]
@@ -650,7 +650,7 @@ Algunas medidas admiten matices (por ejemplo, el RAID se considera seguridad fí
 
 ## 7. Amenazas y ataques más habituales
 
-![Representación visual de un candado digital para proteger una red](/images/ud1/network-protection.jpg)
+![Representación visual de un candado digital para proteger una red](/images/ud01/network-protection.jpg)
 
 *Figura 4. La protección frente a amenazas combina controles técnicos, actualización y vigilancia.*
 
@@ -793,7 +793,7 @@ Received: from mail.servidor-desconocido.ru (203.0.113.50)
 | **Diccionario** | Probar palabras y contraseñas habituales | Rechazar contraseñas conocidas o filtradas |
 | ***Password spraying*** | Probar una contraseña común (`Verano2026!`) contra muchas cuentas | Detección de intentos distribuidos, MFA |
 | ***Credential stuffing*** | Usar pares usuario/contraseña filtrados de otros servicios | No reutilizar contraseñas, MFA |
-| **Ataque *offline* al hash** | Si se roba el fichero de hashes, se prueban contraseñas sin límite de intentos | Algoritmos lentos con sal (yescrypt, Argon2) — UD3 |
+| **Ataque *offline* al hash** | Si se roba el fichero de hashes, se prueban contraseñas sin límite de intentos | Algoritmos lentos con sal (yescrypt, Argon2) — UD03 |
 
 ¿Por qué es tan importante la **longitud**? El número de combinaciones posibles es `N^L`, siendo `N` el número de símbolos posibles y `L` la longitud. Este script lo calcula:
 
@@ -840,23 +840,23 @@ Un ataque de **denegación de servicio** intenta que un servicio deje de estar d
 | De protocolo | Transporte | Inundación SYN que agota la tabla de conexiones |
 | De aplicación | Aplicación | Miles de peticiones HTTP a una búsqueda costosa |
 
-Contramedidas: limitación de peticiones (*rate limiting*), SYN cookies, servicios de mitigación DDoS del proveedor o de una CDN, redundancia y balanceo (UD5), y un plan de respuesta con contactos del proveedor.
+Contramedidas: limitación de peticiones (*rate limiting*), SYN cookies, servicios de mitigación DDoS del proveedor o de una CDN, redundancia y balanceo (UD05), y un plan de respuesta con contactos del proveedor.
 
 ### 7.8. Otros ataques que estudiaremos
 
 | Ataque | Breve descripción | Unidad |
 | --- | --- | --- |
-| *Sniffing* / MITM | Captura o intercepción del tráfico entre dos equipos | UD6 |
-| *Spoofing* (ARP, DNS, IP) | Suplantación de direcciones o nombres | UD6 |
-| Inyección SQL / XSS | Ataques a aplicaciones web por falta de validación | UD7 (WAF) |
-| Escalada de privilegios | Pasar de usuario normal a administrador | UD4 |
-| Ataques a la cadena de suministro | Comprometer un proveedor o una dependencia | UD4 |
+| *Sniffing* / MITM | Captura o intercepción del tráfico entre dos equipos | UD06 |
+| *Spoofing* (ARP, DNS, IP) | Suplantación de direcciones o nombres | UD06 |
+| Inyección SQL / XSS | Ataques a aplicaciones web por falta de validación | UD07 (WAF) |
+| Escalada de privilegios | Pasar de usuario normal a administrador | UD04 |
+| Ataques a la cadena de suministro | Comprometer un proveedor o una dependencia | UD04 |
 
 ---
 
 ## 8. Autenticación y control de acceso
 
-![Candado digital que representa el control de acceso y la autenticación](/images/ud1/secure-access.jpg)
+![Candado digital que representa el control de acceso y la autenticación](/images/ud01/secure-access.jpg)
 
 *Figura 5. Las identidades, contraseñas y factores adicionales de autenticación controlan el acceso.*
 
@@ -904,7 +904,7 @@ Las recomendaciones han cambiado mucho en los últimos años. La guía **NIST SP
 | **Limitar los intentos** fallidos | Frena la fuerza bruta en línea |
 | Permitir **gestores de contraseñas** y pegar | Fomenta contraseñas largas y únicas |
 | Usar **MFA** siempre que sea posible, y obligatoriamente en cuentas privilegiadas y accesos remotos | Una contraseña robada deja de ser suficiente |
-| Almacenar las contraseñas con un **hash lento y con sal** | Dificulta los ataques *offline* (UD3) |
+| Almacenar las contraseñas con un **hash lento y con sal** | Dificulta los ataques *offline* (UD03) |
 
 Ejemplo de **política de contraseñas** para una pyme:
 
@@ -922,7 +922,7 @@ POLÍTICA DE CONTRASEÑAS - Versión 1.0
 10. Las cuentas se deshabilitan el mismo día de la baja del empleado.
 ```
 
-En Linux esta política se implanta con **PAM** (`pam_pwquality`, `pam_faillock`) y con la orden `chage`. Lo veremos en detalle en la UD4; como anticipo:
+En Linux esta política se implanta con **PAM** (`pam_pwquality`, `pam_faillock`) y con la orden `chage`. Lo veremos en detalle en la UD04; como anticipo:
 
 ```bash
 # Ver la caducidad de la contraseña del usuario ana
@@ -969,9 +969,9 @@ Si subimos el umbral, baja la FAR pero sube la FRR, y viceversa. Un CPD prioriza
 | **Mínimo privilegio** | Cada usuario o proceso solo tiene los permisos imprescindibles | El servidor web se ejecuta como `www-data`, no como `root` |
 | **Necesidad de saber** | Solo se accede a la información necesaria para el trabajo | Comercial ve sus clientes, no los de toda la empresa |
 | **Segregación de funciones** | Las tareas críticas requieren a más de una persona | Quien crea un proveedor no puede aprobar sus pagos |
-| **Denegación por defecto** | Lo que no está permitido explícitamente, está prohibido | Política `DROP` en el cortafuegos (UD7) |
+| **Denegación por defecto** | Lo que no está permitido explícitamente, está prohibido | Política `DROP` en el cortafuegos (UD07) |
 | **Seguridad por diseño y por defecto** | La seguridad se incorpora desde el inicio y la configuración inicial es la más segura | Art. 25 del RGPD |
-| **Zero Trust** | No se confía por estar «dentro» de la red; se verifica siempre | Autenticación y autorización en cada acceso (UD6) |
+| **Zero Trust** | No se confía por estar «dentro» de la red; se verifica siempre | Autenticación y autorización en cada acceso (UD06) |
 
 ```bash
 # Ejemplo: comprobar con qué usuario se ejecutan los procesos del servidor web
@@ -998,7 +998,7 @@ Una política de seguridad típica incluye: uso aceptable de los equipos, contra
 
 ## 9. Gestión de incidentes
 
-![Equipo trabajando ante una incidencia de seguridad](/images/ud1/incident-response.jpg)
+![Equipo trabajando ante una incidencia de seguridad](/images/ud01/incident-response.jpg)
 
 *Figura 6. Las auditorías, la monitorización y la respuesta documentada permiten mejorar la seguridad de forma continua.*
 
@@ -1096,7 +1096,7 @@ Una **auditoría de seguridad** es una revisión sistemática e independiente pa
 | Test de intrusión (*pentesting*) | Explotación controlada de vulnerabilidades | Metasploit, Burp Suite (con autorización) |
 | Forense | Investigación tras un incidente | Autopsy, Volatility |
 
-Ejemplo de **auditoría local** rápida con Lynis (se verá en la UD4):
+Ejemplo de **auditoría local** rápida con Lynis (se verá en la UD04):
 
 ```bash
 sudo apt install -y lynis       # Debian/Ubuntu
@@ -1238,7 +1238,7 @@ Acceso, rectificación, supresión («derecho al olvido»), oposición, limitaci
 Las sanciones pueden alcanzar **20 millones de euros o el 4 % de la facturación anual global**.
 
 > [!NOTE]
-> El artículo 32 del RGPD es la conexión directa entre la ley y este módulo: cifrado (UD3), copias y restauración (UD2), disponibilidad y resiliencia (UD5), control de acceso (UD4), y verificación periódica de las medidas (auditorías).
+> El artículo 32 del RGPD es la conexión directa entre la ley y este módulo: cifrado (UD03), copias y restauración (UD02), disponibilidad y resiliencia (UD05), control de acceso (UD04), y verificación periódica de las medidas (auditorías).
 
 ### 12.2. Servicios de la sociedad de la información y comercio electrónico: LSSI-CE
 
@@ -1250,7 +1250,7 @@ La **Ley 34/2002**, de servicios de la sociedad de la información y de comercio
 - **Contratación electrónica**: validez de los contratos celebrados por vía electrónica e información previa obligatoria.
 - Obligaciones de colaboración de los prestadores de servicios de intermediación.
 
-Relacionadas: la **Ley 6/2020** de servicios electrónicos de confianza y el **Reglamento eIDAS** (UE 910/2014, actualizado por el Reglamento (UE) 2024/1183), que regulan la firma electrónica y los certificados (UD3).
+Relacionadas: la **Ley 6/2020** de servicios electrónicos de confianza y el **Reglamento eIDAS** (UE 910/2014, actualizado por el Reglamento (UE) 2024/1183), que regulan la firma electrónica y los certificados (UD03).
 
 ### 12.3. Esquema Nacional de Seguridad (ENS)
 
@@ -1289,7 +1289,7 @@ En España su transposición se realiza mediante la futura **Ley de Coordinació
 | --- | --- | --- |
 | **ISO/IEC 27001:2022** | Sistemas de Gestión de Seguridad de la Información (**SGSI**) | Requisitos **certificables** para gestionar la seguridad con un ciclo de mejora continua (PDCA) |
 | **ISO/IEC 27002:2022** | Controles de seguridad | Guía de 93 controles organizados en 4 temas: organizativos, de personas, físicos y tecnológicos |
-| **ISO 22301** | Continuidad de negocio | Requisitos para un sistema de gestión de la continuidad (UD2, UD5) |
+| **ISO 22301** | Continuidad de negocio | Requisitos para un sistema de gestión de la continuidad (UD02, UD05) |
 | **ISO 31000** | Gestión del riesgo | Principios y proceso general |
 | **ENS** | Sector público español | Marco obligatorio y certificable |
 | **NIST CSF 2.0** (2024) | Gestión de la ciberseguridad | Seis funciones: **Gobernar, Identificar, Proteger, Detectar, Responder y Recuperar** |
@@ -1338,6 +1338,12 @@ Una academia de idiomas detecta que un portátil robado contenía, sin cifrar, u
 <!-- enr:u1f -->
 > [!NOTE]
 > Los controles se clasifican con dos ejes que no hay que mezclar: **cuándo actúan** (preventivo, detectivo, correctivo) y **qué naturaleza tienen** (físico, técnico, organizativo).
+
+## Explora: calcula el riesgo residual
+
+{{< explora "riesgo" >}}
+
+---
 
 ## 14. Ejercicios de repaso
 

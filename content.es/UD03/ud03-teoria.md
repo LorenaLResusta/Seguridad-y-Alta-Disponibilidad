@@ -4,7 +4,7 @@ weight: 1
 bookToc: true
 ---
 
-# UD3 · Criptografía y aplicaciones criptográficas
+# UD03 · Criptografía y aplicaciones criptográficas
 
 ## Resumen del tema
 
@@ -18,7 +18,7 @@ Cada vez que entras en la web de tu banco, te conectas por SSH a un servidor, pr
 | Que el autor **no pueda negar** lo que firmó (no repudio) | **Firma digital** | Presentar impuestos con certificado |
 | **Acordar** una clave secreta por una red insegura | **Intercambio de claves** (Diffie-Hellman) | El inicio de una conexión HTTPS |
 
-Esta unidad conecta con todas las demás: las copias cifradas ([UD2](/ud02-seguridad-pasiva/)), el cifrado de disco y SSH ([UD4](/UD04/)), las VPN y los certificados de cliente ([UD6](/ud06-seguridad-perimetral/)) y el *proxy* inverso con TLS ([UD7](/ud07-alta-disponibilidad/)).
+Esta unidad conecta con todas las demás: las copias cifradas ([UD02](/ud02/)), el cifrado de disco y SSH ([UD04](/UD04/)), las VPN y los certificados de cliente ([UD06](/ud06/)) y el *proxy* inverso con TLS ([UD07](/ud07/)).
 
 {{< ra "RA1:g" "RA2:f" "RA3:c" >}}
 
@@ -27,7 +27,7 @@ Esta unidad conecta con todas las demás: las copias cifradas ([UD2](/ud02-segur
 | Bloque | Horas |
 |---|:-:|
 | Teoría (esta página) | 7 h |
-| [Prácticas](/ud03-criptografia/ud03-practicas/) (incluye la Tarea del proyecto) | 9 h |
+| [Prácticas](/ud03/ud03-practicas/) (incluye la Tarea del proyecto) | 9 h |
 | Evaluación | 2 h |
 | **Total** | **18 h** |
 
@@ -179,7 +179,7 @@ AES cifra bloques de 16 bytes. Para cifrar un fichero de varios megabytes se nec
 | **GCM** | CTR + etiqueta de autenticación | **Recomendado**: cifrado autenticado |
 
 > [!WARNING]
-> **El modo ECB no debe usarse jamás.** Es el famoso «pingüino de ECB»: al cifrar una imagen en modo ECB la silueta sigue siendo visible, porque las zonas del mismo color producen bloques cifrados idénticos. Lo comprobarás en la [práctica 3.2](/ud03-criptografia/ud03-practicas/#práctica-32--cifrado-simétrico-y-autenticado).
+> **El modo ECB no debe usarse jamás.** Es el famoso «pingüino de ECB»: al cifrar una imagen en modo ECB la silueta sigue siendo visible, porque las zonas del mismo color producen bloques cifrados idénticos. Lo comprobarás en la [práctica 3.2](/ud03/ud03-practicas/#práctica-32--cifrado-simétrico-y-autenticado).
 
 ### 2.4 Cifrado autenticado (AEAD)
 
@@ -230,7 +230,7 @@ Descifrado:    Transferir 1500 EUR a la cuenta ES00 1234
 
 ### 2.5 Cifrado simétrico de ficheros desde la terminal
 
-Tres herramientas libres permiten cifrar ficheros con contraseña. Se practican en la [práctica 3.2](/ud03-criptografia/ud03-practicas/#práctica-32--cifrado-simétrico-y-autenticado).
+Tres herramientas libres permiten cifrar ficheros con contraseña. Se practican en la [práctica 3.2](/ud03/ud03-practicas/#práctica-32--cifrado-simétrico-y-autenticado).
 
 | Herramienta | Qué es | Algoritmo por defecto | ¿Autenticado? |
 |---|---|---|---|
@@ -493,14 +493,14 @@ En Windows, PowerShell incluye `Get-FileHash .\fichero.iso -Algorithm SHA256`.
 | Uso | Ejemplo |
 |---|---|
 | **Verificar la integridad** de descargas | Comparar el *hash* de una ISO con el publicado |
-| Detectar cambios en ficheros | Línea base de integridad (AIDE, Wazuh) en la [UD4](/UD04/) |
+| Detectar cambios en ficheros | Línea base de integridad (AIDE, Wazuh) en la [UD04](/UD04/) |
 | **Almacenar contraseñas** | `/etc/shadow` (con sal y algoritmo lento; apartado 4.5) |
 | **Firma digital** | Se firma el *hash* del documento, no el documento entero |
-| Cadena de custodia forense | *Hash* de una evidencia ([UD1](/ud01-seguridad-informatica/)) |
-| Deduplicación y copias | `restic` identifica fragmentos por su *hash* ([UD2](/ud02-seguridad-pasiva/)) |
+| Cadena de custodia forense | *Hash* de una evidencia ([UD01](/ud01/)) |
+| Deduplicación y copias | `restic` identifica fragmentos por su *hash* ([UD02](/ud02/)) |
 | Control de versiones | Git identifica cada *commit* por su *hash* |
 
-**Ejemplo: verificar una ISO de Debian.** Debian publica un fichero `SHA256SUMS` y su firma `SHA256SUMS.sign`. Comprobar solo el *hash* no basta: si un atacante controla la web, puede cambiar la ISO **y** el fichero de *hashes*. La comprobación completa tiene dos pasos (se practica en la [práctica 3.1](/ud03-criptografia/ud03-practicas/#práctica-31--funciones-hash-hmac-e-integridad)):
+**Ejemplo: verificar una ISO de Debian.** Debian publica un fichero `SHA256SUMS` y su firma `SHA256SUMS.sign`. Comprobar solo el *hash* no basta: si un atacante controla la web, puede cambiar la ISO **y** el fichero de *hashes*. La comprobación completa tiene dos pasos (se practica en la [práctica 3.1](/ud03/ud03-practicas/#práctica-31--funciones-hash-hmac-e-integridad)):
 
 ```bash
 # 1. ¿La ISO coincide con el hash publicado?
@@ -530,7 +530,7 @@ Un servidor debe comprobar contraseñas **sin guardarlas en claro**: si se roba 
 | **Vulnerabilidad** | Las contraseñas se guardan en claro, con cifrado reversible o con un *hash* rápido y sin sal |
 | **Ataque** | Fuerza bruta o diccionario con GPU: miles de millones de intentos por segundo contra un SHA-256 simple; tablas *rainbow* precalculadas si no hay sal |
 | **Detección** | Auditoría de robustez de las contraseñas propias en laboratorio (práctica 3.4); alertas ante accesos anómalos |
-| **Mitigación** | *Hash* **lento y con sal** (yescrypt, Argon2id), contraseñas largas, segundo factor ([UD4](/UD04/)) |
+| **Mitigación** | *Hash* **lento y con sal** (yescrypt, Argon2id), contraseñas largas, segundo factor ([UD04](/UD04/)) |
 | **Comprobación** | Medir el coste por intento y comprobar que dos contraseñas iguales dan *hashes* distintos |
 
 | Método | ¿Seguro? | Problema |
@@ -562,7 +562,7 @@ fperez:$y$j9T$Fq1HcMv0...$Vb9w0Tz...:20367:0:99999:7:::
 | `$1$` | MD5-crypt (**obsoleto**) |
 | `!` o `*` al principio del campo | Cuenta bloqueada o sin contraseña utilizable |
 
-Los campos numéricos posteriores indican la fecha del último cambio y la política de caducidad (orden `chage`). La política de contraseñas (longitud frente a complejidad forzada, NIST SP 800-63B) se trata en la [UD4](/UD04/).
+Los campos numéricos posteriores indican la fecha del último cambio y la política de caducidad (orden `chage`). La política de contraseñas (longitud frente a complejidad forzada, NIST SP 800-63B) se trata en la [UD04](/UD04/).
 
 > [!WARNING]
 > **Guardar contraseñas con MD5 o SHA-256 simples es un error grave**, y desarrollar tu propio sistema de contraseñas también. Usa las bibliotecas del sistema o del *framework* con yescrypt, Argon2id o bcrypt.
@@ -641,7 +641,7 @@ La firma digital es una técnica; la **firma electrónica** es un concepto jurí
 | Tipo | Requisitos | Valor legal | Ejemplo |
 |---|---|---|---|
 | **Simple** | Datos electrónicos asociados a otros datos para firmar | Admisible como prueba; no se le puede negar efecto por ser electrónica | Marcar una casilla de aceptación |
-| **Avanzada** | Vinculada al firmante de forma única, permite identificarlo, creada bajo su control exclusivo y detecta cambios posteriores | Mayor valor probatorio | Firma con un certificado software (como el de la [práctica 3.10](/ud03-criptografia/ud03-practicas/#práctica-310--firma-electrónica-de-un-pdf)) |
+| **Avanzada** | Vinculada al firmante de forma única, permite identificarlo, creada bajo su control exclusivo y detecta cambios posteriores | Mayor valor probatorio | Firma con un certificado software (como el de la [práctica 3.10](/ud03/ud03-practicas/#práctica-310--firma-electrónica-de-un-pdf)) |
 | **Cualificada** | Avanzada + **certificado cualificado** + **dispositivo cualificado** de creación de firma | **Equivalente a la firma manuscrita** en toda la UE | Firma con DNIe o con certificado de la FNMT en tarjeta |
 
 Otros conceptos del reglamento:
@@ -845,7 +845,7 @@ sequenceDiagram
     C->>S: {Datos de la aplicación con AES-GCM o ChaCha20-Poly1305}
 ```
 
-Todos los elementos de la unidad aparecen aquí: **Diffie-Hellman** (ECDHE) para acordar claves con secreto hacia adelante, **firma digital** y **certificados** para autenticar al servidor, **hash** (HKDF) para derivar claves y **cifrado simétrico autenticado** para los datos. En TLS 1.3 el certificado viaja **cifrado**, por lo que un analizador de red no lo ve en claro (lo comprobarás en la [práctica 3.7](/ud03-criptografia/ud03-practicas/#práctica-37--análisis-de-la-configuración-tls)).
+Todos los elementos de la unidad aparecen aquí: **Diffie-Hellman** (ECDHE) para acordar claves con secreto hacia adelante, **firma digital** y **certificados** para autenticar al servidor, **hash** (HKDF) para derivar claves y **cifrado simétrico autenticado** para los datos. En TLS 1.3 el certificado viaja **cifrado**, por lo que un analizador de red no lo ve en claro (lo comprobarás en la [práctica 3.7](/ud03/ud03-practicas/#práctica-37--análisis-de-la-configuración-tls)).
 
 ### 7.3 HTTPS en la práctica: comprobaciones y configuración
 
@@ -877,7 +877,7 @@ Buenas prácticas de un servidor HTTPS:
 
 ### 7.4 Otros protocolos seguros y sus equivalentes inseguros
 
-RA3.c pide identificar los protocolos seguros y sus ámbitos de uso. Estos protocolos se configuran en la [UD4](/UD04/) (SSH) y la [UD6](/ud06-seguridad-perimetral/) (acceso remoto y VPN).
+RA3.c pide identificar los protocolos seguros y sus ámbitos de uso. Estos protocolos se configuran en la [UD04](/UD04/) (SSH) y la [UD06](/ud06/) (acceso remoto y VPN).
 
 | Inseguro (texto en claro) | Seguro | Ámbito | Puerto seguro |
 |---|---|---|---|
@@ -954,7 +954,7 @@ El **montaje automático** de un volumen cifrado en un servidor exige que la cla
 | **Fichero de clave** en el disco del sistema (`/etc/crypttab`) | Arranque desatendido | Si roban **todo** el servidor, la clave está dentro; solo protege si se roba el disco de datos por separado (sustitución, retirada, copia) |
 | Clave en **TPM2** o servidor de claves (Clevis/Tang) | Desatendido y ligado al hardware o a la red | Mayor complejidad; fuera del alcance de esta unidad |
 
-En la [práctica 3.9](/ud03-criptografia/ud03-practicas/#práctica-39--cifrado-de-un-volumen-con-luks2) cifras el volumen de los **datos clínicos** de Mediterránea Dental (datos de salud, categoría especial del RGPD): el artículo 32 del RGPD cita expresamente el cifrado como medida técnica apropiada, y el Esquema Nacional de Seguridad lo exige para información sensible en soportes que salen de las instalaciones.
+En la [práctica 3.9](/ud03/ud03-practicas/#práctica-39--cifrado-de-un-volumen-con-luks2) cifras el volumen de los **datos clínicos** de Mediterránea Dental (datos de salud, categoría especial del RGPD): el artículo 32 del RGPD cita expresamente el cifrado como medida técnica apropiada, y el Esquema Nacional de Seguridad lo exige para información sensible en soportes que salen de las instalaciones.
 
 ### 8.2 Cifrado y firma de ficheros y correo
 
@@ -970,13 +970,13 @@ En la [práctica 3.9](/ud03-criptografia/ud03-practicas/#práctica-39--cifrado-d
 
 | Aplicación | Tecnología | Unidad |
 |---|---|---|
-| Cifrado de volúmenes | LUKS2, BitLocker | UD3 y [UD4](/UD04/) |
-| Acceso remoto | SSH con claves Ed25519 | [UD4](/UD04/), [UD6](/ud06-seguridad-perimetral/) |
-| Redes privadas virtuales | WireGuard, IPsec, OpenVPN | [UD6](/ud06-seguridad-perimetral/) |
-| Copias de seguridad | `restic`, BorgBackup (AES-256, cifradas por defecto) | [UD2](/ud02-seguridad-pasiva/) |
-| Paquetes de software | Firmas de repositorios `apt`/`dnf` | [UD4](/UD04/) |
-| Arranque | UEFI *Secure Boot* | [UD4](/UD04/) |
-| Servicios web y balanceadores | TLS en Nginx, HAProxy | UD3, [UD7](/ud07-alta-disponibilidad/) |
+| Cifrado de volúmenes | LUKS2, BitLocker | UD03 y [UD04](/UD04/) |
+| Acceso remoto | SSH con claves Ed25519 | [UD04](/UD04/), [UD06](/ud06/) |
+| Redes privadas virtuales | WireGuard, IPsec, OpenVPN | [UD06](/ud06/) |
+| Copias de seguridad | `restic`, BorgBackup (AES-256, cifradas por defecto) | [UD02](/ud02/) |
+| Paquetes de software | Firmas de repositorios `apt`/`dnf` | [UD04](/UD04/) |
+| Arranque | UEFI *Secure Boot* | [UD04](/UD04/) |
+| Servicios web y balanceadores | TLS en Nginx, HAProxy | UD03, [UD07](/ud07/) |
 
 ### 8.4 Gestión de claves
 

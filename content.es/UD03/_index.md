@@ -1,56 +1,31 @@
 ---
-title: "UD3. Criptografía"
-weight: 3
-bookCollapseSection: true
-cascade:
-  build:
-    render: never
-    list: never
+title: "UD03. Criptografía y aplicaciones criptográficas"
+weight: 30
 ---
 
-# UD3. Criptografía
+# UD03 · Criptografía y aplicaciones criptográficas
 
-> Fundamentos y aplicaciones de la criptografía: cifrado simétrico y asimétrico, funciones hash, almacenamiento de contraseñas, firma digital, certificados, PKI y TLS, con OpenSSL y GnuPG.
+La criptografía es la herramienta que sostiene casi todo lo demás en seguridad: protege los datos guardados en un disco, los que viajan por una red, las copias de seguridad, las contraseñas de las cuentas y la validez de un contrato firmado. En esta unidad aprendes **qué garantiza cada técnica** (confidencialidad, integridad, autenticidad y no repudio), **qué algoritmos son recomendables hoy y cuáles están obsoletos**, y cómo aplicarlas en un sistema real: cifrado simétrico y asimétrico, funciones *hash*, almacenamiento seguro de contraseñas, firma digital, certificados X.509, **infraestructura de clave pública (PKI)**, TLS y HTTPS, cifrado de volúmenes con **LUKS2** y firma electrónica de documentos.
 
-| Datos de la unidad | Información |
-| --- | --- |
-| Módulo | 0378. Seguridad y Alta Disponibilidad |
-| Curso | 2.º ASIR · 2026/27 |
-| Duración | 14 horas |
-| Material | [Teoría](teoria/) · [Prácticas](practicas/) |
+Además, te asomas a las tendencias: la **criptografía post-cuántica** (ML-KEM, ML-DSA) que ya se está desplegando en TLS y SSH, y el cifrado homomórfico.
 
-## Resultados de aprendizaje y criterios de evaluación
+En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) esta unidad entrega la **PKI interna y el cifrado**: una autoridad de certificación propia, HTTPS en la intranet, el volumen cifrado de los datos clínicos y la firma de los consentimientos de los pacientes.
 
-| RA | Criterio de evaluación |
-| --- | --- |
-| RA1 | g) Se han aplicado técnicas criptográficas en el almacenamiento y transmisión de la información. |
-| RA2 | f) Se han utilizado técnicas de cifrado, firmas y certificados digitales en un entorno de trabajo basado en el uso de redes públicas. |
-| RA3 | c) Se han identificado los protocolos seguros de comunicación y sus ámbitos de utilización. |
-| RA7 | e) Se ha descrito la legislación actual sobre los servicios de la sociedad de la información y comercio electrónico (firma electrónica y servicios de confianza). |
+{{< ra "RA1:g" "RA2:f" "RA3:c" >}}
 
-## Contenidos
+| Página | Contenido |
+|---|---|
+| [Teoría](/ud03/ud03-teoria/) | Conceptos, cifrado simétrico (AES, ChaCha20, AEAD), asimétrico (RSA, ECC, Diffie-Hellman), *hash*, HMAC, contraseñas, firma digital y marco legal (eIDAS 2, FNMT, DNIe), certificados y PKI, TLS 1.3, ACME, LUKS2, gestión de claves y criptografía post-cuántica |
+| [Prácticas](/ud03/ud03-practicas/) | Diez prácticas guiadas, autónomas y de reto (*hash*, cifrado, GnuPG, contraseñas, CA propia, HTTPS con Nginx, análisis TLS, revocación, LUKS2, firma de PDF) y la **Tarea del proyecto «PKI interna y HTTPS»** |
 
-- Conceptos: texto en claro, cifrado, clave, principio de Kerckhoffs.
-- Criptografía simétrica: AES, ChaCha20, modos de operación y cifrado autenticado (GCM).
-- Criptografía asimétrica: RSA, curvas elípticas (Ed25519, X25519), Diffie-Hellman.
-- Funciones hash: SHA-2, SHA-3, BLAKE2. Integridad y HMAC.
-- Almacenamiento de contraseñas: sal, yescrypt, Argon2.
-- Firma digital y no repudio. GnuPG.
-- Certificados X.509, autoridades de certificación, PKI, cadena de confianza y revocación.
-- TLS 1.3 y HTTPS. Let's Encrypt y ACME.
-- Criptografía post-cuántica (ML-KEM, ML-DSA).
-- Firma electrónica y servicios de confianza (eIDAS, Ley 6/2020).
+**Duración:** 18 horas (7 h teoría · 9 h prácticas · 2 h evaluación)
 
-## Entorno de laboratorio
-
-Una o dos máquinas virtuales Linux con OpenSSL 3, GnuPG 2.4 y un servidor web (Nginx o Apache).
-
-> [!TIP]
-> Antes de empezar las prácticas, crea una instantánea (*snapshot*) de cada máquina virtual. Si algo sale mal, podrás volver al estado inicial en segundos.
+> [!NOTE]
+> Esta unidad es la «caja de herramientas» del resto del módulo: el cifrado de disco y el acceso por clave SSH se refuerzan en la [UD04](/UD04/), las VPN y los certificados de cliente en la [UD06](/ud06/) y los certificados del *proxy* inverso y del balanceador en la [UD07](/ud07/).
 
 ## Cómo estudiar esta unidad
 
-1. Lee la [teoría](teoria/) en orden: cada apartado se apoya en el anterior.
+1. Lee la [teoría](/ud03/ud03-teoria/) en orden: cada apartado se apoya en el anterior.
 2. Reproduce los ejemplos en tu laboratorio a medida que aparecen.
-3. Resuelve los ejercicios de cada apartado antes de mirar las soluciones.
-4. Realiza las [prácticas](practicas/) y entrega la tarea evaluable con las evidencias solicitadas.
+3. Resuelve los ejercicios antes de abrir las soluciones.
+4. Realiza las [prácticas](/ud03/ud03-practicas/) y entrega la **Tarea del proyecto** dentro de [Mediterránea Dental](/guia/proyecto-clinica/).

@@ -6,7 +6,7 @@ bookToc: true
 
 # Proyecto transversal: Mediterránea Dental
 
-A lo largo del curso construyes, unidad a unidad, la seguridad de **una misma empresa ficticia**. Así cada práctica deja de ser un ejercicio aislado: lo que fortificas en la UD4 se vigila en la UD5, se protege con el perímetro de la UD6 y se hace redundante en la UD7.
+A lo largo del curso construyes, unidad a unidad, la seguridad de **una misma empresa ficticia**. Así cada práctica deja de ser un ejercicio aislado: lo que fortificas en la UD04 se vigila en la UD05, se protege con el perímetro de la UD06 y se hace redundante en la UD07.
 
 > [!IMPORTANT]
 > **Todo es ficticio.** Mediterránea Dental S. L., sus pacientes y sus datos no existen. Nunca uses datos personales reales ni credenciales reales en el laboratorio.
@@ -47,15 +47,15 @@ Todas las máquinas son virtuales (ver [Entorno de trabajo](/guia/entorno/)). El
 
 | Máquina | Sistema | Red | Rol | Unidades |
 |---|---|---|---|---|
-| `fw01` | Debian 13 (nftables) u OPNsense | WAN, LAN, DMZ | Cortafuegos perimetral, NAT y pasarela VPN | UD6, UD7 |
-| `srv-gestion` | Debian 13 | LAN `.10` | Aplicación y base de datos de pacientes | UD1 a UD5 |
-| `srv-ficheros` | Debian 13 | LAN `.11` | Documentos, copias y NAS | UD2, UD4 |
-| `mon01` | Debian 13 | LAN `.20` | Monitorización y SIEM (Wazuh, Zabbix o Prometheus) | UD4, UD5, UD7 |
-| `cli-recepcion` | Debian con escritorio o Windows 11 | LAN `.50` | Puesto de recepción | UD1, UD4, UD5 |
-| `web01`, `web02` | Debian 13 | DMZ `.11`, `.12` | Web de citas (dos nodos) | UD6, UD7 |
-| `lb01`, `lb02` | Debian 13 | DMZ `.21`, `.22` (VIP `.20`) | Balanceo y alta disponibilidad | UD7 |
-| `db01` | Debian 13 | DMZ `.30` | Base de datos con réplica | UD7 |
-| `atacante` | Debian con herramientas de auditoría | Red aislada del laboratorio | Simula amenazas **solo en el laboratorio** | UD4 a UD6 |
+| `fw01` | Debian 13 (nftables) u OPNsense | WAN, LAN, DMZ | Cortafuegos perimetral, NAT y pasarela VPN | UD06, UD07 |
+| `srv-gestion` | Debian 13 | LAN `.10` | Aplicación y base de datos de pacientes | UD01 a UD05 |
+| `srv-ficheros` | Debian 13 | LAN `.11` | Documentos, copias y NAS | UD02, UD04 |
+| `mon01` | Debian 13 | LAN `.20` | Monitorización y SIEM (Wazuh, Zabbix o Prometheus) | UD04, UD05, UD07 |
+| `cli-recepcion` | Debian con escritorio o Windows 11 | LAN `.50` | Puesto de recepción | UD01, UD04, UD05 |
+| `web01`, `web02` | Debian 13 | DMZ `.11`, `.12` | Web de citas (dos nodos) | UD06, UD07 |
+| `lb01`, `lb02` | Debian 13 | DMZ `.21`, `.22` (VIP `.20`) | Balanceo y alta disponibilidad | UD07 |
+| `db01` | Debian 13 | DMZ `.30` | Base de datos con réplica | UD07 |
+| `atacante` | Debian con herramientas de auditoría | Red aislada del laboratorio | Simula amenazas **solo en el laboratorio** | UD04 a UD06 |
 
 > [!NOTE]
 > No hace falta tener todas las máquinas encendidas a la vez. Cada práctica indica cuáles necesita; el resto permanece apagado y con su instantánea.
@@ -64,13 +64,13 @@ Todas las máquinas son virtuales (ver [Entorno de trabajo](/guia/entorno/)). El
 
 | UD | Tarea del proyecto | Evidencias | CE principales |
 |---|---|---|---|
-| **UD1** | **Diagnóstico inicial**: inventario de activos, análisis de riesgos (matriz probabilidad × impacto), registro de actividades de tratamiento (RAT) y política de seguridad | Informe de riesgos + RAT + política | RA1.a-d, RA7.a-g |
-| **UD2** | **Plan de almacenamiento y copias**: RAID en `srv-ficheros`, política 3-2-1, RPO/RTO objetivo y restauración demostrada | Informe + registros de la restauración | RA1.b, RA6.b, RA6.f |
-| **UD3** | **PKI interna y cifrado**: CA propia, HTTPS en la intranet, volumen de datos clínicos cifrado, firma de consentimientos | Informe + certificados + comprobaciones TLS | RA1.g, RA2.f, RA3.c |
-| **UD4** | **Bastionado de `srv-gestion`**: puntuación de Lynis antes y después, SSH por clave con segundo factor, `auditd`, antimalware e integridad | Informe antes/después + evidencias | RA1.e-f, RA1.i, RA2.a-e |
-| **UD5** | **Red segura**: VLAN y ACL, inventario de servicios, IDS (Suricata), SIEM (Wazuh) y detección de un ataque simulado | Informe + alertas + capturas | RA2.c-d, RA2.g-i |
-| **UD6** | **Perímetro**: `fw01` con DMZ, NAT, *proxy* directo e inverso, VPN de teletrabajo y autenticación centralizada | Informe + reglas + pruebas desde el exterior | RA1.h, RA3, RA4, RA5 |
-| **UD7** | **Continuidad**: web de citas en alta disponibilidad (HAProxy + Keepalived), base de datos replicada, monitorización y **prueba de fallo** | Informe + registro de la prueba + SLA calculado | RA6.a-i |
+| **UD01** | **Diagnóstico inicial**: inventario de activos, análisis de riesgos (matriz probabilidad × impacto), registro de actividades de tratamiento (RAT) y política de seguridad | Informe de riesgos + RAT + política | RA1.a-d, RA7.a-g |
+| **UD02** | **Plan de almacenamiento y copias**: RAID en `srv-ficheros`, política 3-2-1, RPO/RTO objetivo y restauración demostrada | Informe + registros de la restauración | RA1.b, RA6.b, RA6.f |
+| **UD03** | **PKI interna y cifrado**: CA propia, HTTPS en la intranet, volumen de datos clínicos cifrado, firma de consentimientos | Informe + certificados + comprobaciones TLS | RA1.g, RA2.f, RA3.c |
+| **UD04** | **Bastionado de `srv-gestion`**: puntuación de Lynis antes y después, SSH por clave con segundo factor, `auditd`, antimalware e integridad | Informe antes/después + evidencias | RA1.e-f, RA1.i, RA2.a-e |
+| **UD05** | **Red segura**: VLAN y ACL, inventario de servicios, IDS (Suricata), SIEM (Wazuh) y detección de un ataque simulado | Informe + alertas + capturas | RA2.c-d, RA2.g-i |
+| **UD06** | **Perímetro**: `fw01` con DMZ, NAT, *proxy* directo e inverso, VPN de teletrabajo y autenticación centralizada | Informe + reglas + pruebas desde el exterior | RA1.h, RA3, RA4, RA5 |
+| **UD07** | **Continuidad**: web de citas en alta disponibilidad (HAProxy + Keepalived), base de datos replicada, monitorización y **prueba de fallo** | Informe + registro de la prueba + SLA calculado | RA6.a-i |
 
 ### Dossier final
 

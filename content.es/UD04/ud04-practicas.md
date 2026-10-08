@@ -46,7 +46,7 @@ Inventario, usuarios y sudo, contraseñas, SSH con claves y Fail2ban, cortafuego
 
 #### Máquinas y *snapshots*
 
-1. `sad-web` (Debian 13) y `sad-cli` (Debian 13 o AlmaLinux 10), con IP fijas en `SAD-NAT` (UD1).
+1. `sad-web` (Debian 13) y `sad-cli` (Debian 13 o AlmaLinux 10), con IP fijas en `SAD-NAT` (UD01).
 2. Crea una *snapshot* de cada máquina llamada `ud4-inicio`. Si algo sale mal, vuelves al estado inicial.
 3. Abre **dos terminales** contra `sad-web`: una para trabajar y otra de seguridad (para corregir errores sin perder el acceso). La consola de VirtualBox también sirve como acceso de emergencia.
 

@@ -13,9 +13,9 @@ import calendario as cal
 R = pathlib.Path(__file__).resolve().parents[1]
 cur = yaml.safe_load(open(R / "data/curriculo.yaml", encoding="utf8"))
 mat = json.load(open(R / "tools/matriz_ra_ce.json", encoding="utf8"))
-SLUG = {"UD1": "ud01-seguridad-informatica", "UD2": "ud02-seguridad-pasiva", "UD3": "ud03-criptografia",
-        "UD4": "ud04", "UD5": "ud05-seguridad-redes", "UD6": "ud06-seguridad-perimetral",
-        "UD7": "ud07-alta-disponibilidad"}
+SLUG = {"UD1": "ud01", "UD2": "ud02", "UD3": "ud03",
+        "UD4": "ud04", "UD5": "ud05", "UD6": "ud06",
+        "UD7": "ud07"}
 UDS = [u[0] for u in cal.UNIDADES]
 DIAS = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
 MES = ["", "ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
