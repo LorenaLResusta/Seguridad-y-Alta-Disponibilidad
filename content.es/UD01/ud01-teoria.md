@@ -139,6 +139,9 @@ ls -l nominas.csv
 
 Otras medidas de confidencialidad: cifrado (UD03), control de acceso, autenticación multifactor, segmentación de red (UD06), clasificación de la información y acuerdos de confidencialidad con el personal.
 
+> [!TIP]
+> **Consejo para recordarlo.** Ante cualquier incidente hazte tres preguntas: *¿quién ha podido verlo?* (confidencialidad), *¿se puede confiar en que no ha cambiado?* (integridad) y *¿puedo usarlo cuando lo necesito?* (disponibilidad). Un mismo suceso puede romper varias propiedades a la vez; en el examen razona cuál es la **principal** y justifica las demás.
+
 ### 4.2. Integridad
 
 La **integridad** garantiza que la información no ha sido **modificada** de forma no autorizada (ni por un atacante ni por un error) y, si lo ha sido, que podemos **detectarlo**.
@@ -280,6 +283,12 @@ Indica qué principio se ve comprometido en cada caso.
 {{% /details %}}
 
 ---
+
+**Explora: ¿qué propiedad se ha roto?**
+
+Lee cada incidente, marca la propiedad (o propiedades) afectadas y comprueba la explicación. Te ayuda a distinguir confidencialidad, integridad y disponibilidad antes de analizar riesgos.
+
+{{< explora "cid" >}}
 
 ## 5. Activos, amenazas, vulnerabilidades y riesgos
 
@@ -534,6 +543,9 @@ python3 matriz_riesgos.py
 #  2 Bajo     Impresora            Avería
 ```
 
+> [!NOTE]
+> **Ejemplo resuelto.** Mediterránea Dental guarda las radiografías en un servidor sin RAID. Amenaza: fallo del disco. Probabilidad **2** (media: los discos fallan con el uso), impacto **3** (alto: sin radiografías no se atiende a los pacientes). Riesgo = 2 × 3 = **6 (Alto)**. Medida: RAID 1 y copia diaria. Con la medida, la probabilidad de parada baja a **1** y el riesgo residual pasa a 1 × 3 = **3 (Medio)**. Fíjate en que la medida **reduce** el riesgo, pero no lo elimina: lo que queda es el *riesgo residual*, que la dirección debe aceptar de forma explícita.
+
 ### 5.5. Metodologías de análisis de riesgos
 
 | Metodología / norma | Ámbito | Aportación |
@@ -785,6 +797,15 @@ Received: from mail.servidor-desconocido.ru (203.0.113.50)
 > [!WARNING]
 > **Ética y legalidad.** Probar las contraseñas de sistemas ajenos, o de los tuyos sin autorización, puede ser un delito (arts. 197 bis y 264 del Código Penal). En este módulo solo se trabaja **en el laboratorio virtual** y con cuentas creadas para la práctica. Aquí estudiamos las técnicas para entender **cómo defenderse**, no para atacar.
 
+**Explora: inspecciona un correo sospechoso**
+
+Pulsa sobre las partes del mensaje que te parezcan señales de alarma y comprueba cuáles lo eran de verdad. Una de ellas es una falsa alarma a propósito.
+
+{{< explora "phishing" >}}
+
+> [!NOTE]
+> **Comentario.** El *phishing* funciona porque ataca a la persona, no a la máquina: un cortafuegos perfecto no impide que alguien escriba su contraseña en una web falsa. Por eso la defensa combina **formación** (reconocer las señales), **técnica** (filtrado de correo, MFA) y **procedimiento** (canal alternativo para confirmar peticiones urgentes). Si tu MFA es una llave FIDO2, la web falsa ni siquiera puede reutilizar tu factor.
+
 ### 7.6. Ataques a contraseñas
 
 | Ataque | Descripción | Contramedida |
@@ -829,6 +850,9 @@ Frase de 5 palabras (lista de 7776)     64.6 bits      9.02e+01 años
 ```
 
 La conclusión es clara: **la longitud aporta más seguridad que la complejidad**. Una frase de paso larga y fácil de recordar es mejor que una contraseña corta y complicada.
+
+> [!TIP]
+> **Consejo.** Una contraseña **larga** gana a una contraseña **rara**. Cuatro palabras corrientes elegidas al azar de una lista de 7776 (método *Diceware*) dan unos 51 bits de entropía (4 × log₂ 7776 ≈ 4 × 12,9) y son mucho más fáciles de recordar que `P@ssw0rd!`. Lo importante es que las palabras se elijan **al azar**, no que sean una frase conocida.
 
 ### 7.7. Denegación de servicio (DoS y DDoS)
 
@@ -935,6 +959,9 @@ sudo chage -l ana
 echo "Verano2026!" | pwscore
 # Password quality check failed: ... (o una puntuación baja)
 ```
+
+> [!WARNING]
+> **Error habitual.** Confundir **autenticación** (demostrar quién eres: contraseña, clave, huella) con **autorización** (qué puedes hacer una vez identificado: permisos). Un usuario correctamente autenticado puede no estar autorizado a leer un fichero, y al revés, un permiso mal asignado vale de poco si la autenticación es débil. Este par de conceptos se pregunta con frecuencia en las pruebas.
 
 ### 8.4. Sistemas biométricos
 
@@ -1061,6 +1088,9 @@ echo "Información guardada en $SALIDA"
 - `set -euo pipefail` hace que el script se detenga ante cualquier error, en lugar de continuar con datos incompletos.
 - La información se guarda en un **soporte externo** para no alterar el disco del sistema investigado.
 - Al final se calcula el hash de cada fichero para demostrar después que no se han modificado.
+
+> [!NOTE]
+> **Ejemplo.** Un martes a las 9:10 el antivirus avisa de un ejecutable sospechoso en un puesto de recepción. **Detección:** se abre el incidente y se anota la hora. **Contención:** se desconecta el equipo de la red (cable o aislamiento en el conmutador) sin apagarlo, para no perder la memoria volátil. **Erradicación:** se identifica y elimina la causa. **Recuperación:** se reinstala o restaura desde una copia limpia y se vigila. **Lecciones aprendidas:** se añade una regla de filtrado de adjuntos y se actualiza el plan. Cada fase deja **evidencias escritas**, aunque el incidente parezca pequeño.
 
 ### 9.2. Notificación de incidentes en España
 
@@ -1240,6 +1270,9 @@ Las sanciones pueden alcanzar **20 millones de euros o el 4 % de la facturación
 > [!NOTE]
 > El artículo 32 del RGPD es la conexión directa entre la ley y este módulo: cifrado (UD03), copias y restauración (UD02), disponibilidad y resiliencia (UD05), control de acceso (UD04), y verificación periódica de las medidas (auditorías).
 
+> [!TIP]
+> **Consejo.** La normativa no se memoriza como una lista de artículos: se aprende preguntándose **a quién protege y qué obliga a hacer**. El RGPD protege a las personas cuyos datos tratas (base legal, información, derechos, brechas en 72 horas); el ENS protege a las administraciones públicas y su cadena de proveedores; NIS2 obliga a las entidades esenciales e importantes a gestionar el riesgo y notificar incidentes. Ante un caso, identifica primero **qué norma se aplica** y después qué medidas exige.
+
 ### 12.2. Servicios de la sociedad de la información y comercio electrónico: LSSI-CE
 
 La **Ley 34/2002**, de servicios de la sociedad de la información y de comercio electrónico (**LSSI-CE**) regula las actividades económicas por Internet:
@@ -1321,6 +1354,9 @@ Una academia de idiomas detecta que un portátil robado contenía, sin cifrar, u
 {{% /details %}}
 
 ---
+
+> [!NOTE]
+> **Comentario sobre el examen.** En la prueba de esta unidad se valoran sobre todo cuatro habilidades: **clasificar** (qué propiedad, qué tipo de medida, qué tipo de ataque), **calcular** (riesgo = probabilidad × impacto, riesgo residual), **ordenar** (fases de un incidente o del análisis forense) y **relacionar** (cada hecho con la norma que lo regula). Las prácticas de laboratorio no se entregan, pero entender qué comprobabas en cada una es lo que te permite responder bien.
 
 ## 13. Buenas prácticas de seguridad
 

@@ -1,0 +1,32 @@
+<div class="sad-w" style="--c: var(--color-accent-important)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> RSA con números pequeños <span class="sad-w-sub">Solo didáctico: las claves reales tienen 2048 bits o más</span></div>
+  <div class="sad-w-body">
+    <div class="sad-w-row">
+      <label class="sad-f">Primo p<input type="number" data-r="p" value="61" min="2"></label>
+      <label class="sad-f">Primo q<input type="number" data-r="q" value="53" min="2"></label>
+      <label class="sad-f">Exponente público e<input type="number" data-r="e" value="17" min="3"></label>
+      <label class="sad-f">Mensaje m (número)<input type="number" data-r="m" value="65" min="0"></label>
+    </div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+function prime(n){if(n<2)return false;for(var i=2;i*i<=n;i++)if(n%i===0)return false;return true}
+function gcd(a,b){while(b){var t=a%b;a=b;b=t}return a}
+function inv(e,f){var a=e,b=f,x0=1n,x1=0n;a=BigInt(a);b=BigInt(b);var F=b;while(b){var t=a/b;var z=a-t*b;a=b;b=z;z=x0-t*x1;x0=x1;x1=z}return ((x0%F)+F)%F}
+function pw(b,e,m){var r=1n;b%=m;while(e>0n){if(e&1n)r=r*b%m;b=b*b%m;e>>=1n}return r}
+function go(){var p=+q('p').value,qq=+q('q').value,e=+q('e').value,m=+q('m').value,o=q('o'),err=[];
+ if(!prime(p))err.push('p no es primo');if(!prime(qq))err.push('q no es primo');if(p===qq)err.push('p y q deben ser distintos');
+ if(err.length){o.innerHTML='<p class="ko">'+err.join(' · ')+'.</p>';return}
+ if(p>100000||qq>100000){o.innerHTML='<p class="warn">Usa primos menores de 100 000 para no perder precisión.</p>';return}
+ var n=p*qq,f=(p-1)*(qq-1);
+ if(gcd(e,f)!==1||e>=f){o.innerHTML='<p class="ko">e debe cumplir 1 &lt; e &lt; φ(n)='+f+' y ser coprimo con φ(n) (mcd(e, φ)=1).</p>';return}
+ if(m>=n){o.innerHTML='<p class="ko">El mensaje debe ser menor que n='+n+' (en RSA real se aplica un relleno y se cifran bloques).</p>';return}
+ var d=inv(e,f),N=BigInt(n),c=pw(BigInt(m),BigInt(e),N),m2=pw(c,d,N),s=pw(BigInt(m),d,N),v=pw(s,BigInt(e),N);
+ o.innerHTML='<table><tr><td>n = p·q</td><td><code>'+n+'</code></td></tr><tr><td>φ(n) = (p−1)(q−1)</td><td><code>'+f+'</code></td></tr><tr><td><strong>Clave pública</strong></td><td><code>(e='+e+', n='+n+')</code></td></tr><tr><td><strong>Clave privada</strong> d = e⁻¹ mod φ(n)</td><td><code>d='+d+'</code></td></tr></table>'+
+ '<p><strong>Cifrar</strong> con la pública: c = m<sup>e</sup> mod n = <code>'+c+'</code></p>'+
+ '<p><strong>Descifrar</strong> con la privada: c<sup>d</sup> mod n = <code>'+m2+'</code> '+(m2===BigInt(m)?'<span class="ok">= m original</span>':'<span class="ko">no coincide</span>')+'</p>'+
+ '<p><strong>Firmar</strong> con la privada: s = m<sup>d</sup> mod n = <code>'+s+'</code>; <strong>verificar</strong> con la pública: s<sup>e</sup> mod n = <code>'+v+'</code> '+(v===BigInt(m)?'<span class="ok">(firma válida)</span>':'')+'</p>'+
+ '<p>Un atacante que solo conoce <code>(e, n)</code> tendría que <strong>factorizar n</strong> para obtener d. Con n=3233 es trivial; con 2048 bits es inviable hoy, pero un ordenador cuántico lo rompería (algoritmo de Shor): de ahí la criptografía post-cuántica.</p>'}
+['p','q','e','m'].forEach(function(k){q(k).oninput=go});go()})();</script>

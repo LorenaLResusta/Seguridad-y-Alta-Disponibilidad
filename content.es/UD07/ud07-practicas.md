@@ -20,12 +20,28 @@ Cálculo de disponibilidad, RAID 1 con fallo de disco, servicio web de dos nodos
 | [7.6 Replicación de MariaDB](#práctica-76--replicación-de-mariadb) | Guiada | ●●● | 1 | RA6: d, f |
 | [7.7 Fallo bajo carga](#práctica-77--fallo-bajo-carga) | Guiada | ●●● | 1 | RA6: g |
 | [7.8 Clúster Pacemaker/Corosync (activo-pasivo)](#práctica-78--clúster-pacemakercorosync-activo-pasivo) | Autónoma | ●●● | — | RA6: g |
-| [7.9 Proxmox VE: alta disponibilidad de máquinas virtuales (evaluable)](#práctica-79--proxmox-ve-alta-disponibilidad-de-máquinas-virtuales-evaluable) | Autónoma | ●●● | — | RA6: c, g |
+| [7.9 Proxmox VE: alta disponibilidad de máquinas virtuales (opcional)](#práctica-79--proxmox-ve-alta-disponibilidad-de-máquinas-virtuales-opcional) | Autónoma | ●●● | — | RA6: c, g |
 | [7.10 Arquitectura de alta disponibilidad para *Librería Pilar*](#tarea-del-proyecto--arquitectura-de-alta-disponibilidad-para-librería-pilar) | Proyecto | ●●● | 2 | RA6: a-i |
 | **Total** | | | **9 h** | |
 
 > [!NOTE]
 > Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 9 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
+
+> [!IMPORTANT]
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-2**.
+
+## Qué entra en la prueba de esta unidad
+
+Estos son los contenidos de las prácticas que se preguntan (no hace falta memorizar comandos largos, sí saber **qué hacen y cómo interpretar su resultado**):
+
+- Disponibilidad y «los nueves»: calcular el tiempo de parada anual permitido y distinguir **SLA, SLO y SLI** (7.1).
+- Qué es un **punto único de fallo** y cómo se elimina con redundancia (7.1).
+- **RAID 1** ante el fallo de un disco: degradado, sustitución y reconstrucción (7.2).
+- **Balanceo con HAProxy**: algoritmos, comprobaciones de salud (`check`) y retirada de un servidor caído (7.3, 7.4).
+- **IP virtual con Keepalived** (VRRP): prioridad, maestro y respaldo (7.5).
+- **Replicación** de MariaDB: origen y réplica, y qué ocurre al promocionar la réplica (7.6).
+- Medir una **interrupción** bajo carga y compararla con el **RTO/RPO** objetivo (7.7).
+- Para qué sirven el **quórum** y el *fencing* en un clúster (Pacemaker/Corosync) y la alta disponibilidad en Proxmox VE (7.8, 7.9).
 
 ## Objetivos
 
@@ -132,6 +148,9 @@ Disponibilidad = MTBF / (MTBF + MTTR). Para componentes **en serie** se multipli
 ## Práctica 7.2 · RAID 1 y fallo de un disco
 
 {{< practica num="7.2" tipo="Guiada" duracion="1 h" nivel="2" ra="RA6:b,f" entorno="Debian 13 · VirtualBox 7" entrega="RAID 1 con fallo y reconstrucción" >}}
+
+> [!TIP]
+> **Consejo.** Haz una captura del estado **antes** (`cat /proc/mdstat`), provoca el fallo y haz otra captura **durante** la reconstrucción. Poder explicar la diferencia entre `[UU]` y `[U_]`, y qué ocurriría con un segundo fallo, es justo lo que se espera que sepas aunque las prácticas no se entreguen.
 
 **Objetivo:** comprobar la tolerancia a fallos de disco y que RAID no es una copia de seguridad (RA6 b, f). En `web01` o en una VM aparte. Se usan ficheros como discos.
 
@@ -302,6 +321,9 @@ curl -s -o /dev/null -w '%{http_code}\n' http://192.168.100.61/salud.php    # 20
 
 {{< practica num="7.4" tipo="Guiada" duracion="1 h" nivel="2" ra="RA6:e" entorno="Debian 13 · VirtualBox 7" entrega="HAProxy con retirada del nodo caído" >}}
 
+> [!TIP]
+> **Consejo.** Valida la configuración con `sudo haproxy -c -f /etc/haproxy/haproxy.cfg` antes de recargar. Y para ver el reparto, lanza varias peticiones seguidas (`for i in $(seq 1 10); do curl -s http://IP/; done`) y comprueba que las respuestas alternan entre los servidores. Apaga después uno y repite: debería responder solo el que queda.
+
 **Objetivo:** repartir la carga entre `web01` y `web02` y retirar automáticamente el que falle (RA6 e).
 
 #### Instalación y configuración en `lb01`
@@ -417,6 +439,9 @@ El cliente no debe notar nada: es la ventaja de la redundancia para el **manteni
 
 {{< practica num="7.5" tipo="Guiada" duracion="1 h" nivel="3" ra="RA6:d" entorno="Debian 13 · VirtualBox 7" entrega="IP virtual y conmutación medida" >}}
 
+> [!NOTE]
+> **Comentario.** Con Keepalived la IP virtual (VIP) la tiene **un solo nodo a la vez**: `ip -br a` te dice quién es el maestro en cada momento. La prioridad más alta gana, y si el nodo cae, el de respaldo la adquiere tras unos segundos (VRRP). Los clientes no notan el cambio porque siguen usando la misma IP: ese es el valor de la VIP.
+
 **Objetivo:** eliminar el SPOF del balanceador con dos nodos y una IP virtual (RA6 d).
 
 #### Segundo balanceador
@@ -525,6 +550,9 @@ Para cada prueba rellena:
 
 {{< practica num="7.6" tipo="Guiada" duracion="1 h" nivel="3" ra="RA6:d,f" entorno="Debian 13 · VirtualBox 7" entrega="réplica promocionada" >}}
 
+> [!TIP]
+> **Consejo.** La replicación solo es útil si compruebas **su estado**: en la réplica, `SHOW REPLICA STATUS\G` debe mostrar `Slave_IO_Running: Yes` y `Slave_SQL_Running: Yes` (los nombres pueden aparecer como `Replica_*` según la versión) y un retraso próximo a cero. Después, inserta un dato en el principal y comprueba que aparece en la réplica. Un fallo de replicación silencioso es un fallo de RPO sin que nadie lo sepa.
+
 **Objetivo:** eliminar (parcialmente) el SPOF de la base de datos (RA6 d, f). Requiere `db02` (Debian 13, MariaDB instalado como en 5.1).
 
 #### Configuración
@@ -610,6 +638,9 @@ sudo mariadb -e "STOP REPLICA; RESET REPLICA ALL; SET GLOBAL read_only = 0;"
 
 {{< practica num="7.7" tipo="Guiada" duracion="1 h" nivel="3" ra="RA6:g" entorno="Debian 13 · VirtualBox 7" entrega="tabla de interrupción bajo carga" >}}
 
+> [!NOTE]
+> **Comentario.** Provocar el fallo bajo carga muestra lo que el diagrama no enseña: cuántas peticiones se pierden durante la conmutación y cuánto tarda el servicio en normalizarse. Anota el tiempo de corte medido; esa cifra es tu **RTO real** y la que debes comparar con el objetivo, no la que dice la documentación del producto.
+
 **Objetivo:** medir el efecto real de un fallo mientras hay tráfico.
 
 En `sad-cli`:
@@ -660,9 +691,9 @@ Sigue el procedimiento del apartado 8.3 de la [teoría](/ud07/ud07-teoria/) comp
 
 ---
 
-## Práctica 7.9 · Proxmox VE: alta disponibilidad de máquinas virtuales (evaluable)
+## Práctica 7.9 · Proxmox VE: alta disponibilidad de máquinas virtuales (opcional)
 
-{{< practica num="7.9" tipo="Autónoma" duracion="0 h · trabajo autónomo" nivel="3" ra="RA6:c,g" entorno="Debian 13 · VirtualBox 7" entrega="informe de HA en Proxmox" >}}
+{{< practica num="7.9" tipo="Autónoma" duracion="0 h · trabajo autónomo" nivel="3" ra="RA6:c,g" entorno="Debian 13 · VirtualBox 7" entrega="notas de la prueba de HA" >}}
 
 Requiere tres nodos Proxmox VE 9 (VM con **virtualización anidada** habilitada) o hardware dedicado, con al menos 4 GiB de RAM por nodo y un segundo disco para Ceph. En VirtualBox la virtualización anidada puede ser lenta: es válida para aprender, no para medir rendimiento.
 
@@ -680,14 +711,14 @@ Requiere tres nodos Proxmox VE 9 (VM con **virtualización anidada** habilitada)
 
 ---
 
-## Tarea del proyecto · Arquitectura de alta disponibilidad para *Librería Pilar*
+## Tarea de repaso del proyecto (no se entrega) · Arquitectura de alta disponibilidad para *Librería Pilar*
 
 > [!IMPORTANT]
-> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-3** (entrega: 30/04/2027). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+> Esta tarea **no se entrega ni se puntúa**. Es el ensayo de la parte de esta unidad en la práctica integradora obligatoria **INT-2** ([qué se entrega y cómo se corrige](/guia/practicas-integradoras/)). Hazla para llegar a INT-2 con las piezas montadas; sus conceptos básicos también entran en la prueba de la unidad.
 
-{{< practica etiqueta="Tarea" num="7.10" tipo="Proyecto" duracion="2 h" nivel="3" ra="RA6" entorno="Debian 13 · VirtualBox 7" entrega="informe de arquitectura de alta disponibilidad" >}}
+{{< practica etiqueta="Tarea de repaso" num="7.10" tipo="Proyecto" duracion="2 h" nivel="3" ra="RA6" entorno="Debian 13 · VirtualBox 7" entrega="informe de arquitectura de alta disponibilidad" >}}
 
-**Entrega** (PDF o Markdown con capturas y evidencias propias, redactado con tus palabras):
+**Resultado esperado** (PDF o Markdown con capturas y evidencias propias, redactado con tus palabras; no se entrega):
 
 1. **Análisis**: SPOF, impacto económico y propuesta de SLO, RTO y RPO justificados (práctica 7.1 y el supuesto de la teoría).
 2. **Diseño**: diagrama de la arquitectura y tabla de componentes (qué SPOF elimina cada uno y cuál queda).

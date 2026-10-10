@@ -22,6 +22,19 @@ Observación y detección de amenazas de capa 2 y 3, segmentación con VLAN y AC
 > [!NOTE]
 > Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 9 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
 
+> [!IMPORTANT]
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-2**.
+
+## Qué entra en la prueba de esta unidad
+
+Estos son los contenidos de las prácticas que se preguntan (no hace falta memorizar comandos largos, sí saber **qué hacen y cómo interpretar su resultado**):
+
+- Amenazas de capa 2 y 3: **ARP spoofing** y **servidor DHCP falso**; cómo se detectan y qué función del *switch* las mitiga (*port security*, *DHCP snooping*, DAI) (5.1).
+- Para qué sirve la **segmentación con VLAN y ACL** y cómo se escribe una **matriz de flujos** (origen → destino → servicio → permitido/denegado) (5.2).
+- Diferencia entre **IDS e IPS**, y la estructura de una **regla de Suricata** (acción, protocolo, direcciones, opciones, `sid`) (5.3).
+- Dónde se registran las alertas (`fast.log`, `eve.json`) y cómo se distingue un **verdadero** de un **falso positivo** (5.3).
+- Capturar tráfico con `tcpdump` o Wireshark y aplicar **filtros** para aislar una conversación (5.4).
+
 ## Objetivos
 
 - Observar el funcionamiento normal de ARP y DHCP y detectar anomalías con herramientas defensivas.
@@ -163,13 +176,16 @@ wait
 
 Anota **qué servidores DHCP responden**. En una red real, si aparece más de uno donde solo debería haber uno, es un indicio de DHCP no autorizado.
 
-**Entrega:** tabla con las amenazas de capa 2/3 vistas, cómo se detecta cada una en tu laboratorio y qué función de switch la mitiga (port security, DHCP snooping, DAI).
+**Resultado esperado:** tabla con las amenazas de capa 2/3 vistas, cómo se detecta cada una en tu laboratorio y qué función de switch la mitiga (port security, DHCP snooping, DAI).
 
 ---
 
 ## Práctica 5.2 · VLAN y ACL entre segmentos
 
 {{< practica num="5.2" tipo="Guiada" duracion="2 h" nivel="3" ra="RA2:c" entorno="Debian 13 · VirtualBox 7" entrega="configuración VLAN/ACL y pruebas" >}}
+
+> [!TIP]
+> **Consejo.** Cuando dos máquinas de VLAN distintas no se ven, comprueba en este orden: **¿están en la VLAN correcta?** (etiqueta del puerto), **¿hay enlace troncal que permita esa VLAN?**, **¿tiene el encaminador una subinterfaz o ruta para ambas?** y, por último, **¿una ACL lo bloquea?** Descartar capa a capa evita ver fallos de red donde solo hay una regla bien aplicada.
 
 **Objetivo:** segmentar con VLAN 802.1Q y permitir solo los flujos necesarios (RA3 a).
 
@@ -280,7 +296,7 @@ Pruebas desde `sad-cli`:
 
 Mira el registro de lo bloqueado en `gw-vpn`: `sudo journalctl -k --since "5 min ago" | grep VLAN-drop`.
 
-**Entrega:** tabla de flujos (origen → destino → servicio → permitido/denegado) con la evidencia de cada prueba y el volcado de `nft list ruleset`.
+**Resultado esperado:** tabla de flujos (origen → destino → servicio → permitido/denegado) con la evidencia de cada prueba y el volcado de `nft list ruleset`.
 
 <!-- hint:h4 -->
 > [!TIP]
@@ -291,6 +307,9 @@ Mira el registro de lo bloqueado en `gw-vpn`: `sudo journalctl -k --since "5 min
 ## Práctica 5.3 · Detección de intrusiones con Suricata
 
 {{< practica num="5.3" tipo="Guiada" duracion="2 h" nivel="3" ra="RA2:i,c" entorno="Debian 13 · VirtualBox 7" entrega="regla propia y alerta de Suricata" >}}
+
+> [!TIP]
+> **Consejo.** Antes de arrancar Suricata comprueba la configuración con `sudo suricata -T -c /etc/suricata/suricata.yaml` y, tras lanzar el ataque de prueba, consulta las alertas con `sudo tail -f /var/log/suricata/fast.log`. Si no aparece nada, comprueba primero que escucha en la **interfaz correcta** y que `HOME_NET` coincide con tu red de laboratorio.
 
 **Objetivo:** desplegar un NIDS, escribir reglas propias y comprobar que alerta (RA2 i).
 
@@ -352,6 +371,9 @@ sudo jq -c 'select(.event_type=="alert") | {hora:.timestamp, regla:.alert.signat
 
 {{< practica num="5.4" tipo="Autónoma" duracion="1 h" nivel="2" ra="RA2:d,h" entorno="Debian 13 · VirtualBox 7" entrega="captura filtrada y análisis" >}}
 
+> [!NOTE]
+> **Comentario.** El análisis de tráfico es una forma de ver lo que dicen los protocolos «en voz alta». Un protocolo seguro (SSH, HTTPS) se ve como una conversación sin contenido legible; uno inseguro (Telnet, HTTP, FTP) enseña usuario y contraseña. Lo que cambia al pasar de uno a otro es lo que justifica la medida de protección y, a la vez, lo que debes poder explicar en la prueba.
+
 **Objetivo:** leer el tráfico para diagnosticar y para verificar medidas de seguridad.
 
 1. En `sad-web` captura 40 paquetes mientras haces desde `sad-cli` una petición web y una consulta DNS:
@@ -377,14 +399,14 @@ Filtros de visualización muy útiles en Wireshark: `dns`, `http`, `tcp.flags.sy
 
 ---
 
-## Tarea del proyecto · Diseño y validación de una red segura
+## Tarea de repaso del proyecto (no se entrega) · Diseño y validación de una red segura
 
 > [!IMPORTANT]
-> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-2** (entrega: 22/03/2027). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+> Esta tarea **no se entrega ni se puntúa**. Es el ensayo de la parte de esta unidad en la práctica integradora obligatoria **INT-2** ([qué se entrega y cómo se corrige](/guia/practicas-integradoras/)). Hazla para llegar a INT-2 con las piezas montadas; sus conceptos básicos también entran en la prueba de la unidad.
 
-{{< practica etiqueta="Tarea" num="5.5" tipo="Proyecto" duracion="2 h" nivel="3" ra="RA2:c,d,h,i" entorno="Debian 13 · VirtualBox 7" entrega="informe de red segura" >}}
+{{< practica etiqueta="Tarea de repaso" num="5.5" tipo="Proyecto" duracion="2 h" nivel="3" ra="RA2:c,d,h,i" entorno="Debian 13 · VirtualBox 7" entrega="informe de red segura" >}}
 
-Para una empresa de 50 usuarios con una sede secundaria, teletrabajo, un servicio web publicado y Wi-Fi para invitados (ver supuesto de la teoría), entrega una memoria (PDF o Markdown) con:
+Para una empresa de 50 usuarios con una sede secundaria, teletrabajo, un servicio web publicado y Wi-Fi para invitados (ver supuesto de la teoría), redacta una memoria (PDF o Markdown, no se entrega) con:
 
 1. **Diagrama lógico**: VLAN, subredes, DMZ, WLAN, sedes, VPN y puntos de control.
 2. **Inventario de activos, amenazas y controles**, usando el ciclo amenaza → vulnerabilidad → ataque → detección → mitigación → comprobación.

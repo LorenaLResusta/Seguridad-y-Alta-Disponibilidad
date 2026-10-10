@@ -25,6 +25,22 @@ Preparación del laboratorio, revisión básica de un sistema Linux, detección 
 > [!NOTE]
 > Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 5 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
 
+> [!IMPORTANT]
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
+
+## Qué entra en la prueba de esta unidad
+
+Estos son los contenidos de las prácticas que se preguntan (no hace falta memorizar comandos largos, sí saber **qué hacen y cómo interpretar su resultado**):
+
+- Qué es una máquina virtual, un hipervisor y una instantánea, y para qué se usa cada una en el laboratorio (1.1).
+- Interpretar la salida de las órdenes de **inventario** (puertos a la escucha, servicios, usuarios y red) y reconocer qué es normal y qué no (1.2).
+- Qué es un *hash*, para qué sirve para la **integridad** y cómo se verifica un fichero con `sha256sum` (1.3).
+- Por qué importa la longitud de una contraseña, qué es un ataque de **fuerza bruta** y cómo se ve en los registros (1.4).
+- Indicadores de un correo de ***phishing*** y qué información dan sus cabeceras (1.5).
+- Qué es un **CVE** y cómo se relaciona una vulnerabilidad con un paquete instalado (1.6).
+- Pasos de un análisis **forense** básico: copia bit a bit, *hash* y **cadena de custodia** (1.7).
+- Calcular el riesgo (**probabilidad × impacto**) y elegir un tratamiento: mitigar, transferir, evitar o aceptar (1.8).
+
 ## Objetivos
 
 - Preparar una máquina virtual aislada y recuperable para las prácticas del módulo.
@@ -44,7 +60,7 @@ Preparación del laboratorio, revisión básica de un sistema Linux, detección 
 > - No uses datos personales reales en capturas, informes ni pruebas.
 > - Crea una **instantánea** antes de cada práctica para poder volver a un estado conocido.
 
-**Entrega de evidencias**: para cada práctica guarda las salidas de los comandos (copiando el texto o con capturas) y responde a las preguntas de análisis. Todas las evidencias se guardarán en `~/ud01/evidencias`.
+**Evidencias para ti**: las prácticas no se entregan, pero conviene guardar las salidas de los comandos (copiando el texto o con capturas) y responder a las preguntas de análisis: te servirán para repasar y para la práctica integradora. Guárdalas en `~/ud01/evidencias`.
 
 ---
 
@@ -436,6 +452,9 @@ journalctl -t integridad -n 5 --no-pager
 
 {{< practica num="1.4" tipo="Guiada" duracion="1 h" nivel="2" ra="RA1:e" entorno="Debian 13 · VirtualBox 7" entrega="política de contraseñas y registro del ataque" >}}
 
+> [!TIP]
+> **Consejo.** Cuando analices registros de autenticación no mires solo si hay fallos: fíjate en **de dónde vienen** (¿una sola IP o muchas?), **a qué cuentas apuntan** (¿`root`, `admin`, usuarios inexistentes?) y **a qué ritmo** (¿intentos por segundo?). Esas tres respuestas te dicen si es un ataque automatizado, un descuido de un usuario o un ataque dirigido.
+
 **Ciclo**: *amenaza* (bot que prueba contraseñas) → *vulnerabilidad* (contraseña débil, sin límite de intentos) → *ataque* (intentos fallidos simulados) → *detección* (registros) → *mitigación* (política de contraseñas, bloqueo y MFA) → *comprobación*.
 
 #### Crear un usuario de pruebas
@@ -623,6 +642,9 @@ Compara tres cosas: el dominio de `From`, el de `Return-Path` y el de `Reply-To`
 ## Práctica 1.6 · Vulnerabilidades conocidas del sistema
 
 {{< practica num="1.6" tipo="Autónoma" duracion="0 h · trabajo autónomo" nivel="2" ra="RA1:c;RA2:b" entorno="Debian 13 · VirtualBox 7" entrega="informe de vulnerabilidades" >}}
+
+> [!NOTE]
+> **Comentario.** Un CVE no es un fallo del que debas alarmarte, sino un **identificador** público de una vulnerabilidad. Lo útil es tres preguntas: ¿está instalada la versión afectada?, ¿el componente es accesible desde donde se puede atacar?, ¿existe corrección? Responderlas en este orden evita tanto el pánico como el descuido.
 
 **Objetivo**: relacionar el software instalado con vulnerabilidades públicas (CVE) y priorizar su corrección (RA1.c).
 
@@ -827,6 +849,9 @@ Si los *hashes* del original y de la copia **no coinciden** al final, la evidenc
 
 {{< practica num="1.8" tipo="Proyecto" duracion="1 h" nivel="3" ra="RA1:a,c;RA7:f" entorno="Debian 13 · VirtualBox 7" entrega="plan de gestión de riesgos" >}}
 
+> [!TIP]
+> **Consejo.** Al redactar una conclusión usa siempre el esquema **qué observé → qué significa → qué haría**. Por ejemplo: «El puerto 3306 escucha en todas las interfaces → cualquier equipo de la red puede intentar conectarse a la base de datos → lo limito a 127.0.0.1 y compruebo con `ss -tulpn`». Ese razonamiento es el que se evalúa, no la salida del comando.
+
 #### Escenarios
 
 Elige uno de estos escenarios para el informe:
@@ -950,12 +975,12 @@ La frase de 5 palabras aleatorias (unos 64 bits frente a unos 52), y además es 
 El Blue Team defiende, monitoriza y responde. El Purple Team coordina a los equipos rojo y azul para convertir las técnicas de ataque simuladas en mejoras de detección y defensa.
 {{% /details %}}
 
-## Tarea evaluable de la unidad
+## Tarea de repaso de la unidad (no se entrega)
 
 > [!IMPORTANT]
-> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-1** (entrega: 27/11/2026). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+> Esta tarea **no se entrega ni se puntúa**. Es el ensayo de la parte de esta unidad en la práctica integradora obligatoria **INT-1** ([qué se entrega y cómo se corrige](/guia/practicas-integradoras/)). Hazla para llegar a INT-1 con las piezas montadas; sus conceptos básicos también entran en la prueba de la unidad.
 
-Entrega un informe en PDF o Markdown que incluya:
+Para comprobar tu trabajo, redacta un informe en PDF o Markdown (no se entrega) que incluya:
 
 1. **Evidencias de las prácticas 1 a 6** (inventario, línea base e incidente simulado, detección de fuerza bruta, análisis de *phishing*, tabla de CVE, informe forense con cadena de custodia).
 2. **Plan de gestión de riesgos** completo de la práctica 7 (activos, amenazas, vulnerabilidades, matriz de riesgos, salvaguardas, riesgo residual).
@@ -963,7 +988,7 @@ Entrega un informe en PDF o Markdown que incluya:
 4. **Procedimiento de respuesta** a un incidente y análisis de **cumplimiento legal**.
 5. **Conclusión** con las tres medidas más urgentes y su justificación.
 
-#### Rúbrica
+#### Rúbrica de autoevaluación
 
 | Criterio | Peso | Excelente (100 %) | Adecuado (60 %) | Insuficiente (0-30 %) |
 | --- | :-: | --- | --- | --- |

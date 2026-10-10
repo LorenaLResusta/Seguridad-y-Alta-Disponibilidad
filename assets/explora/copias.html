@@ -1,0 +1,24 @@
+<div class="sad-w" style="--c: var(--color-accent-tip)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> ¿Qué copias necesito para restaurar? <span class="sad-w-sub">Completa semanal (domingo) + copia diaria</span></div>
+  <div class="sad-w-body">
+    <div class="sad-w-row"><label class="sad-f">Tipo de copia diaria<select data-r="t"><option value="inc">Incremental (cambios desde la última copia)</option><option value="dif">Diferencial (cambios desde la última completa)</option><option value="full">Completa todos los días</option></select></label>
+    <label class="sad-f">Restaurar el estado del final del<select data-r="d"><option value="0">domingo</option><option value="1">lunes</option><option value="2">martes</option><option value="3">miércoles</option><option value="4" selected>jueves</option><option value="5">viernes</option><option value="6">sábado</option></select></label></div>
+    <div class="sad-w-row" data-r="v" style="gap:.4rem"></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var N=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+function go(){var t=q('t').value,d=+q('d').value,need=[];
+ if(t==='full'){need=[d]}
+ else if(t==='dif'){need=d===0?[0]:[0,d]}
+ else{for(var k=0;k<=d;k++)need.push(k)}
+ var h='';for(var k=0;k<7;k++){var on=need.indexOf(k)>=0,lab=(k===0||t==='full')?'Completa':(t==='inc'?'Incr.':'Dif.');
+  h+='<div style="min-width:4.2rem;text-align:center;padding:.4rem;border-radius:6px;border:2px solid '+(on?'var(--c)':'#8884')+';background:'+(on?'color-mix(in srgb,var(--c) 22%,transparent)':'none')+';opacity:'+(on?1:.55)+'"><strong>'+N[k]+'</strong><br><small>'+lab+'</small></div>'}
+ q('v').innerHTML=h;
+ var msg={inc:'Hace falta la completa del domingo <strong>y todas</strong> las incrementales hasta ese día, <strong>en orden</strong>. Si una se pierde o se corrompe, no se puede restaurar más allá de ella. Copia rápida y pequeña; restauración lenta y frágil.',
+ dif:'Hace falta la completa del domingo <strong>y solo la última</strong> diferencial. Restauración sencilla (2 piezas), pero cada diferencial crece a lo largo de la semana.',
+ full:'Basta <strong>una sola</strong> copia. Restauración inmediata, pero la más lenta de hacer y la que más espacio ocupa.'}[t];
+ q('o').innerHTML='<p>Copias necesarias: <strong>'+need.length+'</strong> ('+need.map(function(k){return N[k]}).join(' → ')+').</p><p>'+msg+'</p><p>Recuerda: la copia que no se ha probado a restaurar no se puede considerar una copia (regla 3-2-1-1-0).</p>'}
+q('t').onchange=go;q('d').onchange=go;go()})();</script>

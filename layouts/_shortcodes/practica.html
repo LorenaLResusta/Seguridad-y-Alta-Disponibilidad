@@ -1,6 +1,7 @@
 {{- /*
   Ficha de cabecera de una práctica.
   Uso: {{< practica etiqueta="Ejercicio" (opcional, por defecto «Práctica») num="4.1" tipo="Guiada" duracion="2 h" nivel="1" ra="RA2:b,c,d" entorno="Debian 13" entrega="informe + capturas" >}}
+  entrega: lo que debe quedar al terminar (no se entrega). Solo las prácticas integradoras llevan entregable="si" y se entregan.
   tipo: Guiada | Autónoma | Reto | Proyecto
   nivel: 1 (básico) · 2 (intermedio) · 3 (avanzado)
 */ -}}
@@ -17,6 +18,11 @@
     <div><dt>Dificultad</dt><dd><span class="sad-nivel" aria-label="Nivel {{ $nivel }} de 3">{{ range seq 3 }}<i class="{{ if le . $nivel }}on{{ end }}"></i>{{ end }}</span></dd></div>
     {{- with .Get "ra" }}<div><dt>RA / CE</dt><dd>{{ replace . ";" " · " }}</dd></div>{{ end -}}
     {{- with .Get "entorno" }}<div><dt>Software</dt><dd>{{ . }}</dd></div>{{ end -}}
-    {{- with .Get "entrega" }}<div><dt>Entrega</dt><dd>{{ . }}</dd></div>{{ end -}}
+    {{- if eq (.Get "entregable") "si" -}}
+    <div><dt>Entrega</dt><dd><strong>Obligatoria</strong> · {{ .Get "entrega" }}</dd></div>
+    {{- else -}}
+    {{- with .Get "entrega" }}<div><dt>Resultado</dt><dd>{{ . }}</dd></div>{{ end -}}
+    <div><dt>Entrega</dt><dd><strong>No se entrega</strong> · sus conceptos básicos entran en la prueba</dd></div>
+    {{- end -}}
   </dl>
 </div>

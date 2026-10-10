@@ -26,4 +26,7 @@ En esta unidad recorres la cadena completa de protección de los datos: la **seg
 1. Lee la [teoría](/ud02/ud02-teoria/) en orden: cada apartado se apoya en el anterior.
 2. Reproduce los ejemplos en tu laboratorio a medida que aparecen.
 3. Resuelve los ejercicios antes de abrir las soluciones.
-4. Realiza las [prácticas](/ud02/ud02-practicas/) y entrega la **Tarea del proyecto** dentro de [Mediterránea Dental](/guia/proyecto-clinica/).
+4. Realiza las [prácticas](/ud02/ud02-practicas/) y haz la **Tarea del proyecto** de [Mediterránea Dental](/guia/proyecto-clinica/) (no se entrega: prepara INT-1).
+
+> [!NOTE]
+> **Las prácticas de esta unidad no se entregan.** Los conceptos básicos y las órdenes principales que aparecen en ellas entran en la prueba teórico-práctica de la unidad: consulta [qué entra en la prueba](/ud02/ud02-practicas/#qué-entra-en-la-prueba-de-esta-unidad). Esta unidad contribuye a la práctica integradora **INT-1**, que sí se entrega ([cómo se entrega y se corrige](/guia/practicas-integradoras/)).

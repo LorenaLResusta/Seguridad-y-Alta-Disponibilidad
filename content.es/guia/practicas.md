@@ -13,9 +13,12 @@ bookToc: true
 | **Guiada** | Procedimiento paso a paso con todos los comandos explicados | Reproducirla, comprobar cada resultado y entender qué ha pasado |
 | **Autónoma** | Se plantea el objetivo y los requisitos; el procedimiento lo diseñas tú | Elegir las herramientas, aplicarlas y justificar la decisión |
 | **Reto** | Un sistema roto, vulnerable o mal configurado | Diagnosticar, corregir y demostrar que está resuelto |
-| **Proyecto** | La tarea de la unidad dentro de [Mediterránea Dental](/guia/proyecto-clinica/) | Entregar un informe técnico reproducible |
+| **Proyecto** | La tarea de repaso de la unidad dentro de [Mediterránea Dental](/guia/proyecto-clinica/) | Montar las piezas que luego se reúnen en una [práctica integradora](/guia/practicas-integradoras/) |
 
 El **nivel** (●○○ básico, ●●○ intermedio, ●●● avanzado) y la **duración en horas** figuran en la ficha de cabecera de cada práctica.
+
+> [!IMPORTANT]
+> **Las prácticas no se entregan.** Se hacen en el laboratorio para aprender, pero **los conceptos básicos y las órdenes principales de cada práctica entran en la prueba teórico-práctica de la unidad**. Cada página de prácticas empieza con la lista de «qué entra en la prueba». Lo único que se entrega son **dos [prácticas integradoras](/guia/practicas-integradoras/)** (una por trimestre).
 
 ## Estructura de una práctica
 
@@ -39,11 +42,13 @@ Cada práctica tiene siempre los mismos apartados, para que sepas dónde buscar:
 - Instantánea antes de cada práctica de riesgo.
 - Se documenta toda modificación realizada.
 
-## Entrega de informes
+## Qué hacer con lo que te sale en cada práctica
 
-Cada informe técnico incluye: **objetivo**, **topología** o esquema, **procedimiento** resumido, **evidencias** (salidas reales de las órdenes y capturas), **análisis de resultados** (qué ha ocurrido y por qué), **problemas encontrados** y **conclusiones**. Se entrega en PDF o Markdown.
+Aunque no se entregue, conviene **guardar las evidencias** de cada práctica (salidas reales de las órdenes, con la interpretación de una línea): es el mejor material de repaso y la base de las integradoras. Un buen cuaderno de laboratorio tiene: **objetivo**, **esquema**, **órdenes usadas**, **salida real** y **qué significa**.
 
-### Rúbrica general
+### Rúbrica general de autoevaluación
+
+Úsala para valorar tu propio trabajo antes de la integradora:
 
 | Criterio | Insuficiente (0-4) | Suficiente (5-6) | Notable (7-8) | Sobresaliente (9-10) |
 |---|---|---|---|---|
@@ -54,17 +59,20 @@ Cada informe técnico incluye: **objetivo**, **topología** o esquema, **procedi
 
 ## Evaluación
 
-La evaluación es **continua** y se basa en las evidencias que demuestran los [criterios de evaluación](/guia/ra-ce/). Cada unidad termina con una **prueba teórico-práctica** y alimenta una de las tres [prácticas integradoras obligatorias](/guia/practicas-integradoras/) (una por trimestre; la primera se entrega el **27/11/2026**). Las tareas del proyecto de cada unidad son hitos de esas prácticas, no entregas aparte.
+La evaluación es **continua** y se basa en las evidencias que demuestran los [criterios de evaluación](/guia/ra-ce/):
+
+- Cada unidad termina con una **prueba teórico-práctica**, que incluye preguntas sobre los conceptos básicos y las órdenes de sus prácticas (la lista está al principio de cada página de prácticas).
+- Hay **dos [prácticas integradoras](/guia/practicas-integradoras/) obligatorias**, una al final de cada trimestre: INT-1 (UD01–UD04) e INT-2 (UD05–UD07). Se corrigen en pocos minutos con un script de verificación y cuatro preguntas cortas.
+- Las **prácticas de cada unidad y las tareas del proyecto no se entregan ni puntúan**.
 
 > [!NOTE]
 > La ponderación siguiente es una **propuesta** que debe concretar la programación didáctica del departamento. El módulo se supera cuando se alcanzan **todos** los resultados de aprendizaje.
 
 | Instrumento | Peso orientativo |
 |---|--:|
-| Pruebas teórico-prácticas de unidad | 50 % |
-| Prácticas y tareas del proyecto (informes) | 40 % |
-| Autoevaluaciones, participación y cuaderno de laboratorio | 10 % |
+| Pruebas teórico-prácticas de unidad | 80 % |
+| Práctica integradora INT-1 | 10 % |
+| Práctica integradora INT-2 | 10 % |
+| Autoevaluaciones y cuestionarios en Aules | formativas (sin peso) |
 
-La **recuperación** se plantea sobre los resultados de aprendizaje y criterios no superados: prueba teórica, prueba práctica en el laboratorio o repetición de la tarea del proyecto.
-
-La ponderación y la recuperación de la modalidad semipresencial están en la [guía semipresencial](/guia/semipresencial/#5-evaluación).
+La **recuperación** se plantea sobre los resultados de aprendizaje y criterios no superados: prueba teórico-práctica o repetición de una versión reducida de la práctica integradora.

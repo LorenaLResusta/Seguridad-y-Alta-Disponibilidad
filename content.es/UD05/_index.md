@@ -19,3 +19,6 @@ La unidad aporta al proyecto transversal [Mediterránea Dental](/guia/proyecto-c
 Lo relativo a SSH avanzado, VPN (WireGuard, IPsec, OpenVPN) y autenticación AAA/RADIUS se estudia en la [UD06. Seguridad perimetral](/ud06/ud06-teoria/).
 
 **Duración:** 18 horas (7 h teoría · 9 h prácticas · 2 h evaluación)
+
+> [!NOTE]
+> **Las prácticas de esta unidad no se entregan.** Los conceptos básicos y las órdenes principales que aparecen en ellas entran en la prueba teórico-práctica de la unidad: consulta [qué entra en la prueba](/ud05/ud05-practicas/#qué-entra-en-la-prueba-de-esta-unidad). Esta unidad contribuye a la práctica integradora **INT-2**, que sí se entrega ([cómo se entrega y se corrige](/guia/practicas-integradoras/)).

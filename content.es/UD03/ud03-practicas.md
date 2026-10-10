@@ -25,6 +25,22 @@ Hashes e integridad, cifrado simétrico y autenticado, claves asimétricas y fir
 > [!NOTE]
 > Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 9 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
 
+> [!IMPORTANT]
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
+
+## Qué entra en la prueba de esta unidad
+
+Estos son los contenidos de las prácticas que se preguntan (no hace falta memorizar comandos largos, sí saber **qué hacen y cómo interpretar su resultado**):
+
+- **Hash** (SHA-256 frente a MD5): propiedades, para qué sirve y por qué no es cifrado (3.1).
+- **Cifrado simétrico** (AES) y por qué el modo **ECB** deja ver patrones frente a otros modos (3.2).
+- **Cifrado asimétrico** (RSA, GnuPG): qué se cifra con la clave pública y qué se firma con la privada (3.3).
+- Por qué las contraseñas se guardan con **sal** y un algoritmo con **coste**, y no con un *hash* simple (3.4).
+- Los elementos de una **PKI**: CA, CSR, certificado, cadena de confianza y *subjectAltName* (3.5).
+- Cómo se configura **HTTPS** con Nginx, qué versiones de TLS se permiten y cómo se comprueba con `openssl s_client` (3.6, 3.7).
+- Qué es la **revocación** y qué hace una CRL (3.8).
+- Para qué se usa el cifrado de volúmenes (LUKS2) y la firma de documentos.
+
 ## Objetivos
 
 - Verificar la integridad y la autenticidad de ficheros descargados.
@@ -273,6 +289,9 @@ En modo CTR, cambiar un byte del cifrado cambia **exactamente ese byte** del tex
 
 {{< practica num="3.3" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:f" entorno="Debian 13 · VirtualBox 7" entrega="claves, mensaje cifrado y firma verificada" >}}
 
+> [!TIP]
+> **Consejo.** Con GnuPG identifica siempre las claves por su **huella** (`gpg --fingerprint`), no por el nombre. Dos claves pueden llamarse igual. Al importar la clave de otra persona, compara la huella por un canal distinto (por voz, en persona): es el equivalente manual de lo que hace una autoridad de certificación.
+
 Trabajaremos con dos usuarios en `sad-cli`: **ana** y **bruno**.
 
 ```bash
@@ -479,6 +498,9 @@ sudo userdel -r prueba_ud03; sudo userdel -r prueba_ud03b
 ## Práctica 3.5 · Autoridad de certificación propia
 
 {{< practica num="3.5" tipo="Guiada" duracion="2 h" nivel="3" ra="RA2:f;RA3:c" entorno="Debian 13 · VirtualBox 7" entrega="CA propia y certificados emitidos" >}}
+
+> [!WARNING]
+> **Atención.** La clave privada de la autoridad de certificación (`ca.key`) es el activo más valioso de esta práctica. Debe tener permisos `600`, no estar en el servidor web y, en un entorno real, guardarse **sin conexión**. Quien la tenga puede emitir certificados válidos para cualquier nombre. Aquí la CA es solo de laboratorio: no instales su certificado raíz en equipos reales.
 
 En el laboratorio no podemos usar Let's Encrypt porque no tenemos un dominio público. Crearemos una **CA raíz** propia con OpenSSL y la usaremos para emitir el certificado de `sad-web`. Este procedimiento es el mismo que usan muchas empresas para sus servicios internos.
 
@@ -767,6 +789,9 @@ Para probarlo con un navegador del equipo anfitrión, añade `sad-web.lab` al fi
 
 {{< practica num="3.7" tipo="Autónoma" duracion="0 h · trabajo autónomo" nivel="2" ra="RA3:c" entorno="Debian 13 · VirtualBox 7" entrega="informe de la configuración TLS" >}}
 
+> [!NOTE]
+> **Comentario.** Analizar la configuración TLS es el equivalente en cifrado a pasar Lynis por un sistema: no demuestra que seas seguro, pero encuentra lo que **has dejado abierto**. Comprueba las tres capas: versiones de protocolo, suites de cifrado y certificado. Anota qué debería cambiar y por qué, no solo la nota que obtienes.
+
 #### Con OpenSSL
 
 ```bash
@@ -835,6 +860,9 @@ Puedes analizar de forma pasiva un dominio público con [SSL Labs](https://www.s
 ## Práctica 3.8 · Revocación de un certificado
 
 {{< practica num="3.8" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:f" entorno="Debian 13 · VirtualBox 7" entrega="CRL y comprobación de la revocación" >}}
+
+> [!TIP]
+> **Consejo.** Cuando un cliente sigue aceptando un certificado que ya has revocado, no es un fallo de la revocación: **el cliente no consulta la lista**. La CRL es un fichero que hay que publicar y descargar; OCSP es una consulta en línea. En el laboratorio comprueba con `openssl verify -crl_check` que, de hecho, el certificado deja de ser válido cuando se aporta la CRL.
 
 **Escenario**: la clave privada de `sad-web` se ha copiado por error en un repositorio público. Hay que revocar el certificado y emitir uno nuevo.
 
@@ -911,14 +939,14 @@ La extensión SAN (*Subject Alternative Name*).
 Para que nunca tenga que viajar por la red ni salir del equipo que la usa. A la CA solo se envía la CSR, que contiene la clave pública.
 {{% /details %}}
 
-## Tarea evaluable de la unidad
+## Tarea de repaso de la unidad (no se entrega)
 
 > [!IMPORTANT]
-> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-1** (entrega: 27/11/2026). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+> Esta tarea **no se entrega ni se puntúa**. Es el ensayo de la parte de esta unidad en la práctica integradora obligatoria **INT-1** ([qué se entrega y cómo se corrige](/guia/practicas-integradoras/)). Hazla para llegar a INT-1 con las piezas montadas; sus conceptos básicos también entran en la prueba de la unidad.
 
 **Supuesto**: la empresa *Construcciones Mediterráneo* necesita publicar internamente su intranet (`intranet.cmed.lab`) y su aplicación de fichajes (`fichajes.cmed.lab`) con HTTPS, y que la dirección pueda enviar documentos firmados y cifrados al departamento jurídico.
 
-Entrega un informe con:
+Para comprobar tu trabajo, redacta un informe (no se entrega) con:
 
 1. **Diseño de la PKI**: jerarquía (raíz e intermedia, opcional), algoritmos, validez, custodia de la clave raíz y procedimiento de revocación.
 2. **Implantación**: CA, certificados con SAN para ambos servicios, Nginx con TLS 1.2/1.3, redirección y HSTS. Evidencias de `nginx -t`, `curl -v` y Nmap.

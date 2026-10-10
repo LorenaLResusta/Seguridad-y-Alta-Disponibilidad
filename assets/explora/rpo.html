@@ -1,0 +1,28 @@
+<div class="sad-w" style="--c: var(--color-accent-note)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> RPO y RTO: ¿cumple tu plan de copias? <span class="sad-w-sub">Mueve los controles</span></div>
+  <div class="sad-w-body">
+    <div class="sad-w-cols">
+      <div>
+        <label class="sad-f">Se hace una copia cada <output data-r="a1"></output> h<input type="range" data-r="a" min="1" max="48" value="24"></label>
+        <label class="sad-f">Restaurar el servicio tarda <output data-r="b1"></output> h<input type="range" data-r="b" min="1" max="48" value="6"></label>
+      </div>
+      <div>
+        <label class="sad-f">Objetivo de RPO (pérdida máxima de datos), h<input type="number" data-r="p" min="1" max="72" value="4"></label>
+        <label class="sad-f">Objetivo de RTO (parada máxima), h<input type="number" data-r="t" min="1" max="72" value="8"></label>
+      </div>
+    </div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+function go(){var a=+q('a').value,b=+q('b').value,p=+q('p').value,t=+q('t').value;q('a1').textContent=a;q('b1').textContent=b;
+ var okp=a<=p,okt=b<=t,h='';
+ h+='<p><strong>RPO real (caso peor) = '+a+' h.</strong> Si el fallo llega justo antes de la siguiente copia, se pierden hasta '+a+' h de datos. Objetivo '+p+' h: '+(okp?'<span class="ok">cumple</span>':'<span class="ko">NO cumple</span>')+'.</p>';
+ h+='<p><strong>RTO real = '+b+' h.</strong> Es lo que tarda en volver el servicio. Objetivo '+t+' h: '+(okt?'<span class="ok">cumple</span>':'<span class="ko">NO cumple</span>')+'.</p>';
+ if(!okp)h+='<p>Para cumplir el RPO hay que <strong>copiar con más frecuencia</strong> (o replicar en continuo).</p>';
+ if(!okt)h+='<p>Para cumplir el RTO hay que <strong>acelerar la recuperación</strong>: copias locales, imágenes del sistema, restauración automatizada o un servidor de respaldo en caliente.</p>';
+ if(okp&&okt)h+='<p>El plan cumple los dos objetivos. Falta lo más importante: <strong>probar la restauración</strong> y medir el tiempo real.</p>';
+ h+='<p>Peor caso total: <strong>'+(a+b)+' h</strong> entre el último dato bueno y el servicio recuperado.</p>';
+ q('o').innerHTML=h}
+['a','b','p','t'].forEach(function(k){q(k).oninput=go});go()})();</script>

@@ -27,7 +27,7 @@ Primero se entiende **qué amenaza** al sistema y cómo es un ataque por dentro 
 |---|--:|
 | Teoría (este documento) | 8 h |
 | [Prácticas](/ud04/ud04-practicas/) (diez prácticas y la Tarea del proyecto, hito de la [INT-2](/guia/practicas-integradoras/)) | 12 h |
-| Evaluación (prueba teórico-práctica y entrega del informe de bastionado) | 2 h |
+| Evaluación (prueba teórico-práctica de la unidad) | 2 h |
 | **Total** | **22 h** |
 
 | Apartado de la teoría | Horas |
@@ -88,6 +88,9 @@ Un servidor tiene tres clases de debilidades que el *hardening* trata de cerrar:
 | **Verificación** | Una medida que no se comprueba no existe | Un escaneo `nmap` tras cada cambio |
 
 {{< figura src="ud04/ciclo-hardening.svg" alt="Ciclo del hardening: inventariar, línea base, aplicar, verificar, documentar y vigilar" caption="Figura 4.1. El hardening es un ciclo: medir antes y después, aplicar con copia previa y verificar siempre." >}}
+
+> [!NOTE]
+> **Ejemplo: reducir la superficie de ataque.** Un servidor instalado «con todo» escucha en 14 puertos, pero solo da un servicio web y administración remota. Cada puerto abierto es un posible punto de entrada. Se listan con `ss -tulpn`, se identifica qué proceso escucha en cada uno y se **elimina o se desactiva** lo que no se usa (`systemctl disable --now`). Resultado: 2 puertos expuestos (443 y 22 restringido por origen). Lo que no está instalado no puede ser atacado ni necesita parches.
 
 ### 1.3 El ciclo defensivo de cada medida
 
@@ -359,6 +362,9 @@ POLÍTICA DE CONTRASEÑAS - Versión 1.0
 
 {{< explora "contrasena" >}}
 
+> [!TIP]
+> **Consejo.** Ten claro qué cuenta como **factor**: algo que *sabes* (contraseña), algo que *tienes* (llave FIDO2, app TOTP) o algo que *eres* (huella). Dos contraseñas no son MFA, porque son el mismo factor. Y no todos los segundos factores valen igual: SMS < código TOTP < llave física FIDO2, que además resiste al *phishing* porque está ligada al sitio legítimo.
+
 ### 3.4 Autenticación multifactor (MFA)
 
 No todos los segundos factores resisten igual a un atacante:
@@ -590,6 +596,12 @@ umask 027        # solo para la sesión actual
 
 Para hacerlo permanente: en `/etc/login.defs` (`UMASK 027`) o en `/etc/profile.d/`.
 
+**Explora: calculadora de permisos y umask**
+
+Marca permisos y comprueba el valor octal, la forma simbólica y el efecto del `umask` sobre los ficheros y directorios que se creen.
+
+{{< explora "permisos" >}}
+
 ### 4.4 ACL POSIX: permisos finos
 
 Los permisos clásicos solo permiten un propietario y un grupo. Las **ACL** (*Access Control Lists*) permiten dar permisos a usuarios o grupos adicionales sin cambiar el propietario.
@@ -604,6 +616,9 @@ getfacl /srv/proyecto                             # ver las ACL
 ```
 
 Si un fichero tiene ACL, `ls -l` muestra un `+` al final de los permisos (`drwxrwx---+`). Ten en cuenta que la **máscara** (`mask::`) limita los permisos efectivos de las entradas de usuario y grupo: `getfacl` marca con `#effective:` lo que realmente se concede.
+
+> [!NOTE]
+> **Ejemplo: lectura de un directorio.** Un directorio `/srv/datos` con permisos `750`, propietario `root` y grupo `clinica`: el propietario lo gestiona todo, los miembros de `clinica` pueden listar y entrar (r-x) pero no crear ni borrar, y el resto no puede ni listar. Recuerda que **el permiso `x` en un directorio significa poder atravesarlo**; sin él no accedes a lo que contiene, aunque tengas permiso sobre los ficheros.
 
 ### 4.5 ACL de NTFS en Windows
 
@@ -669,6 +684,9 @@ sudo journalctl _COMM=sudo           # registro de usos de sudo
 > Evita reglas `ALL=(ALL) NOPASSWD: ALL`. Permitir `sudo vim`, `sudo less` o `sudo find` equivale a dar una *shell* de `root`, porque esos programas permiten ejecutar otros comandos desde su interior (técnica T1548.003 de ATT&CK).
 
 **UAC** (*User Account Control*) es el mecanismo equivalente en Windows. Cuando una persona administradora inicia sesión, Windows le da **dos *tokens***: uno filtrado (de usuario estándar) con el que corre todo por defecto y otro completo que solo se usa tras una confirmación (el aviso de elevación). Así, un programa malicioso lanzado por error no hereda privilegios de administración sin que alguien lo apruebe. El comportamiento se ajusta por directiva (*Control de cuentas de usuario: comportamiento de la petición de elevación para los administradores*) y no debe desactivarse.
+
+> [!TIP]
+> **Consejo.** Edita siempre `sudoers` con `visudo`, que valida la sintaxis antes de guardar: un error en ese fichero puede dejarte sin `sudo` y sin la posibilidad de arreglarlo. Mejor aún, no toques el fichero principal y añade tus reglas en `/etc/sudoers.d/` comprobándolas con `visudo -cf`. Aplica el mínimo privilegio: autoriza **órdenes concretas** a grupos concretos, no `ALL` a todos.
 
 ### 4.8 Ajustes del *kernel* con `sysctl`
 
@@ -845,6 +863,9 @@ sudo systemctl restart nginx && systemctl is-active nginx    # comprueba que sig
 
 `disable` impide el arranque automático, pero se puede iniciar a mano o por dependencia; `mask` lo enlaza a `/dev/null` y nada puede iniciarlo. Para algo que nunca debe ejecutarse: `mask`.
 {{% /details %}}
+
+> [!NOTE]
+> **Comentario.** Verificar «desde fuera» importa porque **tu cortafuegos y tu servicio ven cosas distintas**. `ss` te dice qué está escuchando en el servidor; `nmap` desde otra máquina te dice qué puede alcanzar de verdad un atacante. Si coinciden, la regla funciona; si el puerto escucha pero Nmap lo ve «filtrado», el cortafuegos hace su trabajo. Guarda siempre las dos salidas, antes y después.
 
 ### 5.5 Verificar desde fuera con Nmap
 
@@ -1272,6 +1293,15 @@ ssh -o PubkeyAuthentication=no ana@192.168.10.10
 
 Si la configuración dejara de funcionar, vuelve atrás: `sudo rm /etc/ssh/sshd_config.d/10-hardening.conf && sudo systemctl reload ssh`.
 
+**Explora: audita un `sshd_config`**
+
+Pega o modifica la configuración y comprueba qué controles de bastionado cumple. Es un ejemplo ficticio: no sustituye a `sshd -T` ni a Lynis en el servidor real.
+
+{{< explora "sshd" >}}
+
+> [!WARNING]
+> **Atención: no te quedes fuera.** Antes de recargar `sshd` con una configuración nueva, comprueba la sintaxis con `sudo sshd -t`, mantén abierta una **segunda sesión** ya autenticada y prueba el acceso nuevo desde una tercera. Si algo falla, la sesión abierta te permite revertir. Desactivar la contraseña sin haber comprobado que la clave funciona es la forma más rápida de perder el acceso a un servidor.
+
 ### 7.5 Segundo factor TOTP en SSH
 
 Con clave pública y contraseña desactivada, el robo de la clave privada da acceso total. Añadir un **segundo factor** (algo que *sabes/tienes*: el móvil con la app TOTP) exige que el atacante comprometa dos cosas distintas. En Debian se hace con PAM y el paquete `libpam-google-authenticator`, y con `sshd` pidiendo **dos métodos encadenados**: primero la clave y después el código.
@@ -1386,6 +1416,9 @@ Los **booleanos** activan o desactivan comportamientos de la política sin escri
 getsebool -a | grep httpd_can_network              # ver booleanos relacionados
 sudo setsebool -P httpd_can_network_connect on     # -P: permanente (permite que Apache conecte con otros servidores)
 ```
+
+> [!TIP]
+> **Consejo.** Cuando un servicio falla y sospechas de SELinux, **no lo desactives**: ponlo en modo permisivo solo para diagnosticar (`setenforce 0`), busca los rechazos con `ausearch -m avc -ts recent`, corrige la etiqueta o el booleano necesario y vuelve a modo *enforcing* (`setenforce 1`). Desactivarlo es como quitar la alarma porque suena. El mismo razonamiento vale para AppArmor: usa el modo *complain* para ajustar el perfil.
 
 ### 8.2 AppArmor (Debian / Ubuntu)
 
@@ -1544,6 +1577,9 @@ sudo systemctl restart systemd-journald
 > Los registros locales son lo primero que borra un atacante (técnica T1070). En entornos reales se **envían a un servidor central** (`rsyslog` con TLS o un agente de Wazuh) para conservarlos aunque el equipo caiga. La centralización y la correlación de eventos se estudian en la [UD05](/ud05/ud05-teoria/).
 
 En Windows, el equivalente es el **Visor de eventos** (*Event Viewer*): el registro *Seguridad* guarda los inicios de sesión (4624 correcto, 4625 fallido) si la auditoría está activada (apartado 5.6).
+
+> [!TIP]
+> **Consejo.** Filtra antes de leer: `journalctl -u ssh --since "1 hour ago"` limita a un servicio y un intervalo, y `journalctl -p err -b` muestra solo los errores del arranque actual. En un incidente no se lee el registro entero: se pregunta *qué servicio, cuándo y con qué gravedad*, y se anota la hora exacta del primer síntoma.
 
 ### 10.2 Auditoría con `auditd`
 
@@ -1760,7 +1796,7 @@ Método de diagnóstico en tres pasos cuando algo deja de funcionar tras endurec
 > [!IMPORTANT]
 > **Supuesto.** Mediterránea Dental S. L. quiere publicar en Internet su **web de citas** en un servidor **Debian 13 recién instalado** por el proveedor (hasta que se monte la DMZ de la UD06, lo llamamos `srv-web-pre`). El servidor tiene SSH con contraseña y `root` permitido, una base de datos escuchando en todas las interfaces, sin cortafuegos, sin actualizaciones automáticas, registros volátiles y sin ninguna comprobación de integridad. Tu tarea es elaborar y ejecutar su **plan de bastionado**, documentando la puntuación de Lynis antes y después de aplicar las medidas.
 
-Entrega un informe breve con:
+Para autoevaluarte, redacta un informe breve (no se entrega) con:
 
 1. **Inventario** de la situación inicial (evidencias de `ss`, `systemctl`, `sshd -T`) y escaneo `nmap` desde otra máquina.
 2. **Análisis de riesgos**: al menos 8 hallazgos, cada uno con amenaza, vulnerabilidad, impacto, prioridad y técnica ATT&CK asociada.
@@ -1784,7 +1820,7 @@ Aplica primero lo que **más reduce el riesgo con menos probabilidad de dejarte 
 | 8 | `lynis audit system` («después») y `nmap` («después») | Comparación del índice y de los puertos | — |
 {{% /details %}}
 
-La Tarea del proyecto de esta unidad ([Bastionado de `srv-gestion`](/ud04/ud04-practicas/#proyecto-mediterránea-dental--ud4-bastionado-de-srv-gestion)) es la versión evaluable de este supuesto.
+La [tarea de repaso del proyecto](/ud04/ud04-practicas/#tarea-de-repaso-del-proyecto-no-se-entrega--fortificación-de-un-servidor) (no se entrega) es la versión de laboratorio de este supuesto y sirve de ensayo para la práctica integradora INT-1.
 
 ---
 

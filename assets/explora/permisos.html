@@ -1,0 +1,32 @@
+<div class="sad-w" style="--c: var(--color-accent-tip)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Calculadora de permisos y umask <span class="sad-w-sub">chmod en octal y simbólico</span></div>
+  <div class="sad-w-body">
+    <table><thead><tr><th></th><th>r (4)</th><th>w (2)</th><th>x (1)</th></tr></thead><tbody data-r="t"></tbody></table>
+    <div class="sad-w-row">
+      <label class="sad-f" style="flex-direction:row;gap:.4rem"><input type="checkbox" data-r="su"> setuid (4000)</label>
+      <label class="sad-f" style="flex-direction:row;gap:.4rem"><input type="checkbox" data-r="sg"> setgid (2000)</label>
+      <label class="sad-f" style="flex-direction:row;gap:.4rem"><input type="checkbox" data-r="st"> sticky (1000)</label>
+      <label class="sad-f">umask<input type="text" data-r="u" value="022" maxlength="4" size="5"></label>
+    </div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var W=['Propietario (u)','Grupo (g)','Otros (o)'],init=[7,5,5],h='';
+for(var i=0;i<3;i++){h+='<tr><td>'+W[i]+'</td>';for(var j=0;j<3;j++){h+='<td><input type="checkbox" data-c="'+i+j+'"'+((init[i]>>(2-j))&1?' checked':'')+'></td>'}h+='</tr>'}
+q('t').innerHTML=h;
+function go(){var d=[0,0,0],s='';for(var i=0;i<3;i++){for(var j=0;j<3;j++){var on=r.querySelector('[data-c="'+i+j+'"]').checked;if(on)d[i]+=4>>j;s+=on?'rwx'[j]:'-'}}
+ var sp=(q('su').checked?4:0)+(q('sg').checked?2:0)+(q('st').checked?1:0),sym=s.split('');
+ if(q('su').checked)sym[2]=sym[2]==='x'?'s':'S';if(q('sg').checked)sym[5]=sym[5]==='x'?'s':'S';if(q('st').checked)sym[8]=sym[8]==='x'?'t':'T';
+ var oct=(sp?sp:'')+d.join(''),html='<p>Octal: <code>'+oct+'</code> · Simbólico: <code>'+sym.join('')+'</code></p><p>Orden: <code>chmod '+oct+' fichero</code></p>';
+ var w=[];if(d[2]&2)w.push('<span class="ko">«otros» pueden escribir: cualquiera en el sistema puede modificarlo</span>');
+ if(q('su').checked)w.push('<span class="warn">setuid: el programa se ejecuta con los privilegios de su propietario; auditar y evitar salvo necesidad</span>');
+ if(q('st').checked)w.push('sticky en un directorio: solo el propietario del fichero puede borrarlo (como en <code>/tmp</code>)');
+ if(!w.length&&(d[2]===0))w.push('<span class="ok">otros no tienen ningún acceso: buena base para datos sensibles</span>');
+ if(w.length)html+='<ul><li>'+w.join('</li><li>')+'</li></ul>';
+ var u=q('u').value.trim();
+ if(/^[0-7]{3,4}$/.test(u)){var m=parseInt(u,8),f=(0o666&~m)&0o777,dd=(0o777&~m)&0o777;html+='<p>Con <code>umask '+u+'</code>: ficheros nuevos <code>'+f.toString(8).padStart(3,'0')+'</code>, directorios nuevos <code>'+dd.toString(8).padStart(3,'0')+'</code> (ficheros: 666 − umask; directorios: 777 − umask, bit a bit). Un umask <code>027</code> deja a «otros» sin acceso.</p>'}
+ else html+='<p class="warn">Escribe un umask en octal, por ejemplo 022 o 027.</p>';
+ q('o').innerHTML=html}
+r.addEventListener('input',go);r.addEventListener('change',go);go()})();</script>

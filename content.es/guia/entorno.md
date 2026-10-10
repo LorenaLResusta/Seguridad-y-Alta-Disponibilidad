@@ -52,6 +52,6 @@ Primero instala paquetes con salida a Internet; después deja solo las redes int
 
 - **Instantánea antes de cada práctica** que modifique configuraciones críticas. Nómbrala con la unidad y la práctica (`ud04-p3-antes`).
 - **Nombres coherentes**: `fw01`, `srv-gestion`, `web01`… (ver el [proyecto transversal](/guia/proyecto-clinica/)).
-- **Carpeta de evidencias** en cada máquina (`~/evidencias/udNN/`) con las salidas de órdenes que acompañarán al informe.
+- **Carpeta de evidencias** en cada máquina (`~/evidencias/udNN/`) con las salidas de órdenes (para repasar y para la práctica integradora; las prácticas de unidad no se entregan).
 - **Copia de la configuración** antes de tocar un fichero crítico, **comprobación de sintaxis** antes de aplicarlo y **verificación** después.
-- Nunca reutilices contraseñas reales. Las del laboratorio son de prueba y se documentan en el informe solo si la práctica lo exige.
+- Nunca reutilices contraseñas reales. Las del laboratorio son de prueba y no se escriben en ningún fichero que vayas a compartir.

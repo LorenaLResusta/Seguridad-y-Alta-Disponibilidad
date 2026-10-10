@@ -9,7 +9,7 @@ La criptografía es la herramienta que sostiene casi todo lo demás en seguridad
 
 Además, te asomas a las tendencias: la **criptografía post-cuántica** (ML-KEM, ML-DSA) que ya se está desplegando en TLS y SSH, y el cifrado homomórfico.
 
-En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) esta unidad entrega la **PKI interna y el cifrado**: una autoridad de certificación propia, HTTPS en la intranet, el volumen cifrado de los datos clínicos y la firma de los consentimientos de los pacientes.
+En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) esta unidad aporta la **PKI interna y el cifrado**: una autoridad de certificación propia, HTTPS en la intranet, el volumen cifrado de los datos clínicos y la firma de los consentimientos de los pacientes.
 
 {{< ra "RA1:g" "RA2:f" "RA3:c" >}}
 
@@ -28,4 +28,7 @@ En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) esta 
 1. Lee la [teoría](/ud03/ud03-teoria/) en orden: cada apartado se apoya en el anterior.
 2. Reproduce los ejemplos en tu laboratorio a medida que aparecen.
 3. Resuelve los ejercicios antes de abrir las soluciones.
-4. Realiza las [prácticas](/ud03/ud03-practicas/) y entrega la **Tarea del proyecto** dentro de [Mediterránea Dental](/guia/proyecto-clinica/).
+4. Realiza las [prácticas](/ud03/ud03-practicas/) y haz la **Tarea del proyecto** de [Mediterránea Dental](/guia/proyecto-clinica/) (no se entrega: prepara INT-1).
+
+> [!NOTE]
+> **Las prácticas de esta unidad no se entregan.** Los conceptos básicos y las órdenes principales que aparecen en ellas entran en la prueba teórico-práctica de la unidad: consulta [qué entra en la prueba](/ud03/ud03-practicas/#qué-entra-en-la-prueba-de-esta-unidad). Esta unidad contribuye a la práctica integradora **INT-1**, que sí se entrega ([cómo se entrega y se corrige](/guia/practicas-integradoras/)).

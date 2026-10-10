@@ -1,0 +1,28 @@
+<div class="sad-w" style="--c: var(--color-accent-warning)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> ¿Qué propiedad se ha roto? Clasifica incidentes <span class="sad-w-sub">Confidencialidad · Integridad · Disponibilidad</span></div>
+  <div class="sad-w-body">
+    <p data-r="e" style="margin-top:0"></p>
+    <div class="sad-w-row" data-r="b"></div>
+    <div class="sad-w-row"><button type="button" data-r="c">Comprobar</button><button type="button" data-r="n">Siguiente incidente</button></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var S=[
+{t:'Un ransomware cifra los ficheros del servidor de historiales de Mediterránea Dental y nadie puede abrirlos.',a:'D',x:'Los datos siguen existiendo, pero <strong>no están disponibles</strong>. (Si además los atacantes los hubieran copiado antes de cifrarlos, se habría roto también la confidencialidad: es la «doble extorsión».)'},
+{t:'Una auxiliar envía por error el historial de un paciente a un correo equivocado.',a:'C',x:'La información ha llegado a alguien <strong>no autorizado</strong>: se ha roto la confidencialidad. El dato no se ha alterado ni ha dejado de estar accesible.'},
+{t:'Un empleado descontento cambia en la base de datos el importe de varias facturas.',a:'I',x:'Los datos siguen disponibles y nadie ajeno los ha leído, pero ya <strong>no son fiables</strong>: se ha roto la integridad. Un hash o una firma digital permitirían detectarlo.'},
+{t:'Una avalancha de peticiones (DDoS) deja sin servicio la web de citas durante 6 horas.',a:'D',x:'El servicio no es accesible cuando se necesita. No se ha leído ni modificado ningún dato: es un problema de <strong>disponibilidad</strong>.'},
+{t:'Roban un portátil con radiografías de pacientes y el disco no estaba cifrado.',a:'C',x:'Quien tenga el portátil puede leer los datos: se rompe la <strong>confidencialidad</strong>. Con cifrado de disco (LUKS, BitLocker) el robo del equipo no implicaría pérdida de confidencialidad.'},
+{t:'Un fallo de disco deja parado el servidor de agenda porque no había RAID ni servidor de respaldo.',a:'D',x:'El servicio se detiene por un punto único de fallo: <strong>disponibilidad</strong>. Se corrige con redundancia (RAID, alta disponibilidad).'},
+{t:'Alguien con acceso de escritura borra líneas del registro de auditoría para ocultar lo que hizo.',a:'I',x:'Se manipula una evidencia: es un ataque a la <strong>integridad</strong> (y a la trazabilidad). Se mitiga enviando los logs a un servidor remoto de solo anexado.'}
+];
+var i=-1,done=false;
+var boxes=[['C','Confidencialidad'],['I','Integridad'],['D','Disponibilidad']];
+q('b').innerHTML=boxes.map(function(b){return '<label class="sad-f" style="flex-direction:row;gap:.4rem;align-items:center"><input type="checkbox" data-k="'+b[0]+'"> '+b[1]+'</label>'}).join('');
+function sel(){return Array.prototype.filter.call(q('b').querySelectorAll('input'),function(x){return x.checked}).map(function(x){return x.dataset.k}).join('')}
+function next(){i=(i+1)%S.length;done=false;q('e').innerHTML='<strong>Incidente '+(i+1)+' de '+S.length+'.</strong> '+S[i].t;Array.prototype.forEach.call(q('b').querySelectorAll('input'),function(x){x.checked=false});q('o').innerHTML=''}
+q('c').onclick=function(){var s=sel();if(!s){q('o').innerHTML='<p class="warn">Marca al menos una propiedad.</p>';return}
+ q('o').innerHTML=(s===S[i].a?'<p class="ok">Correcto.</p>':'<p class="ko">No exactamente: la propiedad principal afectada es «'+S[i].a+'».</p>')+'<p>'+S[i].x+'</p>'};
+q('n').onclick=next;next()})();</script>

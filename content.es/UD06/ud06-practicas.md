@@ -30,6 +30,22 @@ Perímetro con WAN, LAN y DMZ en un cortafuegos Linux (nftables), NAT y publicac
 > [!NOTE]
 > Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 14 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
 
+> [!IMPORTANT]
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-2**.
+
+## Qué entra en la prueba de esta unidad
+
+Estos son los contenidos de las prácticas que se preguntan (no hace falta memorizar comandos largos, sí saber **qué hacen y cómo interpretar su resultado**):
+
+- Zonas de un perímetro (LAN, DMZ, WAN) y cómo se traduce una **matriz de flujos** en reglas (6.1).
+- Estructura de **nftables** (tabla, cadena, regla), **política `drop`** por defecto y reglas con `ct state established,related` (6.2).
+- **NAT**: diferencia entre **DNAT** (publicar un servicio), **SNAT** y **masquerade** (6.3).
+- Parámetros de **endurecimiento TCP/IP** (`tcp_syncookies`, `rp_filter`), registro (`log`) y cómo diagnosticar un bloqueo (6.4).
+- **Proxy directo** (Squid) frente a **proxy inverso** (Nginx con TLS): para qué sirve cada uno (6.5, 6.6).
+- Protocolos seguros y **SSH avanzado**: túneles y salto por bastión (6.9).
+- **VPN con WireGuard**: pares, claves, `AllowedIPs` y qué indica el *handshake* (6.10).
+- Para qué sirve la autenticación centralizada con **RADIUS** (6.11).
+
 ## Objetivos
 
 - Desplegar una arquitectura de subred apantallada (WAN, LAN, DMZ) con un cortafuegos de tres patas.
@@ -178,6 +194,9 @@ Antes de escribir una regla, completa la matriz con tres columnas: **origen → 
 ## Práctica 6.2 · Cortafuegos con nftables y política `drop`
 
 {{< practica num="6.2" tipo="Guiada" duracion="2 h" nivel="3" ra="RA4:b,c,d" entorno="Debian 13 · VirtualBox 7" entrega="conjunto de reglas nftables y pruebas" >}}
+
+> [!TIP]
+> **Consejo.** Aplica las reglas en este orden: **1)** escribe el fichero, **2)** compruébalo con `sudo nft -c -f /etc/nftables.conf`, **3)** programa una reversión automática (por ejemplo, restaurar la copia en 2 minutos) y **4)** carga el fichero y prueba. Si todo va bien, cancelas la reversión. Es la misma técnica que usan los administradores que gestionan cortafuegos remotos.
 
 **Objetivo:** implementar la matriz de flujos (RA4 d, f).
 
@@ -379,6 +398,9 @@ Sigue siempre el mismo método, **capa por capa**: (1) enlace (`ip -br link`), (
 
 {{< practica num="6.5" tipo="Guiada" duracion="2 h" nivel="2" ra="RA5:b,c,d,e,g" entorno="Debian 13 · VirtualBox 7" entrega="Squid con autenticación y restricciones" >}}
 
+> [!TIP]
+> **Consejo.** Para ver qué hace Squid mientras pruebas, deja abierto `sudo tail -f /var/log/squid/access.log` en otra terminal. Los códigos `TCP_MISS`, `TCP_HIT` y `TCP_DENIED` te dicen si la petición fue al servidor, se atendió desde la caché o fue rechazada por tus reglas; con ellos justificas si la política que has escrito se comporta como pretendías.
+
 **Objetivo:** controlar y registrar la navegación de la LAN (RA5 a–g). Squid se instala en `fw` (ya en la práctica 2.2).
 
 #### Configuración con ACL, horario y bloqueos
@@ -577,7 +599,7 @@ Repite la política mínima de la práctica 6.2 con **OPNsense** en lugar de nft
 5. Revisa *Firewall → Log Files → Live View* y localiza los eventos de las pruebas negativas.
 6. Haz una **copia de configuración** (*System → Configuration → Backups*), descárgala y cífrala (`gpg --symmetric`).
 
-**Entrega:** capturas de las reglas, del Live View con bloqueos y comparación breve **nftables frente a OPNsense** (administración, trazabilidad, rendimiento, curva de aprendizaje).
+**Resultado esperado:** capturas de las reglas, del Live View con bloqueos y comparación breve **nftables frente a OPNsense** (administración, trazabilidad, rendimiento, curva de aprendizaje).
 
 ---
 
@@ -628,7 +650,7 @@ Prueba la **restauración** en una VM de sustitución: instala nftables, descifr
 
 Sigue el apartado 6.1 de la [teoría](/ud06/ud06-teoria/): instala la zona con autenticación básica en `sad-web`, captura tu propia petición con `tcpdump` y decodifica la cabecera `Authorization`.
 
-Entrega: captura de pantalla de la cabecera, el resultado de `base64 -d` y una explicación de por qué es inseguro. Después repite la petición con **HTTPS** (certificado de la UD03, práctica 6) y comprueba que ya no se ve el contenido:
+Resultado esperado: captura de pantalla de la cabecera, el resultado de `base64 -d` y una explicación de por qué es inseguro. Después repite la petición con **HTTPS** (certificado de la UD03, práctica 6) y comprueba que ya no se ve el contenido:
 
 ```bash
 sudo tcpdump -n -A -i enp0s3 'tcp port 443 and host 192.168.100.10' -c 20 | tee ~/ud6-evidencias/03-https.txt
@@ -712,6 +734,9 @@ sudo sshd -t && sudo systemctl reload ssh
 ## Práctica 6.10 · VPN de acceso remoto con WireGuard
 
 {{< practica num="6.10" tipo="Guiada" duracion="2 h" nivel="3" ra="RA3:d,e" entorno="Debian 13 · VirtualBox 7" entrega="túnel WireGuard operativo" >}}
+
+> [!NOTE]
+> **Comentario.** Una VPN no es seguridad completa, es **un túnel**: cifra el trayecto pero no decide qué puede hacer el usuario al llegar. Complétala siempre con filtrado de lo que el cliente VPN puede alcanzar (principio de mínimo privilegio) y con MFA. Las claves de WireGuard se tratan como contraseñas: se generan en cada cliente y la privada no sale de él.
 
 **Objetivo:** que `sad-cli` (fuera de la sede) acceda por un túnel cifrado al servidor interno `srv-lan` y **solo** a lo permitido (RA3 d, e).
 
@@ -824,6 +849,9 @@ Si `wg show` no muestra `latest handshake`: (1) el puerto **UDP 51820** debe est
 
 {{< practica num="6.11" tipo="Guiada" duracion="1 h" nivel="3" ra="RA3:f,g" entorno="Debian 13 · VirtualBox 7" entrega="autenticación RADIUS comprobada" >}}
 
+> [!TIP]
+> **Consejo.** Si FreeRADIUS no autentica, detén el servicio y ejecútalo en primer plano con `sudo freeradius -X`: muestra paso a paso qué módulo procesa cada petición y por qué rechaza. Prueba primero con `radtest` desde el propio servidor, y solo después desde el cliente. Casi todos los fallos son de secreto compartido o de IP del cliente no autorizada en `clients.conf`.
+
 **Objetivo:** montar un servidor RADIUS y comprobar autenticaciones correctas e incorrectas (RA3 f, g).
 
 En `gw-vpn`:
@@ -894,14 +922,14 @@ Requiere dos pasarelas (`gw-sede` y `gw-oficina`, cada una con una LAN interna).
 
 ---
 
-## Tarea del proyecto · Seguridad perimetral del Colegio San Jorge
+## Tarea de repaso del proyecto (no se entrega) · Seguridad perimetral del Colegio San Jorge
 
 > [!IMPORTANT]
-> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-2** (entrega: 22/03/2027). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+> Esta tarea **no se entrega ni se puntúa**. Es el ensayo de la parte de esta unidad en la práctica integradora obligatoria **INT-2** ([qué se entrega y cómo se corrige](/guia/practicas-integradoras/)). Hazla para llegar a INT-2 con las piezas montadas; sus conceptos básicos también entran en la prueba de la unidad.
 
-{{< practica etiqueta="Tarea" num="6.13" tipo="Proyecto" duracion="2 h" nivel="3" ra="RA1:h;RA3;RA4;RA5" entorno="Debian 13 · VirtualBox 7" entrega="informe técnico del perímetro" >}}
+{{< practica etiqueta="Tarea de repaso" num="6.13" tipo="Proyecto" duracion="2 h" nivel="3" ra="RA1:h;RA3;RA4;RA5" entorno="Debian 13 · VirtualBox 7" entrega="informe técnico del perímetro" >}}
 
-**Entrega** (PDF o Markdown con capturas y ficheros de configuración sin secretos), basada en el supuesto de la teoría:
+**Resultado esperado** (PDF o Markdown con capturas y ficheros de configuración sin secretos; no se entrega), basado en el supuesto de la teoría:
 
 1. **Análisis y diseño**: zonas, diagrama, **matriz de flujos** y justificación de la arquitectura (un cortafuegos de tres patas frente a dos cortafuegos).
 2. **Implantación** de las prácticas 2 y 3 (reglas nftables y NAT) con el fichero `nftables.conf` comentado.

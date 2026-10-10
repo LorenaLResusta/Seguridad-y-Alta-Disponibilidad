@@ -25,7 +25,7 @@ El hilo conductor es el proyecto transversal [Mediterránea Dental](/guia/proyec
 |---|---|
 | Teoría | 9 h |
 | [Prácticas](/ud06/ud06-practicas/) | 14 h |
-| Evaluación (prueba escrita y entrega de la Tarea del proyecto) | 2 h |
+| Evaluación (prueba teórico-práctica de la unidad) | 2 h |
 | **Total** | **25 h** |
 
 | Apartado de la teoría | Horas | CE |
@@ -160,6 +160,9 @@ flowchart LR
 
 > [!NOTE]
 > **Débil o fuerte no significa «mala» o «buena»**: es una cuestión de proporcionalidad. Para Mediterránea Dental, con un solo equipo de perímetro, la subred protegida débil (un cortafuegos de tres patas) es razonable **si** se vigila y se hace redundante ([UD07](/ud07/ud07-teoria/)). Dos cortafuegos de fabricantes distintos se justifican cuando un fallo de implementación de uno de ellos no debe dejar pasar el tráfico (infraestructuras críticas, ENS de categoría alta).
+
+> [!NOTE]
+> **Ejemplo: matriz de flujos de una DMZ.** Internet → servidor web (DMZ): **443 permitido**. Servidor web → base de datos (LAN): solo el puerto de la base de datos, desde esa IP. LAN → DMZ: administración por SSH solo desde el equipo de sistemas. **DMZ → LAN en general: denegado**, porque si el servidor expuesto cae, el atacante no debe poder avanzar. Toda regla que no esté en la matriz no existe: la política por defecto es *drop*.
 
 ### 2.4 Del modelo perimetral al modelo de confianza cero (*Zero Trust*)
 
@@ -317,6 +320,9 @@ Si heredas reglas de `iptables`, puedes traducirlas (revisa siempre el resultado
 iptables-translate -A INPUT -p tcp --dport 22 -j ACCEPT        # traduce una regla suelta
 sudo iptables-save | sudo iptables-restore-translate            # traduce un conjunto completo
 ```
+
+> [!NOTE]
+> **Comentario.** `nftables` sustituye a `iptables` como infraestructura de filtrado de Linux. En Debian 13 la orden `iptables` suele ser una capa de compatibilidad (`iptables-nft`) que traduce a `nftables`; no mezcles reglas de ambas en el mismo equipo. Para un laboratorio nuevo escribe directamente en `nft`: la sintaxis es más coherente, admite conjuntos y se aplica de forma atómica.
 
 ### 4.3 Cortafuegos de tres zonas: el *ruleset* de `fw01`
 
@@ -521,6 +527,9 @@ table ip nat2 {
 }
 ```
 
+> [!WARNING]
+> **Atención.** Antes de cargar una política `drop` comprueba que has permitido el tráfico **ya establecido** (`ct state established,related accept`) y tu **propio acceso de administración**. Una política restrictiva aplicada sin esas dos reglas corta la sesión SSH con la que estás trabajando. Por eso se prueba con `nft -c -f fichero` y se aplica con un mecanismo de reversión automática.
+
 ### 4.6 NAT: traducción de direcciones
 
 El **NAT** (*Network Address Translation*, RFC 3022) modifica las direcciones de los paquetes al cruzar el cortafuegos. **No es una medida de seguridad en sí** (la seguridad la da el filtrado con estado), pero oculta el direccionamiento interno y permite compartir una IP pública.
@@ -555,6 +564,9 @@ sequenceDiagram
 > [!NOTE]
 > **¿Y el *hairpin* NAT?** Se necesita cuando un cliente y el servidor publicado están en la **misma red** y el cliente accede por la IP pública: el servidor respondería directamente al cliente (sin pasar por el cortafuegos) y la conexión se rompería. En nuestra arquitectura la LAN y la DMZ son redes **distintas** y todo pasa por `fw01`: basta con una regla DNAT en `prerouting` también para la interfaz LAN (`iifname $LAN ip daddr 10.0.2.10 tcp dport { 80, 443 } dnat to $WEB_PUB`) y la regla de `forward` correspondiente.
 
+
+> [!NOTE]
+> **Ejemplo: publicar un servicio de la DMZ.** Para que Internet llegue al servidor web interno se usa DNAT, con una regla del estilo `tcp dport 443 dnat to 10.0.20.10:443` en la cadena `prerouting`, **más** una regla de `forward` que permita ese flujo y solo ese. Son dos decisiones distintas: el NAT cambia el destino y el filtrado lo autoriza. Las direcciones de la regla son de ejemplo; adapta las de tu laboratorio. Comprueba el resultado desde fuera con `curl` y revisa los contadores con `nft list ruleset`.
 
 ### 4.7 Fortificación de la pila TCP/IP del cortafuegos
 
@@ -928,6 +940,9 @@ Formato del `access.log` de Squid (por defecto):
 | `GET http://...` | Método y URL |
 | `HIER_DIRECT/IP` | Cómo se obtuvo el contenido |
 
+> [!TIP]
+> **Consejo.** Antes de recargar Squid comprueba la sintaxis con `sudo squid -k parse` y, si es correcta, aplica con `sudo squid -k reconfigure`, que no corta las conexiones activas. Recuerda que el orden de las directivas `http_access` importa: se evalúa de arriba abajo y **gana la primera que coincide**, por lo que la denegación final debe estar siempre la última.
+
 ### 7.3 Autenticación en el *proxy* (RA5.c)
 
 Para saber **quién** navega se exige usuario y contraseña mediante un **ayudante** (*helper*), un programa que Squid consulta. Los métodos más habituales:
@@ -1282,6 +1297,9 @@ sudo tcpdump -ni wg0 -c 5 icmp                 # dentro del túnel: el ping se v
 > [!IMPORTANT]
 > Las claves **privadas** no se comparten, no se pegan en chats ni se suben a Git; solo se intercambian las **públicas**. Si una privada se expone, se genera una nueva y se sustituye la pública en el otro extremo. WireGuard solo autentica **equipos** (claves): para autenticar a la **persona** se añade un segundo factor en otra capa (apartado 9.3).
 
+> [!TIP]
+> **Consejo.** En WireGuard, `AllowedIPs` cumple dos funciones a la vez: es una **tabla de rutas** (a qué par se envía cada destino) y una **lista de control de acceso** (qué origen se acepta de ese par). Si la VPN «conecta» pero no pasa tráfico, revisa primero `AllowedIPs` y el reenvío de paquetes; `sudo wg show` te enseña si hay *handshake* reciente (de menos de unos minutos) y cuántos bytes se han movido.
+
 ### 8.4 IPsec/IKEv2 con strongSwan (sitio a sitio)
 
 **IPsec** es el estándar para unir redes entre fabricantes distintos. Funciona en dos fases: **IKEv2** (RFC 7296) autentica a los extremos y negocia las claves (UDP 500 y 4500) y **ESP** (RFC 4303) cifra el tráfico. Por cada túnel se crea una **SA** (*Security Association*) que indica qué redes protege (*selectores de tráfico*).
@@ -1447,6 +1465,9 @@ sudo sshd -t && sudo systemctl reload ssh
 ```
 
 Ventajas: caducan solos (`-V +12w`), llevan una identidad (`-I`) útil en la auditoría y se pueden restringir (`-n`, `-O force-command=...`). Para **revocar** antes de que caduquen, se usa un fichero `RevokedKeys` en `sshd_config`.
+
+> [!NOTE]
+> **Ejemplo: servidor de salto.** En lugar de abrir SSH a todos los servidores, solo se publica el *bastion host*. El administrador se conecta con `ssh -J admin@bastion admin@10.0.20.10`: la sesión pasa por el bastión pero la autenticación es de extremo a extremo y las claves privadas no se copian al servidor intermedio. Se reduce la superficie expuesta y todo el acceso queda registrado en un único punto.
 
 ### 9.3 Protocolos de autenticación y métodos para el acceso remoto (RA3.f)
 

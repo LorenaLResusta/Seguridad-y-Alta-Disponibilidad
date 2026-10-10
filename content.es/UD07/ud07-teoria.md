@@ -82,6 +82,9 @@ Estos tres conceptos se confunden a menudo. Se diferencian por **cuánto dura la
 
 La alta disponibilidad es la pieza **técnica** del problema; la continuidad de negocio es la pieza **organizativa** que la incluye (apartado 11).
 
+> [!NOTE]
+> **Comentario.** La alta disponibilidad es un **objetivo de negocio** antes que una tecnología. Una consulta que factura poco no necesita cinco nueves; una que no puede atender sin su sistema, sí necesita redundancia real. Por eso el primer paso siempre es preguntar *cuánto cuesta una hora parada* y *cuántos datos puede perder la empresa*. La solución técnica se dimensiona después con esas respuestas.
+
 ### 1.3 Lo que no es alta disponibilidad
 
 > [!WARNING]
@@ -132,6 +135,9 @@ La disponibilidad se expresa en «nueves». Cada nueve adicional **reduce diez v
 
 > [!TIP]
 > **Memoriza tres cifras:** 99 % son 3,65 días de parada al año; 99,9 %, 8,76 horas; 99,99 %, 52,6 minutos. No pidas 99,999 % si el negocio solo necesita 99,9 %: cada nueve más se paga con más servidores, más personal y más complejidad.
+
+> [!NOTE]
+> **Ejemplo: cuánto es cada «nueve» al año.** 99 % → unos 3,65 días parados. 99,9 % → unas **8 h 45 min**. 99,99 % → unos **52 min**. 99,999 % → unos **5 min**. Subir un nueve multiplica por diez el esfuerzo y el coste, y llega un punto en que el factor humano (un error de configuración) pesa más que el hardware.
 
 ### 2.4 SLA, SLO y SLI
 
@@ -269,6 +275,9 @@ Cadena con 2 web             = 99.8500 %  ->  13.14 h de parada al año
 El balanceador. Si cae, los dos servidores web dejan de ser accesibles aunque estén sanos. Se corrige con un segundo balanceador y una IP virtual (Keepalived/VRRP).
 {{% /details %}}
 
+> [!NOTE]
+> **Ejemplo: serie frente a paralelo.** Dos servidores con 99 % de disponibilidad cada uno. **En serie** (el servicio necesita los dos): 0,99 × 0,99 = **98,01 %**, peor que uno solo. **En paralelo** (basta uno): 1 − (0,01 × 0,01) = **99,99 %**. Esta es la razón de ser de la redundancia: duplicar un componente en paralelo mejora mucho la disponibilidad; encadenar componentes la empeora. Y cuidado con el eslabón compartido: dos servidores detrás de un solo conmutador siguen teniendo un SPOF.
+
 ### 2.6 Punto único de fallo (SPOF)
 
 Un **SPOF** (*Single Point of Failure*) es un componente cuyo fallo detiene todo el servicio. Se detectan recorriendo la cadena de dependencias de punta a punta y preguntando en cada eslabón: **«si esto falla, ¿qué ocurre?»**.
@@ -363,6 +372,9 @@ Dos conceptos acompañan a la conmutación:
 
 - ***Failover***: el paso del servicio al nodo de reserva cuando el principal falla.
 - ***Failback***: la vuelta al nodo original una vez reparado. No siempre conviene hacerlo de forma automática: volver supone un segundo corte y puede reintroducir un nodo con datos desfasados. Muchas soluciones permiten desactivarlo (`nopreempt` en Keepalived, *stickiness* en Pacemaker).
+
+> [!TIP]
+> **Consejo.** Una práctica de alta disponibilidad sin una **prueba de fallo** no demuestra nada. Para cada diseño pregúntate: *¿qué componente apago?*, *¿qué espero que ocurra?*, *¿cuánto tarda en recuperarse?* y *¿se pierde algún dato?* Provoca el fallo (apaga el nodo, desconecta la red, mata el proceso), mide el tiempo hasta que el servicio responde de nuevo y compáralo con el RTO objetivo.
 
 ### 3.2 El estado: lo que hace difícil la alta disponibilidad
 
@@ -491,6 +503,9 @@ Otras medidas hardware: **discos *hot-spare*** que sustituyen automáticamente a
 
 > [!WARNING]
 > **RAID no es una copia de seguridad.** Protege del fallo de un disco, pero **no** del borrado accidental, de un virus que cifre los ficheros, de la corrupción lógica ni de un incendio: todos esos errores se replican al instante en los discos espejo. Lo comprobarás en la [Práctica 7.1](/ud07/ud07-practicas/#práctica-71--disponibilidad-spof-y-raid-1).
+
+> [!NOTE]
+> **Comentario.** El **RAID no es alta disponibilidad por sí solo**: protege frente al fallo de un disco, pero el servidor sigue siendo un único punto de fallo (fuente, placa, red). Y tampoco es una copia de seguridad: replica también los borrados y los cifrados por ransomware. La alta disponibilidad real se consigue combinando discos, red y nodos redundantes con una copia independiente.
 
 ### 4.3 Redundancia de red: *bonding*
 
@@ -641,6 +656,9 @@ qm migrate 100 pve2 --online             # migración en vivo de la VM 100 al no
 | Consumo | Mayor | Mínimo |
 | Migración en vivo | Sí (con almacenamiento compartido) | No en LXC: se reinicia en el otro nodo |
 | Uso típico | Sistemas operativos completos, Windows | Servicios sin estado, escalado horizontal |
+
+> [!WARNING]
+> **Atención: *split-brain*.** Si dos nodos pierden la comunicación entre sí, cada uno puede creer que el otro ha caído y activarse a la vez: dos servidores atendiendo con datos que divergen. Para evitarlo, los clústeres usan **quórum** (mayoría de votos) y, a veces, *fencing* para aislar al nodo dudoso. Por eso un clúster serio necesita un número **impar** de votos: con dos nodos se añade un tercer voto (un dispositivo de quórum).
 
 ### 5.5 *Clústeres*: tipos y utilidad
 

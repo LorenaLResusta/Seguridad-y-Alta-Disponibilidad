@@ -23,7 +23,7 @@ A lo largo del curso construyes, unidad a unidad, la seguridad de **una misma em
 | Conexión | Fibra con IP pública única; sin cortafuegos dedicado ni copias verificadas |
 | Problema | Un ataque de *ransomware* en otra clínica del sector ha motivado el encargo: **diagnosticar, proteger y garantizar la continuidad** |
 
-Tú eres el técnico de sistemas contratado para hacerlo. Entregas **un informe técnico por unidad** y un **dossier final**.
+Tú eres el técnico de sistemas contratado para hacerlo. En cada unidad montas una pieza de la clínica (**no se entrega**); esas piezas se reúnen en dos [prácticas integradoras](/guia/practicas-integradoras/) que sí se entregan.
 
 ## Infraestructura de laboratorio
 
@@ -60,23 +60,23 @@ Todas las máquinas son virtuales (ver [Entorno de trabajo](/guia/entorno/)). El
 > [!NOTE]
 > No hace falta tener todas las máquinas encendidas a la vez. Cada práctica indica cuáles necesita; el resto permanece apagado y con su instantánea.
 
-## Qué entregas en cada unidad
+## Qué construyes en cada unidad
 
-| UD | Tarea del proyecto | Evidencias | CE principales |
-|---|---|---|---|
-| **UD01** | **Diagnóstico inicial**: inventario de activos, análisis de riesgos (matriz probabilidad × impacto), registro de actividades de tratamiento (RAT) y política de seguridad | Informe de riesgos + RAT + política | RA1.a-d, RA7.a-g |
-| **UD02** | **Plan de almacenamiento y copias**: RAID en `srv-ficheros`, política 3-2-1, RPO/RTO objetivo y restauración demostrada | Informe + registros de la restauración | RA1.b, RA6.b, RA6.f |
-| **UD03** | **PKI interna y cifrado**: CA propia, HTTPS en la intranet, volumen de datos clínicos cifrado, firma de consentimientos | Informe + certificados + comprobaciones TLS | RA1.g, RA2.f, RA3.c |
-| **UD04** | **Bastionado de `srv-gestion`**: puntuación de Lynis antes y después, SSH por clave con segundo factor, `auditd`, antimalware e integridad | Informe antes/después + evidencias | RA1.e-f, RA1.i, RA2.a-e |
-| **UD05** | **Red segura**: VLAN y ACL, inventario de servicios, IDS (Suricata), SIEM (Wazuh) y detección de un ataque simulado | Informe + alertas + capturas | RA2.c-d, RA2.g-i |
-| **UD06** | **Perímetro**: `fw01` con DMZ, NAT, *proxy* directo e inverso, VPN de teletrabajo y autenticación centralizada | Informe + reglas + pruebas desde el exterior | RA1.h, RA3, RA4, RA5 |
-| **UD07** | **Continuidad**: web de citas en alta disponibilidad (HAProxy + Keepalived), base de datos replicada, monitorización y **prueba de fallo** | Informe + registro de la prueba + SLA calculado | RA6.a-i |
+| UD | Tarea del proyecto (de repaso, no se entrega) | Qué debe quedar montado | Integradora | CE principales |
+|---|---|---|---|---|
+| **UD01** | **Diagnóstico inicial**: inventario de activos, análisis de riesgos (matriz probabilidad × impacto), registro de actividades de tratamiento (RAT) y política de seguridad | Matriz de riesgos, RAT y política | INT-1 | RA1.a-d, RA7.a-g |
+| **UD02** | **Plan de almacenamiento y copias**: RAID en `srv-ficheros`, política 3-2-1, RPO/RTO objetivo y restauración demostrada | RAID, copias cifradas y restauración probada | INT-1 | RA1.b, RA6.b, RA6.f |
+| **UD03** | **PKI interna y cifrado**: CA propia, HTTPS en la intranet, volumen de datos clínicos cifrado, firma de consentimientos | CA, certificado y HTTPS verificable | INT-1 | RA1.g, RA2.f, RA3.c |
+| **UD04** | **Bastionado de `srv-gestion`**: puntuación de Lynis antes y después, SSH por clave con segundo factor, `auditd`, antimalware e integridad | Servidor fortificado y medido | INT-1 | RA1.e-f, RA1.i, RA2.a-e |
+| **UD05** | **Red segura**: VLAN y ACL, inventario de servicios, IDS (Suricata), SIEM (Wazuh) y detección de un ataque simulado | Segmentación y detección con alerta | INT-2 | RA2.c-d, RA2.g-i |
+| **UD06** | **Perímetro**: `fw01` con DMZ, NAT, *proxy* directo e inverso, VPN de teletrabajo y autenticación centralizada | Cortafuegos, publicación y VPN | INT-2 | RA1.h, RA3, RA4, RA5 |
+| **UD07** | **Continuidad**: web de citas en alta disponibilidad (HAProxy + Keepalived), base de datos replicada, monitorización y **prueba de fallo** | Servicio que sobrevive a un fallo, con RTO medido | INT-2 | RA6.a-i |
 
-### Dossier final
+### Las dos prácticas integradoras
 
-En la última unidad reúnes los siete informes en un único **dossier técnico** (PDF o página web) con: arquitectura final, matriz de riesgos residuales, matriz de flujos del cortafuegos, política de copias con RPO/RTO medidos, resultado de las pruebas de fallo y un plan de mejora a 12 meses.
+Reúnen las piezas anteriores en un único sistema y **son lo único que se entrega**: INT-1 (UD01–UD04, un servidor seguro) e INT-2 (UD05–UD07, perímetro y servicio sin parada). Cada una se corrige con un script de verificación y cuatro preguntas cortas. Consulta [las condiciones y fechas](/guia/practicas-integradoras/).
 
-## Cómo se evalúa el proyecto
+## Qué se valora del proyecto
 
 | Criterio | Qué se valora |
 |---|---|

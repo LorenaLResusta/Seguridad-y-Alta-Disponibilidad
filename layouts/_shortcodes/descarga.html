@@ -1,0 +1,15 @@
+{{- /*
+  Enlace de descarga de un fichero de static/ y su contenido completo, plegado, para poder leerlo antes de ejecutarlo.
+  Uso: {{< descarga "descargas/verifica-int1.sh" >}}     (ruta dentro de static/)
+*/ -}}
+{{- $f := .Get 0 -}}
+{{- $p := printf "static/%s" $f -}}
+{{- if not (fileExists $p) }}{{ errorf "descarga: no existe %s" $p }}{{ end -}}
+{{- $txt := readFile $p -}}
+<div class="sad-descarga">
+  <p><a class="sad-btn" href="{{ $f | relURL }}" download>⬇ Descargar {{ path.Base $f }}</a></p>
+  <details>
+    <summary>Leer el script completo antes de ejecutarlo ({{ path.Base $f }})</summary>
+    {{ highlight $txt "bash" "" }}
+  </details>
+</div>

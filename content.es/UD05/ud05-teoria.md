@@ -109,6 +109,9 @@ sudo journalctl -u arpwatch --since "10 min ago"
 | Segmentación (VLAN pequeñas) | Red | Reduce el alcance de un atacante |
 | Cifrado de extremo a extremo | Aplicación | Aunque desvíen el tráfico, no lo pueden leer |
 
+> [!NOTE]
+> **Ejemplo: cómo se ve un ARP spoofing.** Si dos direcciones IP distintas de la tabla ARP (`ip neigh`) aparecen con la **misma MAC**, y una de ellas es la de tu puerta de enlace, alguien se está haciendo pasar por ella. El atacante coloca su equipo en medio y lee o modifica el tráfico. La defensa más sólida está en el conmutador (*Dynamic ARP Inspection*, apoyada en *DHCP snooping*); en el host solo puedes detectarlo.
+
 ### 3.3. MAC flooding
 
 Un switch aprende qué MAC hay en cada puerto en su **tabla CAM** (de tamaño finito). Un equipo que envíe miles de tramas con MAC falsas puede **llenar la tabla**; el switch, desbordado, pasa a **difundir por todos los puertos** (*fail-open*), y cualquier equipo puede escuchar tráfico ajeno.
@@ -191,6 +194,9 @@ En un laboratorio con máquinas virtuales no hay switch gestionable, pero un **p
 > [!NOTE]
 > Las VLAN **segmentan**, pero por sí solas **no protegen**: si el router permite todo entre VLAN, no se ha ganado nada. La seguridad la dan las ACL aplicadas en el punto de unión.
 
+> [!TIP]
+> **Consejo.** Piensa las medidas del conmutador como **desconfianza por defecto**: un puerto de usuario no debería aceptar DHCP de nadie, ni más de unas pocas MAC, ni tramas de *spanning tree*, ni negociar enlaces troncales. Cada medida (*DHCP snooping*, *port security*, *BPDU guard*, desactivar DTP) corta una de las amenazas de la sección anterior; si sabes qué amenaza cubre cada una, no necesitas memorizar comandos.
+
 ### 4.2. Segmentación con VLAN
 
 Una **VLAN** (*Virtual LAN*, IEEE 802.1Q) divide un switch físico en redes lógicas aisladas. Cada trama lleva una **etiqueta** con el identificador de la VLAN (1-4094). Entre switches o hacia un router se usa un puerto **trunk** que transporta varias VLAN.
@@ -239,6 +245,9 @@ Address=10.10.10.1/24
 ```
 
 (Y en la interfaz física, `VLAN=enp0s3.10` en su `.network`.) Para eliminarla: `sudo ip link del enp0s3.10`.
+
+> [!NOTE]
+> **Ejemplo: plan de VLAN de la clínica.** VLAN 10 *Administración* (equipos de sistemas), VLAN 20 *Clínica* (puestos y servidor de pacientes), VLAN 30 *Invitados* (Wi-Fi de la sala de espera) y VLAN 99 *Gestión* (conmutadores). Los invitados solo salen a Internet; la clínica accede al servidor; solo administración llega a la gestión. Una ACL aplicada en el encaminador entre VLAN impone esa política: la VLAN separa, la ACL decide qué cruza.
 
 ### 4.3. ACL: controlar qué se comunica con qué
 
@@ -307,6 +316,9 @@ Una red inalámbrica no tiene «cable»: **cualquiera en el alcance** puede capt
 - **WPS**: método de emparejamiento por PIN con debilidades conocidas: **desactívalo**.
 - **SSID oculto**: no es una medida de seguridad (el SSID se descubre al conectarse un cliente).
 - **Aislamiento de clientes** (*client isolation*) en redes de invitados: los clientes no se ven entre sí.
+
+> [!NOTE]
+> **Comentario.** Del WEP al WPA3 la cadena es siempre la misma: se encuentra un fallo, se parchea y llega un protocolo nuevo. **WEP y WPA (TKIP) están rotos** y no deben usarse; WPA2-Personal con una clave débil se ataca fuera de línea capturando el saludo; **WPA3-SAE** protege frente a ese ataque de diccionario. En entornos de empresa la respuesta es WPA2/WPA3-Enterprise con 802.1X, porque cada usuario tiene sus propias credenciales y no hay una clave compartida que revocar cuando alguien se va.
 
 ### 5.2. Buenas prácticas de diseño Wi-Fi
 
@@ -416,6 +428,9 @@ Un **IDS** (*Intrusion Detection System*) **observa** el tráfico o el sistema y
 <!-- enr:u6d -->
 > [!TIP]
 > Un IDS genera **falsos positivos**. Antes de pasar a modo IPS (que bloquea), ejecuta Suricata en modo *detección* varios días, ajusta las reglas ruidosas y valora el impacto de bloquear algo legítimo.
+
+> [!TIP]
+> **Consejo.** Un IDS recién instalado produce ruido. La práctica profesional es empezar en **modo detección**, revisar durante unos días qué alertas son reales y cuáles falsos positivos, ajustar o desactivar reglas y solo entonces pasar a **prevención** (IPS) en línea. Un IPS con reglas mal ajustadas bloquea tráfico legítimo y se convierte en una causa de indisponibilidad.
 
 ### 7.2. Suricata
 
@@ -550,6 +565,9 @@ Cómo leer una línea típica:
 
 `Flags [S]` = SYN, `[S.]` = SYN-ACK, `[.]` = ACK, `[P.]` = datos, `[F.]` = cierre, `[R]` = reinicio. El *handshake* de tres vías es `[S]` → `[S.]` → `[.]`.
 
+> [!TIP]
+> **Consejo.** Captura con filtro de **captura** para no guardar de más (`tcpdump -nn -i enp0s8 'host 10.0.0.5 and tcp port 80'`) y filtra después con **filtros de visualización** en Wireshark (`http.request`, `ip.addr == 10.0.0.5`). La opción `-nn` evita resolver nombres y puertos y acelera la lectura. Guarda la captura en un fichero `.pcap` si quieres analizarla luego sin repetir el ataque.
+
 ### 8.3. Wireshark (análisis gráfico)
 
 **Wireshark** es el analizador gráfico libre estándar. Abre capturas `.pcap` y permite filtrar, seguir conversaciones y descifrar si dispones de las claves.
@@ -656,7 +674,7 @@ Para integrar todo, un caso con el ciclo **amenaza → vulnerabilidad → ataque
 > [!IMPORTANT]
 > **Supuesto.** *Gestoría Moncayo* tiene 25 empleados en una oficina en Zaragoza y 4 en teletrabajo. Una sola red plana para todo (empleados, servidores, impresoras, Wi-Fi de visitas). Los teletrabajadores acceden por escritorio remoto abierto a Internet. Hace un mes detectaron que un invitado accedió a la carpeta de clientes.
 
-Entrega un documento con:
+Para autoevaluarte, redacta un documento (no se entrega) con:
 
 1. **Análisis de riesgos de red**: amenazas, vulnerabilidades y activos afectados.
 2. **Diseño de red segura**: diagrama con VLAN (rangos IP), Wi-Fi corporativa/invitados, matriz de flujos entre VLAN y DMZ si procede.

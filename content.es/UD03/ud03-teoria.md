@@ -228,6 +228,9 @@ Descifrado:    Transferir 1500 EUR a la cuenta ES00 1234
 - Los 16 últimos bytes del resultado son la **etiqueta** de autenticación.
 - Los **datos asociados** no se cifran pero sí se autentican (cabeceras, identificadores…).
 
+> [!WARNING]
+> **Atención.** Nunca diseñes tu propio algoritmo de cifrado ni «mejores» uno estándar. La seguridad de la criptografía se basa en algoritmos públicos revisados durante años (principio de Kerckhoffs). Usa AES-256-GCM o ChaCha20-Poly1305 con bibliotecas mantenidas; lo que suele fallar es la **gestión de la clave**, no el algoritmo.
+
 ### 2.5 Cifrado simétrico de ficheros desde la terminal
 
 Tres herramientas libres permiten cifrar ficheros con contraseña. Se practican en la [práctica 3.2](/ud03/ud03-practicas/#práctica-32--cifrado-simétrico-y-autenticado).
@@ -337,6 +340,12 @@ print(n, d, c, pow(c, d, n))        # 3233 2753 2790 65
 
 Para romperlo habría que factorizar `n = 3233` (trivial), pero es inviable con un `n` de 3.072 bits. **Tamaños recomendados**: **3.072 bits** como mínimo en despliegues nuevos; 2.048 bits se acepta aún en sistemas existentes. Para cifrar con RSA se usa el relleno **OAEP**; el antiguo PKCS#1 v1.5 tiene vulnerabilidades conocidas. Para firmar, **RSA-PSS**.
 
+**Explora: RSA con números pequeños**
+
+Calcula un par de claves, cifra, descifra y firma un número. Con números tan pequeños se rompe en un instante, pero el procedimiento matemático es el mismo que usan las claves reales.
+
+{{< explora "rsa" >}}
+
 ### 3.3 Criptografía de curva elíptica (ECC)
 
 La **criptografía de curva elíptica** ofrece la misma seguridad que RSA con claves mucho más cortas; es más rápida y ocupa menos:
@@ -352,6 +361,9 @@ La **criptografía de curva elíptica** ofrece la misma seguridad que RSA con cl
 | **Ed25519** | Firma digital (claves SSH, GnuPG moderno) |
 | **X25519** | Intercambio de claves (TLS 1.3, SSH, WireGuard) |
 | **ECDSA P-256 / P-384** | Firma en certificados TLS y en la PKI |
+
+> [!NOTE]
+> **Comentario: ¿por qué ECC en lugar de RSA?** Para un nivel de seguridad equivalente a 128 bits, RSA necesita claves de 3072 bits y una curva elíptica como P-256 o Ed25519 solo 256 bits. Las claves, las firmas y los cálculos son mucho más pequeños y rápidos, lo que importa en móviles, certificados y SSH. RSA sigue siendo válido (con 2048 bits como mínimo, mejor 3072) por compatibilidad.
 
 ### 3.4 Generar pares de claves con OpenSSL
 
@@ -509,6 +521,9 @@ sha256sum -c --ignore-missing SHA256SUMS
 gpg --verify SHA256SUMS.sign SHA256SUMS
 ```
 
+> [!NOTE]
+> **Ejemplo: verificar una descarga.** Descargas una imagen ISO y el fichero `SHA256SUMS`. Con `sha256sum -c SHA256SUMS` compruebas que el fichero no se corrompió en el camino. Pero si el atacante controla el servidor, puede cambiar la ISO **y** su hash. Por eso las distribuciones firman el fichero de sumas con GPG: la firma demuestra **quién** lo publicó y el hash demuestra **que no ha cambiado**. Son dos garantías distintas que se combinan.
+
 ### 4.4 MAC y HMAC
 
 Un *hash* detecta cambios **accidentales**, pero un atacante que modifica un fichero puede recalcular también su *hash*. Un **MAC** (*Message Authentication Code*) añade una **clave secreta**: solo quien la conoce puede generar el código correcto. Aporta **integridad** y **autenticidad** (entre quienes comparten la clave). **HMAC** (RFC 2104) es la construcción estándar de MAC basada en una función *hash*:
@@ -634,6 +649,9 @@ gpg --encrypt --sign --armor -r bruno@mediterranea.internal informe.pdf   # cifr
 > [!NOTE]
 > La descripción «cifrar el *hash* con la clave privada» es una simplificación válida para RSA. Ed25519 y ECDSA calculan la firma de otra manera, pero el principio es el mismo: solo la clave privada puede generarla y la pública permite verificarla.
 
+> [!TIP]
+> **Consejo para recordarlo.** En el cifrado se usa la clave **pública del destinatario** para cifrar y su **privada** para descifrar. En la firma es al revés: se firma con tu **privada** y cualquiera verifica con tu **pública**. Regla mnemotécnica: *cifras para que lea otro; firmas para que otro compruebe que fuiste tú*. Lo que se firma en la práctica es el **hash** del documento, no el documento entero.
+
 ### 5.3 Firma electrónica: marco legal
 
 La firma digital es una técnica; la **firma electrónica** es un concepto jurídico. Su régimen está en el **Reglamento (UE) n.º 910/2014 (eIDAS)**, modificado por el **Reglamento (UE) 2024/1183 (eIDAS 2)**, y en España en la **Ley 6/2020**, reguladora de determinados aspectos de los servicios electrónicos de confianza (que sustituyó a la Ley 59/2003). Distingue tres niveles:
@@ -704,6 +722,9 @@ openssl s_client -connect www.boe.es:443 -servername www.boe.es </dev/null 2>/de
 
 - `s_client` abre una conexión TLS como lo haría un navegador; `-servername` envía el nombre del servidor (SNI), necesario cuando un servidor aloja varios dominios.
 - `x509 -noout` muestra campos del certificado sin imprimir el certificado codificado; `-ext` selecciona extensiones.
+
+> [!TIP]
+> **Consejo.** Para inspeccionar un certificado sin abrir un navegador usa `openssl x509 -in cert.pem -noout -subject -issuer -dates -ext subjectAltName`. Fíjate en cuatro cosas: **quién lo emitió**, **para qué nombres es válido** (SAN; el campo CN ya no basta), **cuándo caduca** y **para qué se puede usar**. Un certificado perfecto pero emitido para otro nombre da el mismo error que uno caducado.
 
 ### 6.3 Autoridades de certificación y cadena de confianza
 
@@ -847,6 +868,12 @@ sequenceDiagram
 
 Todos los elementos de la unidad aparecen aquí: **Diffie-Hellman** (ECDHE) para acordar claves con secreto hacia adelante, **firma digital** y **certificados** para autenticar al servidor, **hash** (HKDF) para derivar claves y **cifrado simétrico autenticado** para los datos. En TLS 1.3 el certificado viaja **cifrado**, por lo que un analizador de red no lo ve en claro (lo comprobarás en la [práctica 3.7](/ud03/ud03-practicas/#práctica-37--análisis-de-la-configuración-tls)).
 
+**Explora: el saludo de TLS 1.3 paso a paso**
+
+Avanza por los mensajes del saludo y fíjate en qué viaja en claro, qué va cifrado y qué garantiza cada paso.
+
+{{< explora "tls" >}}
+
 ### 7.3 HTTPS en la práctica: comprobaciones y configuración
 
 ```bash
@@ -874,6 +901,9 @@ Buenas prácticas de un servidor HTTPS:
 | **Detección** | Captura de tráfico en laboratorio (se ven las contraseñas en HTTP); `testssl.sh` marca protocolos débiles |
 | **Mitigación** | HTTPS con certificado válido de la CA interna, TLS 1.2/1.3, redirección y HSTS |
 | **Comprobación** | `curl -v`, `openssl s_client` y `testssl.sh` muestran TLS 1.3, cadena correcta y cabecera HSTS |
+
+> [!NOTE]
+> **Comentario.** SSL 2.0, SSL 3.0, TLS 1.0 y TLS 1.1 están **obsoletos y no deben activarse**; el IETF retiró oficialmente TLS 1.0 y 1.1 en la RFC 8996. Hoy se configura TLS 1.2 como mínimo y TLS 1.3 como preferido. «Más compatible» no es una razón válida para dejar un protocolo inseguro: es la excusa habitual de las auditorías fallidas.
 
 ### 7.4 Otros protocolos seguros y sus equivalentes inseguros
 
@@ -977,6 +1007,9 @@ En la [práctica 3.9](/ud03/ud03-practicas/#práctica-39--cifrado-de-un-volumen-
 | Paquetes de software | Firmas de repositorios `apt`/`dnf` | [UD04](/UD04/) |
 | Arranque | UEFI *Secure Boot* | [UD04](/UD04/) |
 | Servicios web y balanceadores | TLS en Nginx, HAProxy | UD03, [UD07](/ud07/) |
+
+> [!WARNING]
+> **Atención.** El cifrado de disco solo protege mientras **no pierdas la clave**. En un volumen LUKS, si se daña la cabecera, los datos son irrecuperables aunque recuerdes la contraseña. Guarda una copia de la cabecera (`cryptsetup luksHeaderBackup`) **fuera** del equipo cifrado y custodia la frase de paso en un gestor de contraseñas o un sobre sellado. Haz una prueba de recuperación como parte de la práctica.
 
 ### 8.4 Gestión de claves
 

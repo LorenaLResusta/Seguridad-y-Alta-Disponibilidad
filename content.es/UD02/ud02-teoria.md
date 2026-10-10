@@ -30,7 +30,7 @@ En esta unidad estudias, de abajo arriba, las capas de la seguridad pasiva:
 |---|--:|
 | Teoría (esta página) | 7 h |
 | Prácticas ([ver prácticas](/ud02/ud02-practicas/)) | 9 h |
-| Evaluación (prueba teórico-práctica y entrega de la Tarea del proyecto) | 2 h |
+| Evaluación (prueba teórico-práctica de la unidad) | 2 h |
 | **Total** | **18 h** |
 
 **Reparto de la teoría por apartados:**
@@ -665,6 +665,9 @@ print(f"{A ^ P:08b}")     # 01101001  -> es B recuperado
 RAID 5 → (4−1)·2 = 6 TB y tolera 1 fallo. RAID 10 → 4·2/2 = 4 TB y tolera 1 fallo seguro (hasta 2 si no son del mismo espejo).
 {{% /details %}}
 
+> [!NOTE]
+> **Ejemplo: capacidad útil con 4 discos de 2 TB.** RAID 0: 8 TB (sin redundancia). RAID 1 (dos pares en espejo, es decir, RAID 10): 4 TB, tolera 1 fallo por par. RAID 5: (4 − 1) × 2 = **6 TB**, tolera 1 fallo. RAID 6: (4 − 2) × 2 = **4 TB**, tolera 2 fallos. Más capacidad útil significa menos tolerancia: la elección es siempre un compromiso entre capacidad, rendimiento y seguridad.
+
 ### 5.4 RAID por *hardware*, por *software* y *fake RAID*
 
 | Tipo | Descripción | Ventajas | Inconvenientes |
@@ -785,6 +788,9 @@ Este es probablemente el concepto más importante de la unidad:
 > [!IMPORTANT]
 > El RAID protege la **disponibilidad** frente al fallo de un disco. Las copias de seguridad protegen la **información** frente a casi cualquier otra cosa. Se necesitan **ambos**.
 
+> [!TIP]
+> **Consejo para el examen.** Cuando te pregunten «¿qué ocurre si falla un disco?», responde con tres datos: **cuántos fallos tolera** el nivel, **cómo se detecta** (`/proc/mdstat` muestra `[UU]` cuando están todos y `[U_]` cuando falta uno) y **qué hay que hacer** (marcar como fallido, retirar, añadir el disco nuevo y esperar la reconstrucción). Durante la reconstrucción el sistema es vulnerable: un segundo fallo en RAID 5 supone perder el conjunto.
+
 ### 5.7 LVM e instantáneas
 
 **LVM** (*Logical Volume Manager*) añade una capa de abstracción entre los discos y el sistema de ficheros. Sin LVM, una partición tiene un tamaño fijo; con LVM, el espacio de varios discos forma un **grupo** del que se «cortan» volúmenes que se pueden ampliar, reducir o mover en caliente.
@@ -903,6 +909,12 @@ Una **copia de seguridad** (*backup*) es una copia de los datos almacenada de fo
 
 Las herramientas modernas (restic, Borg, Proxmox Backup Server, Veeam…) usan **deduplicación**: cada copia se presenta como completa, pero solo se almacenan los fragmentos nuevos. Combinan las ventajas de ambos tipos: copias rápidas y pequeñas, y restauración directa de cualquier punto.
 
+**Explora: ¿qué copias necesito para restaurar?**
+
+Elige el tipo de copia diaria y el día que quieres recuperar. Observa cuántas piezas necesitas y qué ocurre si falta una.
+
+{{< explora "copias" >}}
+
 ### 7.3 Regla 3-2-1-1-0
 
 La regla 3-2-1 (popularizada por el fotógrafo Peter Krogh) se ha ampliado para hacer frente al *ransomware* con una copia inmutable o desconectada y la verificación:
@@ -919,6 +931,9 @@ La regla 3-2-1 (popularizada por el fotógrafo Peter Krogh) se ha ampliado para 
 
 > [!IMPORTANT]
 > Una copia **que nunca se ha restaurado** es solo una esperanza. Programa restauraciones de prueba periódicas (apartado 8.9) y registra el resultado: es la forma de demostrar el «0» de la regla.
+
+> [!NOTE]
+> **Ejemplo: aplicar la regla 3-2-1-1-0 a la clínica.** *3 copias*: el original en el servidor, una copia local en un NAS y una copia remota. *2 soportes distintos*: disco del servidor y NAS (o cinta). *1 fuera de la sede*: copia cifrada en otra ubicación. *1 inmutable o desconectada*: copia que el ransomware no pueda borrar, aunque comprometa las credenciales. *0 errores*: restauración de prueba verificada cada mes. Si falta cualquiera de estos puntos, sabes qué amenaza dejas sin cubrir.
 
 ### 7.4 Copias de seguridad y *ransomware*
 
@@ -979,6 +994,12 @@ Ambos valores se deciden con la dirección mediante un **análisis de impacto en
 
 Perderá hasta 15 horas de datos en este caso concreto (de las 02:00 a las 17:00); en el peor caso, justo antes de la copia siguiente, el RPO real es de **24 h**. Tardará unas 3 h en recuperar el servicio (RTO ≈ 3 h). Si el negocio necesita menos pérdida, hay que copiar con más frecuencia o replicar.
 {{% /details %}}
+
+**Explora: ¿cumple tu plan los objetivos RPO y RTO?**
+
+Cambia la frecuencia de copia y el tiempo de restauración y compáralos con los objetivos del negocio.
+
+{{< explora "rpo" >}}
 
 ### 7.6 Rotación y retención
 
@@ -1094,6 +1115,9 @@ rsync -aAXH --delete \
       /srv/datos/ /backups/datos/$HOY/
 ln -sfn /backups/datos/$HOY /backups/datos/ultima   # «ultima» apunta a la copia más reciente
 ```
+
+> [!TIP]
+> **Consejo.** Antes de ejecutar `rsync` con `--delete` (que **borra en el destino** lo que ya no existe en el origen) haz una simulación con `-n` (`--dry-run`) y `-v`. Si te equivocas de ruta o de barra final, la simulación te lo enseña sin tocar nada. La diferencia entre `origen` y `origen/` cambia por completo lo que se copia.
 
 ### 8.3 `restic`: copias deduplicadas, cifradas y con historial
 
@@ -1370,6 +1394,9 @@ Un DRP debe incluir, como mínimo:
 > [!NOTE]
 > **Tipos de prueba** (de menos a más coste): revisión documental, **ejercicio de mesa** (el equipo recorre el escenario hablando), prueba técnica parcial (restaurar un servicio en un entorno aislado) y **simulacro completo** (conmutar de verdad al centro de respaldo). Las pruebas de restauración de las prácticas son pruebas técnicas parciales.
 
+> [!NOTE]
+> **Ejemplo: priorizar la recuperación.** Tras un desastre no se restaura todo a la vez: se ordena por criticidad. En la clínica: 1.º autenticación y red (sin ellas nada arranca), 2.º base de datos de pacientes (RTO 4 h, RPO 1 h), 3.º agenda y facturación (RTO 8 h), 4.º ficheros de oficina (RTO 24 h). El plan de contingencia es precisamente esa tabla, más quién hace qué y cómo se contacta con cada responsable.
+
 ### 9.3 Respuesta ante un ataque de *ransomware*
 
 Un plan de contingencia concreto, para el escenario más frecuente, sigue estos pasos:
@@ -1385,6 +1412,9 @@ Un plan de contingencia concreto, para el escenario más frecuente, sigue estos 
 | 7. **Aprender** | Informe posterior y mejoras (qué falló, qué copia salvó la situación) | Cierra el ciclo |
 
 ---
+
+> [!NOTE]
+> **Comentario.** Casi todos los fallos reales de copias son de **gestión, no de herramienta**: la copia no se ejecutaba desde hacía meses, la contraseña de restauración no estaba guardada, el almacenamiento de copias estaba conectado y se cifró junto con el original. Por eso las pruebas de restauración forman parte de la copia: una copia nunca restaurada es una hipótesis, no una garantía.
 
 ## 10. Borrado seguro y ciclo de vida de los soportes
 

@@ -14,8 +14,11 @@ Aprenderás a **medir** la disponibilidad (los «nueves», SLA, RTO y RPO), a **
 | Página | Contenido |
 |---|---|
 | [Teoría](/ud07/ud07-teoria/) | Disponibilidad, SLA/SLO/SLI, SPOF, RTO/RPO, activo-pasivo y activo-activo, redundancia de hardware y de red, virtualización y Proxmox VE, VRRP y Keepalived, Pacemaker y Corosync (quórum y *fencing*), balanceo L4/L7 con HAProxy, almacenamiento compartido, DRBD, Ceph y replicación de bases de datos, escalabilidad y contenedores, monitorización, alta disponibilidad en la nube y continuidad de negocio (BCP, DRP, BIA) |
-| [Prácticas](/ud07/ud07-practicas/) | Siete prácticas (disponibilidad y RAID, web de dos nodos con HAProxy, Keepalived, replicación MariaDB, Pacemaker, Proxmox VE, monitorización) y la **Tarea del proyecto**: web de citas en alta disponibilidad con prueba de fallo y dossier final del módulo |
+| [Prácticas](/ud07/ud07-practicas/) | Siete prácticas (disponibilidad y RAID, web de dos nodos con HAProxy, Keepalived, replicación MariaDB, Pacemaker, Proxmox VE, monitorización) y la **Tarea del proyecto**: web de citas en alta disponibilidad con prueba de fallo (ensayo de la práctica integradora INT-2) |
 
 Esta unidad enlaza con las anteriores: las copias de seguridad y el RAID de la [UD02](/ud02/ud02-teoria/), el cortafuegos y el *proxy* inverso de la [UD06](/ud06/ud06-teoria/) y el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/).
 
 **Duración:** 18 horas (7 h teoría · 9 h prácticas · 2 h evaluación)
+
+> [!NOTE]
+> **Las prácticas de esta unidad no se entregan.** Los conceptos básicos y las órdenes principales que aparecen en ellas entran en la prueba teórico-práctica de la unidad: consulta [qué entra en la prueba](/ud07/ud07-practicas/#qué-entra-en-la-prueba-de-esta-unidad). Esta unidad contribuye a la práctica integradora **INT-2**, que sí se entrega ([cómo se entrega y se corrige](/guia/practicas-integradoras/)).

@@ -1,0 +1,37 @@
+<div class="sad-w" style="--c: var(--color-accent-caution)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Audita un <code>sshd_config</code> <span class="sad-w-sub">Edita el texto y pulsa «Auditar»</span></div>
+  <div class="sad-w-body">
+    <label class="sad-f" style="width:100%">Fichero de ejemplo (ficticio)<textarea data-r="i" rows="10" style="width:100%;font-family:monospace">Port 22
+PermitRootLogin yes
+PasswordAuthentication yes
+PermitEmptyPasswords no
+MaxAuthTries 10
+X11Forwarding yes
+LoginGraceTime 2m
+UsePAM yes</textarea></label>
+    <div class="sad-w-row"><button type="button" data-r="c">Auditar</button></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+function parse(t){var o={};t.split('\n').forEach(function(l){l=l.trim();if(!l||l[0]==='#')return;var m=l.split(/\s+/),k=m.shift().toLowerCase();if(!(k in o))o[k]=m.join(' ')});return o}
+function secs(v){if(!v)return null;var m=/^(\d+)([smhdw]?)$/i.exec(v);if(!m)return null;var u={'':1,s:1,m:60,h:3600,d:86400,w:604800}[m[2].toLowerCase()];return +m[1]*u}
+var R=[
+['permitrootlogin',function(v){return v==='no'},'no','Root no debe entrar por SSH: entra con un usuario normal y usa <code>sudo</code>. («prohibit-password» es aceptable, «yes» no).'],
+['passwordauthentication',function(v){return v==='no'},'no','Con contraseña se puede hacer fuerza bruta. Usa claves públicas y desactiva la contraseña <strong>después</strong> de comprobar que la clave funciona.'],
+['pubkeyauthentication',function(v){return v!=='no'},'yes','La autenticación por clave pública debe estar activada.'],
+['permitemptypasswords',function(v){return v==='no'},'no','Nunca permitas contraseñas vacías.'],
+['maxauthtries',function(v){return +v>=1&&+v<=4},'3','Limita los intentos por conexión (3 o 4).'],
+['x11forwarding',function(v){return v==='no'},'no','Si no lo necesitas, desactiva el reenvío gráfico: reduce la superficie de ataque.'],
+['logingracetime',function(v){var s=secs(v);return s!==null&&s<=60},'30s','Un tiempo corto para autenticarse libera conexiones abandonadas.'],
+['allowusers',function(v){return !!v},'(lista de usuarios)','Restringe quién puede entrar con <code>AllowUsers</code> o <code>AllowGroups</code>.'],
+['clientaliveinterval',function(v){return +v>0},'300','Cierra sesiones inactivas (con <code>ClientAliveCountMax</code>).']];
+var DEF={permitrootlogin:'prohibit-password',passwordauthentication:'yes',pubkeyauthentication:'yes',permitemptypasswords:'no',maxauthtries:'6',x11forwarding:'no',logingracetime:'120',clientaliveinterval:'0'};
+q('c').onclick=function(){var c=parse(q('i').value),ok=0,h='<ul>';
+ R.forEach(function(x){var v=c[x[0]],def=false;if(v===undefined){v=DEF[x[0]];def=true}
+  var pass=x[1]((v===undefined?'':String(v)).toLowerCase()===v?v:v);if(v!==undefined)pass=x[1](String(v).toLowerCase());
+  if(pass)ok++;
+  h+='<li class="'+(pass?'ok':'ko')+'"><code>'+x[0]+'</code> = '+(v===undefined?'<em>sin definir</em>':'<code>'+v+'</code>'+(def?' <em>(valor por defecto)</em>':''))+' → '+(pass?'correcto':'<strong>mejorable</strong> (recomendado: <code>'+x[2]+'</code>)')+'. '+(pass?'':x[3])+'</li>'});
+ q('o').innerHTML='<p>Cumple <strong>'+ok+' de '+R.length+'</strong> controles.</p>'+h+'</ul><p>Si una directiva aparece dos veces, <code>sshd</code> usa la <strong>primera</strong>. Tras editar el fichero real: <code>sudo sshd -t</code> (comprueba la sintaxis) y solo entonces <code>sudo systemctl reload ssh</code>, <strong>sin cerrar</strong> la sesión actual.</p>'};
+})();</script>

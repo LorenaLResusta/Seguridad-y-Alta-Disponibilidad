@@ -99,14 +99,14 @@ Las vacaciones de Navidad son del 22 de diciembre al 6 de enero. Los festivos so
 
 ### Entregas y pruebas
 
-Se mantiene el modelo de [prácticas integradoras](/guia/practicas-integradoras/), con **una práctica obligatoria por trimestre**. Como el módulo termina el 12 de febrero, en esta modalidad se reducen a dos:
+Las **prácticas de cada unidad no se entregan**: se hacen en el laboratorio y en las tutorías presenciales, y **sus conceptos básicos entran en la prueba teórico-práctica de la unidad** (cada página de prácticas empieza con la lista de «qué entra en la prueba»). Solo se entregan **dos [prácticas integradoras](/guia/practicas-integradoras/)**, una por trimestre, pensadas para corregirse en minutos:
 
 | Práctica | Unidades | Fecha |
 |---|---|---|
-| INT-1 | UD1–UD3 | 27/11/2026 |
-| INT-2 | UD4–UD7 | 10/02/2027 (propuesta) |
+| INT-1 · Servidor seguro de la clínica | UD1–UD4 | 27/11/2026 |
+| INT-2 · Perímetro y servicio sin parada | UD5–UD7 | 10/02/2027 (propuesta) |
 
-La última sesión de cada unidad es su prueba teórico-práctica. La recuperación se hace en las últimas sesiones del módulo (semanas 21 y 22), antes de la incorporación a la FE.
+La última sesión de cada unidad es su prueba teórico-práctica. En la tutoría obligatoria más cercana a cada fecha se puede ejecutar el script de verificación delante del profesorado y corregir en el momento. La recuperación se hace en las últimas sesiones del módulo (semanas 21 y 22), antes de la incorporación a la FE.
 
 ## 4. Metodología semipresencial
 
@@ -114,7 +114,7 @@ La última sesión de cada unidad es su prueba teórico-práctica. La recuperaci
 |---|---|
 | **Trabajo autónomo** | Estudio de los apuntes de cada unidad, vídeos, ejercicios, cuestionarios de autoevaluación y prácticas guiadas en Aules y en el laboratorio virtual propio. |
 | **Tutorías presenciales** | Resolver dudas, explicar conceptos complejos, realizar prácticas, corregir errores, orientar los trabajos y realizar las pruebas de evaluación. |
-| **Prácticas** | En máquinas virtuales y redes aisladas (VirtualBox, Debian 13), siguiendo las fichas de cada unidad. Ver [Entorno de trabajo](/guia/entorno/). |
+| **Prácticas** | En máquinas virtuales y redes aisladas (VirtualBox, Debian 13), siguiendo las fichas de cada unidad. **No se entregan**, pero sus conceptos básicos entran en la prueba. Ver [Entorno de trabajo](/guia/entorno/). |
 | **Autoevaluación** | Cada unidad incluye ejercicios con pistas y soluciones plegadas para comprobar el progreso antes de las pruebas. |
 
 ### Organización en Aules
@@ -138,15 +138,15 @@ La evaluación es **continua** y se basa en las evidencias que demuestran los [c
 
 | Instrumento | Peso |
 |---|--:|
-| Prácticas de Aules | 5 % |
-| Prácticas en el aula en las tutorías obligatorias | 15 % |
-| Pruebas teórico-prácticas | 80 % |
+| Pruebas teórico-prácticas de unidad (incluyen preguntas sobre las prácticas) | 80 % |
+| Práctica integradora INT-1 | 10 % |
+| Práctica integradora INT-2 | 10 % |
 | **Total** | **100 %** |
 
 > [!NOTE]
 > Esta ponderación es una **propuesta** para la modalidad semipresencial y puede modificarse para ajustarla a los criterios del departamento o del centro. La ponderación de la modalidad presencial está en [Cómo son las prácticas y la evaluación](/guia/practicas/#evaluación).
 
-En las prácticas se valora especialmente la correcta configuración, la aplicación de medidas de seguridad, la justificación de las decisiones, la capacidad para detectar y solucionar problemas y la documentación del trabajo (ver la [rúbrica general](/guia/practicas/#rúbrica-general)).
+Las prácticas integradoras se corrigen con un script de verificación (16 comprobaciones de 0,5 puntos) y cuatro preguntas cortas (0,5 puntos cada una). Las prácticas de unidad no puntúan: sirven para aprender y para preparar la prueba (ver la [rúbrica de autoevaluación](/guia/practicas/#rúbrica-general-de-autoevaluación)).
 
 ### Recuperación
 

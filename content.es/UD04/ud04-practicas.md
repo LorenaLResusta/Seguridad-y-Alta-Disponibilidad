@@ -28,6 +28,22 @@ Inventario, usuarios y sudo, contraseñas, SSH con claves y Fail2ban, cortafuego
 > [!NOTE]
 > Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 12 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
 
+> [!IMPORTANT]
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
+
+## Qué entra en la prueba de esta unidad
+
+Estos son los contenidos de las prácticas que se preguntan (no hace falta memorizar comandos largos, sí saber **qué hacen y cómo interpretar su resultado**):
+
+- El ciclo *amenaza → vulnerabilidad → ataque → detección → mitigación → comprobación* aplicado a un servidor (4.1).
+- **Usuarios, grupos, `sudo`, ACL y política de contraseñas**: principio de mínimo privilegio (4.2).
+- **SSH seguro**: autenticación por clave, `PasswordAuthentication no`, `PermitRootLogin no` y cómo actúa **Fail2ban** (4.3).
+- Cortafuegos local con política restrictiva (`ufw default deny incoming`) y cómo se verifica con `nmap` (4.4).
+- Cifrado de datos con **LUKS** (4.5) y control de acceso obligatorio: **SELinux/AppArmor** (4.6).
+- **Auditoría** con `auditd`, integridad con AIDE y detección de malware con ClamAV (4.7).
+- Qué mide **Lynis** (índice de fortificación) y cómo se compara el antes y el después (4.8).
+- Para qué sirve un **SIEM** como Wazuh: agentes, reglas y alertas (4.9).
+
 ## Objetivos
 
 - Inventariar servicios, puertos, usuarios y permisos de un host Linux y guardarlo como línea base.
@@ -254,6 +270,9 @@ sudo faillock --user luis --reset              # desbloquear
 
 {{< practica num="4.3" tipo="Guiada" duracion="2 h" nivel="2" ra="RA2:c" entorno="Debian 13 · VirtualBox 7" entrega="SSH por clave y registro de Fail2ban" >}}
 
+> [!WARNING]
+> **Atención.** Esta práctica toca el acceso remoto: no cierres la sesión SSH que usas para configurar hasta haber probado el acceso nuevo desde **otra terminal**. Si te equivocas, la consola de VirtualBox te permite recuperar la máquina, pero en un servidor real sin consola quedarías fuera. Comprueba la sintaxis con `sshd -t` antes de recargar.
+
 **Objetivo:** cerrar la puerta más usada. Ciclo: amenaza (acceso remoto) → vulnerabilidad (contraseñas y `root`) → ataque (intentos repetidos) → detección (registros) → mitigación (claves y Fail2ban) → comprobación.
 
 #### Claves en el cliente
@@ -393,6 +412,9 @@ Para provocar el bloqueo, haz varios intentos fallidos desde `sad-cli` y mira el
 
 {{< practica num="4.4" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:c,h" entorno="Debian 13 · VirtualBox 7" entrega="reglas del cortafuegos y escaneo" >}}
 
+> [!TIP]
+> **Consejo.** Ejecuta Nmap **desde otra máquina virtual** de la red de laboratorio, no desde el propio servidor: desde dentro verías puertos que desde fuera están bloqueados. Guarda el resultado de antes y de después para comparar. Un puerto abierto que no recuerdas haber instalado es el hallazgo más interesante de la práctica.
+
 **Objetivo:** que el servidor solo ofrezca los puertos imprescindibles y comprobarlo desde fuera.
 
 #### Red de seguridad
@@ -459,6 +481,9 @@ Compara los dos ficheros de Nmap: de **todos** los puertos abiertos del «antes�
 ## Práctica 4.5 · Cifrado de datos con LUKS
 
 {{< practica num="4.5" tipo="Guiada" duracion="1 h" nivel="2" ra="RA1:g;RA2:f" entorno="Debian 13 · VirtualBox 7" entrega="volumen cifrado y prueba de apertura" >}}
+
+> [!NOTE]
+> **Comentario.** El cifrado en reposo protege contra el **robo del dispositivo o del disco**, no contra alguien que ya ha iniciado sesión: con el volumen montado, los datos están descifrados para quien tenga permisos. Por eso LUKS complementa a los permisos, no los sustituye. Haz la copia de la cabecera del volumen antes de seguir.
 
 **Objetivo:** proteger datos en reposo y comprobar que sin la clave son ilegibles. Se usa un fichero como disco virtual: **no se toca ningún disco real**.
 
@@ -708,6 +733,9 @@ El fichero EICAR es una cadena de texto **inofensiva** reconocida por todos los 
 
 {{< practica num="4.8" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:b" entorno="Debian 13 · VirtualBox 7" entrega="informe de Lynis antes y después" >}}
 
+> [!TIP]
+> **Consejo.** Para entender un aviso de Lynis, pide el detalle de esa prueba con `lynis show details IDENTIFICADOR` y lee la sugerencia. No persigas el 100 %: el *hardening index* es una guía, no una nota. Aplica las medidas que reducen un riesgo real de tu servidor, vuelve a auditar y deja constancia del valor antes y después.
+
 ```bash
 sudo lynis audit system --quiet | tee ~/ud4-evidencias/08-lynis-despues.txt >/dev/null
 sudo grep -E '^hardening_index' /var/log/lynis-report.dat
@@ -815,16 +843,16 @@ Comprueba cada medida (con el cmdlet `Get-` o la consola «Directiva de segurida
 
 ---
 
-## Tarea del proyecto · Fortificación de un servidor
+## Tarea de repaso del proyecto (no se entrega) · Fortificación de un servidor
 
 > [!IMPORTANT]
-> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-2** (entrega: 22/03/2027). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+> Esta tarea **no se entrega ni se puntúa**. Es el ensayo de la parte de esta unidad en la práctica integradora obligatoria **INT-1** ([qué se entrega y cómo se corrige](/guia/practicas-integradoras/)). Hazla para llegar a INT-1 con las piezas montadas; sus conceptos básicos también entran en la prueba de la unidad.
 
-{{< practica etiqueta="Tarea" num="4.11" tipo="Proyecto" duracion="1 h" nivel="3" ra="RA1:e,f,i;RA2" entorno="Debian 13 · VirtualBox 7" entrega="informe antes/después" >}}
+{{< practica etiqueta="Tarea de repaso" num="4.11" tipo="Proyecto" duracion="1 h" nivel="3" ra="RA1:e,f,i;RA2" entorno="Debian 13 · VirtualBox 7" entrega="informe antes/después" >}}
 
 **Escenario.** Eres administrador/a de sistemas en *Textiles del Ebro*. Recibes un servidor Debian 13 (o AlmaLinux 10) con un servidor web instalado y debes entregarlo fortificado y documentado.
 
-**Entrega** (PDF o Markdown, con capturas y evidencias propias, redactado con tus palabras):
+**Resultado esperado** (PDF o Markdown, con capturas y evidencias propias, redactado con tus palabras; no se entrega):
 
 1. **Inventario inicial** (prácticas 1) y análisis de la superficie de ataque, con `nmap` antes.
 2. **Análisis de riesgos**: al menos 8 hallazgos con amenaza, vulnerabilidad, impacto y prioridad.

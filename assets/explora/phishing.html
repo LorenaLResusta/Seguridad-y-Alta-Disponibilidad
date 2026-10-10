@@ -1,0 +1,33 @@
+<div class="sad-w" style="--c: var(--color-accent-caution)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Inspecciona un correo sospechoso <span class="sad-w-sub">Pulsa sobre lo que te parezca una señal de alarma</span></div>
+  <div class="sad-w-body">
+    <div style="border:1px solid var(--gray-200,#8884);border-radius:6px;padding:.8rem 1rem">
+      <p style="margin:0 0 .3rem"><span data-p="1" role="button" tabindex="0" style="cursor:pointer"><strong>De:</strong> Soporte Informática &lt;soporte@mediterranea-denta1.com&gt;</span></p>
+      <p style="margin:0 0 .3rem"><strong>Asunto:</strong> <span data-p="2" role="button" tabindex="0" style="cursor:pointer">URGENTE: su cuenta será bloqueada en 2 horas</span></p>
+      <hr>
+      <p><span data-p="3" role="button" tabindex="0" style="cursor:pointer">Estimado usuario:</span></p>
+      <p>Hemos detectado actividad inusual en su cuenta corporativa. Para evitar el bloqueo, <span data-p="4" role="button" tabindex="0" style="cursor:pointer;text-decoration:underline">confirme su contraseña en la intranet</span> <small style="opacity:.7">(destino real al pasar el ratón: http://acceso-clinica.verifica-cuenta.xyz/login)</small>.</p>
+      <p>Adjuntamos el informe de actividad: <span data-p="5" role="button" tabindex="0" style="cursor:pointer">📎 informe_actividad.pdf.exe</span></p>
+      <p style="margin-bottom:0"><span data-p="6" role="button" tabindex="0" style="cursor:pointer">Departamento de Sistemas · Mediterránea Dental</span></p>
+    </div>
+    <div class="sad-w-row"><button type="button" data-r="c">Comprobar</button><button type="button" data-r="z">Reiniciar</button></div>
+    <div class="sad-w-out" data-r="o" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var r=document.currentScript.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var E={1:[1,'El dominio es <code>mediterranea-denta<b>1</b>.com</code>: un «1» en lugar de la «l». Es <em>typosquatting</em>. Comprueba siempre el dominio exacto, no solo el nombre visible.'],
+2:[1,'Urgencia y amenaza de bloqueo: busca que actúes sin pensar. Es la señal psicológica más repetida del phishing.'],
+3:[1,'Saludo genérico. Un mensaje interno real suele dirigirse a ti por tu nombre.'],
+4:[1,'El texto del enlace dice «intranet», pero el destino es otro dominio (<code>.xyz</code>). Pasa el ratón <em>sin pulsar</em> y lee la URL real. Además, ninguna empresa pide la contraseña por correo.'],
+5:[1,'Doble extensión <code>.pdf.exe</code>: es un ejecutable disfrazado de PDF. Nunca abras adjuntos ejecutables.'],
+6:[0,'La firma no prueba nada: cualquiera puede copiarla. No es una señal por sí sola (ni una garantía de que el correo sea legítimo).']};
+var sel={};
+function tog(e){var k=e.currentTarget.dataset.p;sel[k]=!sel[k];e.currentTarget.style.background=sel[k]?'#e0a80055':'';q('o').innerHTML=''}
+Array.prototype.forEach.call(r.querySelectorAll('[data-p]'),function(n){n.onclick=tog;n.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();tog({currentTarget:n})}}});
+q('c').onclick=function(){var ok=0,tot=0,h='<ul>';for(var k in E){if(E[k][0])tot++;var s=!!sel[k];
+ if(E[k][0]&&s){ok++;h+='<li class="ok"><strong>Detectada.</strong> '+E[k][1]+'</li>'}
+ else if(E[k][0]&&!s){h+='<li class="ko"><strong>Se te ha escapado.</strong> '+E[k][1]+'</li>'}
+ else if(!E[k][0]&&s){h+='<li class="warn"><strong>Falsa alarma.</strong> '+E[k][1]+'</li>'}}
+ q('o').innerHTML='<p>Has detectado <strong>'+ok+' de '+tot+'</strong> señales reales.</p>'+h+'</ul><p>Ante la duda: no pulses, no abras el adjunto y avisa al responsable de seguridad por otro canal.</p>'};
+q('z').onclick=function(){sel={};Array.prototype.forEach.call(r.querySelectorAll('[data-p]'),function(n){n.style.background=''});q('o').innerHTML=''}})();</script>

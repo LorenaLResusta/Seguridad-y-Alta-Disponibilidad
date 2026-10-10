@@ -24,6 +24,22 @@ En estas prácticas aplicas la [teoría de la UD02](/ud02/ud02-teoria/) en un la
 > [!CAUTION]
 > Las prácticas de RAID, LVM y borrado seguro **destruyen** datos de los dispositivos indicados. Hazlas solo en los discos virtuales creados para ello y comprueba siempre el nombre del dispositivo con `lsblk` antes de ejecutar una orden. Haz una **instantánea** de cada máquina virtual antes de empezar cada práctica.
 
+> [!IMPORTANT]
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
+
+## Qué entra en la prueba de esta unidad
+
+Estos son los contenidos de las prácticas que se preguntan (no hace falta memorizar comandos largos, sí saber **qué hacen y cómo interpretar su resultado**):
+
+- Estados de un **SAI/UPS** (en línea, en batería, batería baja) y qué debe hacer el servidor en cada uno (2.1).
+- **Niveles RAID** (0, 1, 5, 6 y 10): capacidad útil, discos que tolera perder y cuándo elegir cada uno. Leer `/proc/mdstat` y reconocer un RAID degradado (2.2).
+- Para qué sirven las **instantáneas LVM** y por qué una copia coherente necesita una instantánea (2.3).
+- Diferencia entre copia **completa, incremental y diferencial**, y qué hace `rsync` (2.4).
+- Qué ofrece `restic` (cifrado, deduplicación, instantáneas) y cómo se **restaura** y se comprueba una copia (2.5).
+- **RPO y RTO**: definirlos, calcularlos a partir de la frecuencia de copia y del tiempo de restauración medido.
+- La regla de copias **3-2-1** y por qué una copia no probada no es una copia.
+- Diferencia entre borrar, **borrar de forma segura** (`shred`) y cifrar el disco (LUKS2) (2.6).
+
 ## Preparación del laboratorio
 
 Todas las prácticas usan las mismas máquinas, que pertenecen a la infraestructura de [Mediterránea Dental](/guia/proyecto-clinica/). Prepáralas una sola vez.
@@ -252,6 +268,9 @@ Configura un segundo servidor (`srv-copias`) como `secondary` de `srv-ficheros` 
 ## Práctica 2.2 · Disco averiado: diagnóstico y RAID 5 con disco de reserva
 
 {{< practica num="2.2" tipo="Guiada" duracion="2 h" nivel="2" ra="RA6: b, f" entorno="Debian 13 · mdadm" entrega="informe con salidas de /proc/mdstat antes, durante y después" >}}
+
+> [!TIP]
+> **Consejo.** Para simular un fallo de disco sin romper nada, usa primero la orden de marcado de fallo de `mdadm` sobre un miembro y observa cómo cambia `/proc/mdstat`. Es un fallo *lógico* y reversible. Haz una instantánea de la máquina virtual antes: si el conjunto se queda inconsistente, vuelves atrás en segundos y no pierdes la sesión de laboratorio.
 
 #### Objetivo
 
@@ -597,6 +616,9 @@ Haz una copia **diferencial** (nuevo `.snar` copiado del nivel 0 antes de cada e
 
 {{< practica num="2.4" tipo="Autónoma" duracion="1 h" nivel="2" ra="RA1: a" entorno="Debian 13 · rsync · OpenSSH" entrega="script, salida de du/ls -li y restauración de un fichero" >}}
 
+> [!NOTE]
+> **Comentario.** `rsync` es muy eficiente porque solo transfiere las diferencias, pero eso no lo convierte en una copia con historial: si copias un fichero corrupto o borras algo por error, la siguiente sincronización lo replica. Por eso esta práctica usa enlaces duros para conservar versiones anteriores. Compáralo mentalmente con `restic`, que sí guarda instantáneas.
+
 #### Objetivo
 
 Implantar una copia diaria remota con **historial** mediante `rsync --link-dest` y restaurar un fichero borrado, con autenticación SSH por clave.
@@ -892,6 +914,9 @@ Sustituye `restic` por BorgBackup y compara tiempos y tamaño (teoría 8.4). Cal
 
 {{< practica num="2.6" tipo="Guiada" duracion="1 h" nivel="1" ra="RA1: b, g" entorno="Debian 13 · shred · cryptsetup (LUKS2)" entrega="resultados de las tres pruebas y procedimiento de retirada" >}}
 
+> [!WARNING]
+> **Atención.** El borrado por sobrescritura (`shred`, `dd`) es fiable en discos magnéticos, pero **no garantiza** el borrado en SSD ni en sistemas de ficheros con registro o copia al escribir, porque el controlador remapea los bloques. En un SSD se usa la orden de borrado del propio dispositivo o, mejor, **cifrado de disco desde el principio** y destrucción de la clave. Practica solo sobre ficheros o discos virtuales del laboratorio.
+
 #### Objetivo
 
 Comparar el **borrado normal**, la **sobrescritura** y el **borrado criptográfico**, y redactar un procedimiento de retirada de equipos.
@@ -996,16 +1021,19 @@ Investiga `nvme format` y `hdparm --security-erase` para un borrado real de SSD 
 
 ---
 
-## Tarea del proyecto
+> [!TIP]
+> **Consejo.** Cuando termines, comprueba tu trabajo con una sola pregunta: *«si mañana desaparece este servidor, ¿puedo demostrar con una prueba reciente que recupero los datos, cuánto tiempo tardo y cuánta información pierdo?»*. Si la respuesta es sí, has cumplido el objetivo de la unidad. Ese razonamiento (RTO y RPO medidos) es el que se pregunta en la prueba.
+
+## Tarea de repaso del proyecto (no se entrega)
 
 > [!IMPORTANT]
-> Esta tarea **no se entrega por separado**: es un **hito** de la práctica integradora obligatoria **INT-1** (entrega: 27/11/2026). Consulta [Prácticas integradoras](/guia/practicas-integradoras/).
+> Esta tarea **no se entrega ni se puntúa**. Es el ensayo de la parte de esta unidad en la práctica integradora obligatoria **INT-1** ([qué se entrega y cómo se corrige](/guia/practicas-integradoras/)). Hazla para llegar a INT-1 con las piezas montadas; sus conceptos básicos también entran en la prueba de la unidad.
 
-{{< practica etiqueta="Tarea" num="2.7" tipo="Proyecto" duracion="1 h" nivel="3" ra="RA1: b; RA6: b, f, i" entorno="Debian 13" entrega="informe técnico con evidencias" >}}
+{{< practica etiqueta="Tarea de repaso" num="2.7" tipo="Proyecto" duracion="1 h" nivel="3" ra="RA1: b; RA6: b, f, i" entorno="Debian 13" entrega="informe técnico con evidencias" >}}
 
 #### Objetivo
 
-Entregar el **plan de almacenamiento y copias** de [Mediterránea Dental](/guia/proyecto-clinica/) para `srv-ficheros`, con la restauración demostrada.
+Elabora el **plan de almacenamiento y copias** de [Mediterránea Dental](/guia/proyecto-clinica/) para `srv-ficheros`, con la restauración demostrada.
 
 #### Contexto
 
@@ -1045,7 +1073,7 @@ Usa solo datos ficticios. Las copias de datos de salud deben ir **cifradas** y c
 
 Añade una copia en la nube con inmutabilidad y calcula el tiempo de restauración real frente al RTO.
 
-#### Rúbrica
+#### Rúbrica de autoevaluación
 
 | Criterio | Peso |
 |---|--:|

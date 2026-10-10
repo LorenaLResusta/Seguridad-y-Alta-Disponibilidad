@@ -1,6 +1,6 @@
 {{- /*
   Explicación interactiva. Uso: {{< explora "raid" >}}
-  Los fragmentos están en assets/explora/<nombre>.html (riesgo, raid, hash, contrasena, firewall, disponibilidad).
+  Los fragmentos están en assets/explora/<nombre>.html (riesgo, raid, hash, contrasena, firewall, disponibilidad, cid, phishing, copias, rpo, rsa, tls, permisos, sshd).
 */ -}}
 {{- $f := printf "assets/explora/%s.html" (.Get 0) -}}
 {{- if not (fileExists $f) }}{{ errorf "explora: no existe %s" $f }}{{ end -}}

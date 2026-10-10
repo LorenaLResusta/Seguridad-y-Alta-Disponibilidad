@@ -12,4 +12,7 @@ Un servidor recién instalado no es un servidor seguro. En esta unidad (22 h) ap
 | Página | Contenido |
 |---|---|
 | [Teoría](/ud04/ud04-teoria/) | 11 apartados (8 h): superficie de ataque, amenazas, AAA y MFA, permisos, bastionado, actualizaciones, red del host, MAC, antimalware, logs y auditoría, forense |
-| [Prácticas](/ud04/ud04-practicas/) | Diez prácticas (12 h) y la **Tarea del proyecto «Fortificación de un servidor»**, hito de la práctica integradora [INT-2](/guia/practicas-integradoras/) |
+| [Prácticas](/ud04/ud04-practicas/) | Diez prácticas (12 h) y la **Tarea del proyecto «Fortificación de un servidor»**, ensayo de la práctica integradora [INT-1](/guia/practicas-integradoras/) |
+
+> [!NOTE]
+> **Las prácticas de esta unidad no se entregan.** Los conceptos básicos y las órdenes principales que aparecen en ellas entran en la prueba teórico-práctica de la unidad: consulta [qué entra en la prueba](/ud04/ud04-practicas/#qué-entra-en-la-prueba-de-esta-unidad). Esta unidad contribuye a la práctica integradora **INT-1**, que sí se entrega ([cómo se entrega y se corrige](/guia/practicas-integradoras/)).

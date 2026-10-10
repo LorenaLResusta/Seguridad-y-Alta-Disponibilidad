@@ -18,3 +18,6 @@ La red de una organización ya no termina en las paredes de la oficina: la web s
 > Esta unidad se apoya en las anteriores: el cifrado y los certificados de la [UD03](/ud03/ud03-teoria/), el bastionado de la [UD04](/ud04/ud04-teoria/) y la segmentación y la detección de la [UD05](/ud05/ud05-teoria/). La redundancia del propio cortafuegos se desarrolla en la [UD07](/ud07/ud07-teoria/).
 
 **Duración:** 25 horas (9 h teoría · 14 h prácticas · 2 h evaluación)
+
+> [!NOTE]
+> **Las prácticas de esta unidad no se entregan.** Los conceptos básicos y las órdenes principales que aparecen en ellas entran en la prueba teórico-práctica de la unidad: consulta [qué entra en la prueba](/ud06/ud06-practicas/#qué-entra-en-la-prueba-de-esta-unidad). Esta unidad contribuye a la práctica integradora **INT-2**, que sí se entrega ([cómo se entrega y se corrige](/guia/practicas-integradoras/)).
