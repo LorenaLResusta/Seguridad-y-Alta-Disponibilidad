@@ -39,6 +39,9 @@ El módulo **0378. Seguridad y alta disponibilidad** pertenece al título de **T
 > [!NOTE]
 > El orden de las unidades no sigue el de los RA. El currículo describe *qué* hay que conseguir, no *en qué orden* se enseña: primero se estudia qué proteger y cómo cifrarlo (UD1 a UD4), después la red y su perímetro (UD5 y UD6) y, al final, cómo garantizar que el servicio no se detiene (UD7), porque la alta disponibilidad reutiliza lo aprendido antes.
 
+> [!NOTE]
+> **Modalidad semipresencial.** Los resultados de aprendizaje y los criterios son los mismos. El calendario de la modalidad semipresencial (96 h, hasta el 15 de febrero de 2027) está en la [guía semipresencial](/guia/semipresencial/).
+
 ## Mapa de contribución
 
 ```mermaid
@@ -87,6 +90,9 @@ bookToc: true
 > **No uses la Orden 36/2012.** La orden anterior fijaba 100 horas (5 semanales) en la Comunitat Valenciana. Para el curso 2026/27 el currículo vigente es el del **Decreto 114/2025**: 133 horas en total. Esta planificación reparte esas 133 horas a **5 horas semanales** (una hora cada día lectivo); el total oficial no cambia.
 
 Estos apuntes cuentan **horas lectivas** (las del horario oficial del grupo). Cada unidad reparte sus horas en tres bloques: **teoría** (explicación y ejemplos), **prácticas** (laboratorio guiado y autónomo) y **evaluación** (prueba teórico-práctica y entrega de la tarea de la unidad).
+
+> [!NOTE]
+> **Modalidad semipresencial.** Esta página es la planificación de la modalidad presencial (133 h). El alumnado semipresencial de 2.º, que termina las clases el 15 de febrero de 2027 por la FE, sigue la [guía semipresencial](/guia/semipresencial/): 96 h a 5 h semanales con su propio calendario por semanas.
 
 ## Distribución por unidades
 

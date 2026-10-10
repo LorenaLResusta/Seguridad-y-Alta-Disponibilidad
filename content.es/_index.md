@@ -34,7 +34,7 @@ flowchart LR
 
 ## Unidades didácticas
 
-Cada unidad tiene **teoría** (conceptos, ejemplos y ejercicios) y **prácticas** (fichas con duración, nivel, RA/CE y entrega, comprobaciones y problemas habituales). El reparto de horas es el de la [guía didáctica](/guia/temporalizacion/).
+Cada unidad tiene **teoría** (conceptos, ejemplos y ejercicios) y **prácticas** (fichas con duración, nivel, RA/CE y entrega, comprobaciones y problemas habituales). El reparto de horas es el de la [guía didáctica](/guia/temporalizacion/); el alumnado semipresencial sigue la [guía semipresencial](/guia/semipresencial/) (96 h, hasta el 15 de febrero de 2027).
 
 <div class="sad-cards">
   <div class="sad-card"><span class="sad-card-ra">RA1 · RA7 · 14 h</span><h3>UD01 · Introducción, riesgos y marco legal</h3><p>Principios, amenazas, vulnerabilidades, autenticación, incidentes, forense y legislación.</p><div class="sad-card-links"><a href="ud01/ud01-teoria/">Teoría</a> · <a href="ud01/ud01-practicas/">Prácticas</a></div></div>
@@ -83,7 +83,7 @@ Cada unidad tiene **teoría** (conceptos, ejemplos y ejercicios) y **prácticas*
 Las pistas y las soluciones de los ejercicios aparecen plegadas. Intenta resolver el ejercicio antes de abrirlas.
 {{% /details %}}
 
-Los sistemas se indican con etiquetas: {{< sw "Debian 13" >}}. Consulta también la [guía del módulo](/guia/): resultados de aprendizaje, temporalización, proyecto, entorno y evaluación.
+Los sistemas se indican con etiquetas: {{< sw "Debian 13" >}}. Consulta también la [guía del módulo](/guia/): resultados de aprendizaje, temporalización (presencial y [semipresencial](/guia/semipresencial/)), proyecto, entorno y evaluación.
 
 ## Fuentes
 
@@ -93,4 +93,4 @@ Los sistemas se indican con etiquetas: {{< sw "Debian 13" >}}. Consulta también
 
 ## Prácticas integradoras obligatorias
 
-Una por trimestre: **INT-1** (UD01–UD03, 27/11/2026), **INT-2** (UD04–UD06, 22/03/2027) e **INT-3** (UD07, 30/04/2027). Consulta [las condiciones, el informe y la rúbrica](/guia/practicas-integradoras/).
+Una por trimestre: **INT-1** (UD01–UD03, 27/11/2026), **INT-2** (UD04–UD06, 22/03/2027) e **INT-3** (UD07, 30/04/2027). Consulta [las condiciones, el informe y la rúbrica](/guia/practicas-integradoras/). En la [modalidad semipresencial](/guia/semipresencial/) son dos: INT-1 (27/11/2026) e INT-2 (10/02/2027, propuesta).

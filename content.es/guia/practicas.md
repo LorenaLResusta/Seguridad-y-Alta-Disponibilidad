@@ -66,3 +66,5 @@ La evaluación es **continua** y se basa en las evidencias que demuestran los [c
 | Autoevaluaciones, participación y cuaderno de laboratorio | 10 % |
 
 La **recuperación** se plantea sobre los resultados de aprendizaje y criterios no superados: prueba teórica, prueba práctica en el laboratorio o repetición de la tarea del proyecto.
+
+La ponderación y la recuperación de la modalidad semipresencial están en la [guía semipresencial](/guia/semipresencial/#5-evaluación).

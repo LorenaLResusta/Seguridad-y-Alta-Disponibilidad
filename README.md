@@ -1,8 +1,8 @@
 # **Inicializar el sitio Hugo con la plantilla Book**
 Ejecuta el siguiente comando para crear un nuevo sitio Hugo y añadir la plantilla **Hugo Book** como submódulo de Git:
 ```bash
-hugo new site doc-sistemas-informaticos --force
-cd doc-sistemas-informaticos
+hugo new site BBDD --force
+cd BBDD
 git init -b main
 git submodule add https://github.com/alex-shpak/hugo-book.git themes/hugo-book
 # Crea un archivo .gitignore para excluir archivos innecesarios
@@ -13,9 +13,9 @@ echo "node_modules/" >> .gitignore
 # **Configurar el archivo `config.toml`**
 Edita el archivo `config.toml` para configurar el sitio:
 ```toml
-baseURL = "https://[user].gitlab.io/doc-sistemas-informaticos/"  # Cambia por tu URL de GitLab Pages o GitHub Pages
+baseURL = "https://lorenalresusta.github.io/Seguridad-y-Alta-Disponibilidad/"  # Cambia por tu URL de GitLab Pages o GitHub Pages
 locale = "es-es"
-title = "Documentación Sistemas Informáticos"
+title = "Seguridad y Alta Disponibilidad "
 theme = "hugo-book"
 
 # Configuración multilingüe

@@ -21,6 +21,9 @@ bookToc: true
 
 Estos apuntes cuentan **horas lectivas** (las del horario oficial del grupo). Cada unidad reparte sus horas en tres bloques: **teoría** (explicación y ejemplos), **prácticas** (laboratorio guiado y autónomo) y **evaluación** (prueba teórico-práctica y entrega de la tarea de la unidad).
 
+> [!NOTE]
+> **Modalidad semipresencial.** Esta página es la planificación de la modalidad presencial (133 h). El alumnado semipresencial de 2.º, que termina las clases el 15 de febrero de 2027 por la FE, sigue la [guía semipresencial](/guia/semipresencial/): 96 h a 5 h semanales con su propio calendario por semanas.
+
 ## Distribución por unidades
 
 | UD | Unidad | Teoría | Prácticas | Evaluación | Total | % | RA principales |
