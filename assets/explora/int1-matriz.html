@@ -1,0 +1,61 @@
+<div class="sad-w sad-mx" style="--c: var(--color-accent-caution)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Tu matriz de riesgos (INT-1 · A1) <span class="sad-w-sub">Rellena filas, mira el riesgo calculado y copia el CSV</span></div>
+  <div class="sad-w-body">
+    <p class="sad-w-note">Edita las celdas. El <strong>riesgo</strong> se calcula solo (probabilidad × impacto). Necesitas <strong>8 filas como mínimo</strong>. Las comas de los textos se sustituyen por espacios, porque rompen el CSV y el script las rechaza.</p>
+    <table class="sad-mx-t"><thead><tr><th>Activo</th><th>Amenaza</th><th>Prob. (1-5)</th><th>Impacto (1-5)</th><th>Riesgo</th><th>Tratamiento</th><th></th></tr></thead><tbody data-r="rows"></tbody></table>
+    <div class="sad-w-row"><button type="button" data-r="add">+ Añadir fila</button><button type="button" class="ghost" data-r="ej">Cargar ejemplo de la clínica</button><button type="button" class="ghost" data-r="clr">Vaciar</button></div>
+    <div class="sad-mx-ind" data-r="ind" aria-live="polite"></div>
+    <pre data-r="csv"></pre>
+    <div class="sad-w-row"><button type="button" data-r="cp">Copiar CSV</button><button type="button" class="ghost" data-r="dl">Descargar matriz-riesgos.csv</button></div>
+    <p class="sad-w-note">Después, en <code>srv-clinica</code>: guárdalo en <code>/srv/int1/matriz-riesgos.csv</code> y genera su huella con <code>cd /srv/int1 &amp;&amp; sha256sum matriz-riesgos.csv &gt; SHA256SUMS</code>. <strong>No lo edites después</strong> o el hash dejará de coincidir. Si abres el CSV con Excel, guárdalo como «CSV (delimitado por comas)», no como «separado por punto y coma».</p>
+  </div>
+</div>
+<style>
+.sad-mx-t{width:100%;border-collapse:collapse}
+.sad-mx-t th{font-size:var(--font-size-smallest);text-align:left}
+.sad-mx-t td{padding:.15rem .2rem}
+.sad-mx-t input,.sad-mx-t select{width:100%;min-width:3rem;box-sizing:border-box}
+.sad-mx-t input[type=number]{max-width:4.2rem}
+.sad-mx-r{display:inline-block;min-width:2.2rem;text-align:center;font-weight:800;border-radius:6px;padding:.1rem .3rem;color:#111}
+.sad-mx-t tr.top td{background:color-mix(in srgb,var(--color-accent-caution) 14%,transparent)}
+.sad-mx-t button.x{padding:.1rem .45rem;background:transparent;color:var(--color-accent-caution);border-color:transparent}
+.sad-mx-ind{margin:.4rem 0;padding:.5rem .7rem;border-radius:var(--border-radius);border:1px dashed var(--gray-500);background:var(--body-background);font-size:var(--font-size-smaller)}
+@media (max-width:640px){.sad-mx-t{display:block;overflow-x:auto}}
+</style>
+<script>(function(){
+var r=document.currentScript.previousElementSibling.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var T=['mitigar','transferir','evitar','aceptar'];
+var EJ=[['Historiales clinicos','Perdida de datos por fallo de disco',3,5,'mitigar'],['Servidor de ficheros','Ransomware',3,5,'mitigar'],['Intranet de citas','Acceso sin cifrar en HTTP',4,4,'mitigar'],['Acceso SSH','Fuerza bruta de contrasenas',4,4,'mitigar'],['Portatil de recepcion','Robo o perdida',3,3,'transferir'],['Copias de seguridad','Copia no restaurable',2,5,'mitigar'],['Wifi de pacientes','Acceso a la red interna',3,4,'evitar'],['Impresora antigua','Firmware sin actualizar',2,2,'aceptar']];
+var rows=[];
+function clamp(v){v=parseInt(v,10);return isNaN(v)?1:Math.min(5,Math.max(1,v))}
+function san(s){return String(s).replace(/[,\r\n;]+/g,' ').trim()}
+function col(n){return n>=15?'#f26b6b':n>=9?'#f5b04c':n>=5?'#f2dc6b':'#8fd694'}
+function draw(){
+ var h='',mx=0;rows.forEach(function(w){mx=Math.max(mx,w[2]*w[3])});
+ rows.forEach(function(w,i){var n=w[2]*w[3];
+  h+='<tr'+(n===mx&&mx>0?' class="top"':'')+'><td><input type="text" data-i="'+i+'" data-k="0" value="'+san(w[0]).replace(/"/g,'&quot;')+'" aria-label="Activo"></td><td><input type="text" data-i="'+i+'" data-k="1" value="'+san(w[1]).replace(/"/g,'&quot;')+'" aria-label="Amenaza"></td>'
+  +'<td><input type="number" min="1" max="5" data-i="'+i+'" data-k="2" value="'+w[2]+'"></td><td><input type="number" min="1" max="5" data-i="'+i+'" data-k="3" value="'+w[3]+'"></td>'
+  +'<td><span class="sad-mx-r" style="background:'+col(n)+'">'+n+'</span></td><td><select data-i="'+i+'" data-k="4">'+T.map(function(t){return '<option'+(t===w[4]?' selected':'')+'>'+t+'</option>'}).join('')+'</select></td>'
+  +'<td><button type="button" class="x" data-del="'+i+'" aria-label="Borrar fila">✕</button></td></tr>'});
+ q('rows').innerHTML=h;out()}
+function out(){
+ var c='activo,amenaza,probabilidad,impacto,riesgo,tratamiento\n',mx=0,top=null;
+ rows.forEach(function(w){var n=w[2]*w[3];if(n>mx){mx=n;top=w}
+  c+=[san(w[0]),san(w[1]),w[2],w[3],n,w[4]].join(',')+'\n'});
+ q('csv').textContent=c;
+ var k=rows.length,ok=k>=8,empty=rows.some(function(w){return !san(w[0])||!san(w[1])});
+ q('ind').innerHTML='<strong>Filas: '+k+'/8</strong> '+(ok?'<span class="ok">✓ suficiente</span>':'<span class="ko">faltan '+(8-k)+'</span>')
+  +(empty?' · <span class="warn">hay celdas vacías</span>':'')
+  +(top?'<br>Riesgo más alto: <strong>'+mx+'</strong> ('+san(top[0])+' · '+san(top[1])+'). <em>Es el que debes usar en la pregunta P1.</em>':'')}
+r.addEventListener('input',function(e){var t=e.target,i=t.getAttribute('data-i');if(i===null)return;var k=+t.getAttribute('data-k');
+ rows[i][k]=k===2||k===3?clamp(t.value):t.value;
+ if(k===2||k===3||k===4){draw()}else{out()}});
+r.addEventListener('change',function(e){var t=e.target;if(t.getAttribute('data-k')==='4')draw()});
+r.addEventListener('click',function(e){var d=e.target.getAttribute('data-del');if(d!==null){rows.splice(+d,1);draw()}});
+q('add').onclick=function(){rows.push(['','',3,3,'mitigar']);draw()};
+q('ej').onclick=function(){rows=EJ.map(function(x){return x.slice()});draw()};
+q('clr').onclick=function(){rows=[];draw()};
+q('cp').onclick=function(){var t=q('csv').textContent;if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){q('cp').textContent='¡Copiado!';setTimeout(function(){q('cp').textContent='Copiar CSV'},1500)},function(){});};
+q('dl').onclick=function(){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([q('csv').textContent],{type:'text/csv'}));a.download='matriz-riesgos.csv';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},500)};
+rows=EJ.slice(0,3).map(function(x){return x.slice()});draw();
+})();</script>

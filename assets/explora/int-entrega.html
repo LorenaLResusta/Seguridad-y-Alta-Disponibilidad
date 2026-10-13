@@ -1,0 +1,99 @@
+<div class="sad-w sad-ent" style="--c: var(--color-accent-important)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> ¿Qué entrego este trimestre? <span class="sad-w-sub">Elige la práctica, marca lo que ya te sale en verde y mira tu nota</span></div>
+  <div class="sad-w-body">
+    <div class="sad-chips" data-r="sel" role="tablist" aria-label="Práctica integradora">
+      <button type="button" class="sad-chip on" data-p="1" role="tab" aria-selected="true">INT-1 · Servidor seguro (1.er trimestre)</button>
+      <button type="button" class="sad-chip" data-p="2" role="tab" aria-selected="false">INT-2 · Perímetro y servicio sin parada (2.º trimestre)</button>
+    </div>
+    <div class="sad-w-row">
+      <label class="sad-f">Tu apellido (sin tildes)<input type="text" data-r="ape" placeholder="GARCIA" maxlength="30" autocomplete="off"></label>
+      <label class="sad-f">Modalidad<select data-r="mod"><option value="s">Semipresencial</option><option value="p">Presencial</option></select></label>
+    </div>
+
+    <div class="sad-ent-grid">
+      <div class="sad-ent-card" data-r="fecha"></div>
+      <div class="sad-ent-card" data-r="files"></div>
+    </div>
+
+    <h4 class="sad-ent-h">Simulador de nota <span class="sad-w-note">(solo para ti: no se guarda en ningún servidor)</span></h4>
+    <div class="sad-ent-checks" data-r="checks"></div>
+    <div class="sad-w-cols">
+      <div>
+        <p class="sad-w-note"><strong>Preguntas cortas</strong> (0,5 si es completa · 0,25 si es parcial · 0 si falta o es incorrecta)</p>
+        <div data-r="qs"></div>
+      </div>
+      <div>
+        <label class="sad-f">Días lectivos de retraso (−1 punto por día, máximo −3)<input type="number" data-r="ret" min="0" max="10" value="0"></label>
+        <div class="sad-ent-nota" data-r="nota" aria-live="polite"></div>
+      </div>
+    </div>
+    <div class="sad-ent-bar" aria-hidden="true"><i data-r="barA"></i><i data-r="barQ"></i></div>
+  </div>
+</div>
+<style>
+.sad-w button.sad-chip{background:transparent;color:var(--color-link)}.sad-w button.sad-chip.on{background:var(--color-link);color:#fff}
+.sad-ent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.8rem;margin:.6rem 0}
+.sad-ent-card{border:1px solid var(--gray-200);border-left:4px solid var(--c);border-radius:var(--border-radius);padding:.6rem .8rem;background:var(--body-background);font-size:var(--font-size-smaller)}
+.sad-ent-card h4{margin:0 0 .3rem;font-size:.95rem}
+.sad-ent-card code{font-size:.78rem;word-break:break-all}
+.sad-ent-card ul{margin:.2rem 0 .2rem 1.1rem;padding:0}
+.sad-ent-big{font-size:1.6rem;font-weight:800;line-height:1.1;color:var(--c)}
+.sad-ent-h{margin:.9rem 0 .3rem}
+.sad-ent-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:.3rem .8rem;margin-bottom:.6rem}
+.sad-ent-checks .grp{grid-column:1/-1;font-size:var(--font-size-smallest);text-transform:uppercase;letter-spacing:.06em;font-weight:700;opacity:.75;margin-top:.3rem}
+.sad-ent-checks label{display:flex;gap:.45rem;align-items:flex-start;font-size:var(--font-size-smaller);padding:.2rem .35rem;border-radius:var(--border-radius);cursor:pointer;border:1px solid transparent}
+.sad-ent-checks label:hover{background:var(--gray-100)}
+.sad-ent-checks label.on{background:color-mix(in srgb,var(--color-accent-tip) 16%,transparent);border-color:color-mix(in srgb,var(--color-accent-tip) 45%,transparent)}
+.sad-ent-checks b{font-family:ui-monospace,monospace;font-size:.75rem;padding:0 .3rem;border-radius:4px;background:var(--gray-200)}
+.sad-ent-nota{margin-top:.4rem;padding:.6rem .8rem;border-radius:var(--border-radius);border:1px dashed var(--gray-500);background:var(--body-background)}
+.sad-ent-nota .n{font-size:2rem;font-weight:800;line-height:1}
+.sad-ent-bar{display:flex;height:.55rem;border-radius:999px;overflow:hidden;background:var(--gray-200);margin-top:.7rem}
+.sad-ent-bar i{display:block;height:100%;transition:width .35s ease}
+.sad-ent-bar i:first-child{background:var(--color-accent-tip)}
+.sad-ent-bar i:last-child{background:var(--color-accent-note)}
+@media (prefers-reduced-motion:reduce){.sad-ent-bar i{transition:none}}
+</style>
+<script>(function(){
+var r=document.currentScript.previousElementSibling.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var D={
+ 1:{n:'INT-1',t:'Servidor seguro de la clínica',pt:0.5,vm:'<code>srv-clinica</code> (una sola máquina)',cmd:function(a){return 'sudo ./verifica-int1.sh '+a},
+    f:function(a){return ['evidencias-INT1-'+a+'.txt','respuestas.md']},fe:{s:'2026-11-27',p:'2027-01-15'},extra:'',
+    g:[['UD01 · Diagnóstico',[['A1','Matriz de riesgos CSV válida'],['A2','Política de contraseñas (minlen ≥ 12)'],['A3','SHA256SUMS de la matriz']]],
+       ['UD02 · Datos',[['B1','RAID 5: 3 discos + 1 reserva'],['B2','/srv/datos montado y en fstab'],['B3','restic check correcto'],['B4','Restauración idéntica'],['B5','Copias programadas ≤ 4 h']]],
+       ['UD03 · Cifrado',[['C1','CA propia CN=CA-apellido'],['C2','Certificado con SAN firmado por la CA'],['C3','HTTPS con TLS 1.3 verificado']]],
+       ['UD04 · Bastionado',[['D1','SSH solo con clave y sin root'],['D2','UFW: solo 22 y 443'],['D3','Fail2ban sshd, maxretry ≤ 3'],['D4','auditd con regla en passwd/shadow'],['D5','Lynis: +10 puntos']]]]},
+ 2:{n:'INT-2',t:'Perímetro y servicio sin parada',pt:0.8,vm:'<code>fw01</code> (cortafuegos + Suricata + HAProxy) y dos webs <code>web01</code> y <code>web02</code>',cmd:function(a){return 'sudo ./verifica-int2.sh '+a},
+    f:function(a){return ['evidencias-INT2-'+a+'.txt','respuestas.md']},fe:{s:'2027-02-05',p:'2027-04-30'},extra:' El script se ejecuta solo en <code>fw01</code>.',
+    g:[['UD05 · Detección',[['S1','Regla propia de Suricata cargada'],['S2','Alerta de tu regla en fast.log']]],
+       ['UD06 · Perímetro',[['F1','input con policy drop'],['F2','forward con policy drop'],['F3','DNAT (publicar la web)'],['F4','masquerade (salida de la DMZ)']]],
+       ['UD07 · Alta disponibilidad',[['H1','HAProxy válido con 2 servidores y check'],['H2','Los dos servidores UP'],['H3','Reparto web01 / web02'],['H4','Prueba de fallo (CSV + HAProxy)']]]]}
+};
+var P=1,S={1:{},2:{}},Q=[0,0,0,0],store;
+try{store=window.localStorage}catch(e){store=null}
+function load(){try{var j=JSON.parse(store.getItem('sad-int-sim')||'null');if(j){S=j.S||S;Q=j.Q||Q;P=j.P||P;q('ape').value=j.a||'';q('mod').value=j.m||'s';q('ret').value=j.r||0}}catch(e){}}
+function save(){try{store.setItem('sad-int-sim',JSON.stringify({S:S,Q:Q,P:P,a:q('ape').value,m:q('mod').value,r:q('ret').value}))}catch(e){}}
+function fmt(d){var m=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],x=new Date(d+'T12:00:00');return x.getDate()+' de '+m[x.getMonth()]+' de '+x.getFullYear()}
+function ape(){var a=(q('ape').value||'').toUpperCase().replace(/[^A-Z0-9_-]/g,'');return a||'APELLIDO'}
+function draw(){
+ var d=D[P],a=ape(),fe=d.fe[q('mod').value],hoy=new Date();hoy.setHours(12,0,0,0);
+ var dias=Math.round((new Date(fe+'T12:00:00')-hoy)/864e5);
+ var cu=dias>0?'faltan <b>'+dias+' días</b>':dias===0?'<b class="warn">es hoy</b>':'<b class="ko">plazo pasado hace '+(-dias)+' días</b>';
+ q('fecha').innerHTML='<h4>'+d.n+' · '+d.t+'</h4><div class="sad-ent-big">'+fmt(fe)+'</div><p>'+cu+'. Modalidad '+(q('mod').value==='s'?'semipresencial':'presencial')+(fe>'2026-12-01'&&q('mod').value==='p'||P===2?' <em>(fecha propuesta)</em>':'')+'.</p><p>Se hace en '+d.vm+'.</p>';
+ var f=d.f(a);
+ q('files').innerHTML='<h4>Solo entregas dos ficheros</h4><ul><li><code>'+f[0]+'</code> <small>(lo genera el script)</small></li><li><code>'+f[1]+'</code> <small>(4 respuestas de ≤ 3 líneas)</small></li></ul><p>Ejecuta: <code>'+d.cmd(a)+'</code>'+d.extra+'</p><p><small>No se entregan claves privadas, contraseñas ni copias de la máquina.</small></p>';
+ var h='';d.g.forEach(function(g){h+='<div class="grp">'+g[0]+'</div>';g[1].forEach(function(c){var on=S[P][c[0]];h+='<label class="'+(on?'on':'')+'"><input type="checkbox" data-c="'+c[0]+'"'+(on?' checked':'')+'><span><b>'+c[0]+'</b> '+c[1]+'</span></label>'})});
+ q('checks').innerHTML=h;
+ Array.prototype.forEach.call(q('checks').querySelectorAll('input'),function(i){i.onchange=function(){S[P][i.dataset.c]=i.checked;save();draw()}});
+ var qh='';for(var k=0;k<4;k++){qh+='<label class="sad-f">P'+(k+1)+'<select data-q="'+k+'"><option value="0">Falta o incorrecta · 0</option><option value="0.25">Parcial · 0,25</option><option value="0.5">Completa · 0,5</option></select></label>'}
+ q('qs').innerHTML=qh;Array.prototype.forEach.call(q('qs').querySelectorAll('select'),function(s){s.value=String(Q[+s.dataset.q]);s.onchange=function(){Q[+s.dataset.q]=+s.value;save();draw()}});
+ var ok=0,tot=0;d.g.forEach(function(g){g[1].forEach(function(c){tot++;if(S[P][c[0]])ok++})});
+ var auto=ok*d.pt,pq=Q.reduce(function(x,y){return x+y},0),ret=Math.min(3,Math.max(0,+q('ret').value||0)),n=Math.max(0,auto+pq-ret);
+ var est=n>=5?'<span class="ok">Aprobada</span>':'<span class="ko">Por debajo de 5: tendrías que repetir una versión reducida</span>';
+ q('nota').innerHTML='<div class="n">'+n.toFixed(2).replace('.',',')+' <small>/ 10</small></div><p>'+ok+'/'+tot+' comprobaciones → <b>'+auto.toFixed(1).replace('.',',')+'</b> de 8,0 · preguntas <b>'+pq.toFixed(2).replace('.',',')+'</b> de 2,0'+(ret?' · retraso −'+ret:'')+'</p><p>'+est+'</p>';
+ q('barA').style.width=(auto/10*100)+'%';q('barQ').style.width=(pq/10*100)+'%';
+ Array.prototype.forEach.call(q('sel').children,function(b){var on=+b.dataset.p===P;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+}
+Array.prototype.forEach.call(q('sel').children,function(b){b.onclick=function(){P=+b.dataset.p;save();draw()}});
+q('ape').oninput=function(){save();draw()};q('mod').onchange=function(){save();draw()};q('ret').oninput=function(){save();draw()};
+load();draw();
+})();</script>

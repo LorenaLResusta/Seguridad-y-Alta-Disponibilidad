@@ -104,7 +104,7 @@ Las **prácticas de cada unidad no se entregan**: se hacen en el laboratorio y e
 | Práctica | Unidades | Fecha |
 |---|---|---|
 | INT-1 · Servidor seguro de la clínica | UD1–UD4 | 27/11/2026 |
-| INT-2 · Perímetro y servicio sin parada | UD5–UD7 | 10/02/2027 (propuesta) |
+| INT-2 · Perímetro y servicio sin parada | UD5–UD7 | 05/02/2027 (propuesta) |
 
 La última sesión de cada unidad es su prueba teórico-práctica. En la tutoría obligatoria más cercana a cada fecha se puede ejecutar el script de verificación delante del profesorado y corregir en el momento. La recuperación se hace en las últimas sesiones del módulo (semanas 21 y 22), antes de la incorporación a la FE.
 
@@ -146,7 +146,7 @@ La evaluación es **continua** y se basa en las evidencias que demuestran los [c
 > [!NOTE]
 > Esta ponderación es una **propuesta** para la modalidad semipresencial y puede modificarse para ajustarla a los criterios del departamento o del centro. La ponderación de la modalidad presencial está en [Cómo son las prácticas y la evaluación](/guia/practicas/#evaluación).
 
-Las prácticas integradoras se corrigen con un script de verificación (16 comprobaciones de 0,5 puntos) y cuatro preguntas cortas (0,5 puntos cada una). Las prácticas de unidad no puntúan: sirven para aprender y para preparar la prueba (ver la [rúbrica de autoevaluación](/guia/practicas/#rúbrica-general-de-autoevaluación)).
+Las prácticas integradoras se corrigen con un script de verificación (INT-1: 16 comprobaciones de 0,5 puntos; INT-2: 10 comprobaciones de 0,8 puntos) y cuatro preguntas cortas (0,5 puntos cada una). Las prácticas de unidad no puntúan: sirven para aprender y para preparar la prueba (ver la [rúbrica de autoevaluación](/guia/practicas/#rúbrica-general-de-autoevaluación)).
 
 ### Recuperación
 

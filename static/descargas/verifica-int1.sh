@@ -4,8 +4,10 @@
 #
 # Uso (en la máquina virtual srv-clinica, Debian 13):   sudo ./verifica-int1.sh APELLIDO
 #
-# Este script SOLO LEE el estado del sistema: no instala ni cambia nada (salvo ficheros
-# temporales en /tmp que borra al terminar). Cada comprobación vale 0,5 puntos.
+# Este script SOLO LEE el estado del sistema: no instala ni cambia nada. Solo crea una
+# carpeta temporal en /var/tmp para la restauración de prueba y la borra al terminar
+# (restic se ejecuta con --no-lock, así que tampoco escribe en el repositorio).
+# Cada comprobación vale 0,5 puntos (16 comprobaciones = 8,0 puntos).
 # Genera el fichero  evidencias-INT1-APELLIDO.txt  en el directorio actual.
 set -u
 export LC_ALL=C
@@ -37,8 +39,10 @@ chk() {
 
 # ---------- UD01 · Diagnóstico ----------
 f_A1() {  # matriz de riesgos: cabecera exacta, al menos 8 filas y riesgo = probabilidad x impacto (1 a 5)
-  local f="$DIR_INT/matriz-riesgos.csv"; [ -f "$f" ] || return 1
-  head -n1 "$f" | tr -d '\r' | grep -qx 'activo,amenaza,probabilidad,impacto,riesgo,tratamiento' || return 1
+  local f="$DIR_INT/matriz-riesgos.csv" h; [ -f "$f" ] || return 1
+  h=$(head -n1 "$f" | sed '1s/^\xEF\xBB\xBF//' | tr -d '\r')          # tolera BOM de UTF-8 y fin de línea de Windows
+  if [[ "$h" == *';'* ]]; then say "AVISO:    matriz-riesgos.csv usa ';' como separador (Excel en español): debe usar comas"; fi
+  [ "$h" = 'activo,amenaza,probabilidad,impacto,riesgo,tratamiento' ] || return 1
   tail -n +2 "$f" | tr -d '\r' | awk -F, '
     NF > 0 { n++ }
     NF >= 6 && $3 >= 1 && $3 <= 5 && $4 >= 1 && $4 <= 5 && $5 == $3 * $4 { ok++ }
@@ -62,15 +66,44 @@ f_B2() {  # /srv/datos montado desde md0 y persistente en fstab, con datos
   grep -qE "^[^#]*[[:space:]]$DATOS[[:space:]]" /etc/fstab || return 1
   [ "$(find "$DATOS" -type f 2>/dev/null | wc -l)" -ge 5 ]
 }
-f_B3() {  # repositorio restic íntegro
-  RESTIC_PASSWORD_FILE="$PASS_RESTIC" restic -r "$REPO" check
+f_B3() {  # repositorio restic íntegro (sin tomar el bloqueo: no escribe en el repositorio)
+  RESTIC_PASSWORD_FILE="$PASS_RESTIC" restic -r "$REPO" --no-lock check
 }
 f_B4() {  # restauración en una ruta distinta idéntica a los datos actuales
-  local t r; t=$(mktemp -d /tmp/int1-rest.XXXXXX) || return 1
-  if RESTIC_PASSWORD_FILE="$PASS_RESTIC" restic -r "$REPO" restore latest --target "$t"; then
+  local t r; t=$(mktemp -d /var/tmp/int1-rest.XXXXXX) || return 1
+  if RESTIC_PASSWORD_FILE="$PASS_RESTIC" restic -r "$REPO" --no-lock restore latest --include "$DATOS" --target "$t"; then
     diff -r "$DATOS" "$t$DATOS"; r=$?
   else r=1; fi
   rm -rf "$t"; return $r
+}
+f_B5() {  # copias programadas: temporizador de systemd activo que lanza restic al menos cada 4 horas
+  local timer svc exe expr t0 t1 t2 gap
+  while read -r timer _; do
+    [ -n "$timer" ] || continue
+    systemctl is-active --quiet "$timer" || continue
+    svc=$(systemctl show -p Unit --value "$timer" 2>/dev/null); [ -n "$svc" ] || continue
+    # el servicio debe lanzar restic (directamente o mediante un script que lo contenga)
+    exe=$(systemctl show -p ExecStart --value "$svc" 2>/dev/null | sed -nE 's/.*path=([^ ;]+).*/\1/p' | head -n1)
+    { systemctl cat "$svc" 2>/dev/null | grep -q 'restic backup'; } || { [ -r "$exe" ] && grep -q 'restic' "$exe"; } || continue
+    # frecuencia: el mayor intervalo entre ejecuciones consecutivas de cada OnCalendar no supera 4 h
+    while IFS= read -r expr; do
+      [ -n "$expr" ] || continue
+      mapfile -t T < <(systemd-analyze calendar --iterations=48 "$expr" 2>/dev/null | awk '
+        /\(in UTC\):/ { u[++nu] = $0 }
+        /^ *(Next elapse|Iteration #[0-9]+):/ { l[++nl] = $0 }
+        END { if (nu > 0) for (i = 1; i <= nu; i++) print u[i]; else for (i = 1; i <= nl; i++) print l[i] }' \
+        | sed -E 's/^[^:]*: +//')
+      [ "${#T[@]}" -ge 2 ] || continue
+      gap=0; t0=""
+      for t1 in "${T[@]}"; do
+        t1=$(date -d "$t1" +%s 2>/dev/null) || { gap=999999; break; }
+        [ -n "$t0" ] && [ $((t1 - t0)) -gt "$gap" ] && gap=$((t1 - t0))
+        t0=$t1
+      done
+      [ "$gap" -gt 0 ] && [ "$gap" -le 14400 ] && return 0
+    done < <(systemctl show -p TimersCalendar --value "$timer" 2>/dev/null | grep -oE 'OnCalendar=[^;}]*' | sed -E 's/^OnCalendar=//; s/ +$//')
+  done < <(systemctl list-unit-files --type=timer --state=enabled --no-legend 2>/dev/null)
+  return 1
 }
 # ---------- UD03 · PKI y HTTPS ----------
 f_C1() {  # CA propia cuyo nombre incluye tu apellido
@@ -84,24 +117,26 @@ f_C3() {  # Nginx responde en 443 con TLS 1.3 y la cadena se verifica contra la 
   echo | timeout 10 openssl s_client -connect 127.0.0.1:443 -servername "$FQDN" -tls1_3 \
     -CAfile "$CA_DIR/ca.crt" -verify_hostname "$FQDN" 2>&1 | grep -q 'Verification: OK'
 }
-f_C4() {  # Nginx solo admite TLS 1.2 y 1.3 (ni TLSv1 ni TLSv1.1)
-  local p; p=$(nginx -T 2>/dev/null | grep -E '^[[:space:]]*ssl_protocols' | head -n1)
-  [ -n "$p" ] || return 1
-  ! grep -qE 'TLSv1([[:space:];]|\.1)' <<<"$p" && grep -q 'TLSv1.3' <<<"$p"
-}
 # ---------- UD04 · Fortificación ----------
 f_D1() {  # SSH solo con clave y sin acceso directo de root
   local c; c=$(sshd -T 2>/dev/null) || return 1
   grep -qx 'passwordauthentication no' <<<"$c" && grep -qx 'pubkeyauthentication yes' <<<"$c" && grep -qx 'permitrootlogin no' <<<"$c"
 }
-f_D2() {  # UFW activo, entrada denegada por defecto y solo SSH y HTTPS permitidos explícitamente
+f_D2() {  # UFW activo, entrada denegada por defecto y SOLO SSH (22) y HTTPS (443) permitidos
   local s; s=$(ufw status verbose 2>/dev/null) || return 1
-  grep -q 'Status: active' <<<"$s" && grep -q 'Default: deny (incoming)' <<<"$s" &&
-  grep -E '^(22|OpenSSH)([^0-9]|$)' <<<"$s" | grep -q ALLOW &&
-  grep -E '^443([^0-9]|$)' <<<"$s" | grep -q ALLOW
+  grep -q 'Status: active' <<<"$s" && grep -q 'Default: deny (incoming)' <<<"$s" || return 1
+  awk '/ALLOW/ {
+         r = $1; sub(/\/.*/, "", r)                      # "22/tcp" -> "22"; "OpenSSH" se queda igual
+         if (r == "22" || r == "OpenSSH") ssh = 1
+         else if (r == "443") web = 1
+         else otras = 1                                  # cualquier otro puerto o servicio permitido
+       }
+       END { exit !(ssh && web && !otras) }' <<<"$s"
 }
-f_D3() {  # Fail2ban activo con la cárcel (jail) sshd
-  systemctl is-active --quiet fail2ban && fail2ban-client status sshd
+f_D3() {  # Fail2ban activo con la cárcel (jail) sshd y maxretry <= 3 (valor por defecto: 5)
+  local m; systemctl is-active --quiet fail2ban || return 1
+  m=$(fail2ban-client get sshd maxretry 2>/dev/null) || return 1
+  [[ "$m" =~ ^[0-9]+$ ]] && [ "$m" -le 3 ]
 }
 f_D4() {  # auditd activo con una regla de vigilancia sobre /etc/passwd o /etc/shadow
   systemctl is-active --quiet auditd && auditctl -l | grep -qE '/etc/(passwd|shadow)'
@@ -120,27 +155,27 @@ say "MAQUINA:  $(hostname) · $(. /etc/os-release && echo "$PRETTY_NAME") · ker
 say "ID-VM:    $(sha256sum /etc/machine-id | cut -c1-12)"
 say "FECHA:    $(date -Is)"
 say ""
-for h in mdadm restic openssl nginx sshd ufw fail2ban-client auditctl; do
+for h in mdadm restic openssl sshd ufw fail2ban-client auditctl systemd-analyze; do
   command -v "$h" >/dev/null 2>&1 || say "AVISO:    falta la orden '$h' (la comprobación asociada fallará)"
 done
 say "--- UD01 Diagnostico"
 chk A1 "Matriz de riesgos valida (>= 8 filas, riesgo = prob x impacto)" "revisa $DIR_INT/matriz-riesgos.csv" f_A1
-chk A3 "Politica de contrasenas: minlen >= 12 en pwquality"            "edita /etc/security/pwquality.conf"        f_A3
-chk A4 "SHA256SUMS verifica la matriz de riesgos"                       "genera el fichero con sha256sum en $DIR_INT" f_A4
+chk A2 "Politica de contrasenas: minlen >= 12 en pwquality"            "instala libpam-pwquality y edita /etc/security/pwquality.conf" f_A3
+chk A3 "SHA256SUMS verifica la matriz de riesgos"                       "genera el fichero con sha256sum en $DIR_INT" f_A4
 say "--- UD02 Proteccion de los datos"
 chk B1 "RAID 5 con 3 discos activos + 1 de reserva (md0)"               "mdadm --detail /dev/md0"                    f_B1
 chk B2 "/srv/datos montado desde md0, en fstab y con datos"             "findmnt /srv/datos; revisa /etc/fstab"      f_B2
 chk B3 "Repositorio restic integro (restic check)"                      "restic -r $REPO check"                      f_B3
 chk B4 "Restauracion en otra ruta identica a /srv/datos"                "haz una copia NUEVA tras el ultimo cambio"  f_B4
+chk B5 "Copias programadas: temporizador con restic cada 4 h o menos"   "systemctl list-timers; OnCalendar con intervalo <= 4 h" f_B5
 say "--- UD03 PKI y HTTPS"
 chk C1 "CA propia con CN=CA-$APELLIDO"                                  "openssl x509 -in $CA_DIR/ca.crt -noout -subject" f_C1
 chk C2 "Certificado firmado por la CA y con SAN $FQDN"                  "openssl verify y -ext subjectAltName"       f_C2
 chk C3 "HTTPS en 443 con TLS 1.3 y cadena verificada"                   "openssl s_client -tls1_3 -CAfile ca.crt"    f_C3
-chk C4 "Nginx solo con TLS 1.2 y 1.3"                                   "ssl_protocols TLSv1.2 TLSv1.3;"             f_C4
 say "--- UD04 Fortificacion"
 chk D1 "SSH solo con clave y sin root (sshd -T)"                        "PasswordAuthentication no; PermitRootLogin no" f_D1
-chk D2 "UFW activo, deny incoming y permitidos 22 y 443"                "ufw status verbose"                         f_D2
-chk D3 "Fail2ban activo con jail sshd"                                  "systemctl status fail2ban"                  f_D3
+chk D2 "UFW activo, deny incoming y SOLO 22 y 443 permitidos"              "ufw status verbose"                         f_D2
+chk D3 "Fail2ban activo con jail sshd y maxretry <= 3"                  "jail.local: maxretry = 3 y reinicia fail2ban" f_D3
 chk D4 "auditd activo con regla sobre /etc/passwd o /etc/shadow"        "auditctl -l"                                f_D4
 chk D5 "Lynis: mejora de al menos 10 puntos"                            "guarda lynis-antes.dat y lynis-despues.dat"  f_D5
 say ""

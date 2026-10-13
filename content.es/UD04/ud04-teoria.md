@@ -26,7 +26,7 @@ Primero se entiende **qué amenaza** al sistema y cómo es un ataque por dentro 
 | Bloque | Horas |
 |---|--:|
 | Teoría (este documento) | 8 h |
-| [Prácticas](/ud04/ud04-practicas/) (diez prácticas y la Tarea del proyecto, hito de la [INT-2](/guia/practicas-integradoras/)) | 12 h |
+| [Prácticas](/ud04/ud04-practicas/) (diez prácticas y la Tarea del proyecto, hito de la [INT-1](/guia/practicas-integradoras/)) | 12 h |
 | Evaluación (prueba teórico-práctica de la unidad) | 2 h |
 | **Total** | **22 h** |
 

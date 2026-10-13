@@ -1,0 +1,100 @@
+<div class="sad-w sad-fa" style="--c: var(--color-accent-warning)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> Simulador de la prueba de fallo (INT-2 · H4) <span class="sad-w-sub">Para un servidor y observa cómo reacciona HAProxy</span></div>
+  <div class="sad-w-body">
+    <div class="sad-w-cols">
+      <div>
+        <label class="sad-f"><span>Intervalo del <em>health check</em> <code>inter</code>: <output data-r="o1"></output> s</span><input type="range" data-r="inter" min="1" max="10" value="2"></label>
+        <label class="sad-f"><span>Fallos para marcar DOWN <code>fall</code>: <output data-r="o2"></output></span><input type="range" data-r="fall" min="1" max="6" value="3"></label>
+        <label class="sad-f"><span>Aciertos para volver a UP <code>rise</code>: <output data-r="o3"></output></span><input type="range" data-r="rise" min="1" max="6" value="2"></label>
+      </div>
+      <div class="sad-fa-cfg"><div class="sad-w-note">Línea que estás simulando en <code>haproxy.cfg</code>:</div><pre data-r="cfg"></pre><div class="sad-w-note" data-r="det"></div></div>
+    </div>
+    <svg viewBox="0 0 560 190" class="sad-fa-svg" role="img" aria-label="Cliente, HAProxy en fw01 y dos servidores web">
+      <g data-n="cli"><rect x="10" y="68" width="90" height="54" rx="10"/><text x="55" y="100" text-anchor="middle">Cliente</text></g>
+      <g data-n="lb"><rect x="205" y="68" width="120" height="54" rx="10"/><text x="265" y="92" text-anchor="middle">fw01</text><text x="265" y="110" text-anchor="middle" font-size="11">HAProxy</text></g>
+      <g data-n="w1"><rect x="450" y="12" width="100" height="54" rx="10"/><text x="500" y="44" text-anchor="middle">web01</text></g>
+      <g data-n="w2"><rect x="450" y="124" width="100" height="54" rx="10"/><text x="500" y="156" text-anchor="middle">web02</text></g>
+      <line data-l="c" x1="100" y1="95" x2="205" y2="95"/><line data-l="1" x1="325" y1="85" x2="450" y2="39"/><line data-l="2" x1="325" y1="105" x2="450" y2="151"/>
+      <text data-t="s1" x="500" y="82" text-anchor="middle" font-size="11"></text><text data-t="s2" x="500" y="120" text-anchor="middle" font-size="11"></text>
+    </svg>
+    <div class="sad-w-row">
+      <button type="button" data-r="k1">⏹ Parar web01</button><button type="button" data-r="k2">⏹ Parar web02</button><button type="button" data-r="kl">⏹ Parar fw01 (HAProxy)</button>
+      <button type="button" class="ghost" data-r="up">▶ Arrancar todo</button><button type="button" class="ghost" data-r="rs">↺ Reiniciar</button>
+      <label class="sad-f">Velocidad<select data-r="sp"><option value="1">1×</option><option value="5" selected>5×</option><option value="20">20×</option></select></label>
+    </div>
+    <div class="sad-w-note">Cada cuadrado es una petición (cada 0,5 s simulados): <span class="ok">verde = 200</span>, <span class="ko">rojo = error</span>.</div>
+    <div class="sad-fa-strip" data-r="strip" aria-hidden="true"></div>
+    <div class="sad-w-cols">
+      <div><div class="sad-w-note"><strong>Lo que vería <code>show stat</code></strong></div><table><thead><tr><th>Servidor</th><th>status</th><th>chkdown</th></tr></thead><tbody data-r="st"></tbody></table><div class="sad-w-out" data-r="msg" aria-live="polite"></div></div>
+      <div><div class="sad-w-note"><strong>Tu <code>prueba-fallo.csv</code></strong> (se rellena sola)</div><pre data-r="csv"></pre><button type="button" class="ghost" data-r="cp">Copiar CSV</button></div>
+    </div>
+  </div>
+</div>
+<style>
+.sad-fa-svg{width:100%;max-width:640px;height:auto;display:block;margin:.4rem auto}
+.sad-fa-svg rect{fill:var(--gray-100);stroke:var(--gray-500);stroke-width:2;transition:fill .3s,stroke .3s}
+.sad-fa-svg line{stroke:var(--gray-500);stroke-width:3;stroke-dasharray:6 5;transition:stroke .2s}
+.sad-fa-svg g.up rect{stroke:var(--color-accent-tip);fill:color-mix(in srgb,var(--color-accent-tip) 16%,transparent)}
+.sad-fa-svg g.dead rect{stroke:var(--color-accent-caution);fill:color-mix(in srgb,var(--color-accent-caution) 18%,transparent)}
+.sad-fa-svg g.zomb rect{stroke:var(--color-accent-warning);fill:color-mix(in srgb,var(--color-accent-warning) 22%,transparent)}
+.sad-fa-svg line.ok{stroke:var(--color-accent-tip);stroke-dasharray:none}
+.sad-fa-svg line.ko{stroke:var(--color-accent-caution);stroke-dasharray:none}
+.sad-fa-strip{display:flex;flex-wrap:wrap;gap:2px;margin:.3rem 0 .6rem;min-height:14px}
+.sad-fa-strip i{width:9px;height:14px;border-radius:2px;background:var(--color-accent-tip)}
+.sad-fa-strip i.ko{background:var(--color-accent-caution)}
+.sad-fa .sad-w-row button.stop{background:var(--color-accent-caution);border-color:var(--color-accent-caution)}
+@media (prefers-reduced-motion:reduce){.sad-fa-svg rect,.sad-fa-svg line{transition:none}}
+</style>
+<script>(function(){
+var r=document.currentScript.previousElementSibling.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')},
+ N=function(s){return r.querySelector(s)};
+var S,timer;
+function init(){S={t:0,lb:true,rr:0,ev:[],strip:[],last:null,msg:'Todo funciona. Para un servidor y mira qué pasa.',
+ w:[{n:'web01',alive:true,up:true,f:0,o:0,next:+q('inter').value,down:0},{n:'web02',alive:true,up:true,f:0,o:0,next:+q('inter').value*1.5,down:0}]};
+ ['k1','k2','kl'].forEach(function(k){q(k).classList.add('stop')});draw()}
+function P(){return{inter:+q('inter').value,fall:+q('fall').value,rise:+q('rise').value}}
+function hm(t){var s=10*3600+2*60+Math.floor(t),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return [h,m,x].map(function(v){return String(v).padStart(2,'0')}).join(':')}
+function stopC(name,idx){var o=name==='fw01'?null:S.w[idx];if(name==='fw01'){if(!S.lb)return;S.lb=false}else{if(!o.alive)return;o.alive=false}
+ S.ev.push({c:name,t0:S.t,e:null,rec:null,done:false,idx:idx});S.msg='Has parado <strong>'+name+'</strong>. HAProxy aún no lo sabe: sigue enviándole peticiones hasta acumular '+P().fall+' fallos del <em>check</em>.';draw()}
+function tick(){var p=P();S.t+=0.5;
+ S.w.forEach(function(o){if(S.t>=o.next){o.next+=p.inter;
+  if(S.lb){ if(o.alive){o.o++;o.f=0;if(!o.up&&o.o>=p.rise){o.up=true;S.msg='<strong>'+o.n+'</strong> vuelve a UP tras '+p.rise+' comprobaciones correctas.'}}
+  else{o.f++;o.o=0;if(o.up&&o.f>=p.fall){o.up=false;o.down++;S.msg='HAProxy marca <strong>'+o.n+'</strong> como DOWN (<code>chkdown</code> = '+o.down+') tras '+p.fall+' fallos. Detección: ≈ '+(p.fall*p.inter)+' s máx.'}}}}});
+ var ok=false,txt='',link=null;
+ if(!S.lb){txt='sin respuesta';}
+ else{var pool=S.w.filter(function(o){return o.up});
+  if(!pool.length){txt='503'}
+  else{S.rr=(S.rr+1)%pool.length;var c=pool[S.rr];link=S.w.indexOf(c);
+   if(c.alive){ok=true;txt='200'}else txt='503'}}
+ S.last={ok:ok,link:link,lb:S.lb};
+ S.strip.push(ok);if(S.strip.length>90)S.strip.shift();
+ S.ev.forEach(function(e){if(e.done||e.c==='fw01')return;var o=S.w[e.idx];
+  if(!ok){if(e.e===null)e.e=S.t;e.last=S.t}
+  else if(!o.up){ if(e.e===null){e.e=S.t-0.5;e.nofail=true}
+   e.rec=S.t;e.done=true;S.msg='<strong>Recuperado</strong>: HAProxy ya no usa '+o.n+' y desde ahora todas las peticiones dan 200. La fila está en tu CSV.'}});
+ draw()}
+function draw(){var p=P();q('o1').textContent=p.inter;q('o2').textContent=p.fall;q('o3').textContent=p.rise;
+ q('cfg').textContent='server web01 10.0.0.11:80 check inter '+p.inter+'s fall '+p.fall+' rise '+p.rise;
+ q('det').innerHTML='Peor caso de detección: <strong>inter × fall = '+(p.inter*p.fall)+' s</strong>. Menos intervalo = menos RTO, pero más carga de comprobaciones.';
+ function cls(g,c){var e=N('[data-n="'+g+'"]');e.setAttribute('class',c)}
+ cls('cli','up');cls('lb',S.lb?'up':'dead');
+ S.w.forEach(function(o,i){cls('w'+(i+1),!o.alive?'dead':o.up?'up':'zomb');
+  N('[data-t="s'+(i+1)+'"]').textContent=!o.alive?(o.up?'parado · HAProxy aún lo cree UP':'parado · DOWN'):(o.up?'UP':'vivo · aún DOWN')});
+ ['c','1','2'].forEach(function(l){N('[data-l="'+l+'"]').setAttribute('class','')});
+ if(S.last){var k=S.last.ok?'ok':'ko';N('[data-l="c"]').setAttribute('class',k);if(S.last.link!==null)N('[data-l="'+(S.last.link+1)+'"]').setAttribute('class',k)}
+ q('strip').innerHTML=S.strip.map(function(x){return '<i'+(x?'':' class="ko"')+'></i>'}).join('');
+ q('st').innerHTML=S.w.map(function(o){return '<tr><td>'+o.n+'</td><td class="'+(o.up?'ok':'ko')+'">'+(o.up?'UP':'DOWN')+'</td><td>'+o.down+'</td></tr>'}).join('');
+ q('msg').innerHTML=S.msg+(!S.lb?'<br><span class="ko">fw01 es un punto único de fallo:</span> sin él no responde nada, aunque web01 y web02 estén sanos. Solución: un segundo balanceador con VRRP/keepalived (UD07).':'');
+ var c='componente,hora_fallo,hora_recuperacion,segundos\n';
+ S.ev.forEach(function(e){if(e.c==='fw01')return;
+  if(e.done){c+=e.c+','+hm(e.e)+','+hm(e.rec)+','+Math.max(1,Math.round(e.rec-e.e))+'\n'}
+  else c+='# '+e.c+': esperando recuperación…\n'});
+ q('csv').textContent=c}
+function loop(){clearInterval(timer);timer=setInterval(tick,Math.round(500/ +q('sp').value))}
+q('k1').onclick=function(){stopC('web01',0)};q('k2').onclick=function(){stopC('web02',1)};q('kl').onclick=function(){stopC('fw01')};
+q('up').onclick=function(){S.lb=true;S.w.forEach(function(o){o.alive=true});S.msg='Todo arrancado. HAProxy esperará <code>rise</code> = '+P().rise+' comprobaciones correctas antes de volver a usar los servidores.';draw()};
+q('rs').onclick=init;q('sp').onchange=loop;
+['inter','fall','rise'].forEach(function(k){q(k).oninput=draw});
+q('cp').onclick=function(){var t=q('csv').textContent.split('\n').filter(function(l){return l[0]!=='#'}).join('\n');if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){q('cp').textContent='¡Copiado!';setTimeout(function(){q('cp').textContent='Copiar CSV'},1500)},function(){})};
+init();loop();
+})();</script>

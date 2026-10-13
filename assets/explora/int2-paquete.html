@@ -1,0 +1,87 @@
+<div class="sad-w sad-pk" style="--c: var(--color-accent-tip)">
+  <div class="sad-w-head"><span class="sad-w-tag">Explora</span> ¿Qué hace <code>fw01</code> con este paquete? <span class="sad-w-sub">Elige un paquete y sigue su camino por nftables</span></div>
+  <div class="sad-w-body">
+    <div class="sad-chips" data-r="sc" role="tablist" aria-label="Paquete de prueba"></div>
+    <div class="sad-w-row">
+      <label class="sad-f"><span>Política por defecto de <code>input</code> y <code>forward</code></span><select data-r="pol"><option value="drop">policy drop (lo correcto)</option><option value="accept">policy accept (lo peligroso)</option></select></label>
+    </div>
+    <div class="sad-pipe" data-r="pipe"></div>
+    <div class="sad-w-cols">
+      <div><div class="sad-w-note"><strong>table inet filtro · chain entrada</strong> (hook input)</div><div class="sad-pk-rules" data-r="rin"></div></div>
+      <div><div class="sad-w-note"><strong>chain reenvio</strong> (hook forward) y <strong>table ip nat</strong></div><div class="sad-pk-rules" data-r="rfw"></div></div>
+    </div>
+    <div class="sad-w-out" data-r="v" aria-live="polite"></div>
+    <div class="sad-w-out" data-r="su"></div>
+  </div>
+</div>
+<style>
+.sad-w button.sad-chip{background:transparent;color:var(--color-link)}.sad-w button.sad-chip.on{background:var(--color-link);color:#fff}
+.sad-pk-rules{display:flex;flex-direction:column;gap:2px}
+.sad-pk-rules code{display:block;font-size:.76rem;padding:.18rem .45rem;border-radius:5px;border-left:3px solid transparent;background:var(--gray-100);white-space:pre-wrap;opacity:.55;transition:opacity .2s,background .2s}
+.sad-pk-rules code.hit{opacity:1;border-left-color:var(--color-accent-tip);background:color-mix(in srgb,var(--color-accent-tip) 22%,transparent)}
+.sad-pk-rules code.hitko{opacity:1;border-left-color:var(--color-accent-caution);background:color-mix(in srgb,var(--color-accent-caution) 22%,transparent)}
+.sad-pk-rules code.seen{opacity:.8}
+.sad-pk-v{font-size:1.05rem}
+</style>
+<script>(function(){
+var r=document.currentScript.previousElementSibling.previousElementSibling,q=function(n){return r.querySelector('[data-r="'+n+'"]')};
+var IN=[
+ ['ct state established,related accept',function(p){return p.ct==='est'},'a'],
+ ['ct state invalid drop',function(p){return p.ct==='inv'},'d'],
+ ['iif "lo" accept',function(p){return p.iif==='lo'},'a'],
+ ['iifname $DMZ ip protocol icmp accept',function(p){return p.iif==='DMZ'&&p.proto==='icmp'},'a'],
+ ['tcp dport 22 accept',function(p){return p.proto==='tcp'&&p.dport===22},'a'],
+ ['ct status dnat tcp dport 80 accept',function(p){return p.dnat&&p.proto==='tcp'&&p.dport===80},'a'],
+ ['iifname $DMZ tcp dport 80 accept',function(p){return p.iif==='DMZ'&&p.proto==='tcp'&&p.dport===80},'a'],
+ ['log prefix "fw01-drop-in: " limit rate 5/minute',null,'l']];
+var FW=[
+ ['ct state established,related accept',function(p){return p.ct==='est'},'a'],
+ ['iifname $DMZ oifname $WAN tcp dport { 80, 443 } accept',function(p){return p.iif==='DMZ'&&p.oif==='WAN'&&p.proto==='tcp'&&(p.dport===80||p.dport===443)},'a'],
+ ['iifname $DMZ oifname $WAN udp dport 53 accept',function(p){return p.iif==='DMZ'&&p.oif==='WAN'&&p.proto==='udp'&&p.dport===53},'a']];
+var NAT=['prerouting: iifname $WAN tcp dport 8080 dnat to 172.16.0.1:80','postrouting: oifname $WAN masquerade'];
+var SC=[
+ {n:'Cliente externo → web (8080)',d:'Un cliente de Internet pide http://fw01:8080/',iif:'WAN',proto:'tcp',dport:8080,to:'fw',ct:'new'},
+ {n:'Externo → SSH (22)',d:'Alguien intenta entrar por SSH desde fuera',iif:'WAN',proto:'tcp',dport:22,to:'fw',ct:'new'},
+ {n:'Externo → MySQL (3306)',d:'Un escáner prueba el puerto 3306 de fw01',iif:'WAN',proto:'tcp',dport:3306,to:'fw',ct:'new'},
+ {n:'Externo → ping',d:'Un ping (ICMP echo) desde Internet hacia fw01',iif:'WAN',proto:'icmp',dport:0,to:'fw',ct:'new',icmp:1},
+ {n:'Externo → web01 directo',d:'Alguien intenta llegar directamente a web01:80 (172.16.0.11)',iif:'WAN',proto:'tcp',dport:80,to:'web',ct:'new'},
+ {n:'ACK sin conexión previa',d:'Paquete TCP ACK que no pertenece a ninguna conexión (típico de un escaneo ACK)',iif:'WAN',proto:'tcp',dport:80,to:'fw',ct:'inv'},
+ {n:'web01 → HTTPS a Internet',d:'web01 se actualiza: abre una conexión a Internet por el 443',iif:'DMZ',proto:'tcp',dport:443,to:'inet',ct:'new'},
+ {n:'web01 → SMTP (25) a Internet',d:'web01 comprometido intenta enviar spam por el 25',iif:'DMZ',proto:'tcp',dport:25,to:'inet',ct:'new'},
+ {n:'web01 → DNS (UDP 53)',d:'web01 resuelve un nombre en Internet',iif:'DMZ',proto:'udp',dport:53,to:'inet',ct:'new'},
+ {n:'Respuesta de Internet → web01',d:'Llega la respuesta de una conexión que web01 abrió antes',iif:'WAN',proto:'tcp',dport:40000,to:'web',ct:'est'}];
+var cur=0;
+q('sc').innerHTML=SC.map(function(s,i){return '<button type="button" class="sad-chip'+(i?'':' on')+'" data-i="'+i+'">'+s.n+'</button>'}).join('');
+function ruleHTML(list,id,hit,ko){return list.map(function(x,i){var c=hit===i?(ko?'hitko':'hit'):'';return '<code class="'+c+'">'+(i+1)+'  '+x[0]+'</code>'}).join('')}
+function run(){
+ var s=SC[cur],p={iif:s.iif,proto:s.proto,dport:s.dport,ct:s.ct,dnat:false,oif:null},pol=q('pol').value,steps=[],ev=[];
+ // prerouting
+ var nat=null;
+ if(s.iif==='WAN'&&s.proto==='tcp'&&s.dport===8080&&s.ct==='new'){p.dnat=true;p.dport=80;s.to2='fw';nat='dnat'}
+ var local=p.dnat||s.to==='fw';
+ steps.push('prerouting'+(nat?' (DNAT → 172.16.0.1:80)':''));
+ steps.push('decisión de ruta: '+(local?'para fw01':'para reenviar'));
+ var list=local?IN:FW,hook=local?'input':'forward',hit=-1,verdict=null,ko=false;
+ if(!local)p.oif=s.iif==='DMZ'?'WAN':'DMZ';
+ for(var i=0;i<list.length;i++){var f=list[i][1];if(f&&f(p)){hit=i;verdict=list[i][2]==='a';break}}
+ var viaPolicy=false;
+ if(hit<0){viaPolicy=true;verdict=(pol==='accept');}
+ ko=!verdict;
+ steps.push(hook+(verdict?' ✓':' ✗'));
+ var masq=false;
+ if(!local&&verdict&&p.oif==='WAN'){masq=true;steps.push('postrouting (masquerade)')}
+ q('pipe').innerHTML=steps.map(function(t,i){return '<span class="'+(i===steps.length-1?'cur':'done')+'">'+t+'</span>'}).join('<span style="background:none">→</span>');
+ q('rin').innerHTML=ruleHTML(IN,'in',local?hit:-1,ko)+'<code class="'+(local&&viaPolicy?(ko?'hitko':'hit'):'')+'">policy '+pol+';</code>';
+ q('rfw').innerHTML=ruleHTML(FW,'fw',!local?hit:-1,ko)+'<code class="'+(!local&&viaPolicy?(ko?'hitko':'hit'):'')+'">policy '+pol+';</code>'+NAT.map(function(t,i){return '<code class="'+((i===0&&nat)||(i===1&&masq)?'hit':'')+'">'+t+'</code>'}).join('');
+ var why=viaPolicy?(verdict?'ninguna regla coincide y la política es <strong>accept</strong>: <span class="ko">entra todo lo que no prohibiste</span>':'ninguna regla lo permite, así que actúa la <strong>política drop</strong> (todo lo no permitido se descarta)'):'coincide la regla nº '+(hit+1)+': <code>'+list[hit][0]+'</code>';
+ q('v').innerHTML='<p class="sad-pk-v"><strong>'+s.d+'.</strong></p><p>Veredicto: '+(verdict?'<span class="ok">ACEPTADO</span>':'<span class="ko">DESCARTADO</span>')+' en <code>'+hook+'</code> — '+why+'.'
+  +(nat?' Antes, la regla de <code>prerouting</code> cambió el destino a <code>172.16.0.1:80</code>, donde escucha HAProxy; por eso en <code>input</code> casa con <code>ct status dnat</code>.':'')
+  +(masq?' Al salir por la WAN, <code>masquerade</code> sustituye la IP de origen por la de fw01.':'')
+  +(viaPolicy&&!verdict&&local?' Se registra con <code>log</code> (máx. 5/minuto): ese prefijo te sirve para buscarlo en <code>journalctl -k</code>.':'')+'</p>';
+ q('su').innerHTML=s.icmp
+  ?'<strong>Suricata:</strong> captura en la interfaz (AF_PACKET) <em>antes</em> de que el paquete llegue a nftables. Con tu regla <code>alert icmp … itype:8; sid:1000001;</code> verás en <code>fast.log</code>: <code>[1:1000001:1] INT2 ping detectado [**] {ICMP} 203.0.113.9 -> 192.168.1.10</code>. nftables lo descarta, pero la alerta ya existe: <strong>un IDS avisa, el cortafuegos bloquea</strong>.'
+  :'<strong>Suricata:</strong> este paquete no coincide con una regla de ping, así que no genera alerta. Suricata solo avisa de lo que describen sus reglas; no decide si el paquete pasa.';
+ [].forEach.call(q('sc').children,function(b,i){b.classList.toggle('on',i===cur)})}
+q('sc').onclick=function(e){var i=e.target.getAttribute('data-i');if(i!==null){cur=+i;run()}};
+q('pol').onchange=run;run();
+})();</script>
