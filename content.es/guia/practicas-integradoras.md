@@ -7,47 +7,40 @@ bookToc: true
 # Prácticas integradoras obligatorias
 
 > [!IMPORTANT]
-> **En este módulo las prácticas de cada unidad no se entregan.** Sirven para aprender haciendo en el laboratorio, pero **los conceptos básicos y las órdenes principales de esas prácticas entran en la prueba teórico-práctica de cada unidad**. Lo único que se entrega son **dos prácticas integradoras**, una al final de cada trimestre, diseñadas para corregirse en pocos minutos.
+> **En este módulo las prácticas de cada unidad no se entregan.** Sirven para aprender haciendo, pero **los conceptos básicos y las órdenes principales de esas prácticas entran en la prueba teórico-práctica de cada unidad**. Lo único que se entrega son **dos prácticas integradoras**, una al final de cada trimestre, diseñadas para corregirse en pocos minutos.
 
 | Trimestre | Práctica integradora | Unidades | Fecha (semipresencial) | Fecha (presencial) | RA |
 |---|---|---|---|---|---|
-| 1.º | [INT-1 · Servidor seguro de la clínica](#int-1--servidor-seguro-de-la-clínica) | UD01, UD02, UD03, UD04 | **viernes 27/11/2026** | viernes 15/01/2027 *(propuesta)* | RA1, RA2, RA3, RA6, RA7 |
-| 2.º | [INT-2 · Perímetro y servicio sin parada](#int-2--perímetro-y-servicio-sin-parada) | UD05, UD06, UD07 | miércoles 10/02/2027 *(propuesta)* | viernes 30/04/2027 *(propuesta)* | RA2 a RA6 |
+| 1.º | [INT-1 · Servidor seguro de la clínica](#int-1--servidor-seguro-de-la-clínica) | UD01, UD02, UD03, UD04 | **17/11/2026 o 19/11/2026** |  | RA1, RA2, RA3, RA6, RA7 |
+| 2.º | [INT-2 · Perímetro y servicio sin parada](#int-2--perímetro-y-servicio-sin-parada) | UD05, UD06, UD07 | 02/02/2027 o 04/02/2027 | RA2 a RA6 |
 
 > [!NOTE]
 > Las fechas dependen de dónde termine cada bloque en el [calendario](/guia/temporalizacion/) (presencial) o en la [guía semipresencial](/guia/semipresencial/). La de INT-1 semipresencial (27/11/2026) es la fijada para el curso; el resto son propuestas.
 
-## Cómo funcionan (y por qué son fáciles de corregir)
+## Cómo funcionan 
 
-Una práctica integradora no repite una práctica de unidad: **reúne en un mismo sistema lo aprendido** en varias unidades, el de la clínica [Mediterránea Dental](/guia/proyecto-clinica/). Para que corregirla lleve minutos y no horas:
+Una práctica integradora no repite una práctica de unidad: **reúne en un mismo sistema lo aprendido** en varias unidades, el de la clínica [Mediterránea Dental](/guia/proyecto-clinica/). 
 
-1. **Una sola máquina (INT-1) o un laboratorio mínimo (INT-2).** Nombres, rutas y ficheros fijados en el enunciado.
+1. **Una sola máquina (INT-1) o un entorno mínimo (INT-2).** Nombres, rutas y ficheros fijados en el enunciado.
 2. **Un script de verificación** que lees y ejecutas tú: comprueba el sistema con órdenes reales y genera un fichero de **evidencias** con `[OK]` o `[FALLA]` en cada punto y una puntuación automática.
 3. **Cuatro preguntas cortas** (`respuestas.md`) sobre los conceptos de las unidades. Cada una, de tres líneas como máximo.
 4. **Se entregan solo dos ficheros por práctica:** el fichero de evidencias y `respuestas.md`. Nada de informes largos ni capturas.
 
-| Parte | Puntos | Quién la corrige |
-|---|--:|---|
-| 16 comprobaciones automáticas (0,5 cada una) | 8,0 | El script (se contrasta leyendo el fichero) |
-| 4 preguntas cortas (0,5 cada una) | 2,0 | El profesorado, en unos minutos con la [guía de corrección](/guia/correccion-integradoras/) |
-| **Total** | **10,0** | |
+
 
 ### Dos formas de entregar
 
 - **En Aules:** subes `evidencias-….txt` y `respuestas.md`.
-- **En la tutoría o en clase:** ejecutas el script **delante del profesorado**, en tu máquina, y se corrige en el momento. Es la forma recomendada en la modalidad semipresencial.
+- **En la tutoría o en clase:** ejecutas el script **delante del profesorado**, en tu máquina, y se corrige en el momento. 
 
 ### Reglas comunes
 
 | Aspecto | Norma |
 |---|---|
 | Modalidad | Individual |
-| Laboratorio | Solo máquinas virtuales propias. Nada de datos personales ni credenciales reales |
+| Entorno | Solo máquinas virtuales propias. Nada de datos personales ni credenciales reales |
 | Datos propios | El nombre de la CA lleva **tu apellido** (`CA-<apellido>`) y las contraseñas y claves son tuyas |
 | Qué no se entrega | Claves privadas, contraseñas ni copias de la máquina |
-| Retraso | Cada día lectivo de retraso resta un punto sobre diez, hasta un máximo de tres |
-| Recuperación | Quien no entregue o no alcance 5 puntos repite una versión reducida antes de la evaluación |
-| Honestidad | El fichero incluye el nombre de la máquina, su identificador y la fecha, y termina con una **firma** que detecta ediciones manuales. Dos entregas con el mismo identificador de máquina se revisan en directo |
 
 > [!TIP]
 > Ejecuta el script **desde el primer día** que tengas algo montado. Las líneas `[FALLA]` te dicen qué te falta (cada una trae una pista) y es la mejor forma de saber cuánto te queda. Puedes ejecutarlo tantas veces como quieras; solo cuenta la última.
@@ -66,7 +59,7 @@ Dejar **un servidor de la clínica** diagnosticado, protegido frente a la pérdi
 
 La clínica guarda historiales clínicos (datos de salud, categoría especial del RGPD) en un servidor sin RAID, sin copias verificadas y con una intranet en HTTP. La dirección fija un **RPO de 4 horas y un RTO de 8 horas** para los ficheros clínicos y pide demostrar cómo quedaría el servidor bien hecho.
 
-### Laboratorio
+### Entorno
 
 Una única máquina virtual **`srv-clinica`** (Debian 13, 2 CPU, 2 GB de RAM, red NAT) con **cinco discos adicionales de 1 GB**: `sdb`, `sdc`, `sdd` y `sde` para el RAID, y `sdf` para las copias. Haz una instantánea antes de cada fase.
 
@@ -157,7 +150,7 @@ Proteger el perímetro de la clínica y conseguir que su **web de citas siga fun
 
 La clínica quiere abrir la web de citas a Internet y que dos personas teletrabajen. Requisitos de la dirección: política restrictiva en el cortafuegos, detección de escaneos y una web que **se recupere en menos de 5 minutos (RTO)** si cae un servidor.
 
-### Laboratorio
+### Entorno
 
 Cuatro máquinas Debian 13 (haz una instantánea de cada una antes de empezar):
 
