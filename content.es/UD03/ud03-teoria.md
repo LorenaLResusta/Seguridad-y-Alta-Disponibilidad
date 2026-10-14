@@ -1112,3 +1112,50 @@ Material complementario de la unidad (ver también la sección [Recursos de la u
 {{< explora "hash" >}}
 
 ---
+
+## Autoevaluación
+
+Responde sin mirar los apuntes y pulsa **Corregir**: verás la solución y su explicación. Si fallas más de dos, repasa los apartados correspondientes antes de la prueba.
+
+{{< quiz >}}
+- q: "El **principio de Kerckhoffs** afirma que..."
+  options: ["El algoritmo debe mantenerse en secreto", "La seguridad del sistema debe depender solo del secreto de la clave, no del algoritmo", "Cuanto más largo el mensaje, más seguro", "Las claves públicas deben ser secretas"]
+  answer: 1
+  explain: "Los algoritmos se publican y se someten a escrutinio; solo la **clave** es secreta."
+- q: "Para cifrar un fichero de varios gigabytes, ¿qué tipo de algoritmo conviene usar?"
+  options: ["Asimétrico (RSA), porque es más seguro", "Simétrico (AES), porque es mucho más rápido", "Una función hash", "Una firma digital"]
+  answer: 1
+  explain: "La criptografía simétrica es rápida. Los sistemas reales (TLS, PGP) son **híbridos**: usan la asimétrica para acordar la clave y la simétrica para los datos."
+- q: "¿Qué es adecuado para almacenar contraseñas de usuarios?"
+  options: ["SHA-256 sin sal", "MD5", "AES con una clave guardada junto a los datos", "Un algoritmo lento con sal, como Argon2id o bcrypt"]
+  answer: 3
+  explain: "Se guarda un *hash* **lento y con sal** para frenar la fuerza bruta. MD5 y SHA-256 simples son demasiado rápidos; el cifrado es reversible."
+- q: "Cambiar un solo bit del mensaje altera por completo el resultado de SHA-256. Esta propiedad se llama..."
+  options: ["Efecto avalancha", "Colisión", "Reversibilidad", "Difusión de clave"]
+  answer: 0
+  explain: "El **efecto avalancha** hace que dos entradas casi iguales produzcan *hashes* totalmente distintos."
+- q: "Para que **solo Ana** pueda leer un mensaje, Bea debe cifrarlo con..."
+  options: ["Su propia clave privada", "La clave privada de Ana", "La clave pública de Ana", "La clave pública de Bea"]
+  answer: 2
+  explain: "Se cifra con la clave **pública** del destinatario y solo su clave privada lo descifra. Cifrar con la privada propia es lo que hace la firma."
+- q: "¿Qué se utiliza para **firmar** digitalmente un documento?"
+  options: ["La clave pública del firmante", "La clave privada del firmante, y se verifica con su clave pública", "Una clave simétrica compartida", "Solo un hash del documento"]
+  answer: 1
+  explain: "La firma se genera con la clave **privada** (sobre el *hash* del documento) y cualquiera puede verificarla con la pública. Aporta integridad, autenticidad y no repudio."
+- q: "Un certificado X.509 sirve para..."
+  options: ["Cifrar el disco del servidor", "Vincular una clave pública con una identidad, avalado por la firma de una CA", "Almacenar la contraseña del administrador", "Generar claves simétricas"]
+  answer: 1
+  explain: "La CA firma el certificado y así garantiza que la clave pública pertenece a quien dice ser."
+- q: "Tu navegador muestra un aviso al abrir la intranet con un certificado de tu CA propia. ¿Qué falta?"
+  options: ["Reiniciar el navegador", "Desactivar la comprobación de certificados", "Instalar el certificado raíz de la CA como de confianza en ese equipo", "Cambiar el puerto 443 por el 80"]
+  answer: 2
+  explain: "Los equipos solo confían en las CA que tienen en su almacén. Desactivar la comprobación anula la protección frente a suplantaciones."
+- q: "¿Qué versiones de protocolo deben considerarse **obsoletas** y desactivarse?"
+  options: ["TLS 1.2 y TLS 1.3", "SSL 3.0, TLS 1.0 y TLS 1.1", "Solo SSL 2.0", "Ninguna, todas siguen siendo seguras"]
+  answer: 1
+  explain: "Se mantienen TLS 1.2 (bien configurado) y TLS 1.3; las anteriores tienen debilidades conocidas."
+- q: "¿Qué amenaza motiva la criptografía **post-cuántica**?"
+  options: ["Que los ordenadores cuánticos puedan romper RSA y la criptografía de curva elíptica", "Que AES-256 se pueda romper con fuerza bruta clásica", "Que los certificados caduquen demasiado pronto", "Que los hash sean demasiado rápidos"]
+  answer: 0
+  explain: "El algoritmo de Shor, en un ordenador cuántico suficientemente potente, rompería RSA y ECC; se migra a algoritmos resistentes (ML-KEM, ML-DSA)."
+{{< /quiz >}}

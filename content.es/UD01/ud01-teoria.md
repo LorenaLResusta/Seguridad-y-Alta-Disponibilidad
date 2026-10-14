@@ -1404,6 +1404,53 @@ Una academia de idiomas detecta que un portátil robado contenía, sin cifrar, u
 - Ante un incidente se sigue un proceso ordenado y, si hay que investigar, se aplican los principios del **análisis forense**.
 - La **legislación** (RGPD, LOPDGDD, LSSI-CE, ENS, NIS2, Código Penal) y las **normas** (ISO 27001/27002, NIST CSF) marcan qué hay que proteger y cómo demostrarlo.
 
+## Autoevaluación
+
+Responde sin mirar los apuntes y pulsa **Corregir**: verás la solución y su explicación. Si fallas más de dos, repasa los apartados correspondientes antes de la prueba.
+
+{{< quiz >}}
+- q: "¿Qué propiedad de la seguridad se vulnera si alguien modifica sin autorización una nota de un historial clínico?"
+  options: ["Confidencialidad", "Integridad", "Disponibilidad", "No repudio"]
+  answer: 1
+  explain: "La **integridad** garantiza que la información no se altera sin autorización. Si solo se hubiera leído, sería un fallo de confidencialidad; si dejara de estar accesible, de disponibilidad."
+- q: "¿Cómo se define el **riesgo** en seguridad informática?"
+  options: ["La existencia de una vulnerabilidad en un activo", "Cualquier amenaza detectada por el antivirus", "La probabilidad de que una amenaza explote una vulnerabilidad de un activo, multiplicada por el impacto", "El coste de las medidas de seguridad"]
+  answer: 2
+  explain: "Riesgo = probabilidad × impacto. Una vulnerabilidad sin amenaza que la explote, o una amenaza sin activo expuesto, no genera riesgo por sí sola."
+- q: "La clínica contrata un seguro de ciberriesgo para cubrir las pérdidas de un posible incidente. ¿Qué tipo de tratamiento del riesgo es?"
+  options: ["Mitigar", "Evitar", "Transferir", "Aceptar"]
+  answer: 2
+  explain: "**Transferir** es pasar el impacto económico a un tercero (seguro, proveedor). No reduce la probabilidad del incidente."
+- q: "¿Para qué sirve el sistema **CVSS**?"
+  options: ["Para identificar cada vulnerabilidad con un código único", "Para puntuar la gravedad de una vulnerabilidad (de 0 a 10)", "Para cifrar las comunicaciones", "Para registrar los accesos al sistema"]
+  answer: 1
+  explain: "**CVE** identifica la vulnerabilidad (CVE-AAAA-NNNN); **CVSS** valora su gravedad en una escala de 0 a 10."
+- q: "Un correo falso que imita al banco y pide las credenciales es un ejemplo de..."
+  options: ["Ataque de fuerza bruta", "Ingeniería social (phishing)", "Denegación de servicio", "Vulnerabilidad de software"]
+  answer: 1
+  explain: "El *phishing* ataca al **factor humano** mediante engaño; por eso la formación es una medida clave."
+- q: "¿Cuál es un segundo factor de autenticación válido para acompañar a una contraseña?"
+  options: ["Una segunda contraseña distinta", "El nombre de la mascota", "Un código temporal (TOTP) generado en el móvil", "El nombre de usuario"]
+  answer: 2
+  explain: "La MFA combina factores de **categorías distintas**: algo que sabes, algo que tienes (móvil, llave) y algo que eres (biometría). Dos contraseñas siguen siendo el mismo factor."
+- q: "La **defensa en profundidad** consiste en..."
+  options: ["Instalar el mejor cortafuegos posible", "Superponer varias capas de protección, de modo que el fallo de una no deje el sistema expuesto", "Cifrar solo los datos más importantes", "Proteger únicamente el perímetro de la red"]
+  answer: 1
+  explain: "Ninguna medida es infalible: se combinan controles físicos, lógicos, técnicos y organizativos."
+- q: "Según el RGPD, los datos de salud de los pacientes son..."
+  options: ["Datos públicos", "Datos de categoría especial, con protección reforzada", "Datos que no necesitan base legal", "Datos exentos si el tratamiento es interno"]
+  answer: 1
+  explain: "Los datos de salud son una **categoría especial** (art. 9 del RGPD): exigen medidas reforzadas y una base legal específica."
+- q: "Antes de analizar el disco de un equipo comprometido, en un análisis forense hay que..."
+  options: ["Reiniciar el equipo para que funcione correctamente", "Ejecutar un antivirus sobre el disco original", "Hacer una copia bit a bit, calcular su hash y trabajar sobre la copia", "Borrar los ficheros sospechosos"]
+  answer: 2
+  explain: "Se preservan las evidencias: la copia forense con su *hash* demuestra que no se ha alterado el original."
+- q: "¿Cuál de estas medidas pertenece a la seguridad **pasiva**?"
+  options: ["El cortafuegos", "La política de contraseñas", "La copia de seguridad", "El sistema de detección de intrusiones"]
+  answer: 2
+  explain: "La seguridad pasiva reduce las **consecuencias** de un incidente y permite recuperarse (copias, RAID, SAI). Las demás previenen o detectan."
+{{< /quiz >}}
+
 ## 16. Referencias y documentación oficial
 
 - [Real Decreto 1629/2009, título de Técnico Superior en ASIR (BOE)](https://www.boe.es/buscar/act.php?id=BOE-A-2009-18355)

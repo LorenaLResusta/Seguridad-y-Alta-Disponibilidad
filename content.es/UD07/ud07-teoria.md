@@ -682,3 +682,50 @@ Un *clúster* aumenta la **fiabilidad** (tolera fallos) y la **productividad** (
 {{< explora "disponibilidad" >}}
 
 ---
+
+## Autoevaluación
+
+Responde sin mirar los apuntes y pulsa **Corregir**: verás la solución y su explicación. Si fallas más de dos, repasa los apartados correspondientes antes de la prueba.
+
+{{< quiz >}}
+- q: "Una disponibilidad anual del 99,9 % equivale, aproximadamente, a una parada máxima de..."
+  options: ["5 minutos", "52 minutos", "8,76 horas", "3,65 días"]
+  answer: 2
+  explain: "0,1 % de 8760 h ≈ 8,76 h. Un 99,99 % serían unos 52 minutos y un 99,999 %, unos 5 minutos."
+- q: "¿Qué es un **SLA**?"
+  options: ["La métrica que se mide", "Un objetivo interno", "Un compromiso contractual de nivel de servicio con el cliente", "Un tipo de RAID"]
+  answer: 2
+  explain: "El **SLI** es la métrica (p. ej. % de peticiones correctas), el **SLO** el objetivo y el **SLA** el compromiso contractual con consecuencias."
+- q: "Un **punto único de fallo** (SPOF) es..."
+  options: ["Un componente cuya caída deja sin servicio a todo el sistema", "El servidor más potente", "Un fallo de software puntual", "Una copia de seguridad"]
+  answer: 0
+  explain: "Se elimina duplicando el componente. Un balanceador único delante de dos servidores web sigue siendo un SPOF."
+- q: "El **RPO** de un servicio es..."
+  options: ["El tiempo máximo que puede estar parado", "La cantidad máxima de datos que se admite perder, expresada en tiempo", "El número de servidores", "El coste de la recuperación"]
+  answer: 1
+  explain: "**RPO** = datos que se pueden perder; **RTO** = tiempo máximo de recuperación."
+- q: "En una configuración **activo-pasivo**..."
+  options: ["Todos los nodos atienden peticiones", "El nodo pasivo espera y asume el servicio cuando falla el activo", "No hay conmutación por error", "Solo hay un nodo"]
+  answer: 1
+  explain: "En **activo-activo** todos los nodos sirven tráfico y se reparte la carga."
+- q: "¿Qué aportan **VRRP/Keepalived**?"
+  options: ["Cifrado de las comunicaciones", "Una IP virtual que pasa automáticamente al nodo de respaldo si falla el principal", "Copias de seguridad", "Un cortafuegos de aplicación"]
+  answer: 1
+  explain: "Los clientes usan siempre la misma IP virtual, aunque cambie el nodo que la sirve."
+- q: "En un clúster Pacemaker/Corosync, el **quórum** y el *fencing* sirven para evitar..."
+  options: ["El exceso de carga", "La pérdida de la contraseña", "El cerebro dividido (*split-brain*), con dos nodos creyéndose el principal", "La caducidad de certificados"]
+  answer: 2
+  explain: "El quórum decide qué parte del clúster puede seguir; el *fencing* aísla al nodo dudoso para que no escriba datos."
+- q: "¿Qué hace la directiva `check` en una línea `server` de HAProxy?"
+  options: ["Cifra el tráfico al servidor", "Activa comprobaciones de salud y retira del reparto al servidor que no responde", "Cambia el puerto", "Guarda logs"]
+  answer: 1
+  explain: "Con `inter`, `fall` y `rise` se ajusta cada cuánto se comprueba y cuántos fallos o aciertos cambian el estado."
+- q: "La **replicación** de una base de datos no sustituye a la copia de seguridad porque..."
+  options: ["Es más lenta", "Replica también los borrados y la corrupción de datos", "Solo funciona con discos SSD", "No permite conmutación por error"]
+  answer: 1
+  explain: "Un `DELETE` erróneo se propaga a la réplica en segundos. La copia permite volver a un punto anterior."
+- q: "¿Qué debe incluir siempre una práctica de alta disponibilidad?"
+  options: ["Solo la instalación del servicio", "Una prueba explícita de fallo y la comprobación (y medición) de la recuperación", "Un informe de 50 páginas", "La contraseña del administrador"]
+  answer: 1
+  explain: "Si no se provoca el fallo, no se sabe si la solución funciona ni cuánto tarda en recuperarse (RTO real)."
+{{< /quiz >}}

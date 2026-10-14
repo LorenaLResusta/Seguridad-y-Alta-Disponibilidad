@@ -1613,3 +1613,50 @@ La persona debe tener además una **cuenta local** (`ana`): PAM autentica, pero 
 {{< explora "firewall" >}}
 
 ---
+
+## Autoevaluación
+
+Responde sin mirar los apuntes y pulsa **Corregir**: verás la solución y su explicación. Si fallas más de dos, repasa los apartados correspondientes antes de la prueba.
+
+{{< quiz >}}
+- q: "¿Qué es una **DMZ**?"
+  options: ["Una red con todos los equipos de usuarios", "Una zona intermedia, aislada de la LAN, donde se ubican los servicios que se publican a Internet", "El conjunto de reglas del cortafuegos", "Un tipo de VPN"]
+  answer: 1
+  explain: "Si un servidor publicado se compromete, la DMZ limita el daño: no tiene acceso libre a la red interna."
+- q: "¿Qué política por defecto debe tener un cortafuegos bien configurado?"
+  options: ["Aceptar todo y bloquear lo peligroso", "Descartar todo lo no permitido expresamente (`policy drop`)", "Registrar pero no bloquear", "Depende del día"]
+  answer: 1
+  explain: "Con política restrictiva, lo que no has abierto deliberadamente queda cerrado."
+- q: "¿Para qué sirve la regla `ct state established,related accept`?"
+  options: ["Para permitir las respuestas de conexiones ya autorizadas, sin abrir puertos de entrada", "Para permitir todo el tráfico entrante", "Para registrar conexiones", "Para activar NAT"]
+  answer: 0
+  explain: "Un cortafuegos con **seguimiento de estado** reconoce las respuestas de conexiones legítimas y no hay que abrir reglas para ellas."
+- q: "En nftables, el **DNAT** para publicar un servicio se aplica en el hook..."
+  options: ["postrouting", "prerouting", "output", "forward"]
+  answer: 1
+  explain: "El DNAT cambia el destino y debe hacerse antes de la decisión de enrutado (*prerouting*). El `masquerade` se aplica en *postrouting*."
+- q: "Antes de aplicar un conjunto de reglas por SSH conviene..."
+  options: ["Aplicarlas directamente para no perder tiempo", "Comprobar la sintaxis con `nft -c -f`, tener copia y un mecanismo de reversión por si te bloqueas", "Desactivar el cortafuegos", "Reiniciar el servidor"]
+  answer: 1
+  explain: "Un error en la política puede dejarte sin acceso: se verifica antes y se prepara la vuelta atrás."
+- q: "Un **proxy inverso** (por ejemplo Nginx) se usa para..."
+  options: ["Controlar la navegación de los usuarios internos", "Proteger y publicar servidores internos, terminando TLS y repartiendo peticiones", "Cifrar el disco", "Asignar direcciones IP"]
+  answer: 1
+  explain: "El *proxy* directo actúa en nombre de los clientes; el **inverso**, en nombre de los servidores."
+- q: "En una VPN **WireGuard**, ¿cómo se identifican los pares?"
+  options: ["Con usuario y contraseña", "Con pares de claves pública y privada", "Con la dirección MAC", "Con certificados X.509 obligatoriamente"]
+  answer: 1
+  explain: "Cada extremo tiene su par de claves y solo acepta a los pares cuya clave pública figura en su configuración."
+- q: "¿Qué solución se emplea habitualmente para una VPN **sitio a sitio** entre dos sedes?"
+  options: ["IPsec/IKEv2", "Telnet", "Un proxy Squid", "FTP"]
+  answer: 0
+  explain: "IPsec con IKEv2 enlaza redes completas; WireGuard y OpenVPN también pueden usarse."
+- q: "RADIUS proporciona..."
+  options: ["Cifrado de disco", "Balanceo de carga", "Autenticación, autorización y contabilidad (AAA) centralizadas", "Filtrado de paquetes"]
+  answer: 2
+  explain: "Centraliza el acceso de VPN, Wi-Fi y 802.1X en un único servidor (por ejemplo FreeRADIUS)."
+- q: "¿Cómo verificas desde fuera que solo se exponen los servicios previstos?"
+  options: ["Mirando la configuración y suponiendo que funciona", "Escaneando las IP públicas desde el exterior (por ejemplo con `nmap`) y comparando con la matriz de flujos", "Reiniciando el cortafuegos", "Con `ping`"]
+  answer: 1
+  explain: "Lo que importa es lo que ve un atacante: se contrasta el resultado con lo planificado."
+{{< /quiz >}}

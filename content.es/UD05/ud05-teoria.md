@@ -700,6 +700,53 @@ Las prácticas guiadas de la unidad están en [Prácticas](/ud05/ud05-practicas/
 
 ---
 
+## Autoevaluación
+
+Responde sin mirar los apuntes y pulsa **Corregir**: verás la solución y su explicación. Si fallas más de dos, repasa los apartados correspondientes antes de la prueba.
+
+{{< quiz >}}
+- q: "En un ataque de **ARP spoofing**, el atacante..."
+  options: ["Inunda el conmutador con direcciones MAC falsas", "Asocia su MAC a la IP de otro equipo (p. ej. la puerta de enlace) para interceptar el tráfico", "Cambia el identificador de VLAN de las tramas", "Ofrece direcciones IP falsas por DHCP"]
+  answer: 1
+  explain: "Permite un ataque de intermediario (*man in the middle*). Se mitiga con la inspección dinámica de ARP (DAI) y segmentando bien."
+- q: "El **MAC flooding** se mitiga principalmente con..."
+  options: ["Port security en los puertos del conmutador", "Cifrado WPA3", "Un proxy inverso", "Reglas de Suricata"]
+  answer: 0
+  explain: "*Port security* limita el número de direcciones MAC por puerto, de modo que no se llena la tabla del conmutador."
+- q: "¿Qué protege el **DHCP snooping**?"
+  options: ["Frente a servidores DHCP falsos, aceptando respuestas solo desde puertos de confianza", "Frente a virus en los clientes", "Frente a la caída del servidor DHCP", "Frente a la captura de contraseñas Wi-Fi"]
+  answer: 0
+  explain: "Solo los puertos marcados como de confianza pueden ofrecer direcciones; además construye la tabla que usa DAI."
+- q: "Entre dos VLAN segmentadas, ¿cómo debe controlarse el tráfico?"
+  options: ["Permitirlo todo, porque son redes internas", "Con ACL o cortafuegos con denegación por defecto y solo los flujos necesarios", "Desactivando las VLAN", "Con un hub"]
+  answer: 1
+  explain: "Segmentar sirve de poco si el tráfico entre segmentos queda libre. Se aplica **mínimo privilegio** entre zonas."
+- q: "¿Qué configuración Wi-Fi es la recomendable hoy?"
+  options: ["WEP", "WPA con TKIP", "WPA2/WPA3 con WPS activado", "WPA3 (o WPA2-Enterprise con PMF) y WPS desactivado"]
+  answer: 3
+  explain: "WEP y WPA original están rotos y WPS es vulnerable a fuerza bruta del PIN."
+- q: "La diferencia esencial entre un **IDS** y un **IPS** es que..."
+  options: ["El IDS detecta y alerta; el IPS, colocado en línea, además puede bloquear el tráfico", "El IPS solo funciona en redes Wi-Fi", "El IDS bloquea y el IPS solo registra", "Son lo mismo con distinto nombre"]
+  answer: 0
+  explain: "Un IDS observa una copia del tráfico y avisa. Un IPS está en el camino del tráfico y puede descartarlo, con el riesgo de bloquear tráfico legítimo."
+- q: "Al desplegar Suricata por primera vez, lo prudente es..."
+  options: ["Activar todas las reglas en modo bloqueo desde el principio", "Empezar en modo alerta, revisar los falsos positivos y ajustar antes de bloquear", "Desactivar los registros para ganar rendimiento", "Escribir reglas sin probarlas"]
+  answer: 1
+  explain: "Un IPS con falsos positivos puede cortar servicios legítimos; primero se observa y se ajusta."
+- q: "En `tcpdump -i enp0s3 -nn port 80`, la opción `-nn` hace que..."
+  options: ["Capture solo dos paquetes", "No resuelva nombres de equipos ni de puertos, y muestre números", "Guarde la captura en un fichero", "Descifre el tráfico"]
+  answer: 1
+  explain: "Evita consultas DNS durante la captura y muestra direcciones y puertos numéricos."
+- q: "Con `tcpdump` puedes comprobar que una contraseña viaja en claro si el servicio usa..."
+  options: ["SSH", "HTTPS", "HTTP o Telnet sin cifrar", "WireGuard"]
+  answer: 2
+  explain: "Por eso se sustituyen los protocolos en claro por sus equivalentes cifrados y se comprueba con una captura."
+- q: "El modelo **Zero Trust** se resume en..."
+  options: ["Confiar en todo lo que está dentro de la red interna", "Nunca confiar por defecto y verificar siempre identidad y contexto en cada acceso", "Bloquear todo el tráfico de Internet", "Usar una única contraseña muy larga"]
+  answer: 1
+  explain: "Ya no se asume que lo interno sea seguro: se autentica y autoriza cada acceso con el mínimo privilegio."
+{{< /quiz >}}
+
 ## 15. Referencias y documentación oficial
 
 - Wireguard. *Quick Start y documentación*. <https://www.wireguard.com/quickstart/>
