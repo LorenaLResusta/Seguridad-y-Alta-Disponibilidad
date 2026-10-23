@@ -1,0 +1,1 @@
+alert icmp any any -> any any (msg:"INT2 ping detectado"; itype:8; sid:1000001; rev:1;)

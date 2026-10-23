@@ -59,7 +59,7 @@ Con **5 horas semanales** (una por día lectivo, de lunes a viernes) y el [calen
 | UD4 | [Fortificación de hosts y seguridad activa](/ud04/) | 14 h | 41 – 54 | 6 nov – 25 nov | RA1, RA2 |
 | UD5 | [Seguridad en redes: monitorización, detección y respuesta](/ud05/) | 14 h | 55 – 68 | 26 nov – 17 dic | RA2 |
 | UD6 | [Seguridad perimetral: cortafuegos, proxy, VPN y acceso remoto](/ud06/) | 14 h | 69 – 82 | 18 dic – 22 ene | RA1, RA3, RA4, RA5 |
-| UD7 | [Alta disponibilidad, virtualización y continuidad de negocio](/ud07/) | 14 h | 83 – 96 | 25 ene – 11 feb | RA6 |
+| UD7 | [Alta disponibilidad, virtualización y continuidad de negocio](/ud07/) | 14 h | 83 – 96 | 25 ene – 9 feb · examen 10 feb | RA6 |
 | | **Total** | **96 h** | | | RA1 a RA7 |
 
 El orden de las unidades es el mismo que en la modalidad presencial: primero qué proteger y cómo cifrarlo (UD1 a UD4), después la red y su perímetro (UD5 y UD6) y, al final, la alta disponibilidad (UD7), que reutiliza lo aprendido antes y cierra el módulo con una prueba de fallo y su recuperación.
@@ -90,8 +90,8 @@ Las vacaciones de Navidad son del 22 de diciembre al 6 de enero. Los festivos so
 | 18 | lun 11 ene | vie 15 ene | 5 | UD6 | 73–77 |
 | 19 | lun 18 ene | vie 22 ene | 5 | UD6 | 78–82 |
 | 20 | lun 25 ene | vie 29 ene | 5 | UD7 | 83–87 |
-| 21 | lun 1 feb | vie 5 feb | 5 | UD7 | 88–92 |
-| 22 | lun 8 feb | vie 12 feb | 5 | UD7 | 93–96 · 97 de margen |
+| 21 | lun 1 feb | vie 5 feb | 5 | UD7 · **revisión INT-2 (mié 3 feb)** | 88–92 |
+| 22 | lun 8 feb | vie 12 feb | 5 | UD7 · **examen 2.ª evaluación (mié 10 feb)** · revisión y recuperación (jue 11 y vie 12) | 93–96 · 97 de margen |
 | | **Incorporación a la FE** | **lun 15 feb 2027** | | | |
 
 > [!CAUTION]
@@ -104,9 +104,10 @@ Las **prácticas de cada unidad no se entregan**: se hacen en el laboratorio y e
 | Práctica | Unidades | Fecha |
 |---|---|---|
 | INT-1 · Servidor seguro de la clínica | UD1–UD4 | 27/11/2026 |
-| INT-2 · Perímetro y servicio sin parada | UD5–UD7 | 05/02/2027 (propuesta) |
+| INT-2 · Perímetro y servicio sin parada (revisión con el profesorado) | UD5–UD7 | **miércoles 03/02/2027** (propuesta) |
+| **Examen de la 2.ª evaluación** | UD5–UD7 | **miércoles 10/02/2027** (propuesta) |
 
-La última sesión de cada unidad es su prueba teórico-práctica. En la tutoría obligatoria más cercana a cada fecha se puede ejecutar el script de verificación delante del profesorado y corregir en el momento. La recuperación se hace en las últimas sesiones del módulo (semanas 21 y 22), antes de la incorporación a la FE.
+La última sesión de cada unidad es su prueba teórico-práctica; la de UD7 es el **examen de la 2.ª evaluación (10 de febrero)**, una semana después de la revisión de la INT-2. En la tutoría obligatoria más cercana a cada fecha se puede ejecutar el script de verificación delante del profesorado y corregir en el momento. La recuperación se hace tras el examen (jueves 11 y viernes 12 de febrero) y en las tutorías de las semanas 21 y 22, antes de la incorporación a la FE.
 
 ## 4. Metodología semipresencial
 
@@ -150,7 +151,7 @@ Las prácticas integradoras se corrigen con un script de verificación (INT-1: 1
 
 ### Recuperación
 
-Se plantea sobre los resultados de aprendizaje y criterios no superados, en las **semanas 21 y 22** (1 – 12 de febrero de 2027). Puede incluir prueba teórica, prueba práctica en el laboratorio, repetición o mejora de una práctica y entrega de la documentación pendiente.
+Se plantea sobre los resultados de aprendizaje y criterios no superados, en las tutorías de las **semanas 21 y 22** y en las sesiones del **11 y 12 de febrero de 2027**, una vez realizado el examen del 10 de febrero. Puede incluir prueba teórica, prueba práctica en el laboratorio, repetición o mejora de una práctica y entrega de la documentación pendiente.
 
 ## 6. Atención a la diversidad y recursos
 

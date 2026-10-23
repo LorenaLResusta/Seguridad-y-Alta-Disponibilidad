@@ -7,16 +7,15 @@ bookToc: true
 # Prácticas integradoras obligatorias
 
 > [!IMPORTANT]
-> **En este módulo las prácticas de cada unidad no se entregan.** Sirven para aprender haciendo en el laboratorio, pero **los conceptos básicos y las órdenes principales de esas prácticas entran en la prueba teórico-práctica de cada unidad**. Lo único que se entrega son **dos prácticas integradoras**, una al final de cada trimestre, diseñadas para corregirse en pocos minutos.
-
+> **En este módulo las prácticas de cada unidad no se entregan.** Sirven para aprender haciendo, pero **los conceptos básicos y las órdenes principales de esas prácticas entran en la prueba teórico-práctica de cada unidad**. Lo único que se entrega son **dos prácticas integradoras**, una al final de cada trimestre.
 ## Qué entregas, cuándo y cómo
 
 | | **INT-1 · Servidor seguro** (1.er trimestre) | **INT-2 · Perímetro y servicio sin parada** (2.º trimestre) |
 |---|---|---|
 | Unidades | UD01, UD02, UD03, UD04 | UD05, UD06, UD07 |
-| Fecha (semipresencial) | **viernes 27/11/2026** | viernes 05/02/2027 *(propuesta)* |
+| Fecha (semipresencial) | **viernes 27/11/2026** | **miércoles 03/02/2027** *(revisión, propuesta)*; examen de la 2.ª evaluación el 10/02/2027 |
 | Fecha (presencial) | viernes 15/01/2027 *(propuesta)* | viernes 30/04/2027 *(propuesta)* |
-| Laboratorio | **1** máquina virtual: `srv-clinica` | **3** máquinas virtuales: `fw01`, `web01`, `web02` |
+| Prácticas | **1** máquina virtual: `srv-clinica` | **3** máquinas virtuales: `fw01`, `web01`, `web02` |
 | Dedicación orientativa | unas 8 h | unas 5 h |
 | Script que ejecutas | `sudo ./verifica-int1.sh APELLIDO` (en `srv-clinica`) | `sudo ./verifica-int2.sh APELLIDO` (solo en `fw01`) |
 | **Entregas (2 ficheros)** | `evidencias-INT1-APELLIDO.txt` + `respuestas.md` | `evidencias-INT2-APELLIDO.txt` + `respuestas.md` |
@@ -29,9 +28,9 @@ Nada más: **ni informes, ni capturas, ni copias de máquinas, ni claves**. El f
 > [!NOTE]
 > Las fechas dependen de dónde termine cada bloque en el [calendario](/guia/temporalizacion/) (presencial) o en la [guía semipresencial](/guia/semipresencial/). La de INT-1 semipresencial (27/11/2026) es la fijada para el curso; el resto son propuestas.
 
-## Cómo funcionan (y por qué son fáciles de corregir)
+## Cómo funcionan (y por qué son fáciles de evaluar)
 
-Una práctica integradora no repite una práctica de unidad: **reúne en un mismo sistema lo aprendido** en varias unidades, el de la clínica [Mediterránea Dental](/guia/proyecto-clinica/). Para que corregirla lleve minutos y no horas:
+Una práctica integradora no repite una práctica de unidad: **reúne en un mismo sistema lo aprendido** en varias unidades, el de la clínica [Mediterránea Dental](/guia/proyecto-clinica/). Para que su evaluación lleve minutos y no horas:
 
 1. **Nombres, rutas y ficheros fijados** en el enunciado.
 2. **Un script de verificación** que lees y ejecutas tú: comprueba el sistema con órdenes reales y genera el fichero de **evidencias**, con `[OK]` o `[FALLA]` en cada punto y una puntuación automática.
@@ -41,14 +40,14 @@ Una práctica integradora no repite una práctica de unidad: **reúne en un mism
 ### Dos formas de entregar
 
 - **En Aules:** subes `evidencias-….txt` y `respuestas.md`.
-- **En la tutoría o en clase:** ejecutas el script **delante del profesorado**, en tu máquina, y se corrige en el momento. Es la forma recomendada en la modalidad semipresencial.
+- **En la tutoría o en clase:** ejecutas el script **delante del profesorado**, en tu máquina, y se evalúa en el momento. Es la forma recomendada en la modalidad semipresencial.
 
 ### Reglas comunes
 
 | Aspecto | Norma |
 |---|---|
 | Modalidad | Individual |
-| Laboratorio | Solo máquinas virtuales propias. Nada de datos personales ni credenciales reales |
+| Prácticas | Solo máquinas virtuales propias. Nada de datos personales ni credenciales reales |
 | Datos propios | El nombre de la CA lleva **tu apellido** (`CA-<apellido>`) y las contraseñas y claves son tuyas |
 | Qué no se entrega | Claves privadas, contraseñas ni copias de la máquina |
 | Retraso | Cada día lectivo de retraso resta un punto sobre diez, hasta un máximo de tres |
@@ -72,7 +71,7 @@ Dejar **un servidor de la clínica** diagnosticado, protegido frente a la pérdi
 
 La clínica guarda historiales clínicos (datos de salud, categoría especial del RGPD) en un servidor sin RAID, sin copias verificadas y con una intranet en HTTP. La dirección fija un **RPO de 4 horas y un RTO de 8 horas** para los ficheros clínicos y pide demostrar cómo quedaría el servidor bien hecho.
 
-### Laboratorio
+### Prácticas
 
 Una única máquina virtual **`srv-clinica`** (Debian 13, 2 CPU, 2 GB de RAM, red NAT) con **cinco discos adicionales de 1 GB**: `sdb`, `sdc`, `sdd` y `sde` para el RAID, y `sdf` para las copias. Haz una instantánea antes de cada fase.
 
@@ -189,9 +188,9 @@ Proteger el perímetro de la clínica y comprobar que su **web de citas sigue fu
 
 La clínica quiere abrir la web de citas a Internet. Requisitos de la dirección: **política restrictiva** en el cortafuegos, **detección** de tráfico sospechoso y una web que **se recupere en menos de 5 minutos (RTO)** si cae un servidor.
 
-### Laboratorio
+### Prácticas
 
-Tres máquinas Debian 13. Es un laboratorio **reducido** respecto al de las prácticas de unidad (aquí `fw01` también hace de balanceador y no hay `lb01`). Haz una instantánea de cada una antes de empezar:
+Tres máquinas Debian 13. Es un entorno de prácticas **reducido** respecto a las prácticas de unidad (aquí `fw01` también hace de balanceador y no hay `lb01`). Haz una instantánea de cada una antes de empezar:
 
 | Máquina | RAM | Red | Dirección | Función |
 |---|--:|---|---|---|
@@ -225,6 +224,25 @@ Todo se comprueba **en `fw01`**, con un solo script y un solo fichero de evidenc
 | | Los dos servidores en estado **UP** ahora | [7.4](/ud07/ud07-practicas/) | H2 |
 | | En 20 peticiones a `http://127.0.0.1/` responden `web01` **y** `web02` (reparto real) | [7.4](/ud07/ud07-practicas/) | H3 |
 | | `/srv/int2/prueba-fallo.csv` con la caída de **`web01` y de `web02`**, cada una recuperada en **300 s o menos**, y HAProxy ha visto caer a los dos | [7.7](/ud07/ud07-practicas/) | H4 |
+
+### Plan de trabajo y kit de ficheros
+
+La práctica se puede hacer **por partes, sin esperar a la teoría de HAProxy**: esta guía trae la configuración completa. Plan sugerido para la modalidad semipresencial (la revisión es el miércoles 3 de febrero):
+
+| Cuándo | Qué haces | Tiempo |
+|---|---|--:|
+| Semanas 18-19 (11-22 ene, UD6) | Prácticas (3 VM) y pasos 1 y 2: Suricata y nftables | 2 h |
+| Semana 20 (25-29 ene, inicio de UD7) | Pasos 3 y 4: HAProxy y prueba de fallo | 2 h |
+| Semana 21 (1-2 feb) | Ejecutas el script, resuelves los avisos `[FALLA]` y escribes `respuestas.md` | 1 h |
+| **Miércoles 3 feb** | **Revisión** con el profesorado (o entrega en Aules) | |
+
+Para no perder tiempo copiando texto, descarga los **tres ficheros ya preparados** (los mismos que ves en los pasos; cambia solo los nombres de interfaz si los tuyos son distintos y comprueba siempre la sintaxis antes de aplicar):
+
+{{< descarga "descargas/int2-nftables.conf" >}}
+
+{{< descarga "descargas/int2-haproxy.cfg" >}}
+
+{{< descarga "descargas/int2-local.rules" >}}
 
 ### Paso 1 · Detección con Suricata (S1, S2)
 
@@ -427,7 +445,7 @@ El fichero incluye además el dato `RTO_PEOR_MEDIDO`, que necesitarás para la p
 ```
 
 > [!TIP]
-> Pista para P3: en este laboratorio hay dos servidores web, pero **un solo `fw01`** que hace de cortafuegos y de balanceador. ¿Qué pasa si cae?
+> Pista para P3: en estas prácticas hay dos servidores web, pero **un solo `fw01`** que hace de cortafuegos y de balanceador. ¿Qué pasa si cae?
 
 ### Problemas habituales
 

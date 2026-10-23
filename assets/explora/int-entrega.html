@@ -63,7 +63,7 @@ var D={
        ['UD03 · Cifrado',[['C1','CA propia CN=CA-apellido'],['C2','Certificado con SAN firmado por la CA'],['C3','HTTPS con TLS 1.3 verificado']]],
        ['UD04 · Bastionado',[['D1','SSH solo con clave y sin root'],['D2','UFW: solo 22 y 443'],['D3','Fail2ban sshd, maxretry ≤ 3'],['D4','auditd con regla en passwd/shadow'],['D5','Lynis: +10 puntos']]]]},
  2:{n:'INT-2',t:'Perímetro y servicio sin parada',pt:0.8,vm:'<code>fw01</code> (cortafuegos + Suricata + HAProxy) y dos webs <code>web01</code> y <code>web02</code>',cmd:function(a){return 'sudo ./verifica-int2.sh '+a},
-    f:function(a){return ['evidencias-INT2-'+a+'.txt','respuestas.md']},fe:{s:'2027-02-05',p:'2027-04-30'},extra:' El script se ejecuta solo en <code>fw01</code>.',
+    f:function(a){return ['evidencias-INT2-'+a+'.txt','respuestas.md']},fe:{s:'2027-02-03',p:'2027-04-30'},extra:' El script se ejecuta solo en <code>fw01</code>. En semipresencial esa fecha es la <strong>revisión</strong> con el profesorado; el examen de la 2.ª evaluación es el 10/02/2027.',
     g:[['UD05 · Detección',[['S1','Regla propia de Suricata cargada'],['S2','Alerta de tu regla en fast.log']]],
        ['UD06 · Perímetro',[['F1','input con policy drop'],['F2','forward con policy drop'],['F3','DNAT (publicar la web)'],['F4','masquerade (salida de la DMZ)']]],
        ['UD07 · Alta disponibilidad',[['H1','HAProxy válido con 2 servidores y check'],['H2','Los dos servidores UP'],['H3','Reparto web01 / web02'],['H4','Prueba de fallo (CSV + HAProxy)']]]]}

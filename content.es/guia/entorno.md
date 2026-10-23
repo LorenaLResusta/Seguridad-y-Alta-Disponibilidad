@@ -6,10 +6,10 @@ bookToc: true
 
 # Entorno de trabajo
 
-Todas las prácticas se realizan en **máquinas virtuales** sobre redes de laboratorio aisladas. Así puedes equivocarte, atacar tu propio sistema y recuperarte sin riesgo para equipos reales.
+Todas las prácticas se realizan en **máquinas virtuales** sobre redes virtuales aisladas. Así puedes equivocarte, atacar tu propio sistema y recuperarte sin riesgo para equipos reales.
 
 > [!CAUTION]
-> Las técnicas de ataque y análisis de estos apuntes se ejecutan **exclusivamente** en las redes virtuales del laboratorio y sobre máquinas propias. Usarlas contra sistemas ajenos sin autorización puede ser delito (Código Penal, arts. 197 bis, 197 ter y 264 y siguientes).
+> Las técnicas de ataque y análisis de estos apuntes se ejecutan **exclusivamente** en las redes virtuales de prácticas y sobre máquinas propias. Usarlas contra sistemas ajenos sin autorización puede ser delito (Código Penal, arts. 197 bis, 197 ter y 264 y siguientes).
 
 ## Requisitos del equipo anfitrión
 
@@ -48,10 +48,10 @@ Todas las prácticas se realizan en **máquinas virtuales** sobre redes de labor
 
 Primero instala paquetes con salida a Internet; después deja solo las redes internas que necesita cada práctica.
 
-## Buenas costumbres de laboratorio
+## Buenas costumbres en las prácticas
 
 - **Instantánea antes de cada práctica** que modifique configuraciones críticas. Nómbrala con la unidad y la práctica (`ud04-p3-antes`).
 - **Nombres coherentes**: `fw01`, `srv-gestion`, `web01`… (ver el [proyecto transversal](/guia/proyecto-clinica/)).
 - **Carpeta de evidencias** en cada máquina (`~/evidencias/udNN/`) con las salidas de órdenes (para repasar y para la práctica integradora; las prácticas de unidad no se entregan).
 - **Copia de la configuración** antes de tocar un fichero crítico, **comprobación de sintaxis** antes de aplicarlo y **verificación** después.
-- Nunca reutilices contraseñas reales. Las del laboratorio son de prueba y no se escriben en ningún fichero que vayas a compartir.
+- Nunca reutilices contraseñas reales. Las contraseñas de prácticas son de prueba y no se escriben en ningún fichero que vayas a compartir.
