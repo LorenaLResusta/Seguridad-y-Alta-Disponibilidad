@@ -141,7 +141,7 @@ jobs:
           # staticrypt 3.5.0 se rompe con yargs >= 18: se fija yargs 17.
           npm install --prefix "$RUNNER_TEMP/sc" --no-audit --no-fund staticrypt@3.5.0 yargs@17.7.2 > "$RUNNER_TEMP/sc.log" 2>&1 || {
             echo "::error::npm install falló: $(tail -c 1000 "$RUNNER_TEMP/sc.log" | tr '\n' ' ')"; exit 1; }
-          "$RUNNER_TEMP/sc/node_modules/.bin/staticrypt" "public/*" -r -d public -c false \
+          "$RUNNER_TEMP/sc/node_modules/.bin/staticrypt" public/* -r -d public -c false \
             --salt 274defc5fa811b4abf3d00de2156b602 --remember 30 --short \
             --template-title "Apuntes SAD · Acceso restringido" \
             --template-instructions "Introduce la contraseña de acceso a los apuntes." \
