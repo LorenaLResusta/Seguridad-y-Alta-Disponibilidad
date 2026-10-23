@@ -138,7 +138,7 @@ jobs:
           # El índice de búsqueda contiene el texto en claro: se elimina del sitio publicado.
           find public -type f \( -name '*search-data*.json' -o -name '*.search*.js' \) -delete
           # Salt fijo (no es secreto): así la contraseña recordada sigue valiendo tras cada despliegue.
-          npx --yes staticcrypt@3.5.0 "public/*" -r -d public -c false \
+          npx --yes staticrypt@3.5.0 "public/*" -r -d public -c false \
             --salt 274defc5fa811b4abf3d00de2156b602 --remember 30 --short \
             --template-title "Apuntes SAD · Acceso restringido" \
             --template-instructions "Introduce la contraseña de acceso a los apuntes." \
