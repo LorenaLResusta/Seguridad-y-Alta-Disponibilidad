@@ -115,7 +115,7 @@ jobs:
       - name: Build
         run: |
           echo "Building the project..."
-          hugo build \
+          HUGO_PARAMS_BOOKSEARCH=false hugo build \
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/" \
@@ -126,6 +126,27 @@ jobs:
         with:
           path: ${{ runner.temp }}/.cache/hugo
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+
+      - name: Encrypt site (StatiCrypt)
+        # Cifra todas las páginas HTML con la contraseña del secreto SITE_PASSWORD
+        # (Settings > Secrets and variables > Actions). Si falta, el despliegue falla
+        # a propósito para no publicar la web sin cifrar.
+        env:
+          STATICRYPT_PASSWORD: ${{ secrets.SITE_PASSWORD }}
+        run: |
+          test -n "$STATICRYPT_PASSWORD" || { echo "::error::Falta el secreto SITE_PASSWORD"; exit 1; }
+          # El índice de búsqueda contiene el texto en claro: se elimina del sitio publicado.
+          find public -type f \( -name '*search-data*.json' -o -name '*.search*.js' \) -delete
+          # Salt fijo (no es secreto): así la contraseña recordada sigue valiendo tras cada despliegue.
+          npx --yes staticcrypt@3.5.0 "public/*" -r -d public -c false \
+            --salt 274defc5fa811b4abf3d00de2156b602 --remember 30 --short \
+            --template-title "Apuntes SAD · Acceso restringido" \
+            --template-instructions "Introduce la contraseña de acceso a los apuntes." \
+            --template-button "ENTRAR" \
+            --template-placeholder "Contraseña" \
+            --template-error "Contraseña incorrecta" \
+            --template-remember "Recordar en este navegador" \
+            --template-color-primary "#1f6feb" --template-color-secondary "#0b2a5b"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
