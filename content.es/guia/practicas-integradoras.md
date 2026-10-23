@@ -14,21 +14,21 @@ bookToc: true
 |---|---|---|
 | Unidades | UD01, UD02, UD03, UD04 | UD05, UD06, UD07 |
 | Fecha (semipresencial) | **viernes 27/11/2026** | **miércoles 03/02/2027** *(revisión, propuesta)*; examen de la 2.ª evaluación el 10/02/2027 |
-| Fecha (presencial) | viernes 15/01/2027 *(propuesta)* | viernes 30/04/2027 *(propuesta)* |
+| Fecha (presencial) |  |  |
 | Prácticas | **1** máquina virtual: `srv-clinica` | **3** máquinas virtuales: `fw01`, `web01`, `web02` |
 | Dedicación orientativa | unas 8 h | unas 5 h |
 | Script que ejecutas | `sudo ./verifica-int1.sh APELLIDO` (en `srv-clinica`) | `sudo ./verifica-int2.sh APELLIDO` (solo en `fw01`) |
 | **Entregas (2 ficheros)** | `evidencias-INT1-APELLIDO.txt` + `respuestas.md` | `evidencias-INT2-APELLIDO.txt` + `respuestas.md` |
 | Puntuación | 16 comprobaciones × 0,5 = **8,0** + 4 preguntas × 0,5 = **2,0** | 10 comprobaciones × 0,8 = **8,0** + 4 preguntas × 0,5 = **2,0** |
 
-Nada más: **ni informes, ni capturas, ni copias de máquinas, ni claves**. El fichero de evidencias lo genera el script; `respuestas.md` lo escribes tú (cuatro respuestas de tres líneas como máximo).
+ **No hay informes, ni capturas, ni copias de máquinas, ni claves**. El fichero de evidencias lo genera el script; `respuestas.md` lo escribes tú (cuatro respuestas de tres líneas como máximo).
 
 {{< explora "int-entrega" >}}
 
 > [!NOTE]
 > Las fechas dependen de dónde termine cada bloque en el [calendario](/guia/temporalizacion/) (presencial) o en la [guía semipresencial](/guia/semipresencial/). La de INT-1 semipresencial (27/11/2026) es la fijada para el curso; el resto son propuestas.
 
-## Cómo funcionan (y por qué son fáciles de evaluar)
+## Cómo funcionan 
 
 Una práctica integradora no repite una práctica de unidad: **reúne en un mismo sistema lo aprendido** en varias unidades, el de la clínica [Mediterránea Dental](/guia/proyecto-clinica/). Para que su evaluación lleve minutos y no horas:
 
@@ -40,7 +40,7 @@ Una práctica integradora no repite una práctica de unidad: **reúne en un mism
 ### Dos formas de entregar
 
 - **En Aules:** subes `evidencias-….txt` y `respuestas.md`.
-- **En la tutoría o en clase:** ejecutas el script **delante del profesorado**, en tu máquina, y se evalúa en el momento. Es la forma recomendada en la modalidad semipresencial.
+- **En la tutoría o en clase:** ejecutas el script **delante de la profesora**, en tu máquina, y se evalúa en el momento. Es la forma recomendada en la modalidad semipresencial.
 
 ### Reglas comunes
 
@@ -50,8 +50,6 @@ Una práctica integradora no repite una práctica de unidad: **reúne en un mism
 | Prácticas | Solo máquinas virtuales propias. Nada de datos personales ni credenciales reales |
 | Datos propios | El nombre de la CA lleva **tu apellido** (`CA-<apellido>`) y las contraseñas y claves son tuyas |
 | Qué no se entrega | Claves privadas, contraseñas ni copias de la máquina |
-| Retraso | Cada día lectivo de retraso resta un punto sobre diez, hasta un máximo de tres |
-| Recuperación | Quien no entregue o no alcance 5 puntos repite una versión reducida antes de la evaluación |
 | Honestidad | El fichero incluye el nombre de la máquina, un identificador de la máquina y la fecha, y termina con una **firma** (una suma de comprobación del contenido). La firma detecta errores y ediciones descuidadas, **no** una manipulación deliberada: por eso el profesorado puede pedirte repetir la ejecución **en directo**, y dos entregas con el mismo identificador de máquina se revisan siempre así |
 
 > [!TIP]
