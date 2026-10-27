@@ -124,7 +124,7 @@ Las prácticas de cada unidad **no se entregan**. Solo se entregan dos práctica
 
 | Práctica | Unidades | Fecha (presencial) | Fecha (semipresencial) |
 |---|---|---|---|
-| INT-1 | UD1–UD4 | 15/01/2027 (propuesta) | 27/11/2026 |
+| INT-1 | UD1–UD4 | 15/11/2026 (entrega) · revisión 17 o 19/11 · examen 25/11 a las 18:00 | 15/11/2026 (entrega) · revisión 17 o 19/11 · examen 25/11 a las 18:00 |
 | INT-2 | UD5–UD7 | 30/04/2027 (propuesta) | 03/02/2027 (revisión) · examen de la 2.ª evaluación 10/02/2027 (propuesta) |
 
 Detalle en [Prácticas integradoras](/guia/practicas-integradoras/). La planificación del alumnado semipresencial está en la [guía semipresencial](/guia/semipresencial/).

@@ -103,7 +103,9 @@ Las **prácticas de cada unidad no se entregan**: se hacen en el laboratorio y e
 
 | Práctica | Unidades | Fecha |
 |---|---|---|
-| INT-1 · Servidor seguro de la clínica | UD1–UD4 | 27/11/2026 |
+| INT-1 · Servidor seguro de la clínica (entrega) | UD1–UD4 | **domingo 15/11/2026** |
+| INT-1 · Revisión con el profesorado | UD1–UD4 | **martes 17 o jueves 19/11/2026** |
+| **Examen de la 1.ª evaluación** | UD1–UD4 | **miércoles 25/11/2026 a las 18:00** |
 | INT-2 · Perímetro y servicio sin parada (revisión con el profesorado) | UD5–UD7 | **miércoles 03/02/2027** (propuesta) |
 | **Examen de la 2.ª evaluación** | UD5–UD7 | **miércoles 10/02/2027** (propuesta) |
 
@@ -147,7 +149,7 @@ La evaluación es **continua** y se basa en las evidencias que demuestran los [c
 > [!NOTE]
 > Esta ponderación es una **propuesta** para la modalidad semipresencial y puede modificarse para ajustarla a los criterios del departamento o del centro. La ponderación de la modalidad presencial está en [Cómo son las prácticas y la evaluación](/guia/practicas/#evaluación).
 
-Las prácticas integradoras se corrigen con un script de verificación (INT-1: 16 comprobaciones de 0,5 puntos; INT-2: 10 comprobaciones de 0,8 puntos) y cuatro preguntas cortas (0,5 puntos cada una). Las prácticas de unidad no puntúan: sirven para aprender y para preparar la prueba (ver la [rúbrica de autoevaluación](/guia/practicas/#rúbrica-general-de-autoevaluación)).
+Las prácticas integradoras se corrigen con un script de verificación (INT-1: 10 comprobaciones de 0,8 puntos; INT-2: 10 comprobaciones de 0,8 puntos) y cuatro preguntas cortas (0,5 puntos cada una). Las prácticas de unidad no puntúan: sirven para aprender y para preparar la prueba (ver la [rúbrica de autoevaluación](/guia/practicas/#rúbrica-general-de-autoevaluación)).
 
 ### Recuperación
 

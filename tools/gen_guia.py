@@ -158,6 +158,6 @@ t.append("""
 > [!TIP]
 > En las unidades de red, perímetro y alta disponibilidad conviene dejar las **instantáneas** de las máquinas virtuales preparadas al final de cada sesión: la siguiente práctica parte del estado en que terminó la anterior.
 """)
-t += ["", "## Entregas obligatorias", "", "Las prácticas de cada unidad **no se entregan**. Solo se entregan dos prácticas integradoras:", "", "| Práctica | Unidades | Fecha (presencial) | Fecha (semipresencial) |", "|---|---|---|---|", "| INT-1 | UD1–UD4 | 15/01/2027 (propuesta) | 27/11/2026 |", "| INT-2 | UD5–UD7 | 30/04/2027 (propuesta) | 10/02/2027 (propuesta) |", "", "Detalle en [Prácticas integradoras](/guia/practicas-integradoras/). La planificación del alumnado semipresencial está en la [guía semipresencial](/guia/semipresencial/)."]
+t += ["", "## Entregas obligatorias", "", "Las prácticas de cada unidad **no se entregan**. Solo se entregan dos prácticas integradoras:", "", "| Práctica | Unidades | Fecha (presencial) | Fecha (semipresencial) |", "|---|---|---|---|", "| INT-1 | UD1–UD4 | 15/11/2026 (entrega) · revisión 17 o 19/11 · examen 25/11 a las 18:00 | 15/11/2026 (entrega) · revisión 17 o 19/11 · examen 25/11 a las 18:00 |", "| INT-2 | UD5–UD7 | 30/04/2027 (propuesta) | 10/02/2027 (propuesta) |", "", "Detalle en [Prácticas integradoras](/guia/practicas-integradoras/). La planificación del alumnado semipresencial está en la [guía semipresencial](/guia/semipresencial/)."]
 (R / "content.es/guia/temporalizacion.md").write_text("\n".join(t), encoding="utf8")
 print("OK")

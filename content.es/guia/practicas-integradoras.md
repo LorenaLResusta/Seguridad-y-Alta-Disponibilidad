@@ -7,26 +7,29 @@ bookToc: true
 # Prácticas integradoras obligatorias
 
 > [!IMPORTANT]
-> **En este módulo las prácticas de cada unidad no se entregan.** Sirven para aprender haciendo, pero **los conceptos básicos y las órdenes principales de esas prácticas entran en la prueba teórico-práctica de cada unidad**. Lo único que se entrega son **dos prácticas integradoras**, una al final de cada trimestre.
+> **En este módulo las prácticas de cada unidad NO son entregables.** Sirven para aprender haciendo, pero **los conceptos básicos y las órdenes principales de esas prácticas entran en la prueba teórico-práctica de cada unidad**. Lo único que se entrega son **dos prácticas integradoras**, y cada una reúne **una práctica de cada unidad** que abarca.
+
 ## Qué entregas, cuándo y cómo
 
 | | **INT-1 · Servidor seguro** (1.er trimestre) | **INT-2 · Perímetro y servicio sin parada** (2.º trimestre) |
 |---|---|---|
 | Unidades | UD01, UD02, UD03, UD04 | UD05, UD06, UD07 |
-| Fecha (semipresencial) | **viernes 27/11/2026** | **miércoles 03/02/2027** *(revisión, propuesta)*; examen de la 2.ª evaluación el 10/02/2027 |
-| Fecha (presencial) |  |  |
-| Prácticas | **1** máquina virtual: `srv-clinica` | **3** máquinas virtuales: `fw01`, `web01`, `web02` |
-| Dedicación orientativa | unas 8 h | unas 5 h |
+| Una práctica por unidad | UD01 matriz de riesgos · UD02 copias con restic · UD03 CA propia y HTTPS · UD04 SSH seguro y Fail2ban | UD05 Suricata · UD06 nftables y publicación · UD07 HAProxy y prueba de fallo |
+| **Entrega** | **domingo 15/11/2026** | **miércoles 03/02/2027** *(revisión, propuesta)* |
+| Revisión con el profesorado | **martes 17 o jueves 19/11/2026** | miércoles 03/02/2027 *(propuesta)* |
+| Examen de la evaluación | **miércoles 25/11/2026 a las 18:00** (1.ª evaluación) | miércoles 10/02/2027 *(2.ª evaluación, propuesta)* |
+| Máquinas | **1** máquina virtual: `srv-clinica` | **3** máquinas virtuales: `fw01`, `web01`, `web02` |
+| Dedicación orientativa | unas 5 h | unas 5 h |
 | Script que ejecutas | `sudo ./verifica-int1.sh APELLIDO` (en `srv-clinica`) | `sudo ./verifica-int2.sh APELLIDO` (solo en `fw01`) |
 | **Entregas (2 ficheros)** | `evidencias-INT1-APELLIDO.txt` + `respuestas.md` | `evidencias-INT2-APELLIDO.txt` + `respuestas.md` |
-| Puntuación | 16 comprobaciones × 0,5 = **8,0** + 4 preguntas × 0,5 = **2,0** | 10 comprobaciones × 0,8 = **8,0** + 4 preguntas × 0,5 = **2,0** |
+| Puntuación | 10 comprobaciones × 0,8 = **8,0** + 4 preguntas × 0,5 = **2,0** | 10 comprobaciones × 0,8 = **8,0** + 4 preguntas × 0,5 = **2,0** |
 
- **No hay informes, ni capturas, ni copias de máquinas, ni claves**. El fichero de evidencias lo genera el script; `respuestas.md` lo escribes tú (cuatro respuestas de tres líneas como máximo).
+**No hay informes, ni capturas, ni copias de máquinas, ni claves**. El fichero de evidencias lo genera el script; `respuestas.md` lo escribes tú (cuatro respuestas de tres líneas como máximo).
 
 {{< explora "int-entrega" >}}
 
 > [!NOTE]
-> Las fechas dependen de dónde termine cada bloque en el [calendario](/guia/temporalizacion/) (presencial) o en la [guía semipresencial](/guia/semipresencial/). La de INT-1 semipresencial (27/11/2026) es la fijada para el curso; el resto son propuestas.
+> Las fechas de INT-1 (entrega el 15/11/2026, revisión el 17 o el 19/11 y examen el 25/11 a las 18:00) son las fijadas para el curso; las de INT-2 son propuestas que dependen del [calendario](/guia/temporalizacion/) y de la [guía semipresencial](/guia/semipresencial/).
 
 ## Cómo funcionan 
 
@@ -59,43 +62,99 @@ Una práctica integradora no repite una práctica de unidad: **reúne en un mism
 
 ## INT-1 · Servidor seguro de la clínica
 
-{{< practica etiqueta="Práctica integradora" num="1" tipo="Proyecto" duracion="8 h · trabajo autónomo" nivel="3" ra="RA1: a,c,e,g;RA2: c,d,f;RA3: c;RA6: b,f;RA7: b" entorno="Debian 13 · VirtualBox 7" entregable="si" entrega="evidencias-INT1-<apellido>.txt + respuestas.md" >}}
+{{< practica etiqueta="Práctica integradora" num="1" tipo="Proyecto" duracion="5 h · trabajo autónomo" nivel="3" ra="RA1: a,c,e,g;RA2: c,d,f;RA3: c;RA6: b,f;RA7: b" entorno="Debian 13 · VirtualBox 7" entregable="si" entrega="evidencias-INT1-<apellido>.txt + respuestas.md" >}}
 
 ### Objetivo
 
-Dejar **un servidor de la clínica** diagnosticado, protegido frente a la pérdida de datos, con cifrado y fortificado. Reúne UD01 (riesgos), UD02 (RAID y copias), UD03 (PKI y HTTPS) y UD04 (bastionado). Es el mismo trabajo que hiciste en las prácticas de cada unidad, **juntado en una sola máquina** y con los nombres que fija este enunciado.
+Dejar **un servidor de la clínica** diagnosticado, con copias de seguridad que se pueden restaurar, cifrado y acceso remoto fortificado. Reúne **una práctica de cada unidad**: UD01 (matriz de riesgos), UD02 (copias con restic), UD03 (CA propia y HTTPS) y UD04 (SSH seguro con Fail2ban). Es el mismo trabajo que hiciste en esas prácticas de unidad, **juntado en una sola máquina** y con los nombres que fija este enunciado.
 
 ### Contexto
 
-La clínica guarda historiales clínicos (datos de salud, categoría especial del RGPD) en un servidor sin RAID, sin copias verificadas y con una intranet en HTTP. La dirección fija un **RPO de 4 horas y un RTO de 8 horas** para los ficheros clínicos y pide demostrar cómo quedaría el servidor bien hecho.
+La clínica guarda historiales clínicos (datos de salud, categoría especial del RGPD) en un servidor sin copias verificadas y con una intranet en HTTP. La dirección fija un **RPO de 4 horas y un RTO de 8 horas** para los ficheros clínicos y pide demostrar cómo quedaría el servidor bien hecho.
+
+### Qué tienes que descargar y entregar
+
+> [!IMPORTANT]
+> **Solo hay un script que descargar: `verifica-int1.sh`.** Se ejecuta **una sola vez al final** (y las veces que quieras para ver qué te falta) dentro de la máquina `srv-clinica`. **Solo lee** el sistema: no instala ni cambia nada. Genera el fichero de evidencias que entregas.
+
+{{< descarga "descargas/verifica-int1.sh" >}}
+
+{{% steps %}}
+
+1. **Trae el script a `srv-clinica`.** Lo más sencillo es descargarlo desde la propia máquina virtual (necesita Internet; con la red NAT lo tiene):
+
+   ```bash
+   wget https://lorenalresusta.github.io/Seguridad-y-Alta-Disponibilidad/descargas/verifica-int1.sh
+   ```
+
+   Si `wget` no está instalado: `sudo apt install -y wget`. También puedes usar el botón de descarga de arriba y pasarlo a la máquina con el portapapeles compartido de VirtualBox (pegándolo en `nano verifica-int1.sh`) o descargarlo de Aules.
+
+2. **Léelo antes de ejecutarlo.** Con `sudo` un script puede hacer cualquier cosa, así que es buena costumbre mirarlo (se sale con `q`):
+
+   ```bash
+   less verifica-int1.sh
+   ```
+
+3. **Ejecútalo con tu primer apellido**, sin tildes ni espacios (aquí `GARCIA`; sustitúyelo por el tuyo):
+
+   ```bash
+   chmod +x verifica-int1.sh          # da permiso de ejecución al fichero
+   sudo ./verifica-int1.sh GARCIA     # ejecuta las 10 comprobaciones como administrador
+   ```
+
+4. **Lee el resultado.** Cada línea `[OK]` está bien. Cada `[FALLA]` trae al final una pista (`->`). Corrige y vuelve a ejecutarlo: solo cuenta la **última** ejecución.
+
+5. **Escribe `respuestas.md`** (formato más abajo, en [Preguntas cortas](#preguntas-cortas-respuestasmd)).
+
+6. **Entrega dos ficheros**, y ninguno más:
+
+   | Fichero | De dónde sale |
+   |---|---|
+   | `evidencias-INT1-GARCIA.txt` | Lo crea el script en la **carpeta desde la que lo ejecutaste** (compruébalo con `ls evidencias-INT1-*`). **No lo edites** |
+   | `respuestas.md` | Lo escribes tú |
+
+   Para sacarlos de la máquina virtual, copia su contenido con el portapapeles compartido de VirtualBox (`cat evidencias-INT1-GARCIA.txt`, seleccionar y pegar en tu equipo) o usa `scp` si has configurado el reenvío de puertos de la red NAT. Súbelos a **Aules**, o ejecuta el script **delante de la profesora** en la tutoría.
+
+{{% /steps %}}
+
+> [!WARNING]
+> **No entregues** claves privadas (`ca.key`, `servidor.key`), la contraseña de restic, capturas ni copias de la máquina. Si cambias el nombre del fichero de evidencias o lo editas, la línea `FIRMA` deja de coincidir.
 
 ### Prácticas
 
-Una única máquina virtual **`srv-clinica`** (Debian 13, 2 CPU, 2 GB de RAM, red NAT) con **cinco discos adicionales de 1 GB**: `sdb`, `sdc`, `sdd` y `sde` para el RAID, y `sdf` para las copias. Haz una instantánea antes de cada fase.
+Una única máquina virtual **`srv-clinica`** (Debian 13, 2 CPU, 2 GB de RAM, red NAT) con **un disco adicional de 1 GB** (`sdb`) para las copias. Haz una instantánea antes de cada fase.
 
 ### Qué debe existir (el script lo comprueba)
 
-| Fase | Requisito | Práctica de referencia | ID |
+Cada fila es una comprobación del script (`[OK]` o `[FALLA]`) y vale **0,8 puntos**. Hay **una práctica de cada unidad**:
+
+| Unidad · práctica | Requisito | Práctica de referencia | ID |
 |---|---|---|---|
-| **A · UD01 Diagnóstico** | `/srv/int1/matriz-riesgos.csv` con la cabecera `activo,amenaza,probabilidad,impacto,riesgo,tratamiento`, **al menos 8 filas**, valores de 1 a 5 y `riesgo = probabilidad × impacto` (sin comas dentro de los textos) | [1.8](/ud01/ud01-practicas/) | A1 |
-| | Política de contraseñas: `minlen = 12` o más en `/etc/security/pwquality.conf` (paquete `libpam-pwquality`) | [1.4](/ud01/ud01-practicas/) | A2 |
-| | `/srv/int1/SHA256SUMS` con el *hash* de la matriz, que debe verificar con `sha256sum -c` | [1.3](/ud01/ud01-practicas/) | A3 |
-| **B · UD02 Datos** | **RAID 5** `/dev/md0` con **3 discos activos y 1 de reserva** | [2.2](/ud02/ud02-practicas/) | B1 |
-| | `md0` montado en `/srv/datos` (entrada en `/etc/fstab`) con **al menos 5 ficheros** de datos ficticios | [2.2](/ud02/ud02-practicas/), [2.3](/ud02/ud02-practicas/) | B2 |
-| | Repositorio **restic** local en `/backup/repo` (disco `sdf` montado en `/backup`), contraseña en `/root/.restic-pass`, que pase `restic check` | [2.5](/ud02/ud02-practicas/) | B3 |
-| | Una copia **posterior al último cambio** de los datos, que se pueda restaurar en otra ruta y sea **idéntica** | [2.5](/ud02/ud02-practicas/) | B4 |
-| | Copias **programadas**: un temporizador de systemd (`.timer`) activo cuyo servicio ejecuta `restic`, con un intervalo máximo de **4 horas** (el RPO) | [2.5](/ud02/ud02-practicas/) | B5 |
-| **C · UD03 Cifrado** | CA propia en `/etc/ssl/clinica/ca.crt` con `CN=CA-<apellido>` | [3.5](/ud03/ud03-practicas/) | C1 |
+| **UD01 · Matriz de riesgos** | `/srv/int1/matriz-riesgos.csv` con la cabecera `activo,amenaza,probabilidad,impacto,riesgo,tratamiento`, **al menos 8 filas**, valores de 1 a 5 y `riesgo = probabilidad × impacto` (sin comas dentro de los textos) | [1.8](/ud01/ud01-practicas/) | A1 |
+| | `/srv/int1/SHA256SUMS` con el *hash* de la matriz, que debe verificar con `sha256sum -c` | [1.3](/ud01/ud01-practicas/) | A2 |
+| **UD02 · Copias con restic** | **Al menos 5 ficheros** de datos ficticios en `/srv/datos` y repositorio **restic** local en `/backup/repo` (disco `sdb` montado en `/backup`), contraseña en `/root/.restic-pass`, que pase `restic check` | [2.5](/ud02/ud02-practicas/) | B1 |
+| | Una copia **posterior al último cambio** de los datos, que se pueda restaurar en otra ruta y sea **idéntica** | [2.5](/ud02/ud02-practicas/) | B2 |
+| | Copias **programadas**: un temporizador de systemd (`.timer`) activo cuyo servicio ejecuta `restic`, con un intervalo máximo de **4 horas** (el RPO) | [2.5](/ud02/ud02-practicas/) | B3 |
+| **UD03 · CA propia y HTTPS** | CA propia en `/etc/ssl/clinica/ca.crt` con `CN=CA-<apellido>` | [3.5](/ud03/ud03-practicas/) | C1 |
 | | `/etc/ssl/clinica/servidor.crt` firmado por esa CA, con `subjectAltName` `DNS:intranet.clinica.lan` | [3.5](/ud03/ud03-practicas/) | C2 |
 | | Nginx sirve `intranet.clinica.lan` en el puerto 443 con **TLS 1.3** y la cadena se verifica contra tu CA | [3.6](/ud03/ud03-practicas/) | C3 |
-| **D · UD04 Bastionado** | SSH con `PasswordAuthentication no`, `PubkeyAuthentication yes` y `PermitRootLogin no` | [4.3](/ud04/ud04-practicas/) | D1 |
-| | UFW activo, entrada denegada por defecto y **solo 22 y 443** permitidos | [4.4](/ud04/ud04-practicas/) | D2 |
-| | Fail2ban activo con la *jail* `sshd` y `maxretry` de **3 o menos** | [4.3](/ud04/ud04-practicas/) | D3 |
-| | `auditd` activo con una regla sobre `/etc/passwd` o `/etc/shadow` | [4.7](/ud04/ud04-practicas/) | D4 |
-| | Lynis: `/srv/int1/lynis-antes.dat` y `/srv/int1/lynis-despues.dat` (copia de `/var/log/lynis-report.dat` antes y después de fortificar), con **al menos 10 puntos de mejora** en `hardening_index` | [4.8](/ud04/ud04-practicas/) | D5 |
+| **UD04 · SSH seguro** | SSH con `PasswordAuthentication no`, `PubkeyAuthentication yes` y `PermitRootLogin no` | [4.3](/ud04/ud04-practicas/) | D1 |
+| | Fail2ban activo con la *jail* `sshd` y `maxretry` de **3 o menos** | [4.3](/ud04/ud04-practicas/) | D2 |
 
-> [!WARNING]
-> Haz la **primera ejecución de Lynis antes de fortificar** (UD04) y copia el informe a `lynis-antes.dat`. Si fortificas primero, no podrás demostrar la mejora.
+### Prepara los datos y el disco de copias
+
+Los datos de la clínica son **ficticios**. Crea la carpeta de datos y prepara el disco de copias (comprueba con `lsblk` que `sdb` es el disco vacío de 1 GB: `mkfs` **borra** lo que haya en el disco que le indiques):
+
+```bash
+sudo mkdir -p /srv/datos /srv/int1 /backup                        # carpetas de datos, de documentos de la práctica y de copias
+for i in 1 2 3 4 5; do                                            # cinco ficheros de historiales ficticios
+  echo "historial ficticio $i" | sudo tee /srv/datos/paciente$i.txt >/dev/null
+done
+lsblk                                                             # identifica el disco de 1 GB (sdb)
+sudo mkfs.ext4 -L backup /dev/sdb                                 # formatea el disco de copias (borra su contenido)
+echo 'LABEL=backup /backup ext4 defaults 0 2' | sudo tee -a /etc/fstab   # montaje permanente
+sudo mount -a && findmnt /backup                                  # monta y comprueba que /backup aparece
+```
 
 ### Qué cambia respecto a las prácticas de cada unidad
 
@@ -106,9 +165,8 @@ Los nombres de la integradora son **fijos**; si has hecho las prácticas con otr
 | Nombre de la intranet | `intranet.clinica.lan` (en `/etc/hosts` de la máquina: `127.0.0.1 intranet.clinica.lan`) |
 | Certificados | En `/etc/ssl/clinica/` (`ca.crt`, `servidor.crt`) |
 | Copias | Repositorio restic **local** en `/backup/repo` (no uses repositorios remotos) |
-| UFW | Debe permitir el **443** además del 22 (la intranet va por HTTPS) |
+| Datos | Carpeta normal `/srv/datos` (no hace falta RAID) |
 | Fail2ban | `maxretry = 3` en `/etc/fail2ban/jail.local` (el valor por defecto es 5) |
-| Contraseñas | Instala `libpam-pwquality` antes de editar `pwquality.conf` |
 
 ### Prepara tu matriz de riesgos
 
@@ -116,27 +174,18 @@ Es la única parte que empieza «de cero». Usa este generador, copia el resulta
 
 {{< explora "int1-matriz" >}}
 
-### Ejecutar la verificación
-
-Descarga el script (también está en Aules), cópialo a `srv-clinica` y ejecútalo con tu apellido:
-
-```bash
-chmod +x verifica-int1.sh          # permiso de ejecución
-sudo ./verifica-int1.sh GARCIA     # sustituye GARCIA por tu apellido, sin tildes
-```
+### Resultado esperado de la verificación
 
 El script **no cambia nada**: solo lee el estado del sistema (para la restauración de prueba crea una carpeta temporal en `/var/tmp` y la borra al terminar). Genera `evidencias-INT1-GARCIA.txt`, con un resultado así:
 
 ```text
---- UD02 Proteccion de los datos
-[OK]     B1  RAID 5 con 3 discos activos + 1 de reserva (md0)
-[FALLA]  B4  Restauracion en otra ruta identica a /srv/datos   -> haz una copia NUEVA tras el ultimo cambio
+--- UD02 Copias de seguridad (restic)
+[OK]     B1  Datos en /srv/datos (>= 5 ficheros) y repositorio restic integro
+[FALLA]  B2  Restauracion en otra ruta identica a /srv/datos   -> haz una copia NUEVA tras el ultimo cambio
 
-PUNTOS_AUTO: 15/16  (cada comprobacion = 0,5 -> 7.5 de 8,0 puntos)
+PUNTOS_AUTO: 9/10  (cada comprobacion = 0,8 -> 7.2 de 8,0 puntos)
 FIRMA: 17aaa111a4b6df46…
 ```
-
-{{< descarga "descargas/verifica-int1.sh" >}}
 
 ### Preguntas cortas (`respuestas.md`)
 
@@ -151,7 +200,7 @@ Crea el fichero con este formato y responde a cada pregunta en **tres líneas co
 
 **P3 (UD03).** Si un navegador no confía en el certificado de la intranet, ¿qué falta en ese equipo y por qué no se debe desactivar la comprobación?
 
-**P4 (UD04).** Describe una medida de fortificación que hayas aplicado, la amenaza que reduce y la orden con la que lo has comprobado.
+**P4 (UD04).** ¿Qué amenaza reducen el acceso SSH solo con clave y Fail2ban, y con qué orden comprobaste que están activos?
 ```
 
 Para entender la relación entre frecuencia de copia, RPO y RTO (pregunta P2), juega con este ejemplo:
@@ -161,12 +210,11 @@ Para entender la relación entre frecuencia de copia, RPO y RTO (pregunta P2), j
 ### Problemas habituales
 
 - **A1 falla con una matriz que parece correcta:** si la guardaste desde Excel, comprueba que el separador es la **coma** (no el punto y coma) y que no hay comas dentro de los textos. El script tolera el formato de Windows (BOM y saltos `CRLF`), pero avisa si ve `;`.
-- **El RAID no aparece tras reiniciar (B1/B2):** guarda la configuración con `mdadm --detail --scan` en `/etc/mdadm/mdadm.conf` y ejecuta `update-initramfs -u`.
-- **B4 falla aunque la copia existe:** has cambiado datos después de la última copia. Haz una copia nueva y vuelve a ejecutar.
-- **B5 falla:** comprueba con `systemctl list-timers` que el temporizador está activo y que el servicio asociado ejecuta `restic backup`. Con `systemd-analyze calendar --iterations=6 "<tu OnCalendar>"` ves cuándo se dispararía.
+- **B1 falla:** comprueba que hay al menos 5 ficheros en `/srv/datos`, que existe `/root/.restic-pass` y que `sudo restic -r /backup/repo --password-file /root/.restic-pass check` termina sin errores.
+- **B2 falla aunque la copia existe:** has cambiado datos después de la última copia. Haz una copia nueva y vuelve a ejecutar.
+- **B3 falla:** comprueba con `systemctl list-timers` que el temporizador está activo y que el servicio asociado ejecuta `restic backup`. Con `systemd-analyze calendar --iterations=6 "<tu OnCalendar>"` ves cuándo se dispararía.
 - **C3 falla pero el navegador funciona:** el script exige que el nombre `intranet.clinica.lan` esté en el `subjectAltName`, no solo en el `CN`, y que la cadena verifique con tu `ca.crt`.
-- **D2 falla:** si abriste más puertos de la cuenta (por ejemplo, el 80), ciérralos: la comprobación exige **solo** el 22 y el 443.
-- **D5 no puede comparar:** faltan los dos ficheros `.dat` o tienen otro nombre.
+- **D2 falla:** comprueba `maxretry = 3` en la sección `[sshd]` de `/etc/fail2ban/jail.local`, reinicia el servicio (`sudo systemctl restart fail2ban`) y verifica con `sudo fail2ban-client get sshd maxretry`.
 
 ### Consideraciones de seguridad
 
@@ -185,6 +233,51 @@ Proteger el perímetro de la clínica y comprobar que su **web de citas sigue fu
 ### Contexto
 
 La clínica quiere abrir la web de citas a Internet. Requisitos de la dirección: **política restrictiva** en el cortafuegos, **detección** de tráfico sospechoso y una web que **se recupere en menos de 5 minutos (RTO)** si cae un servidor.
+
+### Qué tienes que descargar y entregar
+
+> [!IMPORTANT]
+> **El script que entregas es `verifica-int2.sh`** y se ejecuta **solo en `fw01`**. Solo lee el sistema: no cambia nada. Los otros tres ficheros ([kit de ficheros](#plan-de-trabajo-y-kit-de-ficheros)) son opcionales: ahorran copiar configuración.
+
+{{< descarga "descargas/verifica-int2.sh" >}}
+
+{{% steps %}}
+
+1. **Trae el script a `fw01`.** Descárgalo desde la propia máquina (necesita Internet; descárgalo **antes** de cerrar la salida con el cortafuegos, o usa el portapapeles compartido de VirtualBox si ya la cerraste):
+
+   ```bash
+   wget https://lorenalresusta.github.io/Seguridad-y-Alta-Disponibilidad/descargas/verifica-int2.sh
+   ```
+
+   Si `wget` no está instalado: `sudo apt install -y wget`.
+
+2. **Léelo antes de ejecutarlo** (se sale con `q`):
+
+   ```bash
+   less verifica-int2.sh
+   ```
+
+3. **Ejecútalo en `fw01` con tu primer apellido**, sin tildes ni espacios (aquí `GARCIA`):
+
+   ```bash
+   chmod +x verifica-int2.sh          # da permiso de ejecución al fichero
+   sudo ./verifica-int2.sh GARCIA     # ejecuta las 10 comprobaciones como administrador
+   ```
+
+4. **Lee el resultado.** `[OK]` está bien; cada `[FALLA]` trae una pista (`->`). Corrige y repite: cuenta la **última** ejecución. No reinicies HAProxy antes de ejecutarlo (ver más abajo).
+
+5. **Escribe `respuestas.md`** (formato más abajo, en [Preguntas cortas](#preguntas-cortas-respuestasmd-1)).
+
+6. **Entrega dos ficheros**, y ninguno más:
+
+   | Fichero | De dónde sale |
+   |---|---|
+   | `evidencias-INT2-GARCIA.txt` | Lo crea el script en la carpeta desde la que lo ejecutaste (`ls evidencias-INT2-*`). **No lo edites** |
+   | `respuestas.md` | Lo escribes tú |
+
+   Cópialos fuera de la máquina virtual con el portapapeles compartido de VirtualBox o con `scp`, y súbelos a **Aules**, o ejecuta el script **delante de la profesora** en la revisión.
+
+{{% /steps %}}
 
 ### Prácticas
 
@@ -426,7 +519,7 @@ sudo ./verifica-int2.sh GARCIA      # en fw01 -> evidencias-INT2-GARCIA.txt
 
 El fichero incluye además el dato `RTO_PEOR_MEDIDO`, que necesitarás para la pregunta P3.
 
-{{< descarga "descargas/verifica-int2.sh" >}}
+El script es el que descargaste al principio de esta práctica.
 
 ### Preguntas cortas (`respuestas.md`)
 
