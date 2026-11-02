@@ -13,6 +13,7 @@ La red de una organización ya no termina en las paredes de la oficina: la web s
 |---|---|
 | [Teoría](/ud06/ud06-teoria/) | Perímetro, zonas y DMZ; cortafuegos y niveles de filtrado; `nftables`, NAT, `firewalld`, UFW, OPNsense y cortafuegos de Windows; registros y diagnóstico; Squid, PAC/WPAD, proxy transparente e inverso (Nginx) y WAF; VPN (WireGuard, IPsec, OpenVPN, túneles SSH); servidores de salto, PAP/CHAP/EAP/Kerberos y RADIUS |
 | [Prácticas](/ud06/ud06-practicas/) | Diez prácticas guiadas, autónomas y de reto (diseño de zonas, cortafuegos con `nftables`, OPNsense, diagnóstico, Squid, proxy inverso, WireGuard, SSH avanzado, FreeRADIUS y comprobación con Nmap) y la Tarea del proyecto «Perímetro de Mediterránea Dental» con rúbrica |
+| [Casos de ataque y defensa](/ud06/ud06-casos/) | **DDoS**: inundación SYN contra la DMZ y límites por IP en `nftables`; interfaz de administración expuesta frente a VPN; vulnerabilidades de cortafuegos y VPN |
 
 > [!NOTE]
 > Esta unidad se apoya en las anteriores: el cifrado y los certificados de la [UD03](/ud03/ud03-teoria/), el bastionado de la [UD04](/ud04/ud04-teoria/) y la segmentación y la detección de la [UD05](/ud05/ud05-teoria/). La redundancia del propio cortafuegos se desarrolla en la [UD07](/ud07/ud07-teoria/).

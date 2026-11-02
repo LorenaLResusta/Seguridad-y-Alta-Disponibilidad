@@ -15,6 +15,7 @@ La unidad aporta al proyecto transversal [Mediterránea Dental](/guia/proyecto-c
 |---|---|
 | [Teoría](/ud05/ud05-teoria/) | Amenazas de red por capas, protección de la LAN (VLAN, ACL, *port security*, DHCP *snooping*), Wi-Fi seguro, protocolos seguros, IDS/IPS con Suricata y análisis de tráfico con `tcpdump` y Wireshark |
 | [Prácticas](/ud05/ud05-practicas/) | Cuatro prácticas (ARP y DHCP, VLAN y ACL, Suricata, captura de tráfico) y la **tarea del proyecto «Red segura»** |
+| [Casos de ataque y defensa](/ud05/ud05-casos/) | Intermediario por envenenamiento ARP (ataque, detección con `arpwatch` y mitigación), Wi-Fi gemela maliciosa y reglas propias de Suricata |
 
 Lo relativo a SSH avanzado, VPN (WireGuard, IPsec, OpenVPN) y autenticación AAA/RADIUS se estudia en la [UD06. Seguridad perimetral](/ud06/ud06-teoria/).
 

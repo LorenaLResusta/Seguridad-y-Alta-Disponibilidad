@@ -15,6 +15,7 @@ Aprenderás a **medir** la disponibilidad (los «nueves», SLA, RTO y RPO), a **
 |---|---|
 | [Teoría](/ud07/ud07-teoria/) | Disponibilidad, SLA/SLO/SLI, SPOF, RTO/RPO, activo-pasivo y activo-activo, redundancia de hardware y de red, virtualización y Proxmox VE, VRRP y Keepalived, Pacemaker y Corosync (quórum y *fencing*), balanceo L4/L7 con HAProxy, almacenamiento compartido, DRBD, Ceph y replicación de bases de datos, escalabilidad y contenedores, monitorización, alta disponibilidad en la nube y continuidad de negocio (BCP, DRP, BIA) |
 | [Prácticas](/ud07/ud07-practicas/) | Siete prácticas (disponibilidad y RAID, web de dos nodos con HAProxy, Keepalived, replicación MariaDB, Pacemaker, Proxmox VE, monitorización) y la **Tarea del proyecto**: web de citas en alta disponibilidad con prueba de fallo (ensayo de la práctica integradora INT-2) |
+| [Casos de ataque y defensa](/ud07/ud07-casos/) | Inundación HTTP contra el balanceador (límite por IP en HAProxy), réplica retardada frente a borrados y *ransomware*, secuestro de la IP virtual (VRRP) |
 
 Esta unidad enlaza con las anteriores: las copias de seguridad y el RAID de la [UD02](/ud02/ud02-teoria/), el cortafuegos y el *proxy* inverso de la [UD06](/ud06/ud06-teoria/) y el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/).
 
