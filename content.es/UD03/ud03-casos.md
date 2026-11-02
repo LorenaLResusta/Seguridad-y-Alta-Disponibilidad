@@ -136,6 +136,49 @@ curl -sI https://intranet.clinica.lab/ | grep -i strict      # desde el cliente,
 > [!NOTE]
 > Algunas empresas hacen **inspección TLS** en el cortafuegos o el *proxy*: instalan su propia CA en los equipos corporativos para poder descifrar el tráfico. Técnicamente es un MITM **autorizado**. Exige informar a la plantilla, excluir categorías sensibles (banca, salud) y proteger muy bien la clave de esa CA: quien la robe puede suplantar cualquier web ante esos equipos.
 
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`curl -sS https://intranet.clinica.lab/login.html` falla con el error 60; `curl -k` lo salta (ver arriba).
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+# 1. Desvío del nombre (como administrador; haz copia del fichero antes)
+$h = "$env:SystemRoot\System32\drivers\etc\hosts"
+Copy-Item $h "$h.bak"
+Add-Content $h "192.168.10.66 intranet.clinica.lab"
+
+# 2. Windows valida la cadena del certificado: debe FALLAR
+curl.exe -sS https://intranet.clinica.lab/login.html          # error 60: certificado no confiable
+Invoke-WebRequest https://intranet.clinica.lab/login.html     # excepción: no se puede establecer una relación de confianza
+
+# 3. Ver el certificado que presenta el servidor
+$tcp = [Net.Sockets.TcpClient]::new('intranet.clinica.lab', 443)
+$ssl = [Net.Security.SslStream]::new($tcp.GetStream(), $false, { $true })   # { $true } acepta CUALQUIER certificado: solo para mirarlo
+$ssl.AuthenticateAsClient('intranet.clinica.lab')
+$c = [Security.Cryptography.X509Certificates.X509Certificate2]$ssl.RemoteCertificate
+$c.Issuer; $c.Thumbprint
+
+# 4. Restaura el fichero hosts
+Copy-Item "$h.bak" $h -Force
+```
+
+Para que Windows **confíe** en tu CA del laboratorio (y la web legítima funcione): `Import-Certificate -FilePath .\ca.crt -CertStoreLocation Cert:\LocalMachine\Root` (administrador). Se ve en `certmgr.msc` → *Entidades de certificación raíz de confianza*.
+
+> El bloque `{ $true }` del paso 3 es exactamente el error que no debes cometer en un *script* de producción: acepta cualquier certificado. Se usa aquí solo para **inspeccionarlo**.
+{{% /tab %}}
+{{% tab "Web" %}}
+Páginas de prueba **seguras y legales** para ver cómo reacciona tu navegador ante certificados incorrectos:
+
+- [self-signed.badssl.com](https://self-signed.badssl.com/), [expired.badssl.com](https://expired.badssl.com/) y [wrong.host.badssl.com](https://wrong.host.badssl.com/): ¿qué aviso muestra tu navegador? ¿Te deja continuar?
+- [hsts.badssl.com](https://hsts.badssl.com/): una vez visitada, comprueba en `chrome://net-internals/#hsts` que el dominio queda guardado con HSTS.
+- **[SSL Labs](https://www.ssllabs.com/ssltest/)** analiza el certificado y la configuración TLS de un servidor **público** (se publica el resultado, así que úsalo solo con webs propias).
+{{% /tab %}}
+{{< /tabs >}}
+
 ---
 
 ## Caso 3.B · Robo de una base de datos de contraseñas
@@ -222,6 +265,41 @@ grep -E '^ENCRYPT_METHOD|^YESCRYPT_COST_FACTOR' /etc/login.defs
 > [!TIP]
 > Comprueba si tu correo aparece en filtraciones conocidas en [Have I Been Pwned](https://haveibeenpwned.com/). INCIBE ofrece consejos para crear y gestionar contraseñas en su sección para la ciudadanía y la [Línea de Ayuda en Ciberseguridad 017](https://www.incibe.es/linea-de-ayuda-en-ciberseguridad).
 
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`john --format=raw-sha1 …` y `mkpasswd -m yescrypt` (ver arriba); `/etc/shadow` guarda los *hashes*.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+# SHA-1 sin sal: la misma clave da SIEMPRE el mismo hash (como en LinkedIn)
+'sol2026','sol2026','verano' | ForEach-Object {
+  $b = [Text.Encoding]::UTF8.GetBytes($_)
+  $h = (Get-FileHash -InputStream ([IO.MemoryStream]::new($b)) -Algorithm SHA1).Hash
+  "{0,-10} {1}" -f $_, $h }
+```
+
+Las dos primeras líneas son idénticas: sin sal, dos usuarios con la misma clave tienen el mismo *hash*. Windows no usa SHA-1 para las cuentas locales, sino **NTLM** (MD4 sin sal), también muy rápido de atacar; por eso Microsoft recomienda contraseñas largas y, en dominios, desactivar NTLM cuando sea posible y usar Kerberos con MFA.
+
+Comprueba la política de contraseñas de tu equipo: `net accounts` (longitud mínima, caducidad, bloqueo).
+{{% /tab %}}
+{{% tab "Web" %}}
+**Comprobación sin enviar tu contraseña.** El servicio *Pwned Passwords* de Have I Been Pwned usa **k-anonimato**: solo se envían los 5 primeros caracteres del hash SHA-1 y la respuesta devuelve todos los que empiezan igual.
+
+```powershell
+$b = [Text.Encoding]::UTF8.GetBytes('sol2026')        # usa una contraseña de PRUEBA, nunca una real
+$h = (Get-FileHash -InputStream ([IO.MemoryStream]::new($b)) -Algorithm SHA1).Hash
+$pre = $h.Substring(0,5); $suf = $h.Substring(5)
+(Invoke-RestMethod "https://api.pwnedpasswords.com/range/$pre") -split "`r?`n" | Select-String $suf
+```
+
+Si aparece una línea `SUFIJO:número`, esa contraseña ha aparecido ese número de veces en filtraciones. Debe rechazarse en cualquier política de contraseñas. Es lo que recomienda la guía NIST SP 800-63B.
+{{% /tab %}}
+{{< /tabs >}}
+
 ---
 
 ## Caso 3.C · Cuando el fallo está en la biblioteca: Heartbleed
@@ -276,6 +354,33 @@ Con la configuración de la práctica 3.6 (TLS 1.2 y 1.3 únicamente) deben apar
 ### Parte 3: criptografía y tendencias
 
 Busca en INCIBE-CERT o en el CCN-CERT qué recomiendan sobre la **migración a criptografía post-cuántica** y explica en un párrafo el riesgo de «**almacenar ahora, descifrar después**» (*harvest now, decrypt later*) relacionándolo con la [teoría](/ud03/ud03-teoria/).
+
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`testssl --quiet --protocols --vulnerable https://intranet.clinica.lab`
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+# Protocolos TLS que Windows tiene activados (si no hay claves, usa los valores por defecto del sistema)
+Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols' -ErrorAction SilentlyContinue
+Get-TlsCipherSuite | Select-Object -First 10 Name                # cifrados disponibles
+```
+{{% /tab %}}
+{{% tab "Web" %}}
+Auditorías **en línea** de servidores públicos propios:
+
+| Herramienta | Qué revisa |
+|---|---|
+| [SSL Labs](https://www.ssllabs.com/ssltest/) | Certificado, protocolos y cifrados (nota de A+ a F) |
+| [Mozilla Observatory](https://developer.mozilla.org/en-US/observatory) | Cabeceras de seguridad, HSTS, cookies |
+| [securityheaders.com](https://securityheaders.com/) | Cabeceras HTTP de seguridad |
+| [crt.sh](https://crt.sh/) | Registro público de certificados emitidos para un dominio (útil para detectar certificados que no emitiste tú) |
+{{% /tab %}}
+{{< /tabs >}}
 
 ---
 

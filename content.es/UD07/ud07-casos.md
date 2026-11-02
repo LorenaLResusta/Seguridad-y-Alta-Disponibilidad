@@ -142,6 +142,31 @@ Con la limitación, `ab` muestra miles de `Non-2xx responses` (los 429), la entr
 
 **Prueba de fallo combinada**: con el ataque en marcha, detén HAProxy en `lb01` (`sudo systemctl stop haproxy`). Keepalived mueve la IP virtual a `lb02`. ¿Sigue limitado el atacante? Si no lo está, revisa que `lb02` tenga la misma configuración. Al terminar, vuelve a arrancar HAProxy en `lb01`.
 
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`ab -n 20000 -c 200 http://192.168.100.50/` y `stick-table` en HAProxy.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+Con **PowerShell 7** (`winget install --id Microsoft.PowerShell`) puedes generar carga paralela **contra tu laboratorio**, sin instalar nada más:
+
+```powershell
+# 2000 peticiones, 100 a la vez. SOLO contra la IP virtual del laboratorio
+1..2000 | ForEach-Object -Parallel {
+    try { (Invoke-WebRequest -Uri http://192.168.100.50/ -SkipHttpErrorCheck -TimeoutSec 10).StatusCode } catch { 0 }
+} -ThrottleLimit 100 | Group-Object | Select-Object Count, Name | Sort-Object Count -Descending
+```
+
+El resultado agrupa los códigos HTTP: con la limitación de HAProxy activa verás muchos `429`; sin ella, `200` o tiempos de espera (`0`). Mide el cliente legítimo con `Measure-Command { Invoke-WebRequest http://192.168.100.50/ }`.
+{{% /tab %}}
+{{% tab "Web" %}}
+Si publicas un sitio detrás de un servicio como **Cloudflare**, la limitación de peticiones se configura sin tocar el servidor: *Seguridad → WAF → Reglas de limitación de velocidad* (por IP, por ruta, con acción de bloqueo o *challenge*). Es la misma idea que `http-request deny deny_status 429` de HAProxy, aplicada **aguas arriba**, que es donde se frenan los ataques grandes.
+{{% /tab %}}
+{{< /tabs >}}
+
 ---
 
 ## Caso 7.B · La réplica también se borra
@@ -237,6 +262,34 @@ Relación con los conceptos de la unidad: la réplica retardada mejora el **RPO*
 1. Completa la frase: «La replicación protege frente a ______; la copia de seguridad protege frente a ______».
 2. ¿Por qué el *ransomware* moderno intenta cifrar **también** los servidores de virtualización (como Proxmox o VMware ESXi) y no solo las máquinas virtuales? Relaciónalo con el [caso 2.A](/ud02/ud02-casos/#caso-2a--el-ransomware-que-borra-las-copias).
 3. Diseña el **modo degradado** de la Librería Pilar: si la tienda *online* cae, ¿qué sigue funcionando y cómo?
+
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+Réplica retardada con `MASTER_DELAY` en MariaDB, y `mariadb-binlog` para recuperar.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+En Windows 11 Pro con **Hyper-V** (las VM del laboratorio) tienes estas protecciones, que **no sustituyen a una copia de seguridad**:
+
+```powershell
+# Punto de control (instantánea) antes de una operación peligrosa
+Checkpoint-VM -Name db01 -SnapshotName "antes-de-borrar"
+Get-VMCheckpoint -VMName db01
+
+# Réplica de Hyper-V con puntos de recuperación adicionales (hasta 24): permite volver atrás aunque la réplica ya haya copiado el borrado
+Set-VMReplication -VMName db01 -RecoveryHistory 24
+Get-VMReplication -VMName db01 | Select-Object VMName, State, RecoveryHistory   # (si la réplica está configurada)
+```
+
+El principio es el mismo que con `MASTER_DELAY`: tener **varios puntos en el tiempo** a los que volver, no solo la copia más reciente.
+{{% /tab %}}
+{{% tab "Web" %}}
+Lee el **[informe público de GitLab (2017)](https://about.gitlab.com/blog/2017/02/10/postmortem-of-database-outage-of-january-31/)**: es un modelo de cómo documentar un incidente (cronología, causas, qué funcionó y qué no, acciones). Haz un resumen de una página con ese mismo esquema para el borrado del caso.
+{{% /tab %}}
+{{< /tabs >}}
 
 ---
 

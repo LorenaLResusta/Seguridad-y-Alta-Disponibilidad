@@ -203,6 +203,52 @@ sudo -u restic restic -r /srv/restic/srv-ficheros forget --keep-daily 7 --keep-w
 2. ¿Por qué se recomienda que el servidor de copias **no esté en el dominio** ni comparta credenciales con el resto de servidores?
 3. Compara el modelo *push* (el cliente envía) y *pull* (el servidor de copias recoge). ¿Cuál resiste mejor a un cliente comprometido?
 
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+Servidor `rest-server --append-only` y cliente `restic` (ver arriba). La recuperación se hace con `restic restore ID --target carpeta`.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+**El ataque en Windows.** Los *ransomware* para Windows borran las copias locales (instantáneas VSS) con una orden como `vssadmin delete shadows /all /quiet`. **No la ejecutes en un equipo con datos**: aprende a **verlas** y a detectar su uso.
+
+```powershell
+vssadmin list shadows                                   # copias de volumen (VSS) existentes
+# Detección: ejecución de «vssadmin» o «wbadmin» (requiere auditar la creación de procesos)
+auditpol /set /subcategory:"Process Creation" /success:enable
+Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4688} -MaxEvents 500 |
+  Where-Object { $_.Message -match 'vssadmin|wbadmin|bcdedit' } | Select-Object TimeCreated
+```
+
+**Defensa 1: acceso controlado a carpetas** (Microsoft Defender). Impide que programas no confiables modifiquen tus carpetas protegidas:
+
+```powershell
+Set-MpPreference -EnableControlledFolderAccess Enabled        # como administrador
+Add-MpPreference -ControlledFolderAccessProtectedFolders "C:\Datos"
+Get-MpPreference | Select-Object EnableControlledFolderAccess
+```
+
+**Defensa 2: copias con restic hacia el mismo `rest-server`** (modo solo-añadir):
+
+```powershell
+winget install --id restic.restic
+$env:RESTIC_REPOSITORY = "rest:http://srv-ficheros:CONTRASEÑA_HTTP@192.168.10.30:8000/srv-ficheros/"
+$env:RESTIC_PASSWORD_FILE = "$HOME\.restic-pass"
+restic backup C:\Datos
+restic snapshots
+```
+
+Para recuperar, restaura desde una copia anterior al ataque en un equipo limpio.
+{{% /tab %}}
+{{% tab "Web" %}}
+- **[No More Ransom](https://www.nomoreransom.org/es/index.html)**: proyecto de Europol y empresas de seguridad con **descifradores gratuitos** para algunas familias de *ransomware* y un identificador que, a partir de una nota de rescate o un fichero cifrado, indica si existe solución. Es el primer sitio al que ir **antes de pagar**.
+- **[VirusTotal](https://www.virustotal.com/)**: sube el hash (nunca ficheros con datos personales) de un ejecutable sospechoso y consulta el veredicto de decenas de motores.
+- INCIBE ofrece el [servicio antiransomware](https://www.incibe.es/empresas/te-ayudamos/servicio-antiransomware) y la Línea 017.
+{{% /tab %}}
+{{< /tabs >}}
+
 ---
 
 ## Caso 2.B · NAS expuesto a Internet
@@ -233,6 +279,34 @@ sudo nmap -sV -p- 192.168.10.30
 {{% details title="🎯 Resultado esperado" open=false %}}
 En `srv-copias` deben aparecer solo SSH (22) y `rest-server` (8000). Si aparece algún otro servicio que no esperabas, investígalo con `sudo ss -tlnp` en el propio servidor. Esta comparación entre lo que **crees** que está abierto y lo que **realmente** está abierto es la base del inventario de servicios (RA2 h).
 {{% /details %}}
+
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`sudo nmap -sV -p- 192.168.10.30`
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+winget install --id Insecure.Nmap                       # Nmap oficial para Windows
+nmap -sV -p- 192.168.10.30
+# Sin instalar nada: comprobar puertos concretos
+22,8000,445,3389 | ForEach-Object { Test-NetConnection 192.168.10.30 -Port $_ -WarningAction SilentlyContinue |
+  Select-Object RemotePort, TcpTestSucceeded }
+```
+
+Compara con lo que **tu** Windows ofrece a la red: SMB (445) y Escritorio remoto (3389) son los dos puertos que más se atacan en equipos Windows expuestos. Comprueba si el Escritorio remoto está activo:
+
+```powershell
+(Get-ItemProperty 'HKLM:\System\CurrentControlSet\Control\Terminal Server').fDenyTSConnections   # 1 = desactivado
+```
+{{% /tab %}}
+{{% tab "Web" %}}
+Busca en **[Shodan](https://www.shodan.io/)** o **[Censys](https://search.censys.io/)** tu IP pública y comprueba si aparece algún servicio de almacenamiento (SMB 445, un NAS, el puerto 5000/5001 de Synology…). Si aparece, ciérralo: la administración de un NAS se hace **desde la red interna o por VPN**.
+{{% /tab %}}
+{{< /tabs >}}
 
 ---
 

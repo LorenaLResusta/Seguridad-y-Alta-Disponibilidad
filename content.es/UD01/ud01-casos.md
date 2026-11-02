@@ -119,6 +119,56 @@ last -n 10
 2. ¿Qué principio de seguridad (confidencialidad, integridad, disponibilidad…) se vio más afectado en el caso real? Justifica que se vieron afectados varios.
 3. Clasifica este ataque según la tabla de ataques de la [teoría](/ud01/ud01-teoria/): ¿es interceptación, interrupción, modificación o fabricación?
 
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+Los cambios de contraseña quedan en el *journal*: `sudo journalctl _COMM=passwd --since "24 hours ago"`, `chage -l usuario` y `last -n 10` (ver arriba).
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+Windows registra los cambios de contraseña en el registro de **Seguridad** (Visor de eventos → *Registros de Windows* → *Seguridad*). Los identificadores que debe conocer un analista:
+
+| Id. de evento | Significado |
+|---|---|
+| 4720 | Se creó una cuenta de usuario |
+| 4723 | Un usuario intentó **cambiar** su contraseña |
+| 4724 | Un administrador intentó **restablecer** la contraseña de otra cuenta |
+| 4738 | Se modificó una cuenta de usuario |
+| 4624 / 4625 | Inicio de sesión correcto / fallido |
+
+```powershell
+# 1. Crea un usuario de prueba y restablece su contraseña como lo haría el servicio técnico (como administrador)
+net user empleado1 /add *
+net user empleado1 *                       # pide la nueva contraseña dos veces
+
+# 2. Comprueba que la auditoría de cuentas está activada (debe constar «Correcto»)
+auditpol /get /subcategory:"User Account Management"
+
+# 3. Busca los restablecimientos de las últimas 24 horas
+Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4723,4724; StartTime=(Get-Date).AddDays(-1)} |
+  Select-Object TimeCreated, Id, @{n='Mensaje';e={$_.Message.Split("`n")[0]}}
+
+# 4. Cuándo se cambió por última vez la contraseña
+Get-LocalUser empleado1 | Select-Object Name, PasswordLastSet
+```
+
+- `net user nombre *` pide la contraseña sin dejarla escrita en el historial.
+- `auditpol` consulta qué eventos audita el equipo; si no aparece «Correcto», actívalo con `auditpol /set /subcategory:"User Account Management" /success:enable`.
+- En un dominio de Active Directory, el equivalente es `Get-ADUser empleado1 -Properties PasswordLastSet`.
+
+Al terminar: `net user empleado1 /delete`.
+{{% /tab %}}
+{{% tab "Web" %}}
+No necesitas instalar nada para comprobar la exposición de tus cuentas:
+
+1. **[Have I Been Pwned](https://haveibeenpwned.com/)**: escribe tu correo y comprueba si aparece en filtraciones conocidas.
+2. **Actividad reciente de tu cuenta** (Google: *Seguridad → Tus dispositivos*; Microsoft: *Seguridad → Actividad de inicio de sesión*): ¿hay dispositivos o ubicaciones que no reconoces justo después de un cambio de contraseña? Es la misma señal que busca un analista.
+3. **Análisis de cabeceras de un correo sospechoso**: pega las cabeceras en el [Message Header Analyzer de Google](https://toolbox.googleapps.com/apps/messageheader/) para ver el recorrido real del mensaje (práctica 1.5).
+{{% /tab %}}
+{{< /tabs >}}
+
 ---
 
 ## Caso 1.B · Supermercados sin frío: dispositivos expuestos a Internet
@@ -163,6 +213,39 @@ Usa el método de la unidad (**riesgo = probabilidad × impacto**, escala 1-3) p
 1. ¿Por qué el ataque afectó a la **disponibilidad** y a la **integridad** pero, según lo publicado, no a la confidencialidad?
 2. ¿Qué fase de la gestión de incidentes aplicaron los operadores al desconectar los paneles de Internet: contención, erradicación o recuperación?
 3. La regla general que repiten los expertos es: «estos controladores **nunca** deben conectarse directamente a Internet». ¿Qué alternativa segura propondrías para el mantenimiento remoto? (Lo implementarás en la UD06 con WireGuard).
+
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+Comprueba qué escucha un equipo con `sudo ss -tulpn` y qué ve un atacante desde fuera con `nmap -sV -p- IP`.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+# Qué puertos están a la escucha en ESTE equipo y qué programa los abre
+Get-NetTCPConnection -State Listen |
+  Select-Object LocalAddress, LocalPort, @{n='Proceso';e={(Get-Process -Id $_.OwningProcess).ProcessName}} |
+  Sort-Object LocalPort
+
+# ¿Es alcanzable un puerto de OTRO equipo? (p. ej. el «panel» del laboratorio, puerto 8080)
+Test-NetConnection -ComputerName 192.168.100.100 -Port 8080
+```
+
+- `LocalAddress` **0.0.0.0** o **::** significa «escucha en todas las interfaces» (accesible desde la red); **127.0.0.1**, solo desde el propio equipo.
+- `Test-NetConnection` devuelve `TcpTestSucceeded : True` si el puerto responde. Es la comprobación equivalente a la de un atacante que busca paneles expuestos.
+{{% /tab %}}
+{{% tab "Web" %}}
+Así encuentran los atacantes (y los investigadores) los dispositivos expuestos, **sin escanear nada ellos mismos**:
+
+1. **[Shodan](https://www.shodan.io/)** y **[Censys](https://search.censys.io/)** indexan Internet de forma continua. Busca **tu propia IP pública** (la ves en un buscador con «cuál es mi IP») y comprueba qué muestran de tu casa o de tu centro.
+2. Compara con el caso real: Censys contó **2 991 paneles Danfoss** accesibles el 11 de octubre y **537** en Francia tres días después.
+3. En INCIBE existe el proyecto **+Ciberseguridad**, que avisa a organizaciones con dispositivos vulnerables expuestos en España; consulta su página para ver el alcance por comunidades.
+
+> Solo consulta datos **públicos** y tu propia IP: no pruebes accesos en dispositivos que encuentres.
+{{% /tab %}}
+{{< /tabs >}}
 
 ---
 
@@ -241,6 +324,39 @@ INCIBE publica, de forma anónima, **casos reales** atendidos por su Línea de A
 
 > [!TIP]
 > Suscríbete al **boletín** o a la fuente RSS de avisos de INCIBE-CERT. En el trabajo real, revisar los avisos cada mañana es una tarea habitual del equipo de sistemas.
+
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`apt list --upgradable`, `debsecan --suite trixie --only-fixed` (caso 4.C).
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+winget upgrade                              # programas con actualización disponible
+Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 5   # últimas actualizaciones de Windows
+Get-MpComputerStatus | Select-Object AMProductVersion, AntivirusSignatureLastUpdated   # Microsoft Defender
+```
+
+Para investigar un CVE de Microsoft, la fuente primaria es la **[Guía de actualizaciones de seguridad del MSRC](https://msrc.microsoft.com/update-guide)**, con la gravedad, los equipos afectados y el parche (número KB).
+{{% /tab %}}
+{{% tab "Web" %}}
+Las consultas de la ficha pueden automatizarse con las **API públicas** de las fuentes:
+
+```powershell
+# Probabilidad de explotación (EPSS) de un CVE
+(Invoke-RestMethod "https://api.first.org/data/v1/epss?cve=CVE-2025-41450").data
+
+# ¿Está en el catálogo KEV de CISA? (descarga el JSON y filtra)
+$kev = Invoke-RestMethod "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+$kev.vulnerabilities | Where-Object cveID -eq 'CVE-2023-34362' | Select-Object cveID, vendorProject, dateAdded, knownRansomwareCampaignUse
+```
+
+En Linux o en macOS, `curl -s URL | jq` hace lo mismo. Consulta también la ficha en [NVD](https://nvd.nist.gov/) para el vector CVSS.
+{{% /tab %}}
+{{< /tabs >}}
 
 ---
 

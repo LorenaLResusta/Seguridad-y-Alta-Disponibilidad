@@ -161,6 +161,38 @@ ip neigh show 10.10.10.10                       # debe indicar PERMANENT
 2. Quita la entrada estática (`sudo ip neigh del 10.10.10.10 dev enp0s3`), repite el ataque con la web en HTTPS (`curl --cacert ca.crt -u … https://srv-lan.clinica.lab/privado/`) y comprueba que en la captura no hay ninguna cabecera `Authorization` legible.
 3. Al terminar: `Ctrl+C` en `arpspoof` (restaura las tablas ARP), `sudo sysctl -w net.ipv4.ip_forward=0` en el atacante.
 
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`ip neigh`, `arpwatch`, `ip neigh replace … nud permanent`.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+arp -a                                                  # tabla ARP de todas las interfaces
+Get-NetNeighbor -IPAddress 10.10.10.10                  # la entrada del servidor, con su estado
+Get-NetNeighbor | Group-Object LinkLayerAddress | Where-Object Count -gt 1   # MAC repetidas: sospechoso (el router puede repetirse legítimamente)
+
+# Entrada estática para el servidor crítico (administrador). Sustituye la MAC real
+New-NetNeighbor -IPAddress 10.10.10.10 -LinkLayerAddress 08-00-27-AA-BB-CC -InterfaceAlias "Ethernet" -State Permanent
+Get-NetNeighbor -IPAddress 10.10.10.10                  # Estado: Permanent
+# Para quitarla:
+Remove-NetNeighbor -IPAddress 10.10.10.10 -Confirm:$false
+```
+
+Con **Wireshark** (con Npcap) captura en la interfaz de la LAN y usa el filtro `arp.duplicate-address-detected` o `arp.opcode == 2`: verás respuestas ARP repetidas que nadie ha pedido.
+{{% /tab %}}
+{{% tab "Web" %}}
+Practica el análisis **sin montar el ataque**: en la wiki de Wireshark hay [capturas de ejemplo](https://wiki.wireshark.org/SampleCaptures) (busca las de *ARP*). Ábrelas con Wireshark y localiza:
+
+1. Las respuestas ARP que se repiten sin petición previa.
+2. Dos direcciones IP con la misma MAC.
+3. Un `Authorization: Basic …` en HTTP: decodifícalo con `[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String("..."))` en PowerShell.
+{{% /tab %}}
+{{< /tabs >}}
+
 ---
 
 ## Caso 5.B · Wi-Fi gemela maliciosa (*evil twin*)
@@ -198,6 +230,29 @@ Si dispones de un adaptador Wi-Fi USB compatible con modo AP, puedes crear **en 
 
 No pongas nunca el nombre de una red real ajena (la del centro, un aeropuerto, una cafetería) ni dejes la red activa sin vigilancia.
 {{% /details %}}
+
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`nmcli`, `iw dev`, y desactivar la conexión automática con `nmcli connection modify NOMBRE connection.autoconnect no`.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+netsh wlan show profiles                                           # redes Wi-Fi guardadas
+netsh wlan show profile name="NOMBRE_RED" key=clear | findstr /i "Autenticación Cifrado"   # (administrador) tipo de seguridad
+netsh wlan set profileparameter name="NOMBRE_RED" connectionmode=manual   # no conectar automáticamente
+netsh wlan delete profile name="NOMBRE_RED"                         # olvidar una red abierta
+```
+
+Desde la interfaz: *Configuración → Red e Internet → Wi-Fi → Administrar redes conocidas*. Revisa las redes **abiertas** o con nombres genéricos que ya no uses y bórralas. En el panel de cada red, desactiva *Conectarse automáticamente dentro del alcance*.
+{{% /tab %}}
+{{% tab "Web" %}}
+Consejos oficiales y ejemplos para usuarios: la sección de **Wi-Fi públicas** de [INCIBE para la ciudadanía](https://www.incibe.es/ciudadania) y las [recomendaciones de la Policía Federal Australiana](https://www.afp.gov.au/) sobre este caso. Compara con la tabla del caso: ¿qué recomendación del 017 evita cada fase del ataque?
+{{% /tab %}}
+{{< /tabs >}}
 
 ---
 
@@ -257,6 +312,34 @@ Aparecen alertas con `sid` 1000101 (escaneo), 1000102 (ruta de administración) 
 1. ¿Estas alertas son **prevención** o **detección**? ¿Qué haría falta para bloquear el tráfico (IPS)?
 2. Ajusta el umbral del escaneo: ¿qué pasa si un usuario legítimo abre una web con muchos recursos? ¿Sería un falso positivo?
 3. Un escaneo lento (`nmap -T1`) ¿dispararía la regla 1000101? ¿Qué te dice eso sobre los límites de la detección por umbrales?
+
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+Reglas propias en `local.rules`, `/var/log/suricata/fast.log`.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+Windows Defender Firewall también **registra** lo que descarta, y permite ver un escaneo desde la víctima:
+
+```powershell
+# Activar el registro de paquetes bloqueados (administrador)
+Set-NetFirewallProfile -Profile Domain,Private,Public -LogBlocked True -LogFileName "%SystemRoot%\System32\LogFiles\Firewall\pfirewall.log"
+# Después de un escaneo desde la VM atacante (nmap -sS ...), mira el registro
+Get-Content "$env:SystemRoot\System32\LogFiles\Firewall\pfirewall.log" -Tail 20
+# Cuántos intentos por IP origen (columna 5 = IP origen)
+Get-Content "$env:SystemRoot\System32\LogFiles\Firewall\pfirewall.log" | Select-Object -Skip 5 |
+  ForEach-Object { ($_ -split ' ')[4] } | Group-Object | Sort-Object Count -Descending | Select-Object -First 5
+```
+
+Una misma IP origen con decenas de puertos distintos bloqueados en pocos segundos es el patrón de un escaneo.
+{{% /tab %}}
+{{% tab "Web" %}}
+Las reglas del conjunto *Emerging Threats Open* tienen un buscador público: [rules.emergingthreats.net](https://rules.emergingthreats.net/). Busca *nmap* o *SQL injection*, lee el texto de una regla (`msg`, `content`, `flow`) y compárala con las tuyas del caso.
+{{% /tab %}}
+{{< /tabs >}}
 
 ---
 

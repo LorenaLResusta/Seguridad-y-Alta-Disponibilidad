@@ -257,6 +257,57 @@ Los dos ataques devuelven una página **vacía** (no hay pacientes cuyo nombre c
 | `Access denied for user 'webapp'` | Contraseña o usuario de BD incorrectos | Revisa `CREATE USER` y la cadena de conexión |
 | Error 500 sin mensaje | Es lo esperado en la versión corregida | Mira el detalle en `/var/log/apache2/error.log` |
 
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+Aplicación PHP + MariaDB, `curl -G --data-urlencode`, `sqlmap`, consulta preparada con `mysqli` (ver arriba).
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+**Como atacante** (desde Windows 11 contra la VM del laboratorio): `curl.exe` viene incluido.
+
+```powershell
+curl.exe -G http://192.168.100.30/buscar.php --data-urlencode "nombre=' OR 1=1 -- -"
+```
+
+**Detección en un servidor web de Windows (IIS)**: los registros están en `C:\inetpub\logs\LogFiles\W3SVC1\`.
+
+```powershell
+Select-String -Path 'C:\inetpub\logs\LogFiles\W3SVC1\*.log' -Pattern "%27|union|select|--" | Select-Object -Last 10
+```
+
+**Mitigación en .NET / C# con SQL Server** (el equivalente de la consulta preparada):
+
+```csharp
+// MAL: concatenación
+var cmd = new SqlCommand("SELECT nombre, telefono FROM pacientes WHERE nombre LIKE '%" + nombre + "%'", con);
+
+// BIEN: parámetro. El valor nunca se interpreta como SQL
+var cmd = new SqlCommand("SELECT nombre, telefono FROM pacientes WHERE nombre LIKE @patron", con);
+cmd.Parameters.Add("@patron", SqlDbType.NVarChar, 50).Value = "%" + nombre + "%";
+```
+
+Y, igual que en Linux, la cuenta de la aplicación solo debe tener `SELECT` sobre las tablas necesarias.
+{{% /tab %}}
+{{% tab "Web" %}}
+**Laboratorios web legales para practicar la inyección SQL** (sin montar nada):
+
+- **[PortSwigger Web Security Academy](https://portswigger.net/web-security/sql-injection)**: laboratorios gratuitos en línea de inyección SQL, de nivel inicial a avanzado, con la teoría y la solución de cada uno.
+- **[OWASP Juice Shop](https://owasp.org/www-project-juice-shop/)**: tienda vulnerable a propósito. En local, con Docker (Windows 11 con Docker Desktop, o Linux):
+
+```bash
+docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
+```
+
+  Abre `http://localhost:3000`. El `127.0.0.1:` hace que solo sea accesible desde tu equipo. Prueba el reto de inyección en el formulario de inicio de sesión (reto *Login Admin*).
+- **[DVWA](https://github.com/digininja/DVWA)**: aplicación vulnerable en PHP con niveles *low / medium / high* para comparar cómo se defiende cada uno.
+
+> Ataca **solo** a estas aplicaciones y a las de tu laboratorio. No pruebes inyecciones en webs reales.
+{{% /tab %}}
+{{< /tabs >}}
+
 ---
 
 ## Caso 4.B · Inyección de órdenes del sistema
@@ -368,6 +419,35 @@ sudo mariadb -e "DROP DATABASE clinica; DROP USER 'webapp'@'localhost';"
 
 O, más sencillo, restaura la instantánea `ud04-casos-antes`.
 
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`auditd` con la regla `-a always,exit -S execve -F uid=33` y `ausearch -k web_exec -i`.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+La inyección de órdenes existe en cualquier lenguaje que ejecute programas con datos del usuario (en .NET, `Process.Start` con `cmd.exe /c ping ` + entrada). La detección en Windows se basa en registrar **cada proceso creado con su línea de órdenes**:
+
+```powershell
+# 1. Activar el registro (administrador)
+auditpol /set /subcategory:"Process Creation" /success:enable
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit" /v ProcessCreationIncludeCmdLine_Enabled /t REG_DWORD /d 1 /f
+
+# 2. Qué ha ejecutado un proceso web (p. ej. el grupo de aplicaciones de IIS: w3wp.exe)
+Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4688} -MaxEvents 1000 |
+  Where-Object { $_.Message -match 'ping|whoami|cmd.exe' } |
+  Select-Object TimeCreated, @{n='Evento';e={($_.Message -split "`n" | Select-String 'Nueva|Línea de comandos|Command Line' | Out-String).Trim()}}
+```
+
+Un servidor web (`w3wp.exe`) que lanza `cmd.exe` o `whoami.exe` es tan sospechoso como un `www-data` ejecutando `id` en Linux. **Sysmon** (de Microsoft Sysinternals) registra además el proceso padre, lo que facilita ver quién lanzó qué.
+{{% /tab %}}
+{{% tab "Web" %}}
+Laboratorio guiado en línea: **[PortSwigger: OS command injection](https://portswigger.net/web-security/os-command-injection)**. Incluye laboratorios con la inyección «ciega», en la que no se ve la salida, y la forma de detectarlos por el tiempo de respuesta (`ping -c 10 127.0.0.1`).
+{{% /tab %}}
+{{< /tabs >}}
+
 ---
 
 ## Caso 4.C · Búsqueda de vulnerabilidades en tu propio servidor
@@ -421,6 +501,32 @@ Si usas Docker (por ejemplo, con n8n), las **imágenes** también tienen paquete
 ```bash
 trivy image --severity HIGH,CRITICAL php:8.4-apache
 ```
+
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`debsecan --suite trixie --only-fixed`, `apt upgrade`, `needrestart`.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+winget upgrade                                          # lista de programas con actualización pendiente
+winget upgrade --all                                    # aplica todas (revisa antes la lista)
+Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10
+Get-WindowsUpdateLog                                    # genera el registro de Windows Update en el escritorio
+```
+
+La **herramienta gráfica**: *Configuración → Windows Update → Historial de actualizaciones*. Los parches de Windows se identifican por su número **KB**; busca el KB en la [Guía de actualizaciones del MSRC](https://msrc.microsoft.com/update-guide) para ver los CVE que corrige.
+
+Reiniciar es parte de la actualización: igual que con `needrestart` en Linux, hasta que no se reinicia, el sistema puede seguir con la versión vulnerable.
+{{% /tab %}}
+{{% tab "Web" %}}
+- **[MSRC Security Update Guide](https://msrc.microsoft.com/update-guide)** (Windows, Office…), **[Debian Security Tracker](https://security-tracker.debian.org/tracker/)**, **[Ubuntu CVE Tracker](https://ubuntu.com/security/cves)** y **[Red Hat CVE](https://access.redhat.com/security/security-updates/cve)**: cada distribución publica en qué versión está corregido cada CVE.
+- **[OSV.dev](https://osv.dev/)**: buscador de vulnerabilidades de paquetes de lenguajes (npm, PyPI, Go…) útil si tu aplicación tiene dependencias.
+{{% /tab %}}
+{{< /tabs >}}
 
 ---
 

@@ -233,6 +233,38 @@ sudo ip addr del 192.168.100.11/24 dev enp0s3
 # web-dmz: deja las SYN cookies activadas (valor por defecto y recomendado)
 ```
 
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+`ss -tan state syn-recv | wc -l`, `conntrack -C`, límites con `nftables` y `tcp_syncookies`.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+Windows 11 como equipo **que vigila** (o como servidor de pruebas):
+
+```powershell
+# Conexiones a medias: SynReceived (el equivalente de SYN-RECV)
+(Get-NetTCPConnection -State SynReceived -ErrorAction SilentlyContinue).Count
+netstat -an | findstr /C:"SYN_RECEIVED"
+
+# La protección contra inundación SYN de Windows ya está activa por defecto desde Windows Vista;
+# estos contadores muestran cuántas conexiones están a medias o han fallado
+Get-Counter '\TCPv4\Connection Failures', '\TCPv4\Connections Established'
+```
+
+El **Monitor de rendimiento** (`perfmon`) permite ver en tiempo real el contador *TCPv4 → Connection Failures*. Windows protege a nivel de sistema (por defecto) y el filtrado por origen se hace en el cortafuegos o en el proxy inverso de delante, no en cada equipo.
+{{% /tab %}}
+{{% tab "Web" %}}
+Observa ataques DDoS **reales y en directo**, sin lanzar ninguno:
+
+- **[Cloudflare Radar](https://radar.cloudflare.com/)**: tráfico de Internet, ataques de capa 3/4 y 7 por país y sector, y cortes de servicio.
+- **[Informe DDoS de Cloudflare, 1.er semestre de 2026](https://blog.cloudflare.com/ddos-threat-report-2026-h1/)**: la fuente de la gráfica de esta página.
+- Si tu web está detrás de Cloudflare, en *Seguridad → WAF → Reglas de limitación de velocidad* puedes aplicar el mismo límite por IP que en HAProxy, sin tocar tu servidor.
+{{% /tab %}}
+{{< /tabs >}}
+
 ---
 
 ## Caso 6.B · Interfaz de administración expuesta a Internet
@@ -292,6 +324,35 @@ curl -s http://172.16.0.10:8080/                  # el panel responde
 {{% details title="🎯 Resultado esperado" open=false %}}
 Antes de la mitigación, `nmap` muestra `8080/tcp open http SimpleHTTPServer` y `curl` devuelve el panel. Después, desde Internet el puerto aparece como `filtered` y solo es accesible para quien está autenticado en la VPN. Has reducido la **superficie de ataque** del perímetro y has añadido **autenticación fuerte** (claves de WireGuard) y **trazabilidad** (registro de accesos).
 {{% /details %}}
+
+### Variantes: Linux, Windows 11 y web
+
+{{< tabs >}}
+{{% tab "Linux" %}}
+Regla DNAT en `nftables` frente a acceso por VPN con WireGuard.
+{{% /tab %}}
+{{% tab "Windows 11" %}}
+Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
+
+```powershell
+# ¿Se ve el panel desde fuera? (equivalente al nmap del laboratorio)
+Test-NetConnection -ComputerName 192.168.100.100 -Port 8080
+
+# Cortafuegos de Windows: bloquear un puerto de administración desde fuera de la LAN (administrador)
+New-NetFirewallRule -DisplayName "Bloquear panel 8080 desde Internet" -Direction Inbound -Protocol TCP -LocalPort 8080 -Action Block -Profile Public
+New-NetFirewallRule -DisplayName "Permitir panel 8080 solo desde la LAN" -Direction Inbound -Protocol TCP -LocalPort 8080 -RemoteAddress 192.168.50.0/24 -Action Allow -Profile Domain,Private
+Get-NetFirewallRule -DisplayName "*panel 8080*" | Format-Table DisplayName, Enabled, Action
+
+# Cliente WireGuard para el acceso remoto seguro
+winget install --id WireGuard.WireGuard
+```
+
+Importa el archivo de configuración del cliente en la aplicación *WireGuard* y activa el túnel antes de abrir `http://172.16.0.10:8080/`.
+{{% /tab %}}
+{{% tab "Web" %}}
+Comprueba **tu exposición** con fuentes públicas: busca tu IP pública en [Shodan](https://www.shodan.io/) y [Censys](https://search.censys.io/), y compara con el ritmo del caso real: los operadores franceses retiraron del acceso público el **71 %** de los paneles en tres días. En INCIBE, el proyecto **+Ciberseguridad** notifica a las organizaciones españolas con servicios vulnerables expuestos.
+{{% /tab %}}
+{{< /tabs >}}
 
 ---
 
