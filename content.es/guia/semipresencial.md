@@ -55,9 +55,9 @@ Con **5 horas semanales** (una por día lectivo, de lunes a viernes) y el [calen
 |---|---|--:|---|---|---|
 | UD1 | [Introducción a la seguridad, riesgos y marco legal](/ud01/) | 14 h | 1 – 14 | 9 sep – 28 sep | RA1, RA7 |
 | UD2 | [Seguridad pasiva: almacenamiento y copias de seguridad](/ud02/) | 12 h | 15 – 26 | 29 sep – 16 oct | RA1, RA6 |
-| UD3 | [Criptografía y aplicaciones criptográficas](/ud03/) | 14 h | 27 – 40 | 19 oct – 5 nov | RA1, RA2, RA3 |
-| UD4 | [Fortificación de hosts y seguridad activa](/ud04/) | 14 h | 41 – 54 | 6 nov – 25 nov | RA1, RA2 |
-| UD5 | [Seguridad en redes: monitorización, detección y respuesta](/ud05/) | 14 h | 55 – 68 | 26 nov – 17 dic | RA2 |
+| UD3 | [Criptografía y aplicaciones criptográficas](/ud03/) | 13 h | 27 – 39 | 19 oct – 4 nov | RA1, RA2, RA3 |
+| UD4 | [Fortificación de hosts y seguridad activa](/ud04/) | 14 h | 40 – 53 | 5 nov – 24 nov · examen 24 nov | RA1, RA2 |
+| UD5 | [Seguridad en redes: monitorización, detección y respuesta](/ud05/) | 15 h | 54 – 68 | 25 nov – 17 dic | RA2 |
 | UD6 | [Seguridad perimetral: cortafuegos, proxy, VPN y acceso remoto](/ud06/) | 14 h | 69 – 82 | 18 dic – 22 ene | RA1, RA3, RA4, RA5 |
 | UD7 | [Alta disponibilidad, virtualización y continuidad de negocio](/ud07/) | 14 h | 83 – 96 | 25 ene – 9 feb · examen 10 feb | RA6 |
 | | **Total** | **96 h** | | | RA1 a RA7 |
@@ -79,9 +79,9 @@ Las vacaciones de Navidad son del 22 de diciembre al 6 de enero. Los festivos so
 | 7 | lun 19 oct | vie 23 oct | 5 | UD3 | 27–31 |
 | 8 | lun 26 oct | vie 30 oct | 5 | UD3 | 32–36 |
 | 9 | lun 2 nov | vie 6 nov | 5 | UD3 / UD4 | 37–41 |
-| 10 | lun 9 nov | vie 13 nov | 5 | UD4 | 42–46 |
-| 11 | lun 16 nov | vie 20 nov | 5 | UD4 | 47–51 |
-| 12 | lun 23 nov | vie 27 nov | 5 | UD4 / UD5 | 52–56 |
+| 10 | lun 9 nov | vie 13 nov | 5 | UD4 (entrega INT-1: dom 15 nov) | 42–46 |
+| 11 | lun 16 nov | vie 20 nov | 5 | UD4 · **revisión INT-1 (mar 17 y jue 19 nov)** | 47–51 |
+| 12 | lun 23 nov | vie 27 nov | 5 | UD4 · **examen 1.ª evaluación (mar 24 nov)** / UD5 | 52–56 |
 | 13 | lun 30 nov | vie 4 dic | 5 | UD5 | 57–61 |
 | 14 | mié 9 dic | vie 11 dic | 3 | UD5 | 62–64 |
 | 15 | lun 14 dic | vie 18 dic | 5 | UD5 / UD6 | 65–69 |
@@ -104,12 +104,12 @@ Las **prácticas de cada unidad no se entregan**: se hacen en el laboratorio y e
 | Práctica | Unidades | Fecha |
 |---|---|---|
 | INT-1 · Servidor seguro de la clínica (entrega) | UD1–UD4 | **domingo 15/11/2026** |
-| INT-1 · Revisión con el profesorado | UD1–UD4 | **martes 17 o jueves 19/11/2026** |
-| **Examen de la 1.ª evaluación** | UD1–UD4 | **miércoles 25/11/2026 a las 18:00** |
+| INT-1 · Revisión con el profesorado | UD1–UD4 | **martes 17 y jueves 19/11/2026** |
+| **Examen de la 1.ª evaluación** | UD1–UD4 | **martes 24/11/2026** |
 | INT-2 · Perímetro y servicio sin parada (revisión con el profesorado) | UD5–UD7 | **miércoles 03/02/2027** (propuesta) |
 | **Examen de la 2.ª evaluación** | UD5–UD7 | **miércoles 10/02/2027** (propuesta) |
 
-La última sesión de cada unidad es su prueba teórico-práctica; la de UD7 es el **examen de la 2.ª evaluación (10 de febrero)**, una semana después de la revisión de la INT-2. En la tutoría obligatoria más cercana a cada fecha se puede ejecutar el script de verificación delante del profesorado y corregir en el momento. La recuperación se hace tras el examen (jueves 11 y viernes 12 de febrero) y en las tutorías de las semanas 21 y 22, antes de la incorporación a la FE.
+La última sesión de cada unidad es su prueba teórico-práctica; la de UD4 es el **examen de la 1.ª evaluación (24 de noviembre)**, una semana después de las revisiones de la INT-1 (17 y 19 de noviembre). La de UD7 es el **examen de la 2.ª evaluación (10 de febrero)**, una semana después de la revisión de la INT-2. En la tutoría obligatoria más cercana a cada fecha se puede ejecutar el script de verificación delante del profesorado y corregir en el momento. La recuperación se hace tras el examen (jueves 11 y viernes 12 de febrero) y en las tutorías de las semanas 21 y 22, antes de la incorporación a la FE.
 
 ## 4. Metodología semipresencial
 
