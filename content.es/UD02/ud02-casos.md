@@ -42,6 +42,8 @@ El problema de fondo es de **diseño**: si el equipo que se copia tiene permiso 
 | **Mitigación** | Servidor de copias en modo **solo-añadir** (*append-only*): el cliente puede crear copias nuevas, pero **no borrar** las antiguas. Limpieza solo desde el propio servidor de copias |
 | **Comprobación** | Repetir el ataque y verificar que el historial sobrevive y que se restaura una versión anterior al cifrado |
 
+{{< figura src="ud02/append-only.svg" alt="Copias en modo solo-añadir" caption="El modo solo-añadir permite crear copias nuevas pero rechaza borrar las anteriores." >}}
+
 ### Laboratorio
 
 | Máquina | Función | IP (red `sad-lan`) |
@@ -168,6 +170,16 @@ restic restore <ID_SNAPSHOT_SANO> --target /srv/restaurado
 ls /srv/restaurado/srv/datos | head               # deben aparecer los .txt originales, sin .locked
 cat /srv/restaurado/srv/datos/paciente1.txt        # debe leerse en claro
 restic check                                       # verifica la integridad del repositorio
+```
+
+```mermaid
+flowchart TD
+  A[Sospecha de ransomware] --> B[Aislar el equipo de la red]
+  B --> C[Identificar el momento del cifrado]
+  C --> D[Elegir la última copia ANTERIOR]
+  D --> E[Restaurar en un equipo limpio]
+  E --> F[Verificar con restic check y abrir ficheros]
+  F --> G[Investigar la entrada y corregirla]
 ```
 
 #### 6. Mantenimiento seguro del repositorio

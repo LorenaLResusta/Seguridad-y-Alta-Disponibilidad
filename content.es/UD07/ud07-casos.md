@@ -56,6 +56,8 @@ Un ataque de capa 7 no satura el enlace, sino la **CPU, los procesos o la base d
 | **Mitigación** | Limitar la tasa de peticiones por IP en el balanceador (respuesta **429 Too Many Requests**); *timeouts* y `maxconn` ajustados; protección aguas arriba para ataques grandes |
 | **Comprobación** | Durante el ataque, un cliente legítimo sigue obteniendo **200** en tiempo razonable |
 
+{{< figura src="ud07/haproxy-rate-limit.svg" alt="Limitación por IP en HAProxy" caption="HAProxy responde 429 al atacante sin molestar a los servidores web." >}}
+
 ### 1. Línea base (desde `sad-cli`)
 
 ```bash
@@ -162,6 +164,8 @@ La lección: **alta disponibilidad no es copia de seguridad**. La replicación c
 | **Detección** | Errores de la aplicación; `Seconds_Behind_Master` y el registro binario muestran la sentencia |
 | **Mitigación** | **Réplica retardada** (`MASTER_DELAY`) que da margen para reaccionar; copias de seguridad independientes; registro binario para recuperación a un punto en el tiempo |
 | **Comprobación** | Recuperar la tabla desde la réplica retardada antes de que aplique el borrado |
+
+{{< figura src="ud07/replica-retardada.svg" alt="Réplica retardada" caption="La réplica retardada deja una ventana para detener la réplica antes de aplicar el desastre." >}}
 
 ### 1. Comprobar el problema
 

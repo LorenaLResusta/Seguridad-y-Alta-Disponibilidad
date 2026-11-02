@@ -53,6 +53,8 @@ En **mayo de 2023** el grupo de extorsión **Cl0p** explotó una inyección SQL 
 
 INCIBE recuerda en su blog para empresas las medidas básicas: **filtrar y validar** lo que introduce el usuario, **no exponer** las bases de datos a Internet y **analizar** las aplicaciones antes de publicarlas.
 
+{{< figura src="ud04/sqli-comparativa.svg" alt="Inyección SQL frente a consulta preparada" caption="La misma entrada maliciosa: concatenada (vulnerable) y con consulta preparada (segura)." >}}
+
 ### Ciclo del caso
 
 | Fase | Descripción |
@@ -266,6 +268,15 @@ Los dos ataques devuelven una página **vacía** (no hay pacientes cuyo nombre c
 Una **inyección de órdenes** (*OS command injection*, CWE-78) ocurre cuando una aplicación ejecuta una orden del sistema operativo con texto del usuario dentro. En la consola de Linux el carácter `;` separa órdenes, así que si el usuario escribe `8.8.8.8; cat /etc/passwd`, el servidor ejecuta **las dos**.
 
 Es exactamente el tipo de fallo **CVE-2025-41451** de los controladores de refrigeración Danfoss AK-SM 800A, implicados en el [ataque a los supermercados franceses](/ud01/ud01-casos/#caso-1b--supermercados-sin-frío-dispositivos-expuestos-a-internet): un campo del formulario de configuración del correo no se filtraba y permitía ejecutar órdenes en el equipo. Encadenado con el fallo de autenticación CVE-2025-41450, daba control total del controlador. Muchos *routers*, cámaras y dispositivos IoT tienen páginas de diagnóstico («hacer ping») con este mismo error.
+
+```mermaid
+flowchart LR
+  U[Usuario] -->|"ip=127.0.0.1; id"| W[Apache + PHP]
+  W -->|"shell_exec('ping -c 1 ' . $ip)"| SH[Consola de Linux]
+  SH --> O1[ping]
+  SH --> O2[id: orden inyectada]
+  O2 -.->|detectada por| AU[auditd: web_exec]
+```
 
 ### 1. Aplicación vulnerable (en `sad-web`)
 

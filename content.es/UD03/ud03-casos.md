@@ -199,6 +199,8 @@ john --test --format=crypt    2>/dev/null | tail -n 2
 - En `bd-sha1.txt`, dos usuarios con la misma contraseña tendrían el **mismo** *hash* (sin sal). En `bd-yescrypt.txt`, nunca.
 {{% /details %}}
 
+{{< figura src="ud03/hash-comparativa.svg" alt="SHA-1 sin sal frente a yescrypt" caption="Lo que protege a los usuarios tras un robo es cómo se guardaron las contraseñas." >}}
+
 ### Mitigación y comprobación
 
 | Medida | Qué resuelve |

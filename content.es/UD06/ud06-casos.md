@@ -48,6 +48,8 @@ El volumen de este tipo de ataques no deja de crecer: según Cloudflare, en el *
 > [!TIP]
 > **Caso real de INCIBE (Línea 017).** Una tienda *online* española sufrió un ataque contra su **pasarela de pagos**: más de 1 800 intentos de operación en pocas horas. Al cambiar de banco, el ataque se repitió contra el nuevo. INCIBE recomendó, entre otras medidas, credenciales robustas con doble factor en el gestor de contenidos, avisar al alojamiento y a la pasarela, recopilar evidencias, denunciar y, como prevención, separar entornos, valorar una **DMZ** y **monitorizar el tráfico**. [Lee el caso completo](https://www.incibe.es/linea-de-ayuda-en-ciberseguridad/casos-reales/e-commerce-bloqueado-por-un-ataque-ddos-su-pasarela-de-pagos).
 
+{{< figura src="ud06/ddos-1tbps.svg" alt="Ataques DDoS de más de 1 Tbps por trimestre" caption="Los ataques hipervolumétricos se multiplicaron por seis en un trimestre (Cloudflare, 2026)." >}}
+
 ### Tipos de DDoS y dónde se defienden
 
 | Tipo | Ejemplo | Qué agota | Dónde se mitiga |
@@ -58,6 +60,8 @@ El volumen de este tipo de ataques no deja de crecer: según Cloudflare, en el *
 
 > [!NOTE]
 > Un cortafuegos propio **no puede** detener un ataque volumétrico de cientos de Gbps: el enlace se satura antes de que los paquetes lleguen a él. Para eso se contrata protección al proveedor o a una CDN. Lo que sí puede y debe hacer el perímetro es resistir ataques de protocolo y limitar abusos de clientes individuales.
+
+{{< figura src="ud06/syn-flood.svg" alt="Saludo TCP normal e inundación SYN" caption="En la inundación SYN el atacante nunca completa el saludo y agota la cola del servidor." >}}
 
 ### Ciclo del caso
 

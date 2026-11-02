@@ -56,6 +56,8 @@ flowchart LR
   A -- "4. reenvía" --> C
 ```
 
+{{< figura src="ud05/arp-spoofing.svg" alt="Envenenamiento ARP" caption="Antes y durante el ataque: el tráfico pasa por el atacante sin que nadie lo note." >}}
+
 ### Ciclo del caso
 
 | Fase | Descripción |

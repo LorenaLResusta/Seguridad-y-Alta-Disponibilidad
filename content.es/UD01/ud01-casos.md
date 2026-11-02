@@ -30,6 +30,8 @@ flowchart LR
 > [!NOTE]
 > **Estos casos no se entregan.** Son trabajo autónomo o actividades de clase. Sirven para preparar la prueba (se pregunta la **interpretación** de un caso: identificar activo, amenaza, vulnerabilidad, fase del ataque y medida) y como ejemplos para el diagnóstico de la práctica integradora INT-1.
 
+{{< figura src="ud01/incibe-incidentes.svg" alt="Incidentes gestionados por INCIBE en 2024 y 2025" caption="Los incidentes crecen cada año: conocer los ataques es parte del trabajo." >}}
+
 ## Antes de empezar: ética y legalidad del laboratorio
 
 Aprender cómo funciona un ataque es imprescindible para defenderse, pero **atacar un sistema ajeno es delito**, aunque sea «para probar» o «sin hacer daño». El Código Penal español castiga, entre otros:
@@ -134,6 +136,8 @@ Lo que hizo posible el ataque:
 - **Equipos sin soporte**: los modelos más antiguos (AK-SM 800 y AK-SC 355) ya no reciben actualizaciones, de modo que no hay parche posible.
 
 Nadie reivindicó el ataque ni pidió rescate, lo que hace pensar en un sabotaje con motivación política. Una cadena, Picard, no se vio afectada porque su refrigeración se controla **tienda a tienda**, sin una consola central.
+
+{{< figura src="ud01/supermercados-cadena.svg" alt="Cadena del ataque a la refrigeración de los supermercados" caption="Cadena del ataque: panel expuesto → controlador → descongelación forzada → pérdidas." >}}
 
 ### Actividad: matriz de riesgos del caso
 
