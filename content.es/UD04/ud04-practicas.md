@@ -26,10 +26,10 @@ Inventario, usuarios y sudo, contraseñas, SSH con claves y Fail2ban, cortafuego
 | **Total** | | | **12 h** | |
 
 > [!NOTE]
-> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 12 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
+> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 12 h de prácticas oficiales de la unidad. El resto se realiza en el entorno de prácticas, en las horas indicadas.
 
 > [!IMPORTANT]
-> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el entorno de prácticas. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
 
 ## Qué entra en la prueba de esta unidad
 
@@ -163,7 +163,7 @@ Rellena esta tabla en tu informe:
 sudo groupadd webadmins
 sudo useradd -m -s /bin/bash -G webadmins ana        # administradora web
 sudo useradd -m -s /bin/bash luis                    # usuario sin privilegios
-sudo passwd ana                                      # usa una contraseña de laboratorio
+sudo passwd ana                                      # usa una contraseña de prácticas
 sudo passwd luis
 id ana; id luis | tee ~/ud4-evidencias/02-usuarios.txt
 ```
@@ -395,7 +395,7 @@ Tras desbloquear, vuelve a entrar desde `sad-cli` para comprobar la recuperació
 
 <!-- hint:h8 -->
 {{% details title="💡 Pista" open=false %}}
-Para provocar el bloqueo, haz varios intentos fallidos desde `sad-cli` y mira el estado con `sudo fail2ban-client status sshd`. Para **desbloquear** tu IP de laboratorio: `sudo fail2ban-client set sshd unbanip 192.168.100.10`. Si algo no funciona, el diagnóstico está en `journalctl -u fail2ban`.
+Para provocar el bloqueo, haz varios intentos fallidos desde `sad-cli` y mira el estado con `sudo fail2ban-client status sshd`. Para **desbloquear** tu IP de prácticas: `sudo fail2ban-client set sshd unbanip 192.168.100.10`. Si algo no funciona, el diagnóstico está en `journalctl -u fail2ban`.
 {{% /details %}}
 
 #### Solución de problemas
@@ -413,7 +413,7 @@ Para provocar el bloqueo, haz varios intentos fallidos desde `sad-cli` y mira el
 {{< practica num="4.4" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:c,h" entorno="Debian 13 · VirtualBox 7" entrega="reglas del cortafuegos y escaneo" >}}
 
 > [!TIP]
-> **Consejo.** Ejecuta Nmap **desde otra máquina virtual** de la red de laboratorio, no desde el propio servidor: desde dentro verías puertos que desde fuera están bloqueados. Guarda el resultado de antes y de después para comparar. Un puerto abierto que no recuerdas haber instalado es el hallazgo más interesante de la práctica.
+> **Consejo.** Ejecuta Nmap **desde otra máquina virtual** de la red de prácticas, no desde el propio servidor: desde dentro verías puertos que desde fuera están bloqueados. Guarda el resultado de antes y de después para comparar. Un puerto abierto que no recuerdas haber instalado es el hallazgo más interesante de la práctica.
 
 **Objetivo:** que el servidor solo ofrezca los puertos imprescindibles y comprobarlo desde fuera.
 
@@ -433,7 +433,7 @@ sudo systemd-run --on-active=180 --unit=deshacer-fw systemctl stop ufw        # 
 ```bash
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow from 192.168.100.0/24 to any port 22 proto tcp comment 'SSH laboratorio'
+sudo ufw allow from 192.168.100.0/24 to any port 22 proto tcp comment 'SSH entorno de prácticas'
 sudo ufw allow 80/tcp comment 'HTTP'          # solo si has instalado nginx
 sudo ufw enable
 sudo ufw status verbose | tee ~/ud4-evidencias/04-ufw.txt
@@ -464,7 +464,7 @@ nmap -sV -p- 192.168.100.30 | tee ~/nmap-despues.txt
 diff <(grep -E '^[0-9]+/' ~/nmap-antes.txt) <(grep -E '^[0-9]+/' ~/nmap-despues.txt)
 ```
 
-Resultado esperado: solo siguen abiertos 22 (desde la red del laboratorio) y, si procede, 80. Lo demás aparece `filtered` o desaparece.
+Resultado esperado: solo siguen abiertos 22 (desde la red del entorno de prácticas) y, si procede, 80. Lo demás aparece `filtered` o desaparece.
 
 Si todo funciona, **cancela el deshacer**: `sudo systemctl stop deshacer-fw.timer`. Si el acceso se pierde, a los 3 minutos el cortafuegos se detiene.
 
@@ -493,7 +493,7 @@ sudo cryptsetup luksFormat --type luks2 /root/volumen.img      # escribe YES (ma
 sudo cryptsetup open /root/volumen.img seguro
 sudo mkfs.ext4 -L SEGURO /dev/mapper/seguro
 sudo mkdir -p /mnt/seguro && sudo mount /dev/mapper/seguro /mnt/seguro
-echo "Informe confidencial de laboratorio" | sudo tee /mnt/seguro/informe.txt
+echo "Informe confidencial de prácticas" | sudo tee /mnt/seguro/informe.txt
 df -h /mnt/seguro | tee ~/ud4-evidencias/05-luks-montado.txt
 ```
 
@@ -516,7 +516,7 @@ sudo umount /mnt/seguro && sudo cryptsetup close seguro
 ```
 
 > [!CAUTION]
-> `luksFormat` destruye el contenido del dispositivo indicado. Revisa **dos veces** la ruta; en este laboratorio solo debe ser `/root/volumen.img`.
+> `luksFormat` destruye el contenido del dispositivo indicado. Revisa **dos veces** la ruta; en este entorno de prácticas solo debe ser `/root/volumen.img`.
 
 **Preguntas para el informe:** ¿qué ocurre si olvidas la frase de paso? ¿Y si se corrompe la cabecera y no tienes copia? ¿Dónde guardarías la copia de la cabecera y por qué?
 
@@ -780,7 +780,7 @@ less wazuh-install.sh                      # revisar antes de ejecutar
 sudo bash wazuh-install.sh -a              # instalación todo en uno (servidor, indexador y panel)
 ```
 
-3. Al terminar, el instalador muestra la contraseña del usuario `admin` del panel. **Guárdala** y accede a `https://192.168.100.40` desde el navegador (certificado autofirmado: es esperado en el laboratorio).
+3. Al terminar, el instalador muestra la contraseña del usuario `admin` del panel. **Guárdala** y accede a `https://192.168.100.40` desde el navegador (certificado autofirmado: es esperado en el entorno de prácticas).
 
 <!-- hint:h17 -->
 {{% details title="🔧 Si algo falla" open=false %}}
@@ -835,7 +835,7 @@ net accounts /lockoutthreshold:5 /lockoutduration:15 /lockoutwindow:15 /minpwlen
 auditpol /set /subcategory:"Logon" /success:enable /failure:enable
 ```
 
-Comprueba cada medida (con el cmdlet `Get-` o la consola «Directiva de seguridad local») y haz un inicio de sesión fallido contra tu cuenta de laboratorio para localizar el evento **4625** en el *Visor de eventos* (Seguridad). Anota los campos *Cuenta*, *Tipo de inicio de sesión* y *Dirección de red de origen*.
+Comprueba cada medida (con el cmdlet `Get-` o la consola «Directiva de seguridad local») y haz un inicio de sesión fallido contra tu cuenta de prácticas para localizar el evento **4625** en el *Visor de eventos* (Seguridad). Anota los campos *Cuenta*, *Tipo de inicio de sesión* y *Dirección de red de origen*.
 
 <!-- hint:h18 -->
 > [!TIP]

@@ -8,21 +8,21 @@ bookToc: true
 
 {{< ra "RA6:a,d,e,f,g,h,i" >}}
 
-La alta disponibilidad suele pensarse frente a **averías**: se cae un disco, un servidor o un balanceador y otro toma el relevo. Pero muchas interrupciones las causa un **ataque** o un **error humano**, y frente a ellos la redundancia no siempre ayuda: un ataque de denegación de servicio satura **todos** los nodos a la vez, y un borrado o un cifrado se **replica** al instante. En esta página lo compruebas en el laboratorio de la unidad.
+La alta disponibilidad suele pensarse frente a **averías**: se cae un disco, un servidor o un balanceador y otro toma el relevo. Pero muchas interrupciones las causa un **ataque** o un **error humano**, y frente a ellos la redundancia no siempre ayuda: un ataque de denegación de servicio satura **todos** los nodos a la vez, y un borrado o un cifrado se **replica** al instante. En esta página lo compruebas en el entorno de prácticas de la unidad.
 
 | Caso | Ataque o incidente | Caso real | Tipo |
 |---|---|---|---|
-| [7.A](#caso-7a--inundación-http-contra-el-balanceador) | Inundación HTTP (DDoS de capa 7) | *HTTP/2 Rapid Reset* (2023) | Laboratorio |
-| [7.B](#caso-7b--la-réplica-también-se-borra) | Borrado o cifrado que se replica | GitLab (2017), Ahold Delhaize (2024-2026) | Laboratorio |
+| [7.A](#caso-7a--inundación-http-contra-el-balanceador) | Inundación HTTP (DDoS de capa 7) | *HTTP/2 Rapid Reset* (2023) | Entorno de prácticas |
+| [7.B](#caso-7b--la-réplica-también-se-borra) | Borrado o cifrado que se replica | GitLab (2017), Ahold Delhaize (2024-2026) | Entorno de prácticas |
 | [7.C](#caso-7c--secuestro-de-la-ip-virtual) | Suplantación de VRRP para robar la IP virtual | Riesgo de diseño de los protocolos de redundancia | Análisis + comprobación |
 | [Búsqueda](#búsqueda-de-vulnerabilidades-en-la-pila-de-alta-disponibilidad) | Vulnerabilidades de HAProxy, Keepalived, MariaDB, Proxmox | — | Autónoma |
 
 > [!IMPORTANT]
-> Las pruebas de carga se lanzan **solo** desde `sad-cli` contra tu laboratorio y con un número de peticiones limitado. Recuerda las [normas de laboratorio](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-laboratorio). Estos casos **no se entregan**.
+> Las pruebas de carga se lanzan **solo** desde `sad-cli` contra tu entorno de prácticas y con un número de peticiones limitado. Recuerda las [normas del entorno de prácticas](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-entorno-de-prácticas). Estos casos **no se entregan**.
 
-### Laboratorio común
+### Entorno de prácticas común
 
-Es el laboratorio de las prácticas 7.3 a 7.6:
+Es el entorno de prácticas de las prácticas 7.3 a 7.6:
 
 | VM | IP | Función |
 |---|---|---|
@@ -151,10 +151,10 @@ Con la limitación, `ab` muestra miles de `Non-2xx responses` (los 429), la entr
 {{% tab "Windows 11" %}}
 Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
 
-Con **PowerShell 7** (`winget install --id Microsoft.PowerShell`) puedes generar carga paralela **contra tu laboratorio**, sin instalar nada más:
+Con **PowerShell 7** (`winget install --id Microsoft.PowerShell`) puedes generar carga paralela **contra tu entorno de prácticas**, sin instalar nada más:
 
 ```powershell
-# 2000 peticiones, 100 a la vez. SOLO contra la IP virtual del laboratorio
+# 2000 peticiones, 100 a la vez. SOLO contra la IP virtual del entorno de prácticas
 1..2000 | ForEach-Object -Parallel {
     try { (Invoke-WebRequest -Uri http://192.168.100.50/ -SkipHttpErrorCheck -TimeoutSec 10).StatusCode } catch { 0 }
 } -ThrottleLimit 100 | Group-Object | Select-Object Count, Name | Sort-Object Count -Descending
@@ -208,7 +208,7 @@ La réplica ha hecho **exactamente su trabajo**: copiar el cambio. Restaura la t
 
 ### 2. Mitigación: réplica retardada
 
-Una **réplica retardada** aplica los cambios con un retraso fijo. No sirve para el *failover* inmediato, pero da un margen para detener la réplica antes de que aplique un desastre. En producción se usa una **tercera** máquina para esto; en el laboratorio la configuramos en `db02` (perderás temporalmente la réplica «al día»).
+Una **réplica retardada** aplica los cambios con un retraso fijo. No sirve para el *failover* inmediato, pero da un margen para detener la réplica antes de que aplique un desastre. En producción se usa una **tercera** máquina para esto; en el entorno de prácticas la configuramos en `db02` (perderás temporalmente la réplica «al día»).
 
 ```bash
 # db02
@@ -272,7 +272,7 @@ Réplica retardada con `MASTER_DELAY` en MariaDB, y `mariadb-binlog` para recupe
 {{% tab "Windows 11" %}}
 Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
 
-En Windows 11 Pro con **Hyper-V** (las VM del laboratorio) tienes estas protecciones, que **no sustituyen a una copia de seguridad**:
+En Windows 11 Pro con **Hyper-V** (las VM del entorno de prácticas) tienes estas protecciones, que **no sustituyen a una copia de seguridad**:
 
 ```powershell
 # Punto de control (instantánea) antes de una operación peligrosa

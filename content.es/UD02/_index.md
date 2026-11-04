@@ -7,7 +7,7 @@ weight: 20
 
 Ninguna medida de prevención es infalible: los discos se averían, alguien borra una carpeta por error, el *ransomware* consigue entrar o se va la luz en mitad de una escritura. La **seguridad pasiva** parte de una idea realista (el incidente va a ocurrir) y se ocupa de que sus consecuencias sean mínimas y de que la recuperación sea rápida y demostrable.
 
-En esta unidad recorres la cadena completa de protección de los datos: la **seguridad física** y el centro de proceso de datos (CPD), la **alimentación eléctrica** con SAI, el **almacenamiento redundante** (RAID y LVM), el almacenamiento en red (NAS/SAN), las **copias de seguridad** (`tar`, `rsync`, `restic`, BorgBackup, Proxmox Backup Server y Clonezilla), la política **3-2-1-1-0**, los objetivos **RPO/RTO**, los planes de contingencia y el **borrado seguro** de los soportes. Todo se practica en un laboratorio virtual con **pruebas de fallo** reales: un disco que se avería, un corte eléctrico y un *ransomware* simulado.
+En esta unidad recorres la cadena completa de protección de los datos: la **seguridad física** y el centro de proceso de datos (CPD), la **alimentación eléctrica** con SAI, el **almacenamiento redundante** (RAID y LVM), el almacenamiento en red (NAS/SAN), las **copias de seguridad** (`tar`, `rsync`, `restic`, BorgBackup, Proxmox Backup Server y Clonezilla), la política **3-2-1-1-0**, los objetivos **RPO/RTO**, los planes de contingencia y el **borrado seguro** de los soportes. Todo se practica en un entorno de prácticas virtual con **pruebas de fallo** reales: un disco que se avería, un corte eléctrico y un *ransomware* simulado.
 
 {{< ra "RA1:a,b" "RA6:b,f" >}}
 
@@ -15,7 +15,7 @@ En esta unidad recorres la cadena completa de protección de los datos: la **seg
 |---|---|
 | [Teoría](/ud02/ud02-teoria/) | Seguridad física y CPD, SAI y NUT, almacenamiento y S.M.A.R.T., RAID, LVM, ZFS/Btrfs, NAS/SAN, copias, RPO/RTO, herramientas, continuidad y borrado seguro |
 | [Prácticas](/ud02/ud02-practicas/) | Nueve prácticas: SAI simulado, RAID con fallo de disco, instantáneas LVM, `rsync`, `restic`, recuperación ante *ransomware*, Clonezilla, borrado seguro y la **Tarea del proyecto «Plan de almacenamiento y copias»** |
-| [Casos de ataque y defensa](/ud02/ud02-casos/) | *Ransomware* que borra las copias (laboratorio con `restic` en modo solo-añadir), NAS expuestos a Internet, continuidad sin sistemas y vulnerabilidades del software de copias |
+| [Casos de ataque y defensa](/ud02/ud02-casos/) | *Ransomware* que borra las copias (entorno de prácticas con `restic` en modo solo-añadir), NAS expuestos a Internet, continuidad sin sistemas y vulnerabilidades del software de copias |
 | [Juegos de repaso](/ud02/ud02-juegos/) | Rosco, caza de errores, memory y duelo por equipos |
 
 **Duración:** 18 horas (7 h teoría · 9 h prácticas · 2 h evaluación)
@@ -26,7 +26,7 @@ En esta unidad recorres la cadena completa de protección de los datos: la **seg
 ## Cómo estudiar esta unidad
 
 1. Lee la [teoría](/ud02/ud02-teoria/) en orden: cada apartado se apoya en el anterior.
-2. Reproduce los ejemplos en tu laboratorio a medida que aparecen.
+2. Reproduce los ejemplos en tu entorno de prácticas a medida que aparecen.
 3. Resuelve los ejercicios antes de abrir las soluciones.
 4. Realiza las [prácticas](/ud02/ud02-practicas/) y haz la **Tarea del proyecto** de [Mediterránea Dental](/guia/proyecto-clinica/) (no se entrega: prepara INT-1).
 

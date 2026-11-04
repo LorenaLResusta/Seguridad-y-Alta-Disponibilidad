@@ -90,7 +90,7 @@ Proteger el perímetro no es instalar «un cortafuegos». Un **plan integral** r
 
 ### 1.3 Caso de estudio: Mediterránea Dental
 
-Hoy la clínica tiene una red plana detrás de un *router* doméstico, con un puerto redirigido al servidor web. El encargo es **diseñar e implantar el perímetro**: separar la web de citas de la red interna, controlar la salida a Internet, permitir el teletrabajo con VPN y dejar todo documentado. Las prácticas de la unidad construyen ese perímetro pieza a pieza sobre el laboratorio del proyecto.
+Hoy la clínica tiene una red plana detrás de un *router* doméstico, con un puerto redirigido al servidor web. El encargo es **diseñar e implantar el perímetro**: separar la web de citas de la red interna, controlar la salida a Internet, permitir el teletrabajo con VPN y dejar todo documentado. Las prácticas de la unidad construyen ese perímetro pieza a pieza sobre el entorno de prácticas del proyecto.
 
 ---
 
@@ -322,11 +322,11 @@ sudo iptables-save | sudo iptables-restore-translate            # traduce un con
 ```
 
 > [!NOTE]
-> **Comentario.** `nftables` sustituye a `iptables` como infraestructura de filtrado de Linux. En Debian 13 la orden `iptables` suele ser una capa de compatibilidad (`iptables-nft`) que traduce a `nftables`; no mezcles reglas de ambas en el mismo equipo. Para un laboratorio nuevo escribe directamente en `nft`: la sintaxis es más coherente, admite conjuntos y se aplica de forma atómica.
+> **Comentario.** `nftables` sustituye a `iptables` como infraestructura de filtrado de Linux. En Debian 13 la orden `iptables` suele ser una capa de compatibilidad (`iptables-nft`) que traduce a `nftables`; no mezcles reglas de ambas en el mismo equipo. Para un entorno de prácticas nuevo escribe directamente en `nft`: la sintaxis es más coherente, admite conjuntos y se aplica de forma atómica.
 
 ### 4.3 Cortafuegos de tres zonas: el *ruleset* de `fw01`
 
-El laboratorio del proyecto tiene un cortafuegos `fw01` con tres interfaces:
+El entorno de prácticas del proyecto tiene un cortafuegos `fw01` con tres interfaces:
 
 | Zona | Interfaz | Red | Equipos |
 |---|---|---|---|
@@ -566,7 +566,7 @@ sequenceDiagram
 
 
 > [!NOTE]
-> **Ejemplo: publicar un servicio de la DMZ.** Para que Internet llegue al servidor web interno se usa DNAT, con una regla del estilo `tcp dport 443 dnat to 10.0.20.10:443` en la cadena `prerouting`, **más** una regla de `forward` que permita ese flujo y solo ese. Son dos decisiones distintas: el NAT cambia el destino y el filtrado lo autoriza. Las direcciones de la regla son de ejemplo; adapta las de tu laboratorio. Comprueba el resultado desde fuera con `curl` y revisa los contadores con `nft list ruleset`.
+> **Ejemplo: publicar un servicio de la DMZ.** Para que Internet llegue al servidor web interno se usa DNAT, con una regla del estilo `tcp dport 443 dnat to 10.0.20.10:443` en la cadena `prerouting`, **más** una regla de `forward` que permita ese flujo y solo ese. Son dos decisiones distintas: el NAT cambia el destino y el filtrado lo autoriza. Las direcciones de la regla son de ejemplo; adapta las de tu entorno de prácticas. Comprueba el resultado desde fuera con `curl` y revisa los contadores con `nft list ruleset`.
 
 ### 4.7 Fortificación de la pila TCP/IP del cortafuegos
 
@@ -602,7 +602,7 @@ sysctl net.ipv4.ip_forward net.ipv4.conf.all.rp_filter     # verifica
 
 El tamaño de la tabla de conexiones (`net.netfilter.nf_conntrack_max`) solo existe cuando el módulo `nf_conntrack` está cargado (lo está en cuanto hay reglas con estado). Vigila su ocupación con `sudo conntrack -C` (conexiones actuales) frente a `sysctl net.netfilter.nf_conntrack_max`: si se llena, el cortafuegos descarta conexiones nuevas.
 
-**Direcciones imposibles (*bogons*) desde Internet.** En una WAN real, nada que llegue de Internet puede tener como origen una IP privada (RFC 1918), de *loopback* o de enlace local: se descarta con `iifname $WAN ip saddr { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 169.254.0.0/16 } drop`. **En nuestro laboratorio la WAN usa 10.0.2.0/24 (privada), por eso esa regla no se aplica.**
+**Direcciones imposibles (*bogons*) desde Internet.** En una WAN real, nada que llegue de Internet puede tener como origen una IP privada (RFC 1918), de *loopback* o de enlace local: se descarta con `iifname $WAN ip saddr { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 169.254.0.0/16 } drop`. **En nuestro entorno de prácticas la WAN usa 10.0.2.0/24 (privada), por eso esa regla no se aplica.**
 
 ---
 
@@ -800,7 +800,7 @@ Para sondear puertos se usan `nc` (*netcat*: `-z` solo comprueba si está abiert
 | `filtered` | No hay respuesta | Regla `drop`: el cortafuegos funciona |
 
 ```bash
-# SOLO contra tus propias máquinas del laboratorio, desde la zona WAN (máquina "atacante")
+# SOLO contra tus propias máquinas del entorno de prácticas, desde la zona WAN (máquina "atacante")
 sudo nmap -sS -p- -T4 10.0.2.10        # -sS: sondeo SYN (el paquete SYN sin completar la conexión); -p-: los 65535 puertos
 sudo nmap -sV -p 80,443 10.0.2.10      # -sV: intenta identificar el servicio y su versión
 sudo nmap -sU --top-ports 20 10.0.2.10 # -sU: UDP, los 20 puertos más comunes (es lento: UDP no responde si está filtrado)
@@ -816,7 +816,7 @@ PORT    STATE SERVICE
 ```
 
 > [!WARNING]
-> Sondea **solo** equipos propios del laboratorio. Escanear redes ajenas sin autorización puede constituir delito (Código Penal, arts. 197 bis y siguientes). Un sondeo contra la propia infraestructura, con permiso por escrito, es una **verificación** profesional; en el laboratorio, tú das el permiso.
+> Sondea **solo** equipos propios del entorno de prácticas. Escanear redes ajenas sin autorización puede constituir delito (Código Penal, arts. 197 bis y siguientes). Un sondeo contra la propia infraestructura, con permiso por escrito, es una **verificación** profesional; en el entorno de prácticas, tú das el permiso.
 
 ---
 
@@ -949,7 +949,7 @@ Para saber **quién** navega se exige usuario y contraseña mediante un **ayudan
 
 | Método | Cómo funciona | Cuándo |
 |---|---|---|
-| **Básica** (`basic_ncsa_auth`) | Fichero `htpasswd`; el navegador envía usuario y contraseña en Base64 (**no cifrados**) | Laboratorio o LAN de confianza |
+| **Básica** (`basic_ncsa_auth`) | Fichero `htpasswd`; el navegador envía usuario y contraseña en Base64 (**no cifrados**) | Entorno de prácticas o LAN de confianza |
 | **LDAP / Active Directory** (`basic_ldap_auth`) | Valida contra el directorio de la organización | Empresas con directorio |
 | **Kerberos / NTLM** (`negotiate_kerberos_auth`) | Inicio de sesión único (SSO), sin contraseña en la red | Dominio de Active Directory |
 
@@ -1073,14 +1073,14 @@ Un **proxy inverso** se sitúa **delante de los servidores web**: los clientes d
 - **Protección**: limitación de peticiones, cabeceras de seguridad, filtrado (WAF), ocultación de versiones.
 - **Caché** de contenido estático.
 
-En el laboratorio, el *proxy* inverso es **`web02`** (`172.16.10.12`, actúa de `rp01`) y el servidor real es **`web01`** (`172.16.10.11`). El cortafuegos publica el *proxy*, no el servidor real. En producción, el *proxy* inverso es un equipo propio de la DMZ (o HAProxy en la [UD07](/ud07/ud07-teoria/)).
+En el entorno de prácticas, el *proxy* inverso es **`web02`** (`172.16.10.12`, actúa de `rp01`) y el servidor real es **`web01`** (`172.16.10.11`). El cortafuegos publica el *proxy*, no el servidor real. En producción, el *proxy* inverso es un equipo propio de la DMZ (o HAProxy en la [UD07](/ud07/ud07-teoria/)).
 
 ```bash
 sudo apt install -y nginx                      # AlmaLinux: sudo dnf install -y nginx
 nginx -v                                       # Nginx 1.26 en Debian 13
 ```
 
-Certificado de laboratorio (en la unidad de proyecto se usa el de la PKI de la [UD03](/ud03/ud03-teoria/)): `openssl req -x509` crea un certificado autofirmado; `-newkey ec -pkeyopt ec_paramgen_curve:prime256v1` genera una clave de curva elíptica P-256; `-nodes` la deja sin contraseña (para que Nginx arranque solo; protégela con permisos `600`); `-addext` añade el nombre alternativo (SAN) que exigen los navegadores.
+Certificado de prácticas (en la unidad de proyecto se usa el de la PKI de la [UD03](/ud03/ud03-teoria/)): `openssl req -x509` crea un certificado autofirmado; `-newkey ec -pkeyopt ec_paramgen_curve:prime256v1` genera una clave de curva elíptica P-256; `-nodes` la deja sin contraseña (para que Nginx arranque solo; protégela con permisos `600`); `-addext` añade el nombre alternativo (SAN) que exigen los navegadores.
 
 ```bash
 sudo mkdir -p /etc/ssl/lab && cd /etc/ssl/lab
@@ -1119,7 +1119,7 @@ server {
     ssl_protocols       TLSv1.2 TLSv1.3;          # sin TLS 1.0 ni 1.1
     ssl_prefer_server_ciphers off;
 
-    # Cabeceras de seguridad (HSTS corto en el laboratorio; en producción, max-age=31536000)
+    # Cabeceras de seguridad (HSTS corto en el entorno de prácticas; en producción, max-age=31536000)
     add_header Strict-Transport-Security "max-age=300" always;
     add_header X-Content-Type-Options    "nosniff" always;
     add_header X-Frame-Options           "DENY" always;
@@ -1304,7 +1304,7 @@ sudo tcpdump -ni wg0 -c 5 icmp                 # dentro del túnel: el ping se v
 
 **IPsec** es el estándar para unir redes entre fabricantes distintos. Funciona en dos fases: **IKEv2** (RFC 7296) autentica a los extremos y negocia las claves (UDP 500 y 4500) y **ESP** (RFC 4303) cifra el tráfico. Por cada túnel se crea una **SA** (*Security Association*) que indica qué redes protege (*selectores de tráfico*).
 
-Ejemplo con **strongSwan 6.x** y su interfaz moderna `swanctl` (el antiguo `ipsec.conf` está en desuso): unión de la sede (`192.168.10.0/24`, `fw01` en 10.0.2.10) y la delegación (`192.168.20.0/24`, `fw-deleg` en 10.0.2.20). La clave precompartida (PSK) es **solo para laboratorio**: en producción se usan **certificados** de la PKI de la [UD03](/ud03/ud03-teoria/).
+Ejemplo con **strongSwan 6.x** y su interfaz moderna `swanctl` (el antiguo `ipsec.conf` está en desuso): unión de la sede (`192.168.10.0/24`, `fw01` en 10.0.2.10) y la delegación (`192.168.20.0/24`, `fw-deleg` en 10.0.2.20). La clave precompartida (PSK) es **solo para prácticas**: en producción se usan **certificados** de la PKI de la [UD03](/ud03/ud03-teoria/).
 
 ```bash
 sudo apt install -y strongswan-swanctl charon-systemd   # AlmaLinux: sudo dnf install -y strongswan (EPEL)
@@ -1335,7 +1335,7 @@ secrets {
   ike-sede-delegacion {
     id-1 = sede
     id-2 = delegacion
-    secret = "CambiaEstaPSKDeLaboratorio-UnaFraseLargaYAleatoria"
+    secret = "CambiaEstaPSKDePracticas-UnaFraseLargaYAleatoria"
   }
 }
 ```
@@ -1451,7 +1451,7 @@ Match Group saltadores
 
 ```bash
 # En la máquina de la CA (protegida)
-ssh-keygen -t ed25519 -f ssh_ca -C "CA SSH laboratorio"                  # clave de la CA
+ssh-keygen -t ed25519 -f ssh_ca -C "CA SSH practicas"                  # clave de la CA
 ssh-keygen -s ssh_ca -I ana-2026 -n ana,admin -V +12w ana.pub            # firma: identidad (-I), cuentas permitidas (-n), caducidad (-V)
 ssh-keygen -L -f ana-cert.pub                                            # inspecciona el certificado
 ```
@@ -1482,7 +1482,7 @@ Para el **acceso remoto** de personas se combinan métodos:
 
 | Método | Cómo | Nivel |
 |---|---|---|
-| Clave precompartida | Un secreto común a todos | Bajo (solo laboratorio) |
+| Clave precompartida | Un secreto común a todos | Bajo (solo entorno de prácticas) |
 | Clave pública (WireGuard, SSH) | Un par de claves por equipo o persona | Alto |
 | Certificado de cliente | Emitido por la PKI ([UD03](/ud03/ud03-teoria/)) | Alto |
 | Usuario y contraseña (EAP o RADIUS) | Contra un servidor RADIUS o LDAP | Medio |
@@ -1537,7 +1537,7 @@ client fw01 {
 EOF
 ```
 
-Crea un usuario de prueba al principio de `mods-config/files/authorize` (contraseña en claro: **solo laboratorio**):
+Crea un usuario de prueba al principio de `mods-config/files/authorize` (contraseña en claro: **solo entorno de prácticas**):
 
 ```text
 ana  Cleartext-Password := "ClavePruebaAna1"
@@ -1555,7 +1555,7 @@ radtest ana ClavePruebaAna1 192.168.10.11 0 SecretoRadiusLab-CambiaMe-2026    # 
 La salida debe incluir `Received Access-Accept`; con una clave errónea, `Access-Reject`; si el **secreto** no coincide, el servidor **descarta en silencio** la petición (aparece en el registro de depuración). Cuando funcione: `sudo systemctl enable --now freeradius`.
 
 > [!WARNING]
-> Las contraseñas en claro del fichero `authorize` son **solo para laboratorio**. En producción RADIUS se integra con **LDAP o Active Directory** (módulo `ldap`; para AD con contraseñas NT, `ntlm_auth`/Winbind) o usa *hashes*, y mejor aún EAP-TLS con certificados. Protege `clients.conf` (permisos `640`, propietario `root:freerad`), usa secretos largos y **distintos por cliente**, y no expongas RADIUS fuera de la red de gestión: el protocolo cifra solo la contraseña con el secreto. Entre redes distintas se usa **RadSec** (RADIUS sobre TLS, RFC 6614).
+> Las contraseñas en claro del fichero `authorize` son **solo para prácticas**. En producción RADIUS se integra con **LDAP o Active Directory** (módulo `ldap`; para AD con contraseñas NT, `ntlm_auth`/Winbind) o usa *hashes*, y mejor aún EAP-TLS con certificados. Protege `clients.conf` (permisos `640`, propietario `root:freerad`), usa secretos largos y **distintos por cliente**, y no expongas RADIUS fuera de la red de gestión: el protocolo cifra solo la contraseña con el secreto. Entre redes distintas se usa **RadSec** (RADIUS sobre TLS, RFC 6614).
 
 ### 9.5 Integración de RADIUS con la pasarela
 

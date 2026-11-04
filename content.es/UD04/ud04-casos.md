@@ -12,15 +12,15 @@ Fortificar un *host* no es solo cerrar puertos: las aplicaciones que se ejecutan
 
 | Caso | Ataque | Caso real | Tipo |
 |---|---|---|---|
-| [4.A](#caso-4a--inyección-sql) | Inyección SQL | MOVEit Transfer (2023) | Laboratorio |
-| [4.B](#caso-4b--inyección-de-órdenes-del-sistema) | Inyección de órdenes del sistema operativo | Controladores Danfoss de los supermercados (2025-2026) | Laboratorio |
-| [4.C](#caso-4c--búsqueda-de-vulnerabilidades-en-tu-propio-servidor) | Búsqueda de vulnerabilidades en paquetes instalados | — | Laboratorio |
+| [4.A](#caso-4a--inyección-sql) | Inyección SQL | MOVEit Transfer (2023) | Entorno de prácticas |
+| [4.B](#caso-4b--inyección-de-órdenes-del-sistema) | Inyección de órdenes del sistema operativo | Controladores Danfoss de los supermercados (2025-2026) | Entorno de prácticas |
+| [4.C](#caso-4c--búsqueda-de-vulnerabilidades-en-tu-propio-servidor) | Búsqueda de vulnerabilidades en paquetes instalados | — | Entorno de prácticas |
 | [4.D](#búsqueda-de-vulnerabilidades-de-aplicaciones-web) | Vulnerabilidades de aplicaciones web en INCIBE-CERT | — | Autónoma |
 
 > [!IMPORTANT]
-> Las aplicaciones de esta página son **vulnerables a propósito**. Instálalas solo en una VM del laboratorio, sin acceso desde fuera de la red interna, y **bórralas al terminar**. Recuerda las [normas de laboratorio](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-laboratorio). Estos casos **no se entregan**.
+> Las aplicaciones de esta página son **vulnerables a propósito**. Instálalas solo en una VM del entorno de prácticas, sin acceso desde fuera de la red interna, y **bórralas al terminar**. Recuerda las [normas del entorno de prácticas](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-entorno-de-prácticas). Estos casos **no se entregan**.
 
-### Laboratorio común
+### Entorno de prácticas común
 
 | Máquina | Función | IP (red `SAD-NAT`) |
 |---|---|---|
@@ -80,8 +80,8 @@ INSERT INTO clinica.pacientes (nombre, telefono, diagnostico) VALUES
   ('Ana Pérez','600111222','Caries'), ('Luis Gil','600333444','Ortodoncia'),
   ('Marta Ruiz','600555666','Implante');
 INSERT INTO clinica.usuarios (usuario, clave) VALUES
-  ('admin','$2y$10$EjemploDeHashBcryptNoRealParaElLaboratorio0000000000'),
-  ('recepcion','$2y$10$OtroHashDeEjemploNoRealParaElLaboratorio000000000000');
+  ('admin','$2y$10$EjemploDeHashBcryptNoRealParaLasPracticas0000000000'),
+  ('recepcion','$2y$10$OtroHashDeEjemploNoRealParaLasPracticas000000000000');
 -- ERROR DE DISEÑO A PROPÓSITO: la aplicación recibe todos los privilegios sobre la BD
 CREATE USER 'webapp'@'localhost' IDENTIFIED BY 'ClaveWebLab1';
 GRANT ALL PRIVILEGES ON clinica.* TO 'webapp'@'localhost';
@@ -92,7 +92,7 @@ Crea `/var/www/html/buscar.php`. La página busca pacientes por nombre y **muest
 
 ```php
 <?php
-// APLICACIÓN VULNERABLE A PROPÓSITO: solo para el laboratorio
+// APLICACIÓN VULNERABLE A PROPÓSITO: solo para el entorno de prácticas
 mysqli_report(MYSQLI_REPORT_OFF);              // muestra los errores en lugar de lanzar excepciones
 $db = new mysqli('localhost', 'webapp', 'ClaveWebLab1', 'clinica');
 $nombre = $_GET['nombre'] ?? '';
@@ -150,7 +150,7 @@ curl -sG http://192.168.100.30/buscar.php --data-urlencode "nombre=' UNION SELEC
 Ese último resultado es exactamente lo que pasó en muchos robos de datos reales. Si los *hashes* fueran débiles, el atacante continuaría con el [caso 3.B](/ud03/ud03-casos/#caso-3b--robo-de-una-base-de-datos-de-contraseñas).
 {{% /details %}}
 
-**d) Ataque automatizado con `sqlmap`** (solo contra tu laboratorio)
+**d) Ataque automatizado con `sqlmap`** (solo contra tu entorno de prácticas)
 
 `sqlmap` es una herramienta libre que detecta y explota inyecciones SQL de forma automática. Los atacantes la usan, y los auditores también, para **comprobar** si una corrección funciona.
 
@@ -266,7 +266,7 @@ Aplicación PHP + MariaDB, `curl -G --data-urlencode`, `sqlmap`, consulta prepar
 {{% tab "Windows 11" %}}
 Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
 
-**Como atacante** (desde Windows 11 contra la VM del laboratorio): `curl.exe` viene incluido.
+**Como atacante** (desde Windows 11 contra la VM del entorno de prácticas): `curl.exe` viene incluido.
 
 ```powershell
 curl.exe -G http://192.168.100.30/buscar.php --data-urlencode "nombre=' OR 1=1 -- -"
@@ -292,9 +292,9 @@ cmd.Parameters.Add("@patron", SqlDbType.NVarChar, 50).Value = "%" + nombre + "%"
 Y, igual que en Linux, la cuenta de la aplicación solo debe tener `SELECT` sobre las tablas necesarias.
 {{% /tab %}}
 {{% tab "Web" %}}
-**Laboratorios web legales para practicar la inyección SQL** (sin montar nada):
+**Entornos de prácticas web legales para practicar la inyección SQL** (sin montar nada):
 
-- **[PortSwigger Web Security Academy](https://portswigger.net/web-security/sql-injection)**: laboratorios gratuitos en línea de inyección SQL, de nivel inicial a avanzado, con la teoría y la solución de cada uno.
+- **[PortSwigger Web Security Academy](https://portswigger.net/web-security/sql-injection)**: entornos de prácticas gratuitos en línea de inyección SQL, de nivel inicial a avanzado, con la teoría y la solución de cada uno.
 - **[OWASP Juice Shop](https://owasp.org/www-project-juice-shop/)**: tienda vulnerable a propósito. En local, con Docker (Windows 11 con Docker Desktop, o Linux):
 
 ```bash
@@ -304,7 +304,7 @@ docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
   Abre `http://localhost:3000`. El `127.0.0.1:` hace que solo sea accesible desde tu equipo. Prueba el reto de inyección en el formulario de inicio de sesión (reto *Login Admin*).
 - **[DVWA](https://github.com/digininja/DVWA)**: aplicación vulnerable en PHP con niveles *low / medium / high* para comparar cómo se defiende cada uno.
 
-> Ataca **solo** a estas aplicaciones y a las de tu laboratorio. No pruebes inyecciones en webs reales.
+> Ataca **solo** a estas aplicaciones y a las de tu entorno de prácticas. No pruebes inyecciones en webs reales.
 {{% /tab %}}
 {{< /tabs >}}
 
@@ -444,7 +444,7 @@ Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4688} -MaxEvents 1000 |
 Un servidor web (`w3wp.exe`) que lanza `cmd.exe` o `whoami.exe` es tan sospechoso como un `www-data` ejecutando `id` en Linux. **Sysmon** (de Microsoft Sysinternals) registra además el proceso padre, lo que facilita ver quién lanzó qué.
 {{% /tab %}}
 {{% tab "Web" %}}
-Laboratorio guiado en línea: **[PortSwigger: OS command injection](https://portswigger.net/web-security/os-command-injection)**. Incluye laboratorios con la inyección «ciega», en la que no se ve la salida, y la forma de detectarlos por el tiempo de respuesta (`ping -c 10 127.0.0.1`).
+Entorno de prácticas guiado en línea: **[PortSwigger: OS command injection](https://portswigger.net/web-security/os-command-injection)**. Incluye entornos de prácticas con la inyección «ciega», en la que no se ve la salida, y la forma de detectarlos por el tiempo de respuesta (`ping -c 10 127.0.0.1`).
 {{% /tab %}}
 {{< /tabs >}}
 

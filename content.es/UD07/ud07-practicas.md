@@ -25,10 +25,10 @@ Cálculo de disponibilidad, RAID 1 con fallo de disco, servicio web de dos nodos
 | **Total** | | | **9 h** | |
 
 > [!NOTE]
-> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 9 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
+> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 9 h de prácticas oficiales de la unidad. El resto se realiza en el entorno de prácticas, en las horas indicadas.
 
 > [!IMPORTANT]
-> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-2**.
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el entorno de prácticas. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-2**.
 
 ## Qué entra en la prueba de esta unidad
 
@@ -57,7 +57,7 @@ Estos son los contenidos de las prácticas que se preguntan (no hace falta memor
 > [!IMPORTANT]
 > **Cada práctica termina con una prueba de fallo.** El objetivo no es que el servicio funcione, sino comprobar **qué ocurre cuando algo deja de funcionar** y cuánto tarda en recuperarse. Anota siempre la hora del fallo y de la recuperación.
 
-## Preparación del laboratorio
+## Preparación del entorno de prácticas
 
 #### Máquinas y direcciones
 
@@ -242,7 +242,7 @@ sudo mariadb -e "SHOW GRANTS FOR 'appuser'@'192.168.100.61';"
 ```
 
 > [!NOTE]
-> La contraseña `ClaveAppLab1` es solo de laboratorio. En un entorno real se usan contraseñas únicas y se guardan en un gestor de secretos, nunca en el código.
+> La contraseña `ClaveAppLab1` es solo de prácticas. En un entorno real se usan contraseñas únicas y se guardan en un gestor de secretos, nunca en el código.
 
 #### Servidores web (`web01` y `web02`)
 
@@ -311,7 +311,7 @@ curl -s -o /dev/null -w '%{http_code}\n' http://192.168.100.61/salud.php    # 20
 
 <!-- hint:h3 -->
 {{% details title="🔧 Si algo falla" open=false %}}
-- **El servidor web no conecta con la base de datos:** en `db01`, MariaDB debe escuchar en la red (`bind-address = 0.0.0.0` o la IP de laboratorio), el usuario debe poder conectar desde la red (`'usuario'@'192.168.100.%'`) y el puerto 3306 debe estar abierto.
+- **El servidor web no conecta con la base de datos:** en `db01`, MariaDB debe escuchar en la red (`bind-address = 0.0.0.0` o la IP de prácticas), el usuario debe poder conectar desde la red (`'usuario'@'192.168.100.%'`) y el puerto 3306 debe estar abierto.
 - **Prueba rápida desde un web:** `mariadb -h 192.168.100.70 -u <usuario> -p -e "SELECT 1"`.
 {{% /details %}}
 
@@ -576,7 +576,7 @@ SQL
 ```
 
 > [!NOTE]
-> Si `db01` ya contiene datos (la tabla `visitas` de la práctica 7.3), la réplica debe empezar con una **copia consistente** de esos datos. Hazla con `sudo mariadb-dump --all-databases --single-transaction --master-data=2 > /root/inicial.sql`, cópiala a `db02` (`scp`) e impórtala con `sudo mariadb < inicial.sql` **antes** del paso siguiente. Para un laboratorio nuevo, basta con crear la BD después de configurar la réplica.
+> Si `db01` ya contiene datos (la tabla `visitas` de la práctica 7.3), la réplica debe empezar con una **copia consistente** de esos datos. Hazla con `sudo mariadb-dump --all-databases --single-transaction --master-data=2 > /root/inicial.sql`, cópiala a `db02` (`scp`) e impórtala con `sudo mariadb < inicial.sql` **antes** del paso siguiente. Para un entorno de prácticas nuevo, basta con crear la BD después de configurar la réplica.
 
 En `db02`, `/etc/mysql/mariadb.conf.d/61-replica.cnf`:
 
@@ -659,7 +659,7 @@ ab -n 20000 -c 20 -r http://192.168.100.50/index.php | tee ~/ud5-evidencias/07-c
 Compara: peticiones fallidas (`Failed requests`, `Non-2xx responses`), caída del rendimiento y tiempo hasta estabilizarse. Responde: ¿qué parte de las peticiones se perdió y por qué? ¿Cómo la reducirías (valores `inter`/`fall`, reintentos `retries`, `option redispatch`)?
 
 > [!CAUTION]
-> Estas pruebas se realizan solo sobre tu laboratorio. Generar carga sobre servicios ajenos puede constituir un ataque de denegación de servicio.
+> Estas pruebas se realizan solo sobre tu entorno de prácticas. Generar carga sobre servicios ajenos puede constituir un ataque de denegación de servicio.
 
 <!-- hint:h9 -->
 {{% details title="💡 Pista" open=false %}}
@@ -686,7 +686,7 @@ Sigue el procedimiento del apartado 8.3 de la [teoría](/ud07/ud07-teoria/) comp
 {{% details title="🔧 Si algo falla" open=false %}}
 - **Estado del clúster:** `sudo pcs status` (o `sudo crm_mon -1`). Todos los nodos deben aparecer `Online`.
 - **El recurso no arranca:** `sudo pcs resource debug-start <recurso>` y `journalctl -u pacemaker`.
-- **Aviso:** desactivar *fencing* (`stonith-enabled=false`) es aceptable solo en laboratorio; en producción es imprescindible para evitar la corrupción de datos.
+- **Aviso:** desactivar *fencing* (`stonith-enabled=false`) es aceptable solo en el entorno de prácticas; en producción es imprescindible para evitar la corrupción de datos.
 {{% /details %}}
 
 ---
@@ -757,7 +757,7 @@ Requiere tres nodos Proxmox VE 9 (VM con **virtualización anidada** habilitada)
 - Usuarios de BD con **mínimos privilegios** y limitados por IP de origen.
 - La base de datos escucha solo en la **IP interna**, nunca en `0.0.0.0`.
 - Segmento de red dedicado para VRRP, replicación y Corosync (UD06: VLAN).
-- Contraseñas de laboratorio **sustituidas** por secretos únicos en cualquier entorno real.
+- Contraseñas de prácticas **sustituidas** por secretos únicos en cualquier entorno real.
 - STONITH activo y quórum correcto en clústeres reales.
 - Copias de seguridad **además** de la replicación.
 

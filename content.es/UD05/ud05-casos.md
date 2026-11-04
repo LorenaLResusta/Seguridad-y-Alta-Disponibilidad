@@ -12,17 +12,17 @@ En una red local, los protocolos básicos (ARP, DHCP, DNS) **confían** en lo qu
 
 | Caso | Ataque | Caso real | Tipo |
 |---|---|---|---|
-| [5.A](#caso-5a--intermediario-por-envenenamiento-arp) | *Man-in-the-middle* por envenenamiento ARP (*ARP spoofing*) | Ataque base de muchas intrusiones en LAN | Laboratorio |
-| [5.B](#caso-5b--wi-fi-gemela-maliciosa-evil-twin) | Wi-Fi gemela maliciosa (*evil twin*) | Aeropuertos y vuelos en Australia (2024) | Análisis + laboratorio opcional |
-| [5.C](#caso-5c--detectar-el-reconocimiento-con-suricata) | Reconocimiento y escaneo de la red | Fase previa de casi todos los ataques | Laboratorio |
+| [5.A](#caso-5a--intermediario-por-envenenamiento-arp) | *Man-in-the-middle* por envenenamiento ARP (*ARP spoofing*) | Ataque base de muchas intrusiones en LAN | Entorno de prácticas |
+| [5.B](#caso-5b--wi-fi-gemela-maliciosa-evil-twin) | Wi-Fi gemela maliciosa (*evil twin*) | Aeropuertos y vuelos en Australia (2024) | Análisis + entorno de prácticas opcional |
+| [5.C](#caso-5c--detectar-el-reconocimiento-con-suricata) | Reconocimiento y escaneo de la red | Fase previa de casi todos los ataques | Entorno de prácticas |
 | [Búsqueda](#búsqueda-de-vulnerabilidades-en-equipos-y-protocolos-de-red) | Vulnerabilidades de Wi-Fi, *routers* y reglas IDS | — | Autónoma |
 
 > [!IMPORTANT]
-> Los ataques de esta página se hacen **solo en la red interna `sad-lan`** de VirtualBox, nunca en la red del centro ni en una Wi-Fi real que no sea tuya. Interceptar comunicaciones ajenas es delito (art. 197 bis del Código Penal). Recuerda las [normas de laboratorio](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-laboratorio). Estos casos **no se entregan**.
+> Los ataques de esta página se hacen **solo en la red interna `sad-lan`** de VirtualBox, nunca en la red del centro ni en una Wi-Fi real que no sea tuya. Interceptar comunicaciones ajenas es delito (art. 197 bis del Código Penal). Recuerda las [normas del entorno de prácticas](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-entorno-de-prácticas). Estos casos **no se entregan**.
 
-### Laboratorio común
+### Entorno de prácticas común
 
-Partimos del laboratorio de la unidad y añadimos un cliente y una máquina atacante en la LAN:
+Partimos del entorno de prácticas de la unidad y añadimos un cliente y una máquina atacante en la LAN:
 
 | Máquina | Función | IP (red `sad-lan`) |
 |---|---|---|
@@ -222,7 +222,7 @@ A esta técnica se la llama **gemela maliciosa** (*evil twin*): un punto de acce
 3. Redacta **cinco recomendaciones** para el personal de Mediterránea Dental que viaja o teletrabaja. Compáralas con los consejos de INCIBE sobre redes Wi-Fi públicas en su sección para la ciudadanía.
 4. En la práctica 6.11 configurarás FreeRADIUS: anota qué parte de esa práctica evita este ataque.
 
-{{% details title="💡 Laboratorio opcional (solo con un adaptador USB Wi-Fi propio)" open=false %}}
+{{% details title="💡 Entorno de prácticas opcional (solo con un adaptador USB Wi-Fi propio)" open=false %}}
 Si dispones de un adaptador Wi-Fi USB compatible con modo AP, puedes crear **en casa o en el aula, con tus propios dispositivos** una red abierta con `hostapd` y comprobar desde tu móvil:
 
 - que el móvil la muestra igual que una red legítima con el mismo nombre;

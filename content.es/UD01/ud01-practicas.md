@@ -8,11 +8,11 @@ bookToc: true
 
 {{< ra "RA1:a,b,c,d,e,g,i" "RA2:b,h" "RA7:f" >}}
 
-Preparación del laboratorio, revisión básica de un sistema Linux, detección de amenazas habituales, análisis de vulnerabilidades, iniciación al análisis forense y elaboración de un plan de gestión de riesgos.
+Preparación del entorno de prácticas, revisión básica de un sistema Linux, detección de amenazas habituales, análisis de vulnerabilidades, iniciación al análisis forense y elaboración de un plan de gestión de riesgos.
 
 | Práctica | Tipo | Nivel | Horas | CE principales |
 |---|---|---|--:|---|
-| [1.1 Preparación del laboratorio](#práctica-11--preparación-del-laboratorio) | Guiada | ●○○ | 1 | RA1: a, b |
+| [1.1 Preparación del entorno de prácticas](#práctica-11--preparación-del-entorno-de-prácticas) | Guiada | ●○○ | 1 | RA1: a, b |
 | [1.2 Inventario y revisión básica de seguridad](#práctica-12--inventario-y-revisión-básica-de-seguridad) | Guiada | ●○○ | 1 | RA1: c · RA2: h |
 | [1.3 Integridad y trazabilidad](#práctica-13--integridad-y-trazabilidad) | Guiada | ●●○ | 1 | RA1: a, g |
 | [1.4 Contraseñas y detección de fuerza bruta](#práctica-14--contraseñas-y-detección-de-fuerza-bruta) | Guiada | ●●○ | 1 | RA1: e |
@@ -23,16 +23,16 @@ Preparación del laboratorio, revisión básica de un sistema Linux, detección 
 | **Total** | | | **5 h** | |
 
 > [!NOTE]
-> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 5 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
+> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 5 h de prácticas oficiales de la unidad. El resto se realiza en el entorno de prácticas, en las horas indicadas.
 
 > [!IMPORTANT]
-> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el entorno de prácticas. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
 
 ## Qué entra en la prueba de esta unidad
 
 Estos son los contenidos de las prácticas que se preguntan (no hace falta memorizar comandos largos, sí saber **qué hacen y cómo interpretar su resultado**):
 
-- Qué es una máquina virtual, un hipervisor y una instantánea, y para qué se usa cada una en el laboratorio (1.1).
+- Qué es una máquina virtual, un hipervisor y una instantánea, y para qué se usa cada una en el entorno de prácticas (1.1).
 - Interpretar la salida de las órdenes de **inventario** (puertos a la escucha, servicios, usuarios y red) y reconocer qué es normal y qué no (1.2).
 - Qué es un *hash*, para qué sirve para la **integridad** y cómo se verifica un fichero con `sha256sum` (1.3).
 - Por qué importa la longitud de una contraseña, qué es un ataque de **fuerza bruta** y cómo se ve en los registros (1.4).
@@ -52,7 +52,7 @@ Estos son los contenidos de las prácticas que se preguntan (no hace falta memor
 - Adquirir y analizar una evidencia digital respetando su integridad.
 - Elaborar un plan de gestión de riesgos y un procedimiento de respuesta a incidentes.
 
-## Normas del laboratorio
+## Normas del entorno de prácticas
 
 > [!CAUTION]
 > - Trabaja únicamente sobre **tu propia máquina virtual** y los sistemas que autorice el profesorado.
@@ -64,9 +64,9 @@ Estos son los contenidos de las prácticas que se preguntan (no hace falta memor
 
 ---
 
-## Práctica 1.1 · Preparación del laboratorio
+## Práctica 1.1 · Preparación del entorno de prácticas
 
-{{< practica num="1.1" tipo="Guiada" duracion="1 h" nivel="1" ra="RA1:a,b" entorno="Debian 13 · VirtualBox 7" entrega="capturas del laboratorio operativo" >}}
+{{< practica num="1.1" tipo="Guiada" duracion="1 h" nivel="1" ra="RA1:a,b" entorno="Debian 13 · VirtualBox 7" entrega="capturas del entorno de prácticas operativo" >}}
 
 #### ¿Por qué máquinas virtuales?
 
@@ -194,7 +194,7 @@ VBoxManage snapshot sad-linux01 list
 
 <!-- hint:h3 -->
 > [!TIP]
-> **Toma una instantánea antes de cada práctica que modifique el sistema** y ponle un nombre con la fecha (por ejemplo, `antes-UD01-P2-2026-10-06`). Si algo sale mal, vuelves al punto anterior en segundos. Es el equivalente de laboratorio a una copia de seguridad.
+> **Toma una instantánea antes de cada práctica que modifique el sistema** y ponle un nombre con la fecha (por ejemplo, `antes-UD01-P2-2026-10-06`). Si algo sale mal, vuelves al punto anterior en segundos. Es el equivalente de prácticas a una copia de seguridad.
 
 ---
 
@@ -556,7 +556,7 @@ Fíjate en los campos `user=`, `rhost=` y la hora de cada línea. Muchos fallos 
     su - prueba_ud01                 # debe fallar aunque la contraseña sea correcta
     ```
 
-3. Redacta en `politica_contrasenas.md` una política de contraseñas para tu laboratorio siguiendo las recomendaciones de la teoría (longitud, listas de contraseñas filtradas, bloqueo tras intentos, MFA, cuentas separadas).
+3. Redacta en `politica_contrasenas.md` una política de contraseñas para tu entorno de prácticas siguiendo las recomendaciones de la teoría (longitud, listas de contraseñas filtradas, bloqueo tras intentos, MFA, cuentas separadas).
 
 > [!NOTE]
 > El bloqueo **automático** tras varios intentos (`pam_faillock`), las reglas de calidad (`pam_pwquality`) y la protección de SSH con Fail2ban se configuran en la **UD04**.
@@ -926,11 +926,11 @@ Redacta un procedimiento (una página) para uno de los riesgos más altos siguie
 
 ## Actividades
 
-1. Explica la diferencia entre amenaza, vulnerabilidad, riesgo, ataque e incidente con ejemplos de tu laboratorio.
+1. Explica la diferencia entre amenaza, vulnerabilidad, riesgo, ataque e incidente con ejemplos de tu entorno de prácticas.
 2. Clasifica como física/lógica y activa/pasiva: RAID, cortafuegos, SAI, antivirus, copia de seguridad, control de acceso al CPD, IDS, cifrado de disco.
 3. Analiza la contraseña `empresa2026` con `pwscore` y calcula su espacio de búsqueda. Propón una alternativa.
 4. Busca un caso real de *ransomware* en España en los últimos dos años (por ejemplo en noticias de INCIBE o de la AEPD). Identifica vector de entrada, impacto y medidas que lo habrían evitado.
-5. Prepara un ejercicio para un servicio web del laboratorio: describe una actividad autorizada de Red Team, las evidencias que revisaría el Blue Team, una mejora de Purple Team y dos reglas de alcance del White Team.
+5. Prepara un ejercicio para un servicio web del entorno de prácticas: describe una actividad autorizada de Red Team, las evidencias que revisaría el Blue Team, una mejora de Purple Team y dos reglas de alcance del White Team.
 6. Compara MAGERIT, ISO 27005 y NIST SP 800-30 en una tabla (ámbito, fases, herramientas).
 
 ## Preguntas de autoevaluación

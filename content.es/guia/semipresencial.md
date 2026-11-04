@@ -24,7 +24,7 @@ bookToc: true
 
 ## 1. Presentación
 
-El módulo proporciona los conocimientos y habilidades necesarios para identificar, analizar y aplicar medidas de seguridad sobre sistemas informáticos y redes, y para diseñar soluciones que garanticen la disponibilidad y la continuidad de los servicios. Tiene un marcado carácter práctico: el alumnado aplica las técnicas sobre máquinas virtuales y redes de laboratorio aisladas, documenta las configuraciones y justifica las decisiones.
+El módulo proporciona los conocimientos y habilidades necesarios para identificar, analizar y aplicar medidas de seguridad sobre sistemas informáticos y redes, y para diseñar soluciones que garanticen la disponibilidad y la continuidad de los servicios. Tiene un marcado carácter práctico: el alumnado aplica las técnicas sobre máquinas virtuales y redes de prácticas aisladas, documenta las configuraciones y justifica las decisiones.
 
 La modalidad semipresencial combina **trabajo autónomo** en Aules, **actividades prácticas** y **tutorías presenciales** establecidas por el centro. Los apuntes y las fichas de práctica de cada unidad están pensados para poder seguirlos de forma autónoma.
 
@@ -99,7 +99,7 @@ Las vacaciones de Navidad son del 22 de diciembre al 6 de enero. Los festivos so
 
 ### Entregas y pruebas
 
-Las **prácticas de cada unidad no se entregan**: se hacen en el laboratorio y en las tutorías presenciales, y **sus conceptos básicos entran en la prueba teórico-práctica de la unidad** (cada página de prácticas empieza con la lista de «qué entra en la prueba»). Solo se entregan **dos [prácticas integradoras](/guia/practicas-integradoras/)**, una por trimestre, pensadas para corregirse en minutos:
+Las **prácticas de cada unidad no se entregan**: se hacen en el entorno de prácticas y en las tutorías presenciales, y **sus conceptos básicos entran en la prueba teórico-práctica de la unidad** (cada página de prácticas empieza con la lista de «qué entra en la prueba»). Solo se entregan **dos [prácticas integradoras](/guia/practicas-integradoras/)**, una por trimestre, pensadas para corregirse en minutos:
 
 | Práctica | Unidades | Fecha |
 |---|---|---|
@@ -115,7 +115,7 @@ La última sesión de cada unidad es su prueba teórico-práctica; la de UD4 es 
 
 | Elemento | Qué se hace |
 |---|---|
-| **Trabajo autónomo** | Estudio de los apuntes de cada unidad, vídeos, ejercicios, cuestionarios de autoevaluación y prácticas guiadas en Aules y en el laboratorio virtual propio. |
+| **Trabajo autónomo** | Estudio de los apuntes de cada unidad, vídeos, ejercicios, cuestionarios de autoevaluación y prácticas guiadas en Aules y en el entorno de prácticas virtual propio. |
 | **Tutorías presenciales** | Resolver dudas, explicar conceptos complejos, realizar prácticas, corregir errores, orientar los trabajos y realizar las pruebas de evaluación. |
 | **Prácticas** | En máquinas virtuales y redes aisladas (VirtualBox, Debian 13), siguiendo las fichas de cada unidad. **No se entregan**, pero sus conceptos básicos entran en la prueba. Ver [Entorno de trabajo](/guia/entorno/). |
 | **Autoevaluación** | Cada unidad incluye ejercicios con pistas y soluciones plegadas para comprobar el progreso antes de las pruebas. |
@@ -153,7 +153,7 @@ Las prácticas integradoras se corrigen con un script de verificación (INT-1: 1
 
 ### Recuperación
 
-Se plantea sobre los resultados de aprendizaje y criterios no superados, en las tutorías de las **semanas 21 y 22** y en las sesiones del **11 y 12 de febrero de 2027**, una vez realizado el examen del 10 de febrero. Puede incluir prueba teórica, prueba práctica en el laboratorio, repetición o mejora de una práctica y entrega de la documentación pendiente.
+Se plantea sobre los resultados de aprendizaje y criterios no superados, en las tutorías de las **semanas 21 y 22** y en las sesiones del **11 y 12 de febrero de 2027**, una vez realizado el examen del 10 de febrero. Puede incluir prueba teórica, prueba práctica en el entorno de prácticas, repetición o mejora de una práctica y entrega de la documentación pendiente.
 
 ## 6. Atención a la diversidad y recursos
 
@@ -162,7 +162,7 @@ Se facilitan distintas vías de acceso a los contenidos: material escrito, víde
 Recursos: VirtualBox 7, Debian 13 (AlmaLinux 10 donde se indica), Wireshark, OpenSSL, Lynis, Wazuh, nftables, Suricata y las herramientas de VPN y proxy de las unidades. Aules es el entorno virtual para distribuir materiales, entregar actividades, hacer autoevaluaciones, comunicarse y publicar calificaciones.
 
 > [!IMPORTANT]
-> Normas de las prácticas: ataques y escaneos solo en las redes virtuales del laboratorio y contra máquinas propias; nada de datos personales ni credenciales reales; instantánea antes de cada práctica de riesgo; y se documenta toda modificación. Más detalle en [Cómo son las prácticas y la evaluación](/guia/practicas/#normas-de-seguridad-del-laboratorio).
+> Normas de las prácticas: ataques y escaneos solo en las redes virtuales del entorno de prácticas y contra máquinas propias; nada de datos personales ni credenciales reales; instantánea antes de cada práctica de riesgo; y se documenta toda modificación. Más detalle en [Cómo son las prácticas y la evaluación](/guia/practicas/#normas-de-seguridad-en-las-prácticas).
 
 ## 7. Normativa y referencias
 

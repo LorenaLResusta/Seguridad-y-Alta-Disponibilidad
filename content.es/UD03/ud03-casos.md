@@ -12,13 +12,13 @@ La criptografía protege la información **si se usa bien**. Los atacantes rara 
 
 | Caso | Ataque | Caso real | Tipo |
 |---|---|---|---|
-| [3.A](#caso-3a--intermediario-con-un-certificado-falso) | *Man-in-the-middle* (MITM) con un certificado falso | Wi-Fi falsas, inspección TLS mal configurada | Laboratorio |
-| [3.B](#caso-3b--robo-de-una-base-de-datos-de-contraseñas) | *Cracking* de contraseñas tras el robo de una base de datos | LinkedIn (2012) | Laboratorio |
+| [3.A](#caso-3a--intermediario-con-un-certificado-falso) | *Man-in-the-middle* (MITM) con un certificado falso | Wi-Fi falsas, inspección TLS mal configurada | Entorno de prácticas |
+| [3.B](#caso-3b--robo-de-una-base-de-datos-de-contraseñas) | *Cracking* de contraseñas tras el robo de una base de datos | LinkedIn (2012) | Entorno de prácticas |
 | [3.C](#caso-3c--cuando-el-fallo-está-en-la-biblioteca-heartbleed) | Fallo en la implementación de TLS | Heartbleed (2014) | Análisis |
 | [Búsqueda](#búsqueda-de-vulnerabilidades-en-bibliotecas-y-configuraciones-tls) | Vulnerabilidades de OpenSSL y auditoría de TLS | — | Autónoma |
 
 > [!IMPORTANT]
-> Recuerda las [normas de laboratorio](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-laboratorio). Estos casos **no se entregan**. Reutilizan la CA propia y el servidor Nginx de las prácticas 3.5 y 3.6.
+> Recuerda las [normas del entorno de prácticas](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-entorno-de-prácticas). Estos casos **no se entregan**. Reutilizan la CA propia y el servidor Nginx de las prácticas 3.5 y 3.6.
 
 ---
 
@@ -51,13 +51,13 @@ sequenceDiagram
 | **Mitigación** | Validar siempre la cadena; HSTS para impedir que el usuario se salte el aviso; nunca usar `-k` / `--insecure` en *scripts* |
 | **Comprobación** | El cliente rechaza la conexión falsa y acepta la legítima |
 
-### Laboratorio
+### Entorno de prácticas
 
 | Máquina | Función | IP |
 |---|---|---|
 | `web01` | Servidor HTTPS legítimo (práctica 3.6), certificado firmado por tu CA | 192.168.10.40 |
 | `atacante` | Servidor HTTPS falso | 192.168.10.66 |
-| `cliente` | Debian con la CA del laboratorio instalada (práctica 3.5) | 192.168.10.50 |
+| `cliente` | Debian con la CA del entorno de prácticas instalada (práctica 3.5) | 192.168.10.50 |
 
 #### 1. Situación normal (en `cliente`)
 
@@ -166,7 +166,7 @@ $c.Issuer; $c.Thumbprint
 Copy-Item "$h.bak" $h -Force
 ```
 
-Para que Windows **confíe** en tu CA del laboratorio (y la web legítima funcione): `Import-Certificate -FilePath .\ca.crt -CertStoreLocation Cert:\LocalMachine\Root` (administrador). Se ve en `certmgr.msc` → *Entidades de certificación raíz de confianza*.
+Para que Windows **confíe** en tu CA del entorno de prácticas (y la web legítima funcione): `Import-Certificate -FilePath .\ca.crt -CertStoreLocation Cert:\LocalMachine\Root` (administrador). Se ve en `certmgr.msc` → *Entidades de certificación raíz de confianza*.
 
 > El bloque `{ $true }` del paso 3 es exactamente el error que no debes cometer en un *script* de producción: acepta cualquier certificado. Se usa aquí solo para **inspeccionarlo**.
 {{% /tab %}}
@@ -191,7 +191,7 @@ En **2012** se publicaron en Internet unos 6,5 millones de *hashes* de contrase�
 
 La lección: **cuando roban la base de datos, lo único que protege a los usuarios es cómo se guardaron las contraseñas.**
 
-### Laboratorio
+### Entorno de prácticas
 
 Vas a comparar lo que tarda un atacante en recuperar las mismas contraseñas guardadas de dos formas: con un *hash* rápido sin sal (SHA-1, como LinkedIn) y con un algoritmo lento y con sal (**yescrypt**, el que usa Debian 13 en `/etc/shadow`).
 
@@ -340,7 +340,7 @@ dpkg -l | grep -E '^ii\s+(openssl|libssl)'
 
 ### Parte 2: auditoría TLS de tu propio servidor
 
-`testssl.sh` es un *script* libre que comprueba qué protocolos y cifrados acepta un servidor y si es vulnerable a fallos conocidos (Heartbleed, ROBOT, POODLE…). **Úsalo solo contra tu servidor del laboratorio.**
+`testssl.sh` es un *script* libre que comprueba qué protocolos y cifrados acepta un servidor y si es vulnerable a fallos conocidos (Heartbleed, ROBOT, POODLE…). **Úsalo solo contra tu servidor del entorno de prácticas.**
 
 ```bash
 sudo apt install -y testssl.sh

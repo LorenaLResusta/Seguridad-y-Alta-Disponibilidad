@@ -110,7 +110,7 @@ Ejemplo con SSH en `srv-gestion`: la **amenaza** es un atacante remoto; la **vul
 
 ### 1.4 Entorno de trabajo y convenciones
 
-Los ejemplos usan el laboratorio del [proyecto transversal](/guia/proyecto-clinica/) (ver [Entorno de trabajo](/guia/entorno/)): `srv-gestion` (192.168.10.10) es el servidor a fortificar, `cli-recepcion` (192.168.10.50) hace de cliente y `atacante` simula las amenazas **solo dentro del laboratorio**. Cuando los comandos difieren entre distribuciones se muestran en pestañas:
+Los ejemplos usan el entorno de prácticas del [proyecto transversal](/guia/proyecto-clinica/) (ver [Entorno de trabajo](/guia/entorno/)): `srv-gestion` (192.168.10.10) es el servidor a fortificar, `cli-recepcion` (192.168.10.50) hace de cliente y `atacante` simula las amenazas **solo dentro del entorno de prácticas**. Cuando los comandos difieren entre distribuciones se muestran en pestañas:
 
 - **Debian 13 «trixie» / Ubuntu Server LTS**: gestor `apt`, servicio SSH llamado `ssh`, control de acceso obligatorio **AppArmor**.
 - **AlmaLinux 10 / Rocky**: gestor `dnf`, servicio SSH llamado `sshd`, control de acceso obligatorio **SELinux**.
@@ -734,7 +734,7 @@ No hay que inventar qué endurecer. Existen guías elaboradas por expertos y, en
 | **Lynis** | CISOfy (proyecto libre) | Auditoría local con puntuación (*hardening index*) y sugerencias |
 
 > [!TIP]
-> Antes de aplicar una recomendación pregúntate: *¿qué ataque evita? ¿qué puede dejar de funcionar si la aplico?* Una guía no sustituye al criterio del administrador: documenta las medidas que decides **no** aplicar y por qué. Los CIS Benchmarks se descargan en PDF previo registro gratuito; en un laboratorio sirven como lista de comprobación, y OpenSCAP o Lynis automatizan gran parte de ella.
+> Antes de aplicar una recomendación pregúntate: *¿qué ataque evita? ¿qué puede dejar de funcionar si la aplico?* Una guía no sustituye al criterio del administrador: documenta las medidas que decides **no** aplicar y por qué. Los CIS Benchmarks se descargan en PDF previo registro gratuito; en un entorno de prácticas sirven como lista de comprobación, y OpenSCAP o Lynis automatizan gran parte de ella.
 
 ### 5.2 Inventario: conocer lo que hay antes de endurecer
 
@@ -883,7 +883,7 @@ nmap -sV -p- 192.168.10.10        # -p- todos los puertos; -sV detecta la versi�
 | `filtered` | Nadie responde: un cortafuegos descarta los paquetes |
 
 > [!CAUTION]
-> **Nmap solo contra tus máquinas de laboratorio.** Escanear sistemas ajenos sin permiso puede ser ilegal (Código Penal, art. 197 bis y siguientes). En el laboratorio, escanea únicamente `192.168.10.0/24`, nunca redes públicas ni la red del centro.
+> **Nmap solo contra tus máquinas de prácticas.** Escanear sistemas ajenos sin permiso puede ser ilegal (Código Penal, art. 197 bis y siguientes). En el entorno de prácticas, escanea únicamente `192.168.10.0/24`, nunca redes públicas ni la red del centro.
 
 ### 5.6 Fortificación de Windows Server 2025
 
@@ -933,7 +933,7 @@ auditpol /get /subcategory:"{0CCE9215-69AE-11D9-BED3-505054503030}"
 > [!WARNING]
 > Con `DefaultInboundAction Block` y sin reglas de permiso, puedes perder el acceso remoto (RDP, WinRM). Crea antes las reglas necesarias y trabaja con una instantánea.
 
-**BitLocker** (requiere TPM o, en laboratorio, una directiva que permita protección solo con contraseña):
+**BitLocker** (requiere TPM o, en el entorno de prácticas, una directiva que permita protección solo con contraseña):
 
 ```powershell
 Get-BitLockerVolume
@@ -1696,7 +1696,7 @@ En entornos profesionales se añaden bloqueadores de escritura por *hardware* y 
 ### 11.4 Ejemplo: adquisición de una imagen de disco
 
 > [!WARNING]
-> Ejemplo para laboratorio: se trabaja sobre un **disco virtual secundario** (`/dev/sdb`) de una máquina virtual. Equivocarse de dispositivo en `dd` puede destruir datos.
+> Ejemplo para prácticas: se trabaja sobre un **disco virtual secundario** (`/dev/sdb`) de una máquina virtual. Equivocarse de dispositivo en `dd` puede destruir datos.
 
 ```bash
 # 1. Identificar el dispositivo que se va a copiar
@@ -1756,7 +1756,7 @@ Método de diagnóstico en tres pasos cuando algo deja de funcionar tras endurec
 - **Centraliza los registros** y revisa las alertas: un registro que nadie lee no protege.
 - **Protege la línea base**: la base de datos de AIDE, las copias de configuración y las copias de la cabecera LUKS no deben poder ser modificadas por quien ataca.
 - **Repite la auditoría** (Lynis, OpenSCAP) tras los cambios y de forma periódica.
-- **Pruebas solo en el laboratorio**: escaneos, ataques de contraseñas y *malware* de prueba, únicamente sobre tus máquinas y con intentos mínimos.
+- **Pruebas solo en el entorno de prácticas**: escaneos, ataques de contraseñas y *malware* de prueba, únicamente sobre tus máquinas y con intentos mínimos.
 - **Preserva antes de limpiar**: ante un incidente, copia y calcula el *hash* de las evidencias antes de reinstalar o borrar nada.
 
 ---
@@ -1820,7 +1820,7 @@ Aplica primero lo que **más reduce el riesgo con menos probabilidad de dejarte 
 | 8 | `lynis audit system` («después») y `nmap` («después») | Comparación del índice y de los puertos | — |
 {{% /details %}}
 
-La [tarea de repaso del proyecto](/ud04/ud04-practicas/#tarea-de-repaso-del-proyecto-no-se-entrega--fortificación-de-un-servidor) (no se entrega) es la versión de laboratorio de este supuesto y sirve de ensayo para la práctica integradora INT-1.
+La [tarea de repaso del proyecto](/ud04/ud04-practicas/#tarea-de-repaso-del-proyecto-no-se-entrega--fortificación-de-un-servidor) (no se entrega) es la versión de prácticas de este supuesto y sirve de ensayo para la práctica integradora INT-1.
 
 ---
 

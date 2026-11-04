@@ -14,7 +14,7 @@ En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) elabo
 | Página | Contenido |
 |---|---|
 | [Teoría](/ud01/ud01-teoria/) | Principios, activos, amenazas y vulnerabilidades, tipos de seguridad, ataques habituales, autenticación, gestión de incidentes, auditoría, análisis forense y legislación |
-| [Prácticas](/ud01/ud01-practicas/) | Laboratorio base, inventario, integridad y trazabilidad, contraseñas, *phishing*, vulnerabilidades, análisis forense y plan de riesgos |
+| [Prácticas](/ud01/ud01-practicas/) | Entorno de prácticas base, inventario, integridad y trazabilidad, contraseñas, *phishing*, vulnerabilidades, análisis forense y plan de riesgos |
 | [Casos de ataque y defensa](/ud01/ud01-casos/) | Ingeniería social contra el servicio técnico, supermercados sin frío (2026), ataques a través de proveedores y cómo se investiga un CVE (INCIBE-CERT, NVD, KEV, EPSS) |
 | [Juegos de repaso](/ud01/ud01-juegos/) | Rosco, caza de errores, memory y duelo por equipos |
 
@@ -23,7 +23,7 @@ En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) elabo
 ## Cómo estudiar esta unidad
 
 1. Lee la [teoría](/ud01/ud01-teoria/) en orden.
-2. Crea el laboratorio de la práctica 1.1 y haz una instantánea: lo reutilizarás en todo el módulo.
+2. Crea el entorno de prácticas de la práctica 1.1 y haz una instantánea: lo reutilizarás en todo el módulo.
 3. Realiza las [prácticas](/ud01/ud01-practicas/) y haz el diagnóstico inicial (no se entrega: es la base de la práctica integradora INT-1).
 
 > [!NOTE]

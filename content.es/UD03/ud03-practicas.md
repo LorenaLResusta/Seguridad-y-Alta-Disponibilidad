@@ -23,10 +23,10 @@ Hashes e integridad, cifrado simétrico y autenticado, claves asimétricas y fir
 | **Total** | | | **9 h** | |
 
 > [!NOTE]
-> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 9 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
+> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 9 h de prácticas oficiales de la unidad. El resto se realiza en el entorno de prácticas, en las horas indicadas.
 
 > [!IMPORTANT]
-> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el entorno de prácticas. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
 
 ## Qué entra en la prueba de esta unidad
 
@@ -500,9 +500,9 @@ sudo userdel -r prueba_ud03; sudo userdel -r prueba_ud03b
 {{< practica num="3.5" tipo="Guiada" duracion="2 h" nivel="3" ra="RA2:f;RA3:c" entorno="Debian 13 · VirtualBox 7" entrega="CA propia y certificados emitidos" >}}
 
 > [!WARNING]
-> **Atención.** La clave privada de la autoridad de certificación (`ca.key`) es el activo más valioso de esta práctica. Debe tener permisos `600`, no estar en el servidor web y, en un entorno real, guardarse **sin conexión**. Quien la tenga puede emitir certificados válidos para cualquier nombre. Aquí la CA es solo de laboratorio: no instales su certificado raíz en equipos reales.
+> **Atención.** La clave privada de la autoridad de certificación (`ca.key`) es el activo más valioso de esta práctica. Debe tener permisos `600`, no estar en el servidor web y, en un entorno real, guardarse **sin conexión**. Quien la tenga puede emitir certificados válidos para cualquier nombre. Aquí la CA es solo de prácticas: no instales su certificado raíz en equipos reales.
 
-En el laboratorio no podemos usar Let's Encrypt porque no tenemos un dominio público. Crearemos una **CA raíz** propia con OpenSSL y la usaremos para emitir el certificado de `sad-web`. Este procedimiento es el mismo que usan muchas empresas para sus servicios internos.
+En el entorno de prácticas no podemos usar Let's Encrypt porque no tenemos un dominio público. Crearemos una **CA raíz** propia con OpenSSL y la usaremos para emitir el certificado de `sad-web`. Este procedimiento es el mismo que usan muchas empresas para sus servicios internos.
 
 #### Estructura de la CA
 
@@ -520,7 +520,7 @@ echo 1000 > crlnumber        # siguiente número de CRL
 Fichero `openssl.cnf`:
 
 ```ini
-# Configuración mínima de la CA del laboratorio
+# Configuración mínima de la CA del entorno de prácticas
 [ ca ]
 default_ca = CA_SAD
 
@@ -554,8 +554,8 @@ prompt              = no
 
 [ dn ]
 C  = ES
-O  = SAD Laboratorio
-CN = SAD Laboratorio Root CA
+O  = SAD Practicas
+CN = SAD Practicas Root CA
 
 [ v3_ca ]
 basicConstraints       = critical, CA:true
@@ -597,7 +597,7 @@ Observa que en un certificado raíz el **sujeto** y el **emisor** coinciden.
 
 <!-- hint:h8 -->
 > [!WARNING]
-> La clave privada de la CA (`private/ca.key`) es el activo más valioso de toda la PKI: quien la tenga puede emitir certificados «de confianza». En el laboratorio basta con `chmod 400` y una contraseña; en producción la CA raíz permanece **fuera de línea** (offline) y, si es posible, en un HSM.
+> La clave privada de la CA (`private/ca.key`) es el activo más valioso de toda la PKI: quien la tenga puede emitir certificados «de confianza». En el entorno de prácticas basta con `chmod 400` y una contraseña; en producción la CA raíz permanece **fuera de línea** (offline) y, si es posible, en un HSM.
 
 #### Solicitud del servidor (CSR)
 
@@ -608,7 +608,7 @@ sudo mkdir -p /etc/ssl/sad && cd /etc/ssl/sad
 sudo openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 -out sad-web.key
 sudo chmod 600 sad-web.key
 sudo openssl req -new -key sad-web.key \
-     -subj "/C=ES/O=SAD Laboratorio/CN=sad-web.lab" \
+     -subj "/C=ES/O=SAD Practicas/CN=sad-web.lab" \
      -addext "subjectAltName=DNS:sad-web.lab,DNS:www.sad-web.lab,IP:192.168.100.30" \
      -out sad-web.csr
 openssl req -in sad-web.csr -noout -text | grep -A1 "Alternative"
@@ -818,7 +818,7 @@ La conexión con **TLS 1.1 debe fallar** (`alert protocol version` o `handshake 
 **Nmap** es un escáner de red; su *script* `ssl-enum-ciphers` enumera las versiones y algoritmos que acepta un servidor y les asigna una nota.
 
 > [!CAUTION]
-> Ejecuta Nmap **solo** contra tus máquinas del laboratorio.
+> Ejecuta Nmap **solo** contra tus máquinas del entorno de prácticas.
 
 ```bash
 nmap -p 443 --script ssl-enum-ciphers sad-web.lab
@@ -862,7 +862,7 @@ Puedes analizar de forma pasiva un dominio público con [SSL Labs](https://www.s
 {{< practica num="3.8" tipo="Guiada" duracion="1 h" nivel="2" ra="RA2:f" entorno="Debian 13 · VirtualBox 7" entrega="CRL y comprobación de la revocación" >}}
 
 > [!TIP]
-> **Consejo.** Cuando un cliente sigue aceptando un certificado que ya has revocado, no es un fallo de la revocación: **el cliente no consulta la lista**. La CRL es un fichero que hay que publicar y descargar; OCSP es una consulta en línea. En el laboratorio comprueba con `openssl verify -crl_check` que, de hecho, el certificado deja de ser válido cuando se aporta la CRL.
+> **Consejo.** Cuando un cliente sigue aceptando un certificado que ya has revocado, no es un fallo de la revocación: **el cliente no consulta la lista**. La CRL es un fichero que hay que publicar y descargar; OCSP es una consulta en línea. En el entorno de prácticas comprueba con `openssl verify -crl_check` que, de hecho, el certificado deja de ser válido cuando se aporta la CRL.
 
 **Escenario**: la clave privada de `sad-web` se ha copiado por error en un repositorio público. Hay que revocar el certificado y emitir uno nuevo.
 

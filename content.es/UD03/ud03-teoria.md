@@ -544,7 +544,7 @@ Un servidor debe comprobar contraseñas **sin guardarlas en claro**: si se roba 
 | **Amenaza** | Un atacante obtiene el fichero de contraseñas (copia de seguridad robada, inyección SQL, acceso a `/etc/shadow`) |
 | **Vulnerabilidad** | Las contraseñas se guardan en claro, con cifrado reversible o con un *hash* rápido y sin sal |
 | **Ataque** | Fuerza bruta o diccionario con GPU: miles de millones de intentos por segundo contra un SHA-256 simple; tablas *rainbow* precalculadas si no hay sal |
-| **Detección** | Auditoría de robustez de las contraseñas propias en laboratorio (práctica 3.4); alertas ante accesos anómalos |
+| **Detección** | Auditoría de robustez de las contraseñas propias en el entorno de prácticas (práctica 3.4); alertas ante accesos anómalos |
 | **Mitigación** | *Hash* **lento y con sal** (yescrypt, Argon2id), contraseñas largas, segundo factor ([UD04](/UD04/)) |
 | **Comprobación** | Medir el coste por intento y comprobar que dos contraseñas iguales dan *hashes* distintos |
 
@@ -898,7 +898,7 @@ Buenas prácticas de un servidor HTTPS:
 | **Amenaza** | Alguien con acceso a la red (Wi-Fi de la sala de espera, un equipo comprometido) observa o modifica el tráfico |
 | **Vulnerabilidad** | La intranet se sirve por HTTP, o por HTTPS con TLS antiguo o certificados que los usuarios aprenden a ignorar |
 | **Ataque** | Captura de credenciales y cookies en claro; *man-in-the-middle*; degradación a HTTP |
-| **Detección** | Captura de tráfico en laboratorio (se ven las contraseñas en HTTP); `testssl.sh` marca protocolos débiles |
+| **Detección** | Captura de tráfico en el entorno de prácticas (se ven las contraseñas en HTTP); `testssl.sh` marca protocolos débiles |
 | **Mitigación** | HTTPS con certificado válido de la CA interna, TLS 1.2/1.3, redirección y HSTS |
 | **Comprobación** | `curl -v`, `openssl s_client` y `testssl.sh` muestran TLS 1.3, cadena correcta y cabecera HSTS |
 
@@ -941,7 +941,7 @@ sudo certbot renew --dry-run                   # prueba de renovación automáti
 systemctl list-timers | grep certbot           # temporizador systemd que renueva solo
 ```
 
-Let's Encrypt **no sirve en un laboratorio sin dominio público**, ni para dominios internos como `.internal`: allí se usa una **CA propia** (prácticas 3.5 y 3.6). Si una organización quiere automatización también dentro, puede desplegar una CA interna con soporte ACME (por ejemplo `step-ca`, de Smallstep, software libre): el mismo protocolo, otra autoridad.
+Let's Encrypt **no sirve en un entorno de prácticas sin dominio público**, ni para dominios internos como `.internal`: allí se usa una **CA propia** (prácticas 3.5 y 3.6). Si una organización quiere automatización también dentro, puede desplegar una CA interna con soporte ACME (por ejemplo `step-ca`, de Smallstep, software libre): el mismo protocolo, otra autoridad.
 
 ---
 

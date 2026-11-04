@@ -8,7 +8,7 @@ bookToc: true
 
 {{< ra "RA1:a,b,g" "RA6:b,f,i" >}}
 
-En estas prácticas aplicas la [teoría de la UD02](/ud02/ud02-teoria/) en un laboratorio virtual aislado: provocas un **corte eléctrico**, un **disco averiado** y un ***ransomware*** simulado, y compruebas que sabes **recuperar** el servicio y los datos. Cada práctica de fallo incluye la prueba explícita del fallo y la verificación de la recuperación.
+En estas prácticas aplicas la [teoría de la UD02](/ud02/ud02-teoria/) en un entorno de prácticas virtual aislado: provocas un **corte eléctrico**, un **disco averiado** y un ***ransomware*** simulado, y compruebas que sabes **recuperar** el servicio y los datos. Cada práctica de fallo incluye la prueba explícita del fallo y la verificación de la recuperación.
 
 | Práctica | Tipo | Nivel | Horas | CE principales |
 |---|---|---|--:|---|
@@ -25,7 +25,7 @@ En estas prácticas aplicas la [teoría de la UD02](/ud02/ud02-teoria/) en un la
 > Las prácticas de RAID, LVM y borrado seguro **destruyen** datos de los dispositivos indicados. Hazlas solo en los discos virtuales creados para ello y comprueba siempre el nombre del dispositivo con `lsblk` antes de ejecutar una orden. Haz una **instantánea** de cada máquina virtual antes de empezar cada práctica.
 
 > [!IMPORTANT]
-> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el entorno de prácticas. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-1**.
 
 ## Qué entra en la prueba de esta unidad
 
@@ -40,7 +40,7 @@ Estos son los contenidos de las prácticas que se preguntan (no hace falta memor
 - La regla de copias **3-2-1** y por qué una copia no probada no es una copia.
 - Diferencia entre borrar, **borrar de forma segura** (`shred`) y cifrar el disco (LUKS2) (2.6).
 
-## Preparación del laboratorio
+## Preparación del entorno de prácticas
 
 Todas las prácticas usan las mismas máquinas, que pertenecen a la infraestructura de [Mediterránea Dental](/guia/proyecto-clinica/). Prepáralas una sola vez.
 
@@ -117,7 +117,7 @@ Un corte de luz en mitad de una escritura puede corromper el sistema de ficheros
 
 #### Requisitos previos
 
-- `srv-ficheros` con el paquete `nut` instalado (ver [Preparación](#preparación-del-laboratorio)).
+- `srv-ficheros` con el paquete `nut` instalado (ver [Preparación](#preparación-del-entorno-de-prácticas)).
 - Ficheros de NUT en `/etc/nut/` ({{< sw "Debian 13" >}}); en AlmaLinux están en `/etc/ups/`.
 
 #### Desarrollo
@@ -152,11 +152,11 @@ Un corte de luz en mitad de una escritura puede corromper el sistema de ficheros
    [saisim]
        driver = dummy-ups
        port = dummy.dev
-       desc = "SAI simulado para el laboratorio"
+       desc = "SAI simulado para el entorno de prácticas"
    EOT
    ```
 
-4. **Usuario de `upsmon`** en `upsd.users`. La contraseña es solo de laboratorio.
+4. **Usuario de `upsmon`** en `upsd.users`. La contraseña es solo de prácticas.
 
    ```bash
    sudo tee -a upsd.users >/dev/null <<'EOT'
@@ -270,7 +270,7 @@ Configura un segundo servidor (`srv-copias`) como `secondary` de `srv-ficheros` 
 {{< practica num="2.2" tipo="Guiada" duracion="2 h" nivel="2" ra="RA6: b, f" entorno="Debian 13 · mdadm" entrega="informe con salidas de /proc/mdstat antes, durante y después" >}}
 
 > [!TIP]
-> **Consejo.** Para simular un fallo de disco sin romper nada, usa primero la orden de marcado de fallo de `mdadm` sobre un miembro y observa cómo cambia `/proc/mdstat`. Es un fallo *lógico* y reversible. Haz una instantánea de la máquina virtual antes: si el conjunto se queda inconsistente, vuelves atrás en segundos y no pierdes la sesión de laboratorio.
+> **Consejo.** Para simular un fallo de disco sin romper nada, usa primero la orden de marcado de fallo de `mdadm` sobre un miembro y observa cómo cambia `/proc/mdstat`. Es un fallo *lógico* y reversible. Haz una instantánea de la máquina virtual antes: si el conjunto se queda inconsistente, vuelves atrás en segundos y no pierdes la sesión de prácticas.
 
 #### Objetivo
 
@@ -734,7 +734,7 @@ Programa el script con un temporizador de systemd (como el de la práctica 2.5) 
 
 #### Objetivo
 
-Implantar copias **cifradas y deduplicadas** con `restic`, automatizarlas, simular un *ransomware* en el laboratorio, **detectarlo y recuperar** los datos midiendo el tiempo frente al RTO.
+Implantar copias **cifradas y deduplicadas** con `restic`, automatizarlas, simular un *ransomware* en el entorno de prácticas, **detectarlo y recuperar** los datos midiendo el tiempo frente al RTO.
 
 #### Contexto
 
@@ -832,7 +832,7 @@ Implantar copias **cifradas y deduplicadas** con `restic`, automatizarlas, simul
    find /srv/datos -type f ! -name "*.cifrado" | while read -r f; do
      openssl enc -aes-256-cbc -pbkdf2 -salt -pass pass:"$CLAVE" -in "$f" -out "$f.cifrado" && rm -f "$f"
    done
-   echo "Sus ficheros han sido cifrados. (Simulación de laboratorio)" > /srv/datos/LEEME_RESCATE.txt
+   echo "Sus ficheros han sido cifrados. (Simulación de prácticas)" > /srv/datos/LEEME_RESCATE.txt
    unset CLAVE
    EOT
    chmod 700 /root/simula_ransomware.sh
@@ -876,7 +876,7 @@ Orden recomendado: (1) **aislar** (parar el temporizador y desconectar la red si
 {{% /details %}}
 
 {{% details title="Solución" %}}
-1. RTO real = `hora_fin_restauracion` − `hora_ataque` (o − hora de detección); en el laboratorio será de pocos minutos, pero con 300 GB y enlace de 300 Mbit/s sería mucho mayor: comprueba si el RTO se cumple con datos reales.
+1. RTO real = `hora_fin_restauracion` − `hora_ataque` (o − hora de detección); en el entorno de prácticas será de pocos minutos, pero con 300 GB y enlace de 300 Mbit/s sería mucho mayor: comprueba si el RTO se cumple con datos reales.
 2. Se pierde lo escrito entre la última copia buena y el ataque: es el RPO efectivo, igual a la frecuencia de las copias en el peor caso.
 3. Sí: con acceso de escritura al repositorio, sí. Medidas: servidor REST de `restic` en modo `--append-only`, modelo *pull* iniciado desde `srv-copias`, o una copia adicional inmutable o desconectada.
 4. `restic check` verifica la estructura del repositorio; `forget --dry-run --prune` muestra qué instantáneas se eliminarían sin borrar nada.
@@ -915,7 +915,7 @@ Sustituye `restic` por BorgBackup y compara tiempos y tamaño (teoría 8.4). Cal
 {{< practica num="2.6" tipo="Guiada" duracion="1 h" nivel="1" ra="RA1: b, g" entorno="Debian 13 · shred · cryptsetup (LUKS2)" entrega="resultados de las tres pruebas y procedimiento de retirada" >}}
 
 > [!WARNING]
-> **Atención.** El borrado por sobrescritura (`shred`, `dd`) es fiable en discos magnéticos, pero **no garantiza** el borrado en SSD ni en sistemas de ficheros con registro o copia al escribir, porque el controlador remapea los bloques. En un SSD se usa la orden de borrado del propio dispositivo o, mejor, **cifrado de disco desde el principio** y destrucción de la clave. Practica solo sobre ficheros o discos virtuales del laboratorio.
+> **Atención.** El borrado por sobrescritura (`shred`, `dd`) es fiable en discos magnéticos, pero **no garantiza** el borrado en SSD ni en sistemas de ficheros con registro o copia al escribir, porque el controlador remapea los bloques. En un SSD se usa la orden de borrado del propio dispositivo o, mejor, **cifrado de disco desde el principio** y destrucción de la clave. Practica solo sobre ficheros o discos virtuales del entorno de prácticas.
 
 #### Objetivo
 
@@ -979,7 +979,7 @@ Al borrar un fichero con `rm` solo se libera el espacio; los datos permanecen en
    sudo cryptsetup open cifrado.img vol_cifrado <<< "ClaveLab2026"    # ya no es posible abrirlo
    ```
 
-   - `cryptsetup luksFormat` prepara un volumen cifrado con LUKS2; `<<<` pasa la contraseña por la entrada estándar (solo válido en laboratorio).
+   - `cryptsetup luksFormat` prepara un volumen cifrado con LUKS2; `<<<` pasa la contraseña por la entrada estándar (solo válido en el entorno de prácticas).
    - `cryptsetup erase` destruye todas las ranuras de clave: sin ellas el contenido es irrecuperable aunque se conozca la contraseña.
 
 {{% /steps %}}
@@ -1041,7 +1041,7 @@ El servidor de ficheros guarda los historiales clínicos (datos de salud, catego
 
 #### Requisitos previos
 
-Prácticas 2.1 a 2.6 realizadas en el laboratorio.
+Prácticas 2.1 a 2.6 realizadas en el entorno de prácticas.
 
 #### Desarrollo
 
@@ -1049,7 +1049,7 @@ Prácticas 2.1 a 2.6 realizadas en el laboratorio.
 
 1. **Diseño**: esquema del almacenamiento con el nivel RAID justificado, SAI dimensionado y ubicación de las copias, con un diagrama de la solución.
 2. **Política de copias**: qué se copia, cuándo, tipo, retención, cifrado, ubicaciones según 3-2-1-1-0, verificación y responsables, coherente con los RPO/RTO.
-3. **Implantación en el laboratorio** con evidencias: RAID funcionando, fallo y reconstrucción, copias automáticas con `restic` y NUT configurado.
+3. **Implantación en el entorno de prácticas** con evidencias: RAID funcionando, fallo y reconstrucción, copias automáticas con `restic` y NUT configurado.
 4. **Prueba de recuperación**: restauración tras el *ransomware* simulado, con tiempos medidos y comparación con el RTO.
 5. **Procedimiento de retirada segura** de los discos antiguos.
 
