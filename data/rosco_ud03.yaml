@@ -1,0 +1,121 @@
+es:
+  title: Rosco de la UD03 · Criptografía
+  intro: Cifrado, hash, firma, certificados y TLS.
+  time: 180
+  letters:
+  - l: A
+    mode: empieza
+    clue: Estándar de cifrado simétrico en bloque más usado en la actualidad (siglas).
+    answers:
+    - aes
+    ref: 2. Criptografía simétrica
+    ref_url: /ud03/ud03-teoria/
+  - l: C
+    mode: empieza
+    clue: Documento firmado por una autoridad que vincula una clave pública con una identidad.
+    answers:
+    - certificado
+    ref: 6.2 Certificado X.509
+    ref_url: /ud03/ud03-teoria/
+  - l: D
+    mode: empieza
+    clue: Algoritmo que permite acordar una clave compartida a través de un canal inseguro (apellidos).
+    answers:
+    - diffie-hellman
+    - diffie hellman
+    ref: 3.5 Diffie-Hellman
+    ref_url: /ud03/ud03-teoria/
+  - l: E
+    mode: empieza
+    clue: Algoritmo de curva elíptica moderno para firmas y claves SSH.
+    answers:
+    - ed25519
+    ref: 3.4 Pares de claves
+    ref_url: /ud03/ud03-teoria/
+  - l: F
+    mode: empieza
+    clue: Mecanismo que garantiza autenticidad, integridad y no repudio con la clave privada.
+    answers:
+    - firma
+    ref: 5. Firma digital
+    ref_url: /ud03/ud03-teoria/
+  - l: H
+    mode: empieza
+    clue: Función que resume cualquier mensaje en una huella de longitud fija.
+    answers:
+    - hash
+    ref: 4.1 Concepto y propiedades
+    ref_url: /ud03/ud03-teoria/
+  - l: K
+    mode: empieza
+    clue: Principio según el cual la seguridad debe depender de la clave y no del secreto del algoritmo (apellido).
+    answers:
+    - kerckhoffs
+    ref: 1.3 Principio de Kerckhoffs
+    ref_url: /ud03/ud03-teoria/
+  - l: L
+    mode: empieza
+    clue: Autoridad de certificación gratuita que emite certificados con ACME (Let's ___).
+    answers:
+    - let's encrypt
+    - lets encrypt
+    - letsencrypt
+    ref: 7.5 Let's Encrypt y ACME
+    ref_url: /ud03/ud03-teoria/
+  - l: M
+    mode: empieza
+    clue: Ataque en el que alguien se interpone entre dos partes que se comunican (siglas inglesas).
+    answers:
+    - mitm
+    ref: 7.3 HTTPS en la práctica
+    ref_url: /ud03/ud03-teoria/
+  - l: N
+    mode: empieza
+    clue: Valor que no debe repetirse nunca con la misma clave en el cifrado autenticado.
+    answers:
+    - nonce
+    ref: 2.4 Cifrado autenticado
+    ref_url: /ud03/ud03-teoria/
+  - l: O
+    mode: empieza
+    clue: Biblioteca y herramienta de línea de comandos para claves, certificados y TLS.
+    answers:
+    - openssl
+    ref: 3.4 Pares de claves
+    ref_url: /ud03/ud03-teoria/
+  - l: P
+    mode: empieza
+    clue: Infraestructura de clave pública (siglas).
+    answers:
+    - pki
+    ref: 6.4 PKI
+    ref_url: /ud03/ud03-teoria/
+  - l: R
+    mode: empieza
+    clue: Anulación de un certificado antes de su caducidad.
+    answers:
+    - revocacion
+    - revocar
+    ref: 6.7 Revocación
+    ref_url: /ud03/ud03-teoria/
+  - l: S
+    mode: empieza
+    clue: Dato aleatorio que se añade a la contraseña antes de calcular su hash.
+    answers:
+    - sal
+    ref: 4.5 Almacenamiento de contraseñas
+    ref_url: /ud03/ud03-teoria/
+  - l: T
+    mode: empieza
+    clue: Protocolo que cifra HTTPS (siglas).
+    answers:
+    - tls
+    ref: 7.1 TLS
+    ref_url: /ud03/ud03-teoria/
+  - l: Y
+    mode: empieza
+    clue: Algoritmo de hash lento para contraseñas, por defecto en /etc/shadow de Debian.
+    answers:
+    - yescrypt
+    ref: 4.5 Almacenamiento de contraseñas
+    ref_url: /ud03/ud03-teoria/

@@ -1,0 +1,105 @@
+es:
+  title: Rosco de la UD02 · Seguridad pasiva
+  intro: Almacenamiento, copias de seguridad y continuidad.
+  time: 180
+  letters:
+  - l: B
+    mode: empieza
+    clue: 'Eliminación irrecuperable de datos antes de desechar un soporte: ___ seguro.'
+    answers:
+    - borrado
+    ref: 10. Borrado seguro
+    ref_url: /ud02/ud02-teoria/
+  - l: C
+    mode: empieza
+    clue: Duplicado de los datos que permite recuperarlos tras un fallo o un ataque.
+    answers:
+    - copia
+    - copia de seguridad
+    - backup
+    ref: 7. Copias de seguridad
+    ref_url: /ud02/ud02-teoria/
+  - l: E
+    mode: empieza
+    clue: 'Nivel RAID 1: los discos guardan lo mismo, como un ___.'
+    answers:
+    - espejo
+    ref: 5.3 Niveles RAID
+    ref_url: /ud02/ud02-teoria/
+  - l: I
+    mode: empieza
+    clue: Copia que no se puede modificar ni borrar durante un tiempo, ni siquiera con credenciales de administrador.
+    answers:
+    - inmutable
+    ref: 7.4 Copias y ransomware
+    ref_url: /ud02/ud02-teoria/
+  - l: L
+    mode: empieza
+    clue: Gestor de volúmenes lógicos de Linux que permite instantáneas (siglas).
+    answers:
+    - lvm
+    ref: 5.7 LVM e instantáneas
+    ref_url: /ud02/ud02-teoria/
+  - l: M
+    mode: empieza
+    clue: Herramienta de Linux para crear y gestionar RAID por software.
+    answers:
+    - mdadm
+    ref: 5.5 RAID con mdadm
+    ref_url: /ud02/ud02-teoria/
+  - l: N
+    mode: empieza
+    clue: Almacenamiento conectado a la red que comparte ficheros (siglas).
+    answers:
+    - nas
+    ref: 6. DAS, NAS y SAN
+    ref_url: /ud02/ud02-teoria/
+  - l: P
+    mode: empieza
+    clue: Información adicional que permite reconstruir los datos de un disco averiado en RAID 5.
+    answers:
+    - paridad
+    ref: 5.3 Niveles RAID
+    ref_url: /ud02/ud02-teoria/
+  - l: R
+    mode: empieza
+    clue: Siglas del tiempo máximo que puede tardar la recuperación de un servicio.
+    answers:
+    - rto
+    ref: 7.5 RPO y RTO
+    ref_url: /ud02/ud02-teoria/
+  - l: S
+    mode: empieza
+    clue: Siglas en español del equipo que mantiene la alimentación eléctrica durante un corte.
+    answers:
+    - sai
+    ref: 3.2 SAI
+    ref_url: /ud02/ud02-teoria/
+  - l: T
+    mode: empieza
+    clue: Clasificación de un CPD por niveles de disponibilidad (del I al IV).
+    answers:
+    - tier
+    ref: 2.2 Niveles Tier
+    ref_url: /ud02/ud02-teoria/
+  - l: U
+    mode: empieza
+    clue: Siglas inglesas del SAI.
+    answers:
+    - ups
+    ref: 3.2 SAI
+    ref_url: /ud02/ud02-teoria/
+  - l: W
+    mode: empieza
+    clue: Almacenamiento de escritura única y lectura múltiple (siglas inglesas).
+    answers:
+    - worm
+    ref: 7.3 Regla 3-2-1-1-0
+    ref_url: /ud02/ud02-teoria/
+  - l: Z
+    mode: empieza
+    clue: Sistema de ficheros con integridad, instantáneas y RAID-Z integrado.
+    answers:
+    - zfs
+    ref: 4.4 ZFS y Btrfs
+    ref_url: /ud02/ud02-teoria/

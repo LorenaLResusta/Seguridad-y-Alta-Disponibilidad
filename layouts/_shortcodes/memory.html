@@ -1,0 +1,178 @@
+{{- /*
+  Memory de parejas. Uso: {{< memory data="memory_ud02" >}}
+  Contenido (es/val) en data/<data>.yaml: tag_a, tag_b y pairs [{a: {text, fig}, b: {text, fig}, explain}].
+  fig: mini diagrama dibujado aquí (rel, refl, tern, weak, isa, arc, agg, mv) o tables (lista de esquemas: {pk} subrayada, →TABLA para las FK, [nota]).
+*/ -}}
+{{- $name := .Get "data" -}}
+{{- $lang := .Page.Language.Lang -}}
+{{- $d := index (index hugo.Data $name) $lang -}}
+{{- $ui := index (index hugo.Data.juegos_ui $lang) "memory" -}}
+{{- $id := printf "mm-%s-%d" $name .Ordinal -}}
+<div class="mm" id="{{ $id }}"></div>
+<script type="application/json" id="{{ $id }}-data">{{ dict "d" $d "ui" $ui | jsonify | safeJS }}</script>
+<style>
+.mm { --ink: #1d1b2f; margin: 1rem 0; border-radius: .7rem; overflow: hidden; background: #0f2a2a; color: #eefcf9; box-shadow: 0 6px 22px rgba(0,0,0,.25); }
+.mm * { box-sizing: border-box; }
+.mm-top { display: flex; flex-wrap: wrap; gap: .4rem .9rem; align-items: center; padding: .55rem .85rem; background: linear-gradient(90deg, #0b5d5b, #12867f); }
+.mm-tag { background: #ffd54f; color: var(--ink); border-radius: 1rem; padding: .05rem .6rem; font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+.mm-meta { margin-left: auto; font-weight: 800; font-variant-numeric: tabular-nums; display: flex; gap: .8rem; flex-wrap: wrap; }
+.mm-meta .turn { background: #ffd54f; color: var(--ink); border-radius: .3rem; padding: 0 .4rem; }
+.mm-body { padding: .8rem; }
+.mm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11.5rem), 1fr)); gap: .55rem; }
+.mm-card { position: relative; min-height: 10.5rem; border: 0; padding: 0; border-radius: .55rem; cursor: pointer; font: inherit; perspective: 900px; background: transparent; color: var(--ink); text-align: left; }
+.mm-card .in { position: absolute; inset: 0; transition: transform .45s; transform-style: preserve-3d; }
+.mm-card.up .in, .mm-card.done .in { transform: rotateY(180deg); }
+.mm-card .face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: .55rem; overflow: hidden; }
+.mm-card .back { background: repeating-linear-gradient(45deg, #12867f 0 12px, #0f766f 12px 24px); display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 1.6rem; box-shadow: inset 0 0 0 3px rgba(255,255,255,.25); }
+.mm-card .front { transform: rotateY(180deg); background: #fff; padding: .45rem .5rem; display: flex; flex-direction: column; gap: .25rem; font-size: .8rem; line-height: 1.3; overflow-y: auto; box-shadow: inset 0 0 0 2px #cfe9e6; }
+.mm-card.done .front { box-shadow: inset 0 0 0 3px #2e9e5b; background: #f1fbf4; }
+.mm-card.bad .front { box-shadow: inset 0 0 0 3px #d64545; }
+.mm-card:focus-visible { outline: 3px solid #ffd54f; outline-offset: 2px; }
+.mm-ft { font-size: .62rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: #0b5d5b; }
+.mm-card .front svg { width: 100%; height: auto; max-height: 6.2rem; }
+.mm-card code, .mm-exp code { background: #e6f4f2; color: #0b4d4a; padding: 0 .15rem; border-radius: .2rem; font-size: .92em; }
+.mm-tab { font-family: ui-monospace, Consolas, monospace; font-size: .72rem; background: #f4f8f8; border-radius: .3rem; padding: .25rem .35rem; }
+.mm-tab div { margin: .1rem 0; overflow-wrap: anywhere; }
+.mm-tab u { text-decoration-thickness: 1.5px; font-weight: 700; }
+.mm-tab .fk { color: #1565c0; }
+.mm-tab .nt { color: #8a3a00; font-family: system-ui, sans-serif; font-size: .7rem; }
+.mm-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .6rem 0; }
+.mm button.b { font: inherit; cursor: pointer; border: 0; border-radius: .4rem; padding: .45rem 1rem; font-weight: 800; background: #ffd54f; color: var(--ink); }
+.mm button.b.ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.45); }
+.mm input[type=text] { font: inherit; padding: .35rem .5rem; border-radius: .35rem; border: 0; max-width: 11rem; }
+.mm label { display: inline-flex; gap: .35rem; align-items: center; }
+.mm-exp { margin-top: .7rem; padding: .55rem .75rem; border-radius: .4rem; background: rgba(255,255,255,.08); min-height: 2.6rem; }
+.mm-exp a { color: #ffd54f; }
+.mm-end ol { margin: .4rem 0; padding-left: 1.3rem; }
+.mm-end li { margin: .35rem 0; }
+@media (prefers-reduced-motion: reduce) { .mm-card .in { transition: none; } }
+</style>
+<script>
+(function () {
+  var root = document.getElementById({{ $id }});
+  var J = JSON.parse(document.getElementById({{ printf "%s-data" $id }}).textContent), D = J.d, U = J.ui;
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(t, c, x) { var n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; }
+  function sv(t, a, p) { var n = document.createElementNS(NS, t); for (var k in a) n.setAttribute(k, a[k]); if (p) p.appendChild(n); return n; }
+  function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+  function fmt(s, o) { return String(s).replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); }
+  var TOK = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/;
+  function rich(p, s) { String(s).split(TOK).forEach(function (t) { if (!t) return;
+    if (/^`[^`]+`$/.test(t)) p.appendChild(el('code', null, t.slice(1, -1)));
+    else if (/^\*\*[^*]+\*\*$/.test(t)) p.appendChild(el('strong', null, t.slice(2, -2)));
+    else if (/^\*[^*]+\*$/.test(t)) p.appendChild(el('em', null, t.slice(1, -1)));
+    else p.appendChild(document.createTextNode(t)); }); return p; }
+  function btn(t, c, f) { var b = el('button', c, t); b.type = 'button'; b.addEventListener('click', f); return b; }
+
+  // ---------- mini diagramas ----------
+  function txt(g, x, y, s, o) { o = o || {}; var t = sv('text', { x: x, y: y, 'text-anchor': o.a || 'middle', 'font-size': o.s || 10, 'font-weight': o.w || 700, fill: o.f || '#0d3c78', 'font-family': 'system-ui, sans-serif' }, g); t.textContent = s; return t; }
+  function ew(s) { return Math.max(44, s.length * 6.2 + 12); }
+  function ent(g, x, y, s, weak) { var w = ew(s); sv('rect', { x: x - w / 2, y: y - 11, width: w, height: 22, rx: 2, fill: '#e8f0fe', stroke: '#1565c0', 'stroke-width': 1.5 }, g);
+    if (weak) sv('rect', { x: x - w / 2 + 3, y: y - 8, width: w - 6, height: 16, rx: 1, fill: 'none', stroke: '#1565c0', 'stroke-width': 1 }, g); txt(g, x, y + 3.5, s, { s: s.length > 11 ? 9 : 10 }); return w; }
+  function rel(g, x, y, s, dbl) { var w = Math.max(44, s.length * 6 + 16); sv('polygon', { points: [x, y - 13, x + w / 2, y, x, y + 13, x - w / 2, y].join(' '), fill: '#fff3e0', stroke: '#e65100', 'stroke-width': 1.5 }, g);
+    if (dbl) sv('polygon', { points: [x, y - 9, x + w / 2 - 6, y, x, y + 9, x - w / 2 + 6, y].join(' '), fill: 'none', stroke: '#e65100', 'stroke-width': 1 }, g); txt(g, x, y + 3, s, { s: 8.5, f: '#8a3a00' }); }
+  function ln(g, a, b, c, d, o) { o = o || {}; sv('line', { x1: a, y1: b, x2: c, y2: d, stroke: o.c || '#1d1b2f', 'stroke-width': o.w || 1.4, 'stroke-dasharray': o.d || '' }, g); }
+  function card(g, x, y, s) { if (!s) return; txt(g, x, y, s, { s: 9, f: '#c62828', w: 800 }); }
+  var FIG = {
+    rel: function (g, f) { var xa = 3 + ew(f.a) / 2, xb = 237 - ew(f.b) / 2, xm = (xa + ew(f.a) / 2 + xb - ew(f.b) / 2) / 2; ln(g, xa, 50, xb, 50); ent(g, xa, 50, f.a); ent(g, xb, 50, f.b); rel(g, xm, 50, f.r); card(g, xa + ew(f.a) / 2 + 12, 36, f.ca); card(g, xb - ew(f.b) / 2 - 12, 36, f.cb); if (f.attr) { ln(g, 120, 63, 120, 82, { c: '#777' }); sv('ellipse', { cx: 120, cy: 90, rx: 26, ry: 9, fill: '#fff', stroke: '#555' }, g); txt(g, 120, 93, f.attr, { s: 8, w: 500, f: '#333' }); } },
+    refl: function (g, f) { ln(g, 90, 30, 90, 80); ln(g, 90, 80, 150, 80); ln(g, 150, 80, 150, 30); ln(g, 150, 30, 120, 30); ent(g, 90, 30, f.a); rel(g, 150, 80, f.r); card(g, 72, 62, f.ca); card(g, 188, 52, f.cb); if (f.roles) { txt(g, 120, 100, f.roles, { s: 8, f: '#555', w: 500 }); } },
+    tern: function (g, f) { ln(g, 40, 30, 120, 60); ln(g, 200, 30, 120, 60); ln(g, 120, 60, 120, 98); ent(g, 40, 22, f.a); ent(g, 200, 22, f.b); ent(g, 120, 100, f.c); rel(g, 120, 60, f.r); card(g, 70, 52, f.ca); card(g, 170, 52, f.cb); card(g, 134, 85, f.cc); },
+    weak: function (g, f) { var xa = 3 + ew(f.a) / 2, xb = 237 - ew(f.b) / 2, xm = (xa + ew(f.a) / 2 + xb - ew(f.b) / 2) / 2; ln(g, xa, 50, xb, 50); ent(g, xa, 50, f.a); ent(g, xb, 50, f.b, true); rel(g, xm, 50, f.r, f.id); card(g, xa + ew(f.a) / 2 + 12, 36, f.ca); card(g, xb - ew(f.b) / 2 - 12, 36, f.cb); if (f.note) txt(g, 120, 90, f.note, { s: 8.5, f: '#555', w: 600 }); },
+    isa: function (g, f) { ent(g, 120, 16, f.top); sv('polygon', { points: '120,30 134,50 106,50', fill: '#fff', stroke: '#1565c0', 'stroke-width': 1.5 }, g); ln(g, 120, 27, 120, 30);
+      var n = f.subs.length; f.subs.forEach(function (s, i) { var x = n === 2 ? (i ? 185 : 55) : 40 + i * 80; ln(g, 120, 50, x, 78); ent(g, x, 88, s); }); if (f.label) txt(g, 150, 46, f.label, { a: 'start', s: 9, f: '#c62828', w: 800 }); },
+    arc: function (g, f) { ln(g, 50, 55, 170, 25); ln(g, 50, 55, 170, 85); ent(g, 50, 55, f.e); rel(g, 175, 25, f.r1); rel(g, 175, 85, f.r2); sv('path', { d: 'M100 42 Q112 55 100 68', fill: 'none', stroke: '#6a1b9a', 'stroke-width': 1.8 }, g); if (f.label) txt(g, 120, 59, f.label, { a: 'start', s: 9, f: '#6a1b9a', w: 800 }); if (f.e2) { ln(g, 210, 25, 225, 25); ln(g, 210, 85, 225, 85); } },
+    agg: function (g, f) { sv('rect', { x: 8, y: 8, width: 224, height: 40, rx: 6, fill: 'none', stroke: '#6a1b9a', 'stroke-dasharray': '4 3', 'stroke-width': 1.4 }, g); ln(g, 40, 28, 200, 28); ent(g, 40, 28, f.a); ent(g, 200, 28, f.b); rel(g, 120, 28, f.r); ln(g, 120, 48, 120, 98); rel(g, 120, 70, f.r2); ent(g, 120, 100, f.c); },
+    mv: function (g, f) { ent(g, 60, 55, f.e); ln(g, 100, 55, 140, 55, { c: '#777' }); sv('ellipse', { cx: 180, cy: 55, rx: 44, ry: 14, fill: '#fff', stroke: '#555' }, g); if (f.multi !== false) sv('ellipse', { cx: 180, cy: 55, rx: 38, ry: 10, fill: 'none', stroke: '#555' }, g);
+      if (f.dashed) { g.lastChild.setAttribute('stroke-dasharray', '4 3'); } txt(g, 180, 58, f.attr, { s: 9, w: 500, f: '#333' }); if (f.parts) f.parts.forEach(function (p, i) { var x = 140 + i * 40; ln(g, 180, 69, x, 88, { c: '#777' }); sv('ellipse', { cx: x, cy: 96, rx: 19, ry: 8, fill: '#fff', stroke: '#555' }, g); txt(g, x, 99, p, { s: 7, w: 500, f: '#333' }); }); }
+  };
+  function figure(f) {
+    if (f.t === 'tables') { var b = el('div', 'mm-tab'); f.rows.forEach(function (r) { var d = el('div'); String(r).split(/(\{[^}]+\}|→ ?[A-ZÁÉÍÓÚÀÈÒÇ_]+|\[[^\]]+\])/).forEach(function (t) {
+        if (!t) return; if (/^\{[^}]+\}$/.test(t)) d.appendChild(el('u', null, t.slice(1, -1))); else if (/^→/.test(t)) d.appendChild(el('span', 'fk', t)); else if (/^\[.*\]$/.test(t)) d.appendChild(el('span', 'nt', t.slice(1, -1))); else d.appendChild(document.createTextNode(t)); }); b.appendChild(d); }); return b; }
+    var s = sv('svg', { viewBox: '0 0 240 112', role: 'img' }); var g = sv('g', {}, s); (FIG[f.t] || function () {})(g, f); return s;
+  }
+
+  // ---------- juego ----------
+  var P = D.pairs, cards, open, lock, moves, matched, t0, tick, teams, turn, mode;
+  var top = el('div', 'mm-top'), meta = el('span', 'mm-meta'), body = el('div', 'mm-body');
+  top.appendChild(el('span', 'mm-tag', U.tag)); top.appendChild(el('strong', null, D.title)); top.appendChild(meta);
+  root.appendChild(top); root.appendChild(body);
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function secs() { return Math.round((Date.now() - t0) / 1000); }
+  function clock(s) { var m = Math.floor(s / 60), r = s % 60; return m + ':' + (r < 10 ? '0' : '') + r; }
+  function drawMeta() {
+    clear(meta);
+    meta.appendChild(el('span', null, fmt(U.pairs, { f: matched, n: P.length })));
+    if (mode === 'teams') teams.forEach(function (t, i) { meta.appendChild(el('span', i === turn ? 'turn' : '', t.name + ': ' + t.pts)); });
+    else { meta.appendChild(el('span', null, fmt(U.moves, { m: moves }))); meta.appendChild(el('span', null, '⏱ ' + clock(t0 ? secs() : 0))); }
+  }
+  function setup() {
+    clear(body); if (tick) clearInterval(tick); t0 = 0; mode = 'solo'; matched = 0; moves = 0; drawMeta();
+    if (D.intro) body.appendChild(rich(el('p'), D.intro));
+    var ul = el('ul'); U.rules.forEach(function (r) { ul.appendChild(rich(el('li'), fmt(r, { n: P.length, a: D.tag_a, b: D.tag_b }))); }); body.appendChild(ul);
+    var r1 = el('div', 'mm-row'), names = [];
+    var solo = btn('▶ ' + U.solo, 'b', function () { start('solo'); });
+    r1.appendChild(solo); body.appendChild(r1);
+    var r2 = el('div', 'mm-row');
+    [U.team_a, U.team_b].forEach(function (n) { var l = el('label'), i = el('input'); i.type = 'text'; i.value = n; i.setAttribute('aria-label', n); names.push(i); l.appendChild(i); r2.appendChild(l); });
+    r2.appendChild(btn('⚔ ' + U.teams, 'b ghost', function () { teams = names.map(function (i) { return { name: i.value.trim() || i.getAttribute('aria-label'), pts: 0 }; }); start('teams'); }));
+    body.appendChild(r2);
+  }
+  var grid, exp;
+  function start(m) {
+    mode = m; turn = 0; moves = 0; matched = 0; open = []; lock = false; t0 = Date.now();
+    clear(body);
+    var list = [];
+    P.forEach(function (p, i) { list.push({ p: i, s: 'a' }); list.push({ p: i, s: 'b' }); });
+    shuffle(list);
+    grid = el('div', 'mm-grid'); cards = list.map(function (c, k) {
+      var b = el('button', 'mm-card'); b.type = 'button'; b.setAttribute('aria-label', fmt(U.card, { n: k + 1 }));
+      var inn = el('div', 'in'), back = el('div', 'face back', '?'), front = el('div', 'face front'), side = P[c.p][c.s];
+      front.appendChild(el('div', 'mm-ft', c.s === 'a' ? D.tag_a : D.tag_b));
+      if (side.fig) front.appendChild(figure(side.fig));
+      if (side.text) front.appendChild(rich(el('div'), side.text));
+      inn.appendChild(back); inn.appendChild(front); b.appendChild(inn);
+      b.addEventListener('click', function () { flip(k); });
+      c.el = b; grid.appendChild(b); return c;
+    });
+    body.appendChild(grid);
+    exp = el('div', 'mm-exp'); exp.setAttribute('aria-live', 'polite'); exp.textContent = mode === 'teams' ? fmt(U.turn, { t: teams[0].name }) : U.go;
+    body.appendChild(exp);
+    var r = el('div', 'mm-row'); r.appendChild(btn('↻ ' + U.restart, 'b ghost', setup)); body.appendChild(r);
+    tick = setInterval(drawMeta, 1000); drawMeta();
+  }
+  function hideOpen() { open.forEach(function (k) { cards[k].el.classList.remove('up', 'bad'); cards[k].el.setAttribute('aria-label', fmt(U.card, { n: k + 1 })); }); open = []; lock = false; }
+  function flip(k) {
+    var c = cards[k];
+    if (c.done) return;
+    if (lock) { hideOpen(); }
+    if (open.indexOf(k) > -1) return;
+    c.el.classList.add('up'); c.el.setAttribute('aria-label', (c.s === 'a' ? D.tag_a : D.tag_b) + ': ' + c.el.querySelector('.front').textContent.slice(0, 160));
+    open.push(k);
+    if (open.length < 2) return;
+    moves++;
+    var a = cards[open[0]], b = cards[open[1]];
+    if (a.p === b.p && a.s !== b.s) {
+      a.done = b.done = true; a.el.classList.add('done'); b.el.classList.add('done'); matched++;
+      if (mode === 'teams') teams[turn].pts++;
+      clear(exp); exp.appendChild(el('strong', null, (mode === 'teams' ? fmt(U.point, { t: teams[turn].name }) : U.match) + ' ')); rich(exp, P[a.p].explain || '');
+      open = [];
+      if (matched === P.length) finish();
+    } else {
+      a.el.classList.add('bad'); b.el.classList.add('bad'); lock = true;
+      if (mode === 'teams') { turn = 1 - turn; exp.textContent = fmt(U.miss_team, { t: teams[turn].name }); } else exp.textContent = U.miss;
+    }
+    drawMeta();
+  }
+  function finish() {
+    clearInterval(tick); drawMeta();
+    var e = el('div', 'mm-end');
+    var head = mode === 'teams' ? (teams[0].pts === teams[1].pts ? U.draw : fmt(U.winner, { t: teams[0].pts > teams[1].pts ? teams[0].name : teams[1].name }))
+      : fmt(U.done, { m: moves, t: clock(secs()), min: P.length });
+    e.appendChild(el('h3', null, head));
+    var ol = el('ol'); P.forEach(function (p) { var li = el('li'); rich(li, p.explain || ''); ol.appendChild(li); });
+    e.appendChild(el('div', null, U.summary)); e.appendChild(ol);
+    body.insertBefore(e, exp.nextSibling);
+  }
+  setup();
+})();
+</script>

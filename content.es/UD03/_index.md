@@ -18,6 +18,7 @@ En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) esta 
 | [Teoría](/ud03/ud03-teoria/) | Conceptos, cifrado simétrico (AES, ChaCha20, AEAD), asimétrico (RSA, ECC, Diffie-Hellman), *hash*, HMAC, contraseñas, firma digital y marco legal (eIDAS 2, FNMT, DNIe), certificados y PKI, TLS 1.3, ACME, LUKS2, gestión de claves y criptografía post-cuántica |
 | [Prácticas](/ud03/ud03-practicas/) | Diez prácticas guiadas, autónomas y de reto (*hash*, cifrado, GnuPG, contraseñas, CA propia, HTTPS con Nginx, análisis TLS, revocación, LUKS2, firma de PDF) y la **Tarea del proyecto «PKI interna y HTTPS»** |
 | [Casos de ataque y defensa](/ud03/ud03-casos/) | Intermediario con certificado falso y HSTS, *cracking* de contraseñas robadas (SHA-1 frente a yescrypt), Heartbleed y auditoría TLS con `testssl.sh` |
+| [Juegos de repaso](/ud03/ud03-juegos/) | Rosco, caza de errores, memory y duelo por equipos |
 
 **Duración:** 18 horas (7 h teoría · 9 h prácticas · 2 h evaluación)
 

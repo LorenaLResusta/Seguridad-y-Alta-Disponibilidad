@@ -1,0 +1,95 @@
+es:
+  title: Duelo UD03 · Cripto en la clínica
+  time: 90
+  intro: 'Dos equipos, un caso y rondas de dificultad creciente. Leed el enunciado con calma: todas las preguntas salen de él.'
+  case:
+  - 'La clínica quiere: (1) **cifrar las copias**, (2) publicar su **web de citas** con HTTPS, (3) guardar las **contraseñas** de los trabajadores, (4) enviar las **facturas firmadas** a la gestoría y (5) acceder por **SSH** a los servidores.'
+  - 'El técnico propone: copias con AES-256-GCM, certificado de Let''s Encrypt, contraseñas con SHA-256 sin sal, firma con la clave pública y claves SSH Ed25519.'
+  solution_txt: 'El diseño final: AES-256-GCM para los datos, TLS con certificado de una CA pública, hash lento con sal, firma con la clave privada y claves SSH Ed25519.'
+  rounds:
+  - pts: 100
+    type: choice
+    q: AES-256-GCM es un algoritmo…
+    options:
+    - Simétrico con integridad (AEAD)
+    - Asimétrico
+    - De hash
+    - De firma
+    answer: 0
+    explain: 'AES es simétrico y GCM añade autenticación: cifrado autenticado.'
+    ref: 2.4 Cifrado autenticado (AEAD)
+    ref_url: /ud03/ud03-teoria/
+  - pts: 100
+    type: choice
+    q: ¿Qué ventaja tiene el cifrado simétrico frente al asimétrico para copias grandes?
+    options:
+    - Es más rápido
+    - No necesita clave
+    - Es más lento pero más seguro
+    - No cifra
+    answer: 0
+    explain: Es mucho más rápido; el reparto de la clave se hace con criptografía asimétrica.
+    ref: 3.7 Comparativa
+    ref_url: /ud03/ud03-teoria/
+  - pts: 200
+    type: choice
+    q: ¿Es correcto guardar contraseñas con SHA-256 sin sal?
+    options:
+    - Sí, SHA-256 es seguro
+    - 'No: hace falta un hash lento y con sal'
+    - Sí, si se cifra después
+    - 'No: hay que guardarlas en claro'
+    answer: 1
+    explain: Hash lento con sal (yescrypt, Argon2id, bcrypt). SHA-256 simple se rompe con diccionarios y GPU.
+    ref: 4.5 Almacenamiento de contraseñas
+    ref_url: /ud03/ud03-teoria/
+  - pts: 200
+    type: choice
+    q: Para firmar las facturas, el técnico debería usar…
+    options:
+    - La clave pública de la empresa
+    - La clave privada de la empresa
+    - La clave pública de la gestoría
+    - Una clave simétrica
+    answer: 1
+    explain: Se firma con la privada; la gestoría verifica con la pública.
+    ref: 5.1 Funcionamiento
+    ref_url: /ud03/ud03-teoria/
+  - pts: 300
+    type: choice
+    q: ¿Qué aporta el certificado de Let's Encrypt a la web de citas?
+    options:
+    - Cifra el disco del servidor
+    - Vincula la clave pública con el dominio con una CA de confianza
+    - Evita todos los ataques
+    - Es una firma de las facturas
+    answer: 1
+    explain: Permite que el navegador valide la identidad del servidor y establezca TLS.
+    ref: 6.3 Autoridades de certificación
+    ref_url: /ud03/ud03-teoria/
+  - pts: 300
+    type: number
+    q: Los certificados de Let's Encrypt duran 90 días. Si se renuevan a los 60, ¿cuántos días de margen quedan antes de caducar?
+    answer: 30
+    explain: 90 − 60 = 30 días de margen. Se renuevan solos con ACME.
+    ref: 7.5 Let's Encrypt y ACME
+    ref_url: /ud03/ud03-teoria/
+  - pts: 400
+    type: choice
+    q: Un atacante intercepta la conexión y presenta un certificado falso. ¿Qué lo detecta?
+    options:
+    - El navegador al validar la cadena de confianza
+    - El antivirus
+    - El cortafuegos
+    - Nada
+    answer: 0
+    explain: 'El certificado no está firmado por una CA de confianza (o no coincide el dominio): el navegador avisa.'
+    ref: 7.3 HTTPS en la práctica
+    ref_url: /ud03/ud03-teoria/
+  - pts: 500
+    type: open
+    q: Explicad con vuestras palabras **por qué** se usa criptografía híbrida (simétrica + asimétrica) en TLS.
+    model: La asimétrica resuelve el **reparto de claves** (o acuerdo, como Diffie-Hellman) y la autenticación del servidor; la simétrica cifra **rápido** el tráfico real con la clave de sesión acordada.
+    explain: ''
+    ref: 3.6 Criptografía híbrida
+    ref_url: /ud03/ud03-teoria/

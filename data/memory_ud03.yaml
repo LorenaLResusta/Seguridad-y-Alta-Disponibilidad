@@ -1,0 +1,51 @@
+es:
+  title: Memory · Situaciones y soluciones de la UD03
+  tag_a: Situación
+  tag_b: Solución
+  intro: Empareja cada **necesidad** con la **técnica criptográfica** adecuada.
+  pairs:
+  - a:
+      text: Cifrar un fichero grande de forma rápida con una clave compartida.
+    b:
+      text: Cifrado **simétrico** (AES-256-GCM)
+    explain: Es rápido y el modo GCM aporta además integridad.
+  - a:
+      text: Dos partes que no se conocen quieren acordar una clave por Internet.
+    b:
+      text: '**Diffie-Hellman** / criptografía híbrida'
+    explain: Se acuerda una clave de sesión sin enviarla.
+  - a:
+      text: Comprobar que un fichero descargado no ha sido modificado.
+    b:
+      text: '**Hash** (SHA-256) publicado por el proveedor'
+    explain: Si el resumen coincide, el contenido es el mismo.
+  - a:
+      text: Guardar contraseñas de usuarios en el servidor.
+    b:
+      text: Hash **lento con sal** (yescrypt, Argon2id)
+    explain: SHA-256 simple y sin sal es un error grave.
+  - a:
+      text: Probar que una factura la emitió la empresa y no ha cambiado.
+    b:
+      text: '**Firma digital** con la clave privada'
+    explain: Se firma con la privada y se verifica con la pública.
+  - a:
+      text: Saber que la clave pública de una web es realmente suya.
+    b:
+      text: '**Certificado** X.509 de una CA de confianza'
+    explain: La CA vincula la clave pública con la identidad.
+  - a:
+      text: Un certificado se ha filtrado antes de caducar.
+    b:
+      text: '**Revocación** (CRL u OCSP)'
+    explain: Se anula antes de su fecha de caducidad.
+  - a:
+      text: Un servicio público necesita HTTPS válido para los navegadores.
+    b:
+      text: Certificado de una **CA pública** (p. ej. Let's Encrypt)
+    explain: Los navegadores ya confían en ella; una CA propia sirve para el entorno interno.
+  - a:
+      text: Un atacante se interpone y presenta un certificado falso.
+    b:
+      text: El navegador **no lo valida** (cadena de confianza)
+    explain: Un certificado no firmado por una CA de confianza provoca una advertencia.

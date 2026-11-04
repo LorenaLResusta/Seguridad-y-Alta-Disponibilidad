@@ -1,0 +1,117 @@
+es:
+  title: Rosco de la UD04 · Fortificación de hosts
+  intro: Bastionado, autenticación, SSH, registros e incidentes.
+  time: 180
+  letters:
+  - l: A
+    mode: empieza
+    clue: Servicio de Linux que registra llamadas al sistema y accesos a ficheros.
+    answers:
+    - auditd
+    ref: 10.2 Auditoría con auditd
+    ref_url: /ud04/ud04-teoria/
+  - l: B
+    mode: empieza
+    clue: Proceso de reducir la superficie de ataque de un sistema, en español.
+    answers:
+    - bastionado
+    ref: 5. Fortificación del sistema
+    ref_url: /ud04/ud04-teoria/
+  - l: C
+    mode: empieza
+    clue: Orden de Linux que cambia los permisos de un fichero.
+    answers:
+    - chmod
+    ref: 4.3 Permisos y umask
+    ref_url: /ud04/ud04-teoria/
+  - l: E
+    mode: empieza
+    clue: '___ de privilegios: pasar de un usuario normal a administrador aprovechando un fallo.'
+    answers:
+    - escalada
+    ref: 2.3 Anatomía de un ataque
+    ref_url: /ud04/ud04-teoria/
+  - l: F
+    mode: empieza
+    clue: Herramienta que bloquea automáticamente las IP con demasiados intentos fallidos.
+    answers:
+    - fail2ban
+    ref: 7.6 Fail2ban
+    ref_url: /ud04/ud04-teoria/
+  - l: H
+    mode: empieza
+    clue: 'Término inglés equivalente a «bastionado»: ___ de sistemas.'
+    answers:
+    - hardening
+    ref: 1. Principios del hardening
+    ref_url: /ud04/ud04-teoria/
+  - l: I
+    mode: empieza
+    clue: 'Antes de endurecer un sistema hay que conocer qué contiene: hacer un ___.'
+    answers:
+    - inventario
+    ref: 5.2 Inventario
+    ref_url: /ud04/ud04-teoria/
+  - l: K
+    mode: empieza
+    clue: 'Cyber ___ Chain: modelo de las fases de un ataque.'
+    answers:
+    - kill
+    ref: 2.3 Cyber Kill Chain
+    ref_url: /ud04/ud04-teoria/
+  - l: L
+    mode: empieza
+    clue: Herramienta que audita el bastionado de un sistema Linux y da una puntuación.
+    answers:
+    - lynis
+    ref: 5.7 Lynis y OpenSCAP
+    ref_url: /ud04/ud04-teoria/
+  - l: M
+    mode: empieza
+    clue: Autenticación con más de un factor (siglas).
+    answers:
+    - mfa
+    ref: 3.4 MFA
+    ref_url: /ud04/ud04-teoria/
+  - l: N
+    mode: empieza
+    clue: Herramienta que escanea puertos desde fuera para verificar qué servicios se ven.
+    answers:
+    - nmap
+    ref: 5.5 Nmap
+    ref_url: /ud04/ud04-teoria/
+  - l: P
+    mode: empieza
+    clue: Módulos de autenticación enchufables en Linux (siglas).
+    answers:
+    - pam
+    ref: 3.6 PAM
+    ref_url: /ud04/ud04-teoria/
+  - l: R
+    mode: empieza
+    clue: Malware que oculta la presencia del atacante en el sistema.
+    answers:
+    - rootkit
+    ref: 9.2 rkhunter
+    ref_url: /ud04/ud04-teoria/
+  - l: S
+    mode: empieza
+    clue: Orden que permite ejecutar un comando con privilegios de administrador de forma controlada.
+    answers:
+    - sudo
+    ref: 4.7 sudo y UAC
+    ref_url: /ud04/ud04-teoria/
+  - l: T
+    mode: empieza
+    clue: Código temporal de un solo uso del segundo factor (siglas).
+    answers:
+    - totp
+    ref: 7.5 TOTP en SSH
+    ref_url: /ud04/ud04-teoria/
+  - l: U
+    mode: empieza
+    clue: Máscara que indica qué permisos se quitan a los ficheros nuevos.
+    answers:
+    - umask
+    ref: 4.3 Permisos y umask
+    ref_url: /ud04/ud04-teoria/

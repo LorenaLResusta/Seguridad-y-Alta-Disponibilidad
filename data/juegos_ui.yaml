@@ -1,0 +1,211 @@
+# Textos comunes de los juegos (rosco y caza de errores)
+es:
+  rosco:
+    tag: Rosco
+    rules:
+    - 'Hay **{n} letras**. Para cada una verás una definición: la respuesta **empieza** por esa letra o la **contiene**.'
+    - Escribe la respuesta y pulsa *Intro*. Si no la sabes, pulsa **Pasapalabra** (o *Intro* con la casilla vacía) y volverá a salir al final.
+    - Tienes **{t} segundos**. Las tildes y las mayúsculas no importan.
+    best: 'Tu mejor marca en este navegador: {ok} de {n} aciertos.'
+    start: Empezar
+    answer: Tu respuesta
+    check: Responder
+    pass: Pasapalabra
+    stop: Plantarse
+    starts: Empieza por {l}
+    contains: Contiene la {l}
+    right: ¡Correcto!
+    wrong: No. Era «{a}».
+    passed: Pasapalabra.
+    end: Fin del rosco
+    perfect: ¡Rosco completo! 🎉
+    hits: aciertos
+    misses: fallos
+    pending: sin contestar
+    again: Jugar otra vez
+    c_letter: Letra
+    c_clue: Definición
+    c_answer: Respuesta
+    c_yours: Tu respuesta
+  caza:
+    tag: Caza de errores
+    goal: Haz clic en las líneas que estén **mal**. Hay **{n} errores** escondidos. Si pulsas algo que está bien, te dirá por qué (y contará como fallo).
+    counter: Encontrados {f}/{n} · Fallos {m}
+    found: ¡Error encontrado!
+    fine: 'Esto está bien:'
+    already: Ese error ya lo habías encontrado.
+    nothing: Ahí no hay nada que revisar. Prueba en otra línea.
+    hint: Pista
+    hint_said: Mira la zona que parpadea.
+    solve: Ver soluciones
+    restart: Empezar de nuevo
+    win: ¡Has encontrado todos los errores!
+    win_detail: 'Fallos: {m} · Pistas: {h}.'
+    lose: Has encontrado {f} de {n}. Los que faltaban aparecen marcados en rojo.
+    keyboard: Revisar los elementos sin ratón
+    list_title: Errores
+  memory:
+    tag: Memory
+    rules:
+    - 'Hay **{n} parejas**: cada carta de tipo **{a}** tiene su pareja exacta de tipo **{b}**. Muchas se parecen a propósito: fíjate en los detalles.'
+    - Da la vuelta a dos cartas. Si son pareja se quedan boca arriba; si no, se vuelven a tapar al pulsar otra carta.
+    - 'Puedes jugar **en solitario** (cuenta movimientos y tiempo) o **por equipos**: cada pareja es un punto y, si fallas, el turno pasa al otro equipo.'
+    solo: Jugar en solitario
+    teams: Duelo por equipos
+    team_a: Equipo A
+    team_b: Equipo B
+    pairs: Parejas {f}/{n}
+    moves: Movimientos {m}
+    card: Carta {n}
+    go: Elige dos cartas.
+    turn: Empieza {t}.
+    match: ¡Pareja!
+    point: ¡Pareja para {t}!
+    miss: No son pareja.
+    miss_team: No son pareja. Turno de {t}.
+    restart: Empezar de nuevo
+    done: ¡Completado en {m} movimientos y {t}! (el mínimo posible es {min})
+    winner: ¡Gana {t}!
+    draw: ¡Empate!
+    summary: 'Las parejas, explicadas:'
+  duelo:
+    tag: Duelo por equipos
+    rules:
+    - Dos equipos se enfrentan en **{n} rondas** sobre el mismo caso. Los puntos suben con la dificultad.
+    - 'Cada ronda es para un equipo. Si falla o se acaba el tiempo, hay **rebote**: el otro equipo puede contestar por la mitad de puntos.'
+    - 'Cada equipo tiene dos comodines para toda la partida: **✂️ 50 %** (quita dos opciones incorrectas) y **💡 pista** (los puntos de esa ronda se reducen a la mitad).'
+    - En las preguntas abiertas, el equipo responde en voz alta o en la pizarra y el profesor o la profesora decide si es correcta tras ver la respuesta modelo.
+    case: Enunciado del caso
+    team_a: Equipo A
+    team_b: Equipo B
+    time: Tiempo por ronda
+    secs: '{s} s por ronda'
+    start: Empezar el duelo
+    hint: pista
+    use_half: 50 %
+    use_hint: Pista (puntos a la mitad)
+    round: Ronda {i} de {n} · {p} puntos
+    turn: Turno de {t}
+    answer: Respuesta
+    check: Responder
+    show_model: Ver respuesta modelo
+    model: 'Respuesta modelo:'
+    right: Correcta
+    wrong: Incorrecta
+    won: ¡{p} puntos para {t}!
+    fail: ¡Incorrecto!
+    timeout: ¡Tiempo!
+    rebound: Rebote para {t}, por {p} puntos.
+    rebound_tag: rebote
+    was: La respuesta era {a}.
+    next: Siguiente ronda
+    finish: Ver el resultado
+    winner: ¡Gana {t}!
+    draw: ¡Empate!
+    review: 'Repaso de todas las rondas:'
+    again: Nuevo duelo
+val:
+  rosco:
+    tag: Rosco
+    rules:
+    - 'Hi ha **{n} lletres**. Per a cadascuna veuràs una definició: la resposta **comença** per eixa lletra o la **conté**.'
+    - Escriu la resposta i prem *Intro*. Si no la saps, prem **Passaparaula** (o *Intro* amb la casella buida) i tornarà a eixir al final.
+    - Tens **{t} segons**. Els accents i les majúscules no importen.
+    best: 'La teua millor marca en este navegador: {ok} de {n} encerts.'
+    start: Començar
+    answer: La teua resposta
+    check: Respondre
+    pass: Passaparaula
+    stop: Plantar-se
+    starts: Comença per {l}
+    contains: Conté la {l}
+    right: Correcte!
+    wrong: No. Era «{a}».
+    passed: Passaparaula.
+    end: Fi del rosco
+    perfect: Rosco complet! 🎉
+    hits: encerts
+    misses: errors
+    pending: sense contestar
+    again: Jugar una altra vegada
+    c_letter: Lletra
+    c_clue: Definició
+    c_answer: Resposta
+    c_yours: La teua resposta
+  caza:
+    tag: Caça d'errors
+    goal: Fes clic en les parts del diagrama que estiguen **malament**. Hi ha **{n} errors** amagats. Si prems alguna cosa que està bé, et dirà per què (i comptarà com a error).
+    counter: Trobats {f}/{n} · Errors {m}
+    found: Error trobat!
+    fine: 'Açò està bé:'
+    already: Eixe error ja l'havies trobat.
+    nothing: Ací no hi ha res a revisar. Prova en un altre element del diagrama.
+    hint: Pista
+    hint_said: Mira la zona que parpelleja.
+    solve: Veure solucions
+    restart: Tornar a començar
+    win: Has trobat tots els errors!
+    win_detail: 'Errors: {m} · Pistes: {h}.'
+    lose: N'has trobat {f} de {n}. Els que faltaven apareixen marcats en roig.
+    keyboard: Revisar els elements sense ratolí
+    list_title: Errors
+  memory:
+    tag: Memory
+    rules:
+    - 'Hi ha **{n} parelles**: cada carta de tipus **{a}** té la seua parella exacta de tipus **{b}**. Moltes s''assemblen a propòsit: fixa''t en els detalls.'
+    - Dona la volta a dos cartes. Si són parella es queden cap per amunt; si no, es tornen a tapar en prémer una altra carta.
+    - 'Pots jugar **en solitari** (compta moviments i temps) o **per equips**: cada parella és un punt i, si falles, el torn passa a l''altre equip.'
+    solo: Jugar en solitari
+    teams: Duel per equips
+    team_a: Equip A
+    team_b: Equip B
+    pairs: Parelles {f}/{n}
+    moves: Moviments {m}
+    card: Carta {n}
+    go: Tria dos cartes.
+    turn: Comença {t}.
+    match: Parella!
+    point: Parella per a {t}!
+    miss: No són parella.
+    miss_team: No són parella. Torn de {t}.
+    restart: Tornar a començar
+    done: Completat en {m} moviments i {t}! (el mínim possible és {min})
+    winner: Guanya {t}!
+    draw: Empat!
+    summary: 'Les parelles, explicades:'
+  duelo:
+    tag: Duel per equips
+    rules:
+    - Dos equips s'enfronten en **{n} rondes** sobre el mateix cas. Els punts pugen amb la dificultat.
+    - 'Cada ronda és per a un equip. Si falla o s''acaba el temps, hi ha **rebot**: l''altre equip pot contestar per la meitat de punts.'
+    - 'Cada equip té dos comodins per a tota la partida: **✂️ 50 %** (lleva dos opcions incorrectes) i **💡 pista** (els punts d''eixa ronda es reduïxen a la meitat).'
+    - En les preguntes obertes, l'equip respon en veu alta o en la pissarra i el professor o la professora decidix si és correcta després de veure la resposta model.
+    case: Enunciat del cas
+    team_a: Equip A
+    team_b: Equip B
+    time: Temps per ronda
+    secs: '{s} s per ronda'
+    start: Començar el duel
+    hint: pista
+    use_half: 50 %
+    use_hint: Pista (punts a la meitat)
+    round: Ronda {i} de {n} · {p} punts
+    turn: Torn de {t}
+    answer: Resposta
+    check: Respondre
+    show_model: Veure resposta model
+    model: 'Resposta model:'
+    right: Correcta
+    wrong: Incorrecta
+    won: '{p} punts per a {t}!'
+    fail: Incorrecte!
+    timeout: Temps!
+    rebound: Rebot per a {t}, per {p} punts.
+    rebound_tag: rebot
+    was: La resposta era {a}.
+    next: Ronda següent
+    finish: Veure el resultat
+    winner: Guanya {t}!
+    draw: Empat!
+    review: 'Repàs de totes les rondes:'
+    again: Nou duel

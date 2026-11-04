@@ -1,0 +1,90 @@
+es:
+  title: Duelo UD02 · Disaster en el CPD
+  time: 90
+  intro: 'Dos equipos, un caso y rondas de dificultad creciente. Leed el enunciado con calma: todas las preguntas salen de él.'
+  case:
+  - El CPD de **Mediterránea Dental** es una sala con un solo servidor con **dos discos de 4 TB en RAID 1** y un SAI de 10 minutos. Hay una copia diaria en un **NAS de la misma sala**, siempre conectado con credenciales de escritura. Nunca se ha probado una restauración.
+  - La dirección ha fijado un **RPO de 1 hora** y un **RTO de 4 horas**. Una noche, un incendio en la sala destruye servidor y NAS.
+  solution_txt: Un único CPD, un único soporte y ninguna prueba de restauración es un punto único de fallo. Así se diseñan los planes de continuidad.
+  rounds:
+  - pts: 100
+    type: number
+    q: ¿Cuántos TB útiles ofrece el RAID 1 con dos discos de 4 TB?
+    answer: 4
+    explain: En un espejo la capacidad es la de un solo disco.
+    ref: 5.3 Niveles RAID
+    ref_url: /ud02/ud02-teoria/
+  - pts: 100
+    type: choice
+    q: ¿Qué protege el RAID 1 en este caso?
+    options:
+    - Un incendio
+    - El fallo de un disco
+    - Un borrado accidental
+    - Un ransomware
+    answer: 1
+    explain: 'Solo el fallo de un disco. No protege del resto: **RAID no es una copia de seguridad**.'
+    ref: 5.6 RAID no es una copia
+    ref_url: /ud02/ud02-teoria/
+  - pts: 200
+    type: choice
+    q: El RPO de 1 hora significa que se puede perder como máximo…
+    options:
+    - 1 hora de datos
+    - 1 hora de servicio
+    - Una copia
+    - Un disco
+    answer: 0
+    explain: RPO = pérdida de datos máxima aceptable.
+    ref: 7.5 RPO y RTO
+    ref_url: /ud02/ud02-teoria/
+  - pts: 200
+    type: choice
+    q: Con una copia diaria, ¿se cumple el RPO de 1 hora?
+    options:
+    - Sí
+    - 'No: haría falta una copia horaria o replicación'
+    - Sí, con RAID 1
+    - Solo si el NAS está encendido
+    answer: 1
+    explain: Entre dos copias diarias se pueden perder hasta 24 horas.
+    ref: 7.5 RPO y RTO
+    ref_url: /ud02/ud02-teoria/
+  - pts: 300
+    type: choice
+    q: ¿Qué falla de la regla 3-2-1-1-0 en este diseño?
+    options:
+    - Todo está en el mismo sitio y no hay copia fuera ni desconectada
+    - Tiene demasiadas copias
+    - Usa dos tipos de soporte
+    - Usa SAI
+    answer: 0
+    explain: Falta la copia **fuera de las instalaciones** y la **inmutable o desconectada**, y nunca se ha verificado la restauración (el «0»).
+    ref: 7.3 Regla 3-2-1-1-0
+    ref_url: /ud02/ud02-teoria/
+  - pts: 300
+    type: number
+    q: Con un RPO de 1 hora y copias cada hora, ¿cuántas copias se hacen en una jornada de 24 horas?
+    answer: 24
+    explain: 'Una por hora: 24 copias al día.'
+    ref: 7.5 RPO y RTO
+    ref_url: /ud02/ud02-teoria/
+  - pts: 400
+    type: choice
+    q: El **RTO** de 4 horas se mide…
+    options:
+    - En datos perdidos
+    - En tiempo hasta recuperar el servicio
+    - En TB
+    - En euros
+    answer: 1
+    explain: RTO = tiempo máximo de recuperación del servicio.
+    ref: 7.5 RPO y RTO
+    ref_url: /ud02/ud02-teoria/
+  - pts: 500
+    type: open
+    q: Redactad en tres líneas la **estrategia de copias** que cumpliría RPO 1 h, RTO 4 h y la regla 3-2-1-1-0.
+    model: 'Por ejemplo: copia cada hora con `restic` al NAS y replicación diaria cifrada a la nube (fuera del edificio); una copia **inmutable** (object lock/WORM) o desconectada; pruebas de restauración mensuales documentadas y un sitio alternativo para levantar el servicio en menos de 4 h.'
+    explain: ''
+    ref: 7. Copias de seguridad
+    ref_url: /ud02/ud02-teoria/

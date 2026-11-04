@@ -1,0 +1,95 @@
+es:
+  title: Duelo UD04 · Bastionado de srv-clinica
+  time: 90
+  intro: 'Dos equipos, un caso y rondas de dificultad creciente. Leed el enunciado con calma: todas las preguntas salen de él.'
+  case:
+  - El servidor **srv-clinica** (Debian) tiene SSH abierto a Internet en el puerto 22 con contraseñas permitidas, `PermitRootLogin yes` y dos servicios que nadie usa. Los logs muestran **miles de intentos fallidos** desde unas pocas IP. No hay actualizaciones automáticas.
+  - Te toca **bastionar** el servidor y comprobar que las medidas funcionan.
+  solution_txt: 'El ciclo de cada medida: amenaza → vulnerabilidad → ataque → detección → mitigación → comprobación.'
+  rounds:
+  - pts: 100
+    type: choice
+    q: Lo primero antes de endurecer es…
+    options:
+    - Reinstalar el sistema
+    - Hacer un inventario de lo que hay (servicios, puertos, usuarios)
+    - Cambiar el puerto SSH
+    - Apagar el servidor
+    answer: 1
+    explain: No se puede proteger lo que no se conoce.
+    ref: 5.2 Inventario
+    ref_url: /ud04/ud04-teoria/
+  - pts: 100
+    type: choice
+    q: Los intentos masivos de contraseña contra SSH son un ataque de…
+    options:
+    - Fuerza bruta
+    - Phishing
+    - Inyección SQL
+    - Día cero
+    answer: 0
+    explain: Se prueban muchas contraseñas hasta acertar.
+    ref: 2.5 Ataques a contraseñas
+    ref_url: /ud04/ud04-teoria/
+  - pts: 200
+    type: choice
+    q: ¿Qué directiva impide entrar directamente como root?
+    options:
+    - PermitRootLogin no
+    - AllowUsers root
+    - PasswordAuthentication yes
+    - PermitEmptyPasswords yes
+    answer: 0
+    explain: '`PermitRootLogin no`, y elevación con sudo.'
+    ref: 7.4 Endurecer sshd
+    ref_url: /ud04/ud04-teoria/
+  - pts: 200
+    type: choice
+    q: ¿Qué comando comprueba la sintaxis de la configuración de SSH antes de recargarla?
+    options:
+    - sshd -t
+    - ssh -v
+    - systemctl status ssh
+    - nmap -sV
+    answer: 0
+    explain: '`sshd -t` no produce salida si todo está bien.'
+    ref: 7.4 Endurecer sshd
+    ref_url: /ud04/ud04-teoria/
+  - pts: 300
+    type: number
+    q: Con `maxretry = 4` en Fail2ban, ¿a partir de qué número de intentos fallidos se bloquea la IP?
+    answer: 4
+    explain: Con 4 fallos dentro del `findtime`, se aplica el bloqueo durante el `bantime`.
+    ref: 7.6 Fail2ban
+    ref_url: /ud04/ud04-teoria/
+  - pts: 300
+    type: choice
+    q: ¿Qué herramienta verifica desde otra máquina qué puertos quedan abiertos?
+    options:
+    - Nmap
+    - AIDE
+    - Lynis
+    - auditd
+    answer: 0
+    explain: '`nmap` escanea puertos desde fuera: es la prueba de eficacia del cierre de servicios.'
+    ref: 5.5 Verificar desde fuera con Nmap
+    ref_url: /ud04/ud04-teoria/
+  - pts: 400
+    type: choice
+    q: Quieres detectar cambios no autorizados en ficheros del sistema. Usarías…
+    options:
+    - AIDE
+    - ClamAV
+    - Fail2ban
+    - UFW
+    answer: 0
+    explain: AIDE compara con una base de datos de huellas conocida (integridad).
+    ref: 9.3 Integridad con AIDE
+    ref_url: /ud04/ud04-teoria/
+  - pts: 500
+    type: open
+    q: Describid la **secuencia segura** para endurecer SSH sin quedaros fuera del servidor.
+    model: 1) Copia de seguridad de la configuración. 2) Comprobar la sintaxis con `sshd -t`. 3) Mantener **otra sesión abierta**. 4) `systemctl reload ssh`. 5) Probar el acceso desde otra terminal. 6) Si falla, restaurar la copia.
+    explain: ''
+    ref: 7.4 Endurecer sshd
+    ref_url: /ud04/ud04-teoria/

@@ -1,0 +1,72 @@
+es:
+  title: Caza de errores · Política criptográfica
+  img: caza-ud03
+  intro: El responsable de sistemas ha escrito esta política criptográfica. Hay **cinco decisiones incorrectas**. Haz clic en ellas.
+  errors:
+  - x: 0
+    y: 61
+    w: 900
+    h: 30
+    label: Línea 2 · Contraseñas
+    title: Hash rápido y sin sal
+    explain: Las contraseñas deben guardarse con un **hash lento y con sal** (yescrypt, Argon2id, bcrypt). SHA-256 simple se rompe por fuerza bruta.
+    ref: 4.5 Almacenamiento de contraseñas
+    ref_url: /ud03/ud03-teoria/
+  - x: 0
+    y: 91
+    w: 900
+    h: 30
+    label: Línea 3 · RSA directo
+    title: RSA no cifra ficheros grandes
+    explain: 'Se usa **criptografía híbrida**: el fichero se cifra con una clave simétrica (AES) y esa clave se protege con la asimétrica.'
+    ref: 3.6 Criptografía híbrida
+    ref_url: /ud03/ud03-teoria/
+  - x: 0
+    y: 121
+    w: 900
+    h: 30
+    label: Línea 4 · Firma
+    title: Se firma con la clave privada
+    explain: La firma se genera con la **clave privada** y cualquiera la verifica con la pública.
+    ref: 5.1 Funcionamiento de la firma
+    ref_url: /ud03/ud03-teoria/
+  - x: 0
+    y: 151
+    w: 900
+    h: 30
+    label: Línea 5 · Certificado autofirmado
+    title: Un navegador no confía en él
+    explain: Para un servicio público hace falta un certificado de una **CA de confianza** (p. ej. Let's Encrypt). El autofirmado provoca advertencias.
+    ref: 6.5 Tipos de certificados
+    ref_url: /ud03/ud03-teoria/
+  - x: 0
+    y: 181
+    w: 900
+    h: 30
+    label: Línea 6 · TLS 1.0
+    title: Protocolo obsoleto
+    explain: 'TLS 1.0 y 1.1 están **obsoletos**: se debe exigir TLS 1.2 como mínimo, preferiblemente 1.3.'
+    ref: 7.1 TLS
+    ref_url: /ud03/ud03-teoria/
+  decoys:
+  - x: 0
+    y: 31
+    w: 900
+    h: 30
+    label: Línea 1 · AES-GCM
+    title: Correcto
+    explain: 'AES-256-GCM es cifrado autenticado: confidencialidad e integridad.'
+  - x: 0
+    y: 211
+    w: 900
+    h: 30
+    label: Línea 7 · Ed25519 y ACME
+    title: Correcto
+    explain: Algoritmos modernos y renovación automatizada.
+  - x: 0
+    y: 241
+    w: 900
+    h: 30
+    label: Línea 8 · Hash de descarga
+    title: Correcto
+    explain: Si coincide el resumen, el fichero no se ha modificado.

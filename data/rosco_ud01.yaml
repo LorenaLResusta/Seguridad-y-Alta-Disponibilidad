@@ -1,0 +1,119 @@
+es:
+  title: Rosco de la UD01 · Introducción a la seguridad
+  intro: Riesgos, principios, ataques y normativa en una vuelta.
+  time: 180
+  letters:
+  - l: A
+    mode: empieza
+    clue: 'Recurso con valor para la organización que hay que proteger: datos, un servidor, una persona…'
+    answers:
+    - activo
+    ref: 5.1 Activos
+    ref_url: /ud01/ud01-teoria/
+  - l: B
+    mode: empieza
+    clue: 'Incidente que expone datos personales y que hay que notificar a la AEPD en 72 horas: ___ de seguridad.'
+    answers:
+    - brecha
+    ref: 12.1 RGPD y LOPDGDD
+    ref_url: /ud01/ud01-teoria/
+  - l: C
+    mode: empieza
+    clue: Principio que garantiza que solo accede a la información quien está autorizado.
+    answers:
+    - confidencialidad
+    ref: 4.1 Confidencialidad
+    ref_url: /ud01/ud01-teoria/
+  - l: D
+    mode: empieza
+    clue: Principio que garantiza que los sistemas y los datos están accesibles cuando se necesitan.
+    answers:
+    - disponibilidad
+    ref: 4.3 Disponibilidad
+    ref_url: /ud01/ud01-teoria/
+  - l: E
+    mode: empieza
+    clue: Siglas del Esquema Nacional de Seguridad (Real Decreto 311/2022).
+    answers:
+    - ens
+    ref: 12.3 ENS
+    ref_url: /ud01/ud01-teoria/
+  - l: F
+    mode: empieza
+    clue: 'Análisis ___: investigación que preserva las pruebas de un incidente (ordenador, disco, memoria).'
+    answers:
+    - forense
+    - forense.
+    ref: 11. Análisis forense
+    ref_url: /ud01/ud01-teoria/
+  - l: G
+    mode: empieza
+    clue: Malware que se replica por la red por sí solo, sin necesidad de que un usuario lo ejecute.
+    answers:
+    - gusano
+    ref: 7.3 Malware
+    ref_url: /ud01/ud01-teoria/
+  - l: I
+    mode: empieza
+    clue: Principio que garantiza que la información no se modifica sin autorización.
+    answers:
+    - integridad
+    ref: 4.2 Integridad
+    ref_url: /ud01/ud01-teoria/
+  - l: L
+    mode: empieza
+    clue: Siglas de la ley orgánica que adapta el RGPD en España.
+    answers:
+    - lopdgdd
+    ref: 12.1 RGPD y LOPDGDD
+    ref_url: /ud01/ud01-teoria/
+  - l: M
+    mode: empieza
+    clue: Medida que reduce la probabilidad o el impacto de un riesgo.
+    answers:
+    - mitigacion
+    - medida de mitigacion
+    ref: 5.4 Riesgo
+    ref_url: /ud01/ud01-teoria/
+  - l: N
+    mode: empieza
+    clue: Directiva europea de ciberseguridad para sectores esenciales e importantes (siglas y número).
+    answers:
+    - nis2
+    ref: 12.4 NIS2
+    ref_url: /ud01/ud01-teoria/
+  - l: P
+    mode: empieza
+    clue: Correo fraudulento que suplanta a una entidad para robar credenciales.
+    answers:
+    - phishing
+    ref: 7.5 Phishing
+    ref_url: /ud01/ud01-teoria/
+  - l: R
+    mode: empieza
+    clue: Combinación de la probabilidad de una amenaza y su impacto sobre un activo.
+    answers:
+    - riesgo
+    ref: 5.4 Riesgo
+    ref_url: /ud01/ud01-teoria/
+  - l: S
+    mode: empieza
+    clue: Siglas del sistema de gestión de la seguridad de la información (ISO 27001).
+    answers:
+    - sgsi
+    ref: 12.6 Normas de gestión
+    ref_url: /ud01/ud01-teoria/
+  - l: T
+    mode: empieza
+    clue: Propiedad que permite saber quién hizo qué y cuándo, gracias a los registros.
+    answers:
+    - trazabilidad
+    ref: 4.5 Trazabilidad
+    ref_url: /ud01/ud01-teoria/
+  - l: V
+    mode: empieza
+    clue: Debilidad de un activo que una amenaza puede aprovechar.
+    answers:
+    - vulnerabilidad
+    ref: 5.3 Vulnerabilidades
+    ref_url: /ud01/ud01-teoria/
