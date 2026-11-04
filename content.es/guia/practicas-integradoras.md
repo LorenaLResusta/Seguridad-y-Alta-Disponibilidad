@@ -16,8 +16,8 @@ bookToc: true
 | Unidades | UD01, UD02, UD03, UD04 | UD05, UD06, UD07 |
 | Una práctica por unidad | UD01 matriz de riesgos · UD02 copias con restic · UD03 CA propia y HTTPS · UD04 SSH seguro y Fail2ban | UD05 Suricata · UD06 nftables y publicación · UD07 HAProxy y prueba de fallo |
 | **Entrega** | **domingo 15/11/2026** | **miércoles 03/02/2027** *(revisión, propuesta)* |
-| Revisión con el profesorado | **martes 17 o jueves 19/11/2026** | miércoles 03/02/2027 *(propuesta)* |
-| Examen de la evaluación | **miércoles 25/11/2026 a las 18:00** (1.ª evaluación) | miércoles 10/02/2027 *(2.ª evaluación, propuesta)* |
+| Revisión con el profesorado | **martes 17 y jueves 19/11/2026** | miércoles 03/02/2027 *(propuesta)* |
+| Examen de la evaluación | **martes 24/11/2026** (1.ª evaluación) | miércoles 10/02/2027 *(2.ª evaluación, propuesta)* |
 | Máquinas | **1** máquina virtual: `srv-clinica` | **3** máquinas virtuales: `fw01`, `web01`, `web02` |
 | Dedicación orientativa | unas 5 h | unas 5 h |
 | Script que ejecutas | `sudo ./verifica-int1.sh APELLIDO` (en `srv-clinica`) | `sudo ./verifica-int2.sh APELLIDO` (solo en `fw01`) |
@@ -29,7 +29,7 @@ bookToc: true
 {{< explora "int-entrega" >}}
 
 > [!NOTE]
-> Las fechas de INT-1 (entrega el 15/11/2026, revisión el 17 o el 19/11 y examen el 25/11 a las 18:00) son las fijadas para el curso; las de INT-2 son propuestas que dependen del [calendario](/guia/temporalizacion/) y de la [guía semipresencial](/guia/semipresencial/).
+> Las fechas de INT-1 (entrega el 15/11/2026, revisión el 17 y el 19/11 y examen el 24/11) son las fijadas para el curso; las de INT-2 son propuestas que dependen del [calendario](/guia/temporalizacion/) y de la [guía semipresencial](/guia/semipresencial/).
 
 ## Cómo funcionan 
 
