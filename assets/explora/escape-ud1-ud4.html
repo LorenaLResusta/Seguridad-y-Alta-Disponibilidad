@@ -1,0 +1,81 @@
+<div class="sad-w" style="--c: var(--color-accent-important)">
+  <div class="sad-w-head"><span class="sad-w-tag">Escape room</span> Mediterránea Dental: sal del servidor <span class="sad-w-sub">UD1 a UD4 · 4 salas · 12 enigmas</span></div>
+  <div class="sad-w-body">
+    <div data-e="bar" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem"></div>
+    <div data-e="room" aria-live="polite"></div>
+  </div>
+</div>
+<script>(function(){
+var root=document.currentScript.previousElementSibling,q=function(n){return root.querySelector('[data-e="'+n+'"]')};
+/* t: 'c' = elegir opción, 't' = texto libre. a: respuestas válidas (ya normalizadas). */
+var R=[
+{n:'Sala 1 · Recepción (UD1)',k:'RIESGO',intro:'Son las 3:12 de la madrugada. La clínica Mediterránea Dental ha sufrido un incidente y la puerta de la recepción se ha cerrado. Un cartel dice: «Demuestra que entiendes el riesgo».',
+ p:[
+ {q:'Un pendrive sin cifrar con historiales clínicos se pierde en el tren. ¿Qué principio de la seguridad se ha vulnerado principalmente?',t:'c',o:['Confidencialidad','Integridad','Disponibilidad','No repudio'],a:['confidencialidad'],h:'Personas no autorizadas pueden leer los datos.',e:'Confidencialidad: los datos quedan al alcance de quien no debe verlos. Por eso se cifran los soportes.'},
+ {q:'Completa la fórmula del análisis de riesgos: Riesgo = probabilidad × ____',t:'t',a:['impacto'],h:'Es lo que cuesta que la amenaza se materialice.',e:'Riesgo = probabilidad × impacto. Con ello se prioriza qué proteger primero.'},
+ {q:'Alguien llama al help desk fingiendo ser un empleado y consigue que le restablezcan la contraseña (caso M&S/Co-op). ¿Cómo se llama el tipo de ataque, en general?',t:'t',a:['ingenieria social','ingenieria social.'],h:'Se ataca a la persona, no a la máquina (dos palabras).',e:'Ingeniería social: se explota la confianza humana. La defensa es un procedimiento de verificación de identidad.'}
+ ]},
+{n:'Sala 2 · CPD y copias (UD2)',k:'COPIA',intro:'Entras en la sala de servidores. Los discos parpadean y un panel pide tres comprobaciones antes de abrir la siguiente puerta.',
+ p:[
+ {q:'Montas un RAID 1 (espejo) con dos discos de 4 TB. ¿Cuántos TB útiles tienes?',t:'t',a:['4','4 tb','4tb'],h:'En un espejo, los dos discos guardan lo mismo.',e:'4 TB: el segundo disco es una réplica. Y recuerda: RAID no es una copia de seguridad.'},
+ {q:'En la regla 3-2-1-1-0, ¿qué significa el 0 final?',t:'c',o:['Cero copias en la nube','Cero errores al verificar la restauración','Cero soportes distintos','Cero días de retención'],a:['cero errores al verificar la restauracion'],h:'Una copia que nunca se ha restaurado es solo una esperanza.',e:'El 0 son cero errores en las pruebas de restauración periódicas.'},
+ {q:'La clínica tolera perder como máximo 1 hora de datos. ¿Qué parámetro define eso: RPO o RTO?',t:'t',a:['rpo'],h:'Uno mide cuántos datos se pierden; el otro, cuánto tarda la recuperación.',e:'RPO (objetivo de punto de recuperación): máxima pérdida de datos aceptable. El RTO es el tiempo máximo de recuperación.'}
+ ]},
+{n:'Sala 3 · Sala de claves (UD3)',k:'CLAVE',intro:'Una caja fuerte con un teclado y tres pistas grabadas en la pared. La criptografía abre la puerta.',
+ p:[
+ {q:'¿Cuál de estos algoritmos hash está obsoleto para comprobar integridad (se conocen colisiones)?',t:'c',o:['SHA-1','SHA-256','SHA-512','SHA3-256'],a:['sha-1'],h:'Es el más antiguo de la lista.',e:'SHA-1 está roto en la práctica. Usa SHA-256 o superior.'},
+ {q:'En /etc/shadow de Debian aparece un hash que empieza por «$y$». ¿Qué algoritmo es?',t:'t',a:['yescrypt'],h:'Hash lento con sal, valor por defecto desde Debian 11.',e:'yescrypt: lento y con sal, pensado para dificultar los ataques por fuerza bruta.'},
+ {q:'Quieres firmar digitalmente una factura. ¿Con qué clave firmas: pública o privada?',t:'t',a:['privada','la privada','clave privada'],h:'La pública la tiene todo el mundo para verificar.',e:'Se firma con la clave privada y se verifica con la pública.'}
+ ]},
+{n:'Sala 4 · Servidor a bastionar (UD4)',k:'BASTION',intro:'La última sala: el servidor srv-clinica, con SSH abierto al mundo. Cierra bien la puerta para poder salir.',
+ p:[
+ {q:'¿Qué directiva de sshd_config impide el acceso directo como root? (escríbela completa, con su valor)',t:'t',a:['permitrootlogin no'],h:'Empieza por Permit… y termina en «no».',e:'PermitRootLogin no. Tras editar: sshd -t para comprobar la sintaxis y recargar el servicio.'},
+ {q:'¿Cómo se ve en formato simbólico el permiso chmod 640?',t:'t',a:['rw-r-----'],h:'Propietario rw-, grupo r--, otros ---',e:'rw-r-----: el propietario lee y escribe, el grupo solo lee y el resto no accede.'},
+ {q:'¿Qué servicio de Linux registra llamadas al sistema y accesos a ficheros para la auditoría?',t:'t',a:['auditd','audit'],h:'Su nombre acaba en «d» de daemon.',e:'auditd, configurado con reglas de auditoría, deja trazabilidad de quién hizo qué.'}
+ ]}
+];
+var CICLO=['Amenaza','Vulnerabilidad','Ataque','Detección','Mitigación','Comprobación'];
+var S={room:0,done:[],pistas:0,fallos:0,keys:[],final:false,fin:false};
+function nrm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim()}
+function el(t,txt,st){var x=document.createElement(t);if(txt)x.textContent=txt;if(st)x.style.cssText=st;return x}
+function bar(){var b=q('bar');b.textContent='';R.forEach(function(r,i){var ok=S.done[i],cur=S.room===i&&!S.final&&!S.fin;
+ var c=el('span',(ok?'🔓 ':'🔒 ')+r.n.split(' · ')[0],'padding:.15rem .6rem;border-radius:1rem;border:1px solid var(--c);font-size:.85em;'+(ok?'background:var(--c);color:#fff':'')+(cur?';font-weight:700':''));b.appendChild(c)});
+ var f=el('span',(S.fin?'🔓 ':'🔒 ')+'Puerta final','padding:.15rem .6rem;border-radius:1rem;border:1px solid var(--c);font-size:.85em;'+(S.fin?'background:var(--c);color:#fff':'')+(S.final&&!S.fin?';font-weight:700':''));b.appendChild(f)}
+function fb(cont,ok,msg){var o=cont.querySelector('[data-f]');if(!o){o=el('p');o.setAttribute('data-f','1');cont.appendChild(o)}o.textContent=msg;o.style.color=ok?'#1a7f37':'#b42318';o.style.fontWeight='600'}
+function drawRoom(){var m=q('room');m.textContent='';bar();
+ if(S.fin)return end(m);
+ if(S.final)return finalDoor(m);
+ var r=R[S.room];m.appendChild(el('h4',r.n,'margin:.2rem 0'));m.appendChild(el('p',r.intro,'font-style:italic'));
+ var solved=0;
+ r.p.forEach(function(p,i){var box=el('div',null,'border:1px solid var(--gray-200,#8884);border-radius:6px;padding:.7rem .9rem;margin:.6rem 0');
+  box.appendChild(el('p','Enigma '+(i+1)+'. '+p.q,'margin:0 0 .5rem;font-weight:600'));
+  var row=el('div',null,'display:flex;flex-wrap:wrap;gap:.4rem;align-items:center'),inp;
+  if(p.t==='c'){inp=el('select');inp.appendChild(el('option','— elige —'));p.o.forEach(function(o){inp.appendChild(el('option',o))})}
+  else{inp=el('input');inp.type='text';inp.placeholder='Tu respuesta';inp.autocomplete='off';inp.style.minWidth='14rem'}
+  var ok=el('button','Probar'),hint=el('button','Pista');ok.type=hint.type='button';
+  function check(){if(p.d)return;var v=nrm(inp.value||''),good=p.a.indexOf(v)>-1||(p.t==='c'&&p.a.indexOf(nrm(inp.value))>-1);
+   if(good){p.d=1;inp.disabled=ok.disabled=hint.disabled=true;fb(box,true,'✔ Correcto. '+p.e);solved++;if(solved===r.p.length)open()}
+   else{S.fallos++;fb(box,false,'✘ Esa no es. Revisa la teoría de la unidad o pide una pista.')}}
+  ok.onclick=check;inp.onkeydown=function(e){if(e.key==='Enter')check()};
+  hint.onclick=function(){S.pistas++;fb(box,true,'💡 '+p.h)};
+  row.appendChild(inp);row.appendChild(ok);row.appendChild(hint);box.appendChild(row);m.appendChild(box)});
+ function open(){S.done[S.room]=1;S.keys[S.room]=r.k;bar();var d=el('div',null,'border:2px solid var(--c);border-radius:6px;padding:.8rem 1rem;margin:.8rem 0');
+  d.appendChild(el('p','🔓 ¡Puerta abierta! Llave obtenida: '+r.k,'margin:0 0 .5rem;font-weight:700'));
+  var b=el('button',S.room<R.length-1?'Pasar a la siguiente sala':'Ir a la puerta final');b.type='button';
+  b.onclick=function(){if(S.room<R.length-1){S.room++}else{S.final=true}drawRoom()};d.appendChild(b);m.appendChild(d)}}
+function finalDoor(m){m.appendChild(el('h4','Puerta final','margin:.2rem 0'));
+ m.appendChild(el('p','Llaves: '+S.keys.join(' · ')+'.','font-weight:600'));
+ m.appendChild(el('p','La cerradura pide el ciclo defensivo que se repite en todas las unidades. Ordena los seis pasos (amenaza → … → comprobación).'));
+ var sels=[],row=el('div',null,'display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0');
+ for(var i=0;i<6;i++){var s=el('select');s.appendChild(el('option','Paso '+(i+1)));
+  var sh=CICLO.slice().sort(function(a,b){return nrm(a)<nrm(b)?-1:1});sh.forEach(function(c){s.appendChild(el('option',c))});sels.push(s);row.appendChild(s)}
+ m.appendChild(row);var b=el('button','Abrir');b.type='button';
+ b.onclick=function(){var ok=sels.every(function(s,i){return s.value===CICLO[i]});
+  if(ok){S.fin=true;drawRoom()}else{S.fallos++;fb(m,false,'✘ El orden no es correcto. Pista: empieza por lo que puede causar el daño y termina verificando que la medida funciona.')}};
+ m.appendChild(b)}
+function end(m){var pts=Math.max(0,100-S.pistas*5-S.fallos*3);
+ m.appendChild(el('h4','🎉 ¡Has salido del servidor!','margin:.2rem 0'));
+ m.appendChild(el('p','Llaves: '+S.keys.join(' · ')+'. Pistas usadas: '+S.pistas+' · Intentos fallidos: '+S.fallos+' · Puntuación: '+pts+'/100.','font-weight:600'));
+ m.appendChild(el('p',pts>=80?'Dominas los contenidos de UD1 a UD4. Repasa solo lo que fallaste.':'Repasa las unidades de los enigmas en los que usaste pistas o fallaste: es justo lo que puede caer en el examen.'));
+ var b=el('button','Volver a jugar');b.type='button';b.onclick=function(){R.forEach(function(r){r.p.forEach(function(p){p.d=0})});S={room:0,done:[],pistas:0,fallos:0,keys:[],final:false,fin:false};drawRoom()};m.appendChild(b)}
+drawRoom()})();</script>
