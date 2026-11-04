@@ -1,0 +1,51 @@
+es:
+  title: Memory · Situaciones y soluciones de la UD02
+  tag_a: Situación
+  tag_b: Solución
+  intro: Empareja cada **situación** con la **medida de seguridad pasiva** adecuada.
+  pairs:
+  - a:
+      text: Un disco falla y no se debe parar el servicio.
+    b:
+      text: '**RAID 1** (espejo)'
+    explain: El segundo disco tiene los mismos datos y el servicio continúa.
+  - a:
+      text: Se borra un fichero por error y el RAID no lo recupera.
+    b:
+      text: '**Copia de seguridad** con versiones'
+    explain: 'RAID no es una copia: replica también los borrados y la corrupción.'
+  - a:
+      text: Corte eléctrico de unos minutos mientras se escribe en disco.
+    b:
+      text: '**SAI / UPS**'
+    explain: Mantiene la alimentación hasta apagar ordenadamente o volver la red.
+  - a:
+      text: Un ransomware cifra las copias del NAS conectado con credenciales de escritura.
+    b:
+      text: Copia **inmutable** o desconectada
+    explain: La «1» desconectada o inmutable de la regla 3-2-1-1-0.
+  - a:
+      text: Nadie ha restaurado nunca una copia.
+    b:
+      text: '**Pruebas de restauración** (el «0»)'
+    explain: 'Cero errores al verificar: una copia no probada es solo una esperanza.'
+  - a:
+      text: La empresa tolera perder como máximo 1 hora de datos.
+    b:
+      text: '**RPO** = 1 hora'
+    explain: Define la frecuencia mínima de copia. El RTO mide el tiempo de recuperación.
+  - a:
+      text: El servicio debe volver en menos de 4 horas tras un desastre.
+    b:
+      text: '**RTO** = 4 horas'
+    explain: Tiempo máximo de recuperación aceptable.
+  - a:
+      text: Se desecha un disco duro con datos de clientes.
+    b:
+      text: '**Borrado seguro** o destrucción'
+    explain: 'Eliminar archivos no basta: los datos pueden recuperarse.'
+  - a:
+      text: Hay que clasificar un CPD según su disponibilidad.
+    b:
+      text: Niveles **Tier** I–IV
+    explain: Cuanto mayor es el Tier, más redundancia y disponibilidad.

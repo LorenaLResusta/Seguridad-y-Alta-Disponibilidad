@@ -1,0 +1,51 @@
+es:
+  title: Memory · Situaciones y soluciones de la UD04
+  tag_a: Situación
+  tag_b: Medida
+  intro: Empareja cada **riesgo** del servidor con la **medida de bastionado** que lo reduce.
+  pairs:
+  - a:
+      text: Miles de intentos de contraseña contra SSH desde una IP.
+    b:
+      text: '**Fail2ban** y autenticación por clave'
+    explain: Bloquea la IP tras varios fallos; sin contraseñas no hay fuerza bruta.
+  - a:
+      text: Un atacante entra por SSH directamente como administrador.
+    b:
+      text: '`PermitRootLogin no`'
+    explain: Obliga a entrar con usuario normal y a elevar con sudo.
+  - a:
+      text: Un servicio que nadie usa escucha en un puerto abierto.
+    b:
+      text: '**Reducir la superficie**: parar y deshabilitar'
+    explain: Lo que no está en marcha no se puede atacar.
+  - a:
+      text: Un fichero con datos del personal es legible por todos los usuarios.
+    b:
+      text: '`chmod 640` y grupo adecuado'
+    explain: Propietario lee y escribe, el grupo lee y el resto no accede.
+  - a:
+      text: Un cambio no autorizado en `/etc/passwd` pasa desapercibido.
+    b:
+      text: '**AIDE** (integridad de ficheros)'
+    explain: Compara con una base de datos de huellas conocida.
+  - a:
+      text: Hay que saber quién ejecutó un comando privilegiado y cuándo.
+    b:
+      text: '**auditd** y registros centralizados'
+    explain: Aporta trazabilidad para el análisis posterior.
+  - a:
+      text: Una vulnerabilidad pública afecta a un paquete instalado.
+    b:
+      text: '**Parchear** (actualizaciones de seguridad)'
+    explain: Es el ciclo de gestión de vulnerabilidades.
+  - a:
+      text: Se sospecha de un servidor comprometido.
+    b:
+      text: '**No apagar**, aislar y preservar evidencias'
+    explain: Primeros pasos de la respuesta y el análisis forense.
+  - a:
+      text: Se quiere medir el nivel de bastionado con un informe.
+    b:
+      text: '**Lynis** u OpenSCAP'
+    explain: Auditan la configuración y proponen mejoras.

@@ -1,0 +1,224 @@
+{{- /*
+  Duelo por equipos sobre un caso. Uso: {{< duelo data="duelo_ud02" >}}
+  Contenido (es/val) en data/<data>.yaml: case (párrafos), case_img y solution_img (assets/juegos/<img>.svg), time y rounds
+  [{pts, type: choice|number|open, q, pre, table, options, answer, model, hint, explain, ref, ref_url}].
+*/ -}}
+{{- $name := .Get "data" -}}
+{{- $lang := .Page.Language.Lang -}}
+{{- $d := index (index hugo.Data $name) $lang -}}
+{{- $ui := index (index hugo.Data.juegos_ui $lang) "duelo" -}}
+{{- $id := printf "du-%s-%d" $name .Ordinal -}}
+<div class="du" id="{{ $id }}" data-base="{{ "" | relLangURL }}"></div>
+<script type="application/json" id="{{ $id }}-data">{{ dict "d" $d "ui" $ui | jsonify | safeJS }}</script>
+{{- range $k := slice "case_img" "solution_img" }}{{ with index $d $k }}{{ with resources.Get (printf "juegos/%s.svg" .) }}
+<template id="{{ $id }}-{{ $k }}">{{ .Content | safeHTML }}</template>{{ else }}{{ warnf "duelo: falta assets/juegos/%s.svg" . }}{{ end }}{{ end }}{{ end }}
+<style>
+.du { --a: #1e6fd9; --b: #d9361e; --ink: #1d1b2f; margin: 1rem 0; border-radius: .7rem; overflow: hidden; background: #171327; color: #f5f2ff; box-shadow: 0 6px 22px rgba(0,0,0,.25); }
+.du * { box-sizing: border-box; }
+.du a { color: #ffd54f; }
+.du-top { display: flex; flex-wrap: wrap; gap: .4rem .9rem; align-items: center; padding: .55rem .85rem; background: linear-gradient(90deg, #2b1d59, #5b1d4f); }
+.du-tag { background: #ffd54f; color: var(--ink); border-radius: 1rem; padding: .05rem .6rem; font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+.du-body { padding: .8rem .9rem 1rem; }
+.du-score { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: .7rem; }
+.du-team { border-radius: .55rem; padding: .5rem .7rem; background: rgba(255,255,255,.06); border: 2px solid transparent; }
+.du-team.on { border-color: #ffd54f; box-shadow: 0 0 0 3px rgba(255,213,79,.25); }
+.du-team b { display: block; font-size: 1.9rem; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.du-team .n { font-weight: 800; }
+.du-team.ta .n { color: #8fc0ff; } .du-team.tb .n { color: #ffab9b; }
+.du-team .jk { font-size: .78rem; opacity: .85; }
+.du details { background: rgba(255,255,255,.05); border-radius: .5rem; padding: .4rem .7rem; margin-bottom: .7rem; }
+.du summary { cursor: pointer; font-weight: 800; }
+.du-case p { margin: .45rem 0; }
+.du-fig { background: #fff; border-radius: .45rem; padding: .4rem; margin: .5rem 0; }
+.du-fig svg { display: block; width: 100%; height: auto; }
+.du-q { background: #fbfaff; color: var(--ink); border-radius: .6rem; padding: .8rem .9rem; }
+.du-q h3 { margin: 0 0 .3rem; font-size: 1.05rem; color: #3b2a7a; }
+.du-q .who { font-weight: 800; }
+.du-q pre { background: #1d1b2f; color: #f4f1ff; padding: .55rem .7rem; border-radius: .4rem; font-size: .8rem; overflow-x: auto; }
+.du-q code { background: #efeaff; color: #5a1f6f; padding: 0 .2rem; border-radius: .2rem; }
+.du-q pre code { background: transparent; color: inherit; }
+.du-q table { display: table; border-collapse: collapse; font-size: .85rem; margin: .4rem 0; }
+.du-q th, .du-q td { border: 1px solid #ddd7ee; padding: .2rem .5rem; }
+.du-q th { background: #efeaff; }
+.du-bar { height: .45rem; border-radius: .3rem; background: #e5e1f3; overflow: hidden; margin: .5rem 0; }
+.du-bar i { display: block; height: 100%; background: linear-gradient(90deg, #2e9e5b, #ffb300, #d64545); transition: width 1s linear; }
+.du-opt { display: block; width: 100%; text-align: left; font: inherit; margin: .3rem 0; padding: .5rem .7rem; border-radius: .45rem; border: 2px solid #ddd7ee; background: #fff; color: var(--ink); cursor: pointer; }
+.du-opt:hover:not(:disabled) { border-color: #6a4bd6; }
+.du-opt:disabled { cursor: default; }
+.du-opt.ok { border-color: #2e9e5b; background: #e3f5ea; }
+.du-opt.ko { border-color: #d64545; background: #fde8e8; text-decoration: line-through; }
+.du-opt.gone { opacity: .25; }
+.du button.b { font: inherit; cursor: pointer; border: 0; border-radius: .4rem; padding: .45rem .95rem; font-weight: 800; background: #6a4bd6; color: #fff; }
+.du button.b.y { background: #ffd54f; color: var(--ink); }
+.du button.b.g { background: #2e9e5b; } .du button.b.r { background: #d64545; }
+.du button.b.ghost { background: transparent; color: inherit; border: 1px solid currentColor; }
+.du button.b:disabled { opacity: .4; cursor: not-allowed; }
+.du-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .6rem 0 .2rem; }
+.du input[type=text], .du input[type=number], .du select { font: inherit; padding: .4rem .55rem; border-radius: .35rem; border: 1px solid #b9b0d6; max-width: 14rem; }
+.du-fb { margin-top: .6rem; padding: .55rem .75rem; border-radius: .4rem; }
+.du-fb:empty { display: none; }
+.du-fb.ok { background: #e3f5ea; border-left: 4px solid #2e9e5b; }
+.du-fb.ko { background: #fde8e8; border-left: 4px solid #d64545; }
+.du-fb.info { background: #eef2ff; border-left: 4px solid #3f51b5; }
+.du-model { background: #fff7dc; border-radius: .4rem; padding: .5rem .7rem; margin-top: .5rem; }
+.du-end h3 { font-size: 1.5rem; margin: .2rem 0 .5rem; }
+.du-end ol { padding-left: 1.3rem; }
+.du-end li { margin: .4rem 0; }
+</style>
+<script>
+(function () {
+  var root = document.getElementById({{ $id }});
+  var J = JSON.parse(document.getElementById({{ printf "%s-data" $id }}).textContent), D = J.d, U = J.ui, R = D.rounds;
+  var base = (root.getAttribute('data-base') || '/').replace(/\/$/, ''), IDP = {{ $id }};
+  function el(t, c, x) { var n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; }
+  function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+  function fmt(s, o) { return String(s).replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); }
+  var TOK = /(\[[^\]]+\]\([^)]+\)|`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/;
+  function rich(p, s) { String(s).split(TOK).forEach(function (t) { if (!t) return; var m;
+    if ((m = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(t))) { var a = el('a', null, m[1]); a.href = /^https?:/.test(m[2]) ? m[2] : base + m[2]; a.target = '_blank'; a.rel = 'noopener'; p.appendChild(a); }
+    else if (/^`[^`]+`$/.test(t)) p.appendChild(el('code', null, t.slice(1, -1)));
+    else if (/^\*\*[^*]+\*\*$/.test(t)) p.appendChild(el('strong', null, t.slice(2, -2)));
+    else if (/^\*[^*]+\*$/.test(t)) p.appendChild(el('em', null, t.slice(1, -1)));
+    else p.appendChild(document.createTextNode(t)); }); return p; }
+  function paras(p, t) { (Array.isArray(t) ? t : [t]).forEach(function (x) { p.appendChild(rich(el('p'), x)); }); }
+  function btn(t, c, f) { var b = el('button', 'b ' + (c || ''), t); b.type = 'button'; b.addEventListener('click', f); return b; }
+  function fig(k) { var t = document.getElementById(IDP + '-' + k); if (!t) return null; var d = el('div', 'du-fig'); var s = t.content.firstElementChild.cloneNode(true); s.removeAttribute('width'); s.removeAttribute('height'); d.appendChild(s); return d; }
+  function norm(s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); }
+
+  var top = el('div', 'du-top'), body = el('div', 'du-body');
+  top.appendChild(el('span', 'du-tag', U.tag)); top.appendChild(el('strong', null, D.title));
+  root.appendChild(top); root.appendChild(body);
+  var T, ri, turn, phase, left, timer, perQ, log;
+
+  function caseBox(open) {
+    var d = el('details'); if (open) d.open = true; d.appendChild(el('summary', null, '📄 ' + U.case));
+    var c = el('div', 'du-case'); paras(c, D.case); var f = fig('case_img'); if (f) c.appendChild(f); d.appendChild(c); return d;
+  }
+  function setup() {
+    stop(); clear(body);
+    paras(body, D.intro);
+    var ul = el('ul'); U.rules.forEach(function (r) { ul.appendChild(rich(el('li'), fmt(r, { n: R.length }))); }); body.appendChild(ul);
+    body.appendChild(caseBox(true));
+    var row = el('div', 'du-row'), ins = [];
+    [U.team_a, U.team_b].forEach(function (n) { var i = el('input'); i.type = 'text'; i.value = n; i.setAttribute('aria-label', n); ins.push(i); row.appendChild(i); });
+    var sel = el('select'); sel.setAttribute('aria-label', U.time);
+    [45, 60, 90, 120].forEach(function (s) { var o = el('option', null, fmt(U.secs, { s: s })); o.value = s; if (s === (D.time || 90)) o.selected = true; sel.appendChild(o); });
+    row.appendChild(sel);
+    row.appendChild(btn('⚔ ' + U.start, 'y', function () {
+      T = ins.map(function (i, k) { return { name: i.value.trim() || [U.team_a, U.team_b][k], pts: 0, half: true, hint: true }; });
+      perQ = +sel.value; ri = 0; log = []; round();
+    }));
+    body.appendChild(row);
+  }
+  function score() {
+    var s = el('div', 'du-score');
+    T.forEach(function (t, k) {
+      var d = el('div', 'du-team ' + (k ? 'tb' : 'ta') + (k === turn ? ' on' : ''));
+      d.appendChild(el('span', 'n', t.name)); d.appendChild(el('b', null, String(t.pts)));
+      d.appendChild(el('span', 'jk', (t.half ? '✂️ 50 %  ' : '') + (t.hint ? '💡 ' + U.hint : '')));
+      s.appendChild(d);
+    });
+    return s;
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  var Q, fb, bar, opts, ctl;
+  function round() {
+    stop(); if (ri >= R.length) return end();
+    var r = R[ri]; turn = ri % 2; phase = 'main';
+    clear(body); body.appendChild(score()); body.appendChild(caseBox(false));
+    Q = el('div', 'du-q'); body.appendChild(Q);
+    Q.appendChild(el('h3', null, fmt(U.round, { i: ri + 1, n: R.length, p: r.pts })));
+    var who = el('div', 'who'); who.textContent = fmt(U.turn, { t: T[turn].name }); Q.appendChild(who);
+    Q.appendChild(rich(el('p'), r.q));
+    if (r.pre) { var pr = el('pre'); pr.appendChild(el('code', null, r.pre)); Q.appendChild(pr); }
+    if (r.table) { var tb = el('table'), h = el('tr'); r.table.head.forEach(function (x) { h.appendChild(el('th', null, x)); }); tb.appendChild(h);
+      r.table.rows.forEach(function (row) { var tr = el('tr'); row.forEach(function (v) { tr.appendChild(rich(el('td'), v)); }); tb.appendChild(tr); }); Q.appendChild(tb); }
+    bar = el('div', 'du-bar'); bar.appendChild(el('i')); Q.appendChild(bar);
+    ctl = el('div'); Q.appendChild(ctl);
+    var jk = el('div', 'du-row');
+    var h50 = btn('✂️ ' + U.use_half, 'ghost', function () { T[turn].half = false; h50.disabled = true; half(); refreshScore(); });
+    var hh = btn('💡 ' + U.use_hint, 'ghost', function () { T[turn].hint = false; hh.disabled = true; r._hinted = turn; var p = el('div', 'du-fb info'); rich(p, '💡 ' + r.hint); ctl.appendChild(p); refreshScore(); });
+    h50.disabled = !T[turn].half || r.type !== 'choice'; hh.disabled = !T[turn].hint || !r.hint;
+    jk.appendChild(h50); jk.appendChild(hh); Q.appendChild(jk);
+    fb = el('div', 'du-fb'); Q.appendChild(fb);
+    controls(r); countdown();
+  }
+  function refreshScore() { var s = body.querySelector('.du-score'); if (s) body.replaceChild(score(), s); }
+  function countdown() {
+    stop(); left = perQ; var i = bar.firstChild; i.style.width = '100%';
+    timer = setInterval(function () { left--; i.style.width = Math.max(0, left / perQ * 100) + '%'; if (left <= 0) { stop(); judge(null, true); } }, 1000);
+  }
+  function half() {
+    var r = R[ri], wrong = []; opts.forEach(function (b, k) { if (k !== r.answer && !b.disabled) wrong.push(k); });
+    wrong.sort(function () { return Math.random() - .5; }).slice(0, 2).forEach(function (k) { opts[k].disabled = true; opts[k].classList.add('gone'); });
+  }
+  function controls(r) {
+    clear(ctl); opts = [];
+    if (r.type === 'choice') {
+      r.options.forEach(function (o, k) { var b = el('button', 'du-opt'); b.type = 'button'; rich(b, String.fromCharCode(65 + k) + ') ' + o); b.addEventListener('click', function () { judge(k); }); opts.push(b); ctl.appendChild(b); });
+    } else if (r.type === 'number') {
+      var row = el('div', 'du-row'), i = el('input'); i.type = 'number'; i.setAttribute('aria-label', U.answer);
+      i.addEventListener('keydown', function (e) { if (e.key === 'Enter') judge(i.value); });
+      row.appendChild(i); row.appendChild(btn(U.check, '', function () { judge(i.value); })); ctl.appendChild(row);
+    } else {
+      var row2 = el('div', 'du-row');
+      row2.appendChild(btn('👁 ' + U.show_model, 'y', function () {
+        if (!ctl.querySelector('.du-model')) { var m = el('div', 'du-model'); m.appendChild(el('strong', null, U.model + ' ')); rich(m, r.model); ctl.insertBefore(m, row2.nextSibling); }
+      }));
+      row2.appendChild(btn('✔ ' + U.right, 'g', function () { judge(true); }));
+      row2.appendChild(btn('✘ ' + U.wrong, 'r', function () { judge(false); }));
+      ctl.appendChild(row2);
+    }
+  }
+  function judge(v, timeout) {
+    var r = R[ri]; if (phase === 'done') return; stop();
+    var ok = false;
+    if (!timeout) {
+      if (r.type === 'choice') ok = v === r.answer;
+      else if (r.type === 'number') ok = v !== '' && Number(v) === Number(r.answer);
+      else ok = v === true;
+    }
+    if (r.type === 'choice' && !timeout) { opts[v].classList.add(ok ? 'ok' : 'ko'); opts[v].disabled = true; }
+    if (ok) {
+      var pts = phase === 'main' ? r.pts : Math.round(r.pts / 2);
+      if (r._hinted === turn) pts = Math.round(pts / 2);
+      T[turn].pts += pts; log.push({ r: ri, who: turn, pts: pts });
+      return reveal('ok', fmt(U.won, { t: T[turn].name, p: pts }));
+    }
+    if (phase === 'main') {
+      phase = 'rebound'; turn = 1 - turn; refreshScore();
+      fb.className = 'du-fb ko'; clear(fb); fb.appendChild(el('strong', null, (timeout ? U.timeout : U.fail) + ' '));
+      fb.appendChild(document.createTextNode(fmt(U.rebound, { t: T[turn].name, p: Math.round(r.pts / 2) })));
+      Q.querySelector('.who').textContent = fmt(U.turn, { t: T[turn].name }) + ' · ' + U.rebound_tag;
+      var jk = Q.querySelectorAll('.du-row')[Q.querySelectorAll('.du-row').length - 1];
+      if (r.type === 'number') { var inp = ctl.querySelector('input'); if (inp) { inp.value = ''; inp.focus(); } }
+      countdown(); return;
+    }
+    log.push({ r: ri, who: null, pts: 0 });
+    reveal('ko', timeout ? U.timeout : U.fail);
+  }
+  function reveal(kind, msg) {
+    var r = R[ri]; phase = 'done'; stop(); refreshScore();
+    if (r.type === 'choice') opts.forEach(function (b, k) { b.disabled = true; if (k === r.answer) b.classList.add('ok'); });
+    fb.className = 'du-fb ' + kind; clear(fb); fb.appendChild(el('strong', null, msg + ' '));
+    if (r.type === 'number') fb.appendChild(document.createTextNode(fmt(U.was, { a: r.answer }) + ' '));
+    if (r.type === 'open' && !ctl.querySelector('.du-model')) { var m = el('div', 'du-model'); m.appendChild(el('strong', null, U.model + ' ')); rich(m, r.model); ctl.appendChild(m); }
+    rich(fb, r.explain || '');
+    if (r.ref) { fb.appendChild(document.createTextNode(' ')); rich(fb, '[📖 ' + r.ref + '](' + r.ref_url + ')'); }
+    var row = el('div', 'du-row'); row.appendChild(btn(ri + 1 < R.length ? U.next + ' ➜' : U.finish + ' 🏁', 'y', function () { ri++; round(); })); Q.appendChild(row);
+  }
+  function end() {
+    stop(); clear(body); turn = -1; body.appendChild(score());
+    var e = el('div', 'du-end');
+    e.appendChild(el('h3', null, T[0].pts === T[1].pts ? U.draw : fmt(U.winner, { t: T[0].pts > T[1].pts ? T[0].name : T[1].name })));
+    if (D.solution_txt) paras(e, D.solution_txt);
+    var f = fig('solution_img'); if (f) e.appendChild(f);
+    var ol = el('ol');
+    R.forEach(function (r, k) { var li = el('li'); rich(li, r.q); li.appendChild(el('br')); var a = el('em'); rich(a, r.type === 'choice' ? r.options[r.answer] : r.type === 'number' ? String(r.answer) : r.model); li.appendChild(a); ol.appendChild(li); });
+    e.appendChild(el('div', null, U.review)); e.appendChild(ol);
+    var row = el('div', 'du-row'); row.appendChild(btn('↻ ' + U.again, 'y', setup)); e.appendChild(row);
+    body.appendChild(e);
+  }
+  setup();
+})();
+</script>

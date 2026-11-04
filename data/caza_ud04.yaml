@@ -1,0 +1,79 @@
+es:
+  title: Caza de errores · /etc/ssh/sshd_config.d/10-hardening.conf
+  img: caza-ud04
+  intro: Este fichero de configuración de SSH tiene **cinco directivas inseguras**. Haz clic en las que debería cambiar. Las demás están bien.
+  errors:
+  - x: 0
+    y: 31
+    w: 900
+    h: 30
+    label: PermitRootLogin yes
+    title: Acceso directo como root
+    explain: 'Debe ser `PermitRootLogin no`: se entra con un usuario normal y se eleva con `sudo`.'
+    ref: 7.4 Endurecer sshd
+    ref_url: /ud04/ud04-teoria/
+  - x: 0
+    y: 61
+    w: 900
+    h: 30
+    label: PasswordAuthentication yes
+    title: Contraseñas permitidas
+    explain: 'Con claves públicas se evita la fuerza bruta: `PasswordAuthentication no`.'
+    ref: 7.4 Endurecer sshd
+    ref_url: /ud04/ud04-teoria/
+  - x: 0
+    y: 121
+    w: 900
+    h: 30
+    label: PermitEmptyPasswords yes
+    title: Cuentas sin contraseña
+    explain: Nunca debe permitirse. El valor correcto es `no`.
+    ref: 7.4 Endurecer sshd
+    ref_url: /ud04/ud04-teoria/
+  - x: 0
+    y: 151
+    w: 900
+    h: 30
+    label: MaxAuthTries 20
+    title: Demasiados intentos
+    explain: Se recomienda `MaxAuthTries 3` para limitar los intentos por conexión.
+    ref: 7.4 Endurecer sshd
+    ref_url: /ud04/ud04-teoria/
+  - x: 0
+    y: 211
+    w: 900
+    h: 30
+    label: X11Forwarding yes
+    title: Reenvío gráfico activo
+    explain: 'Salvo necesidad concreta, `X11Forwarding no`: reduce la superficie de ataque.'
+    ref: 7.4 Endurecer sshd
+    ref_url: /ud04/ud04-teoria/
+  decoys:
+  - x: 0
+    y: 91
+    w: 900
+    h: 30
+    label: PubkeyAuthentication yes
+    title: Correcto
+    explain: Es el método que queremos usar.
+  - x: 0
+    y: 181
+    w: 900
+    h: 30
+    label: AllowUsers ana
+    title: Correcto
+    explain: Lista blanca de usuarios autorizados.
+  - x: 0
+    y: 241
+    w: 900
+    h: 30
+    label: LoginGraceTime 30
+    title: Correcto
+    explain: Pocos segundos para autenticarse.
+  - x: 0
+    y: 271
+    w: 900
+    h: 30
+    label: AllowTcpForwarding no
+    title: Correcto
+    explain: Sin túneles TCP salvo necesidad concreta.

@@ -1,0 +1,51 @@
+es:
+  title: Memory · Situaciones y conceptos de la UD01
+  tag_a: Situación
+  tag_b: Concepto
+  intro: 'Empareja cada **situación** con el **concepto** de seguridad que le corresponde. Algunos se parecen mucho: fíjate en los detalles.'
+  pairs:
+  - a:
+      text: Un pendrive con historiales se pierde sin cifrar.
+    b:
+      text: Se vulnera la **confidencialidad**
+    explain: Personas no autorizadas pueden leer la información.
+  - a:
+      text: Alguien modifica el importe de una factura en la base de datos.
+    b:
+      text: Se vulnera la **integridad**
+    explain: Los datos se han alterado sin autorización.
+  - a:
+      text: Un ransomware cifra los servidores y la clínica no puede atender.
+    b:
+      text: Se vulnera la **disponibilidad**
+    explain: El servicio deja de estar accesible cuando se necesita.
+  - a:
+      text: Un empleado niega haber enviado una orden que consta en los registros firmados.
+    b:
+      text: '**No repudio**'
+    explain: Las pruebas (firma, registros) impiden negar la autoría.
+  - a:
+      text: Una llamada al soporte técnico en la que un atacante finge ser un empleado.
+    b:
+      text: '**Ingeniería social**'
+    explain: Se ataca a la persona, no al sistema.
+  - a:
+      text: Un servidor sin parchear con un fallo conocido y público.
+    b:
+      text: '**Vulnerabilidad**'
+    explain: Es la debilidad; la amenaza sería quien la aprovecha.
+  - a:
+      text: Probabilidad alta × impacto alto sobre un activo crítico.
+    b:
+      text: '**Riesgo** alto'
+    explain: Riesgo = probabilidad × impacto.
+  - a:
+      text: La recepción solo puede leer las citas, no modificarlas.
+    b:
+      text: Principio de **mínimo privilegio**
+    explain: Cada usuario recibe solo los permisos que necesita.
+  - a:
+      text: Se pierden datos personales y hay que avisar a la AEPD en 72 horas.
+    b:
+      text: '**Brecha** de seguridad (art. 33 RGPD)'
+    explain: Notificación a la autoridad de control sin dilación indebida y como máximo en 72 horas.

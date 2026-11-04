@@ -16,6 +16,7 @@ En esta unidad recorres la cadena completa de protección de los datos: la **seg
 | [Teoría](/ud02/ud02-teoria/) | Seguridad física y CPD, SAI y NUT, almacenamiento y S.M.A.R.T., RAID, LVM, ZFS/Btrfs, NAS/SAN, copias, RPO/RTO, herramientas, continuidad y borrado seguro |
 | [Prácticas](/ud02/ud02-practicas/) | Nueve prácticas: SAI simulado, RAID con fallo de disco, instantáneas LVM, `rsync`, `restic`, recuperación ante *ransomware*, Clonezilla, borrado seguro y la **Tarea del proyecto «Plan de almacenamiento y copias»** |
 | [Casos de ataque y defensa](/ud02/ud02-casos/) | *Ransomware* que borra las copias (laboratorio con `restic` en modo solo-añadir), NAS expuestos a Internet, continuidad sin sistemas y vulnerabilidades del software de copias |
+| [Juegos de repaso](/ud02/ud02-juegos/) | Rosco, caza de errores, memory y duelo por equipos |
 
 **Duración:** 18 horas (7 h teoría · 9 h prácticas · 2 h evaluación)
 

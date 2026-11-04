@@ -1,0 +1,79 @@
+es:
+  title: Caza de errores · Informe de riesgos de la clínica
+  img: caza-ud01
+  intro: El becario ha redactado este informe de riesgos de la clínica **Mediterránea Dental**. Contiene **cinco errores** de concepto o de normativa. Haz clic en la línea que creas incorrecta.
+  errors:
+  - x: 0
+    y: 61
+    w: 900
+    h: 30
+    label: Línea 2 · Amenaza
+    title: Un activo no es una amenaza
+    explain: El servidor de historiales es un **activo** (ya aparece en la línea 1). Una amenaza sería, por ejemplo, un ransomware o un acceso no autorizado.
+    ref: 5.2 Amenazas
+    ref_url: /ud01/ud01-teoria/
+  - x: 0
+    y: 121
+    w: 900
+    h: 30
+    label: Línea 4 · Riesgo
+    title: El riesgo no se suma
+    explain: '**Riesgo = probabilidad × impacto**. Si la probabilidad es cero, el riesgo es cero aunque el impacto sea enorme.'
+    ref: 5.4 Riesgo
+    ref_url: /ud01/ud01-teoria/
+  - x: 0
+    y: 151
+    w: 900
+    h: 30
+    label: Línea 5 · Formación
+    title: La formación es un control organizativo
+    explain: Formar y concienciar al personal es una medida **organizativa**, no técnica.
+    ref: 6.3 Medidas físicas, técnicas y organizativas
+    ref_url: /ud01/ud01-teoria/
+  - x: 0
+    y: 181
+    w: 900
+    h: 30
+    label: Línea 6 · Política de contraseñas
+    title: Política desfasada
+    explain: Las guías actuales (NIST SP 800-63B, CCN, INCIBE) recomiendan **longitud** y no forzar cambios periódicos sin motivo; 6 caracteres es insuficiente.
+    ref: 8.3 Políticas de contraseñas
+    ref_url: /ud01/ud01-teoria/
+  - x: 0
+    y: 241
+    w: 900
+    h: 30
+    label: Línea 8 · Plazo de notificación
+    title: El plazo son 72 horas
+    explain: El art. 33 del RGPD obliga a notificar a la AEPD **sin dilación indebida y, si es posible, en 72 horas**, no en 7 días.
+    ref: 12.1 RGPD y LOPDGDD
+    ref_url: /ud01/ud01-teoria/
+  decoys:
+  - x: 0
+    y: 31
+    w: 900
+    h: 30
+    label: Línea 1 · Activo
+    title: Es un activo
+    explain: Los datos y los servidores son activos.
+  - x: 0
+    y: 91
+    w: 900
+    h: 30
+    label: Línea 3 · Vulnerabilidad
+    title: Es una vulnerabilidad
+    explain: Las credenciales por defecto son una debilidad que una amenaza puede aprovechar.
+  - x: 0
+    y: 211
+    w: 900
+    h: 30
+    label: Línea 7 · Mínimo privilegio
+    title: Correcto
+    explain: Solo los permisos necesarios para la tarea.
+  - x: 0
+    y: 271
+    w: 900
+    h: 30
+    label: Línea 9 · Ransomware
+    title: Correcto
+    explain: 'Cifrar los servidores impide usarlos: disponibilidad (y también hay riesgo para la confidencialidad si se exfiltran datos).'

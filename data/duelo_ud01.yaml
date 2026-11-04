@@ -1,0 +1,96 @@
+es:
+  title: Duelo UD01 · Brecha en la clínica
+  time: 90
+  intro: 'Dos equipos, un caso y rondas de dificultad creciente. Leed el enunciado con calma: todas las preguntas salen de él.'
+  case:
+  - '**Mediterránea Dental** tiene tres clínicas y 40 empleados. El servidor central guarda los **historiales clínicos** (datos de salud) y la agenda de citas. Se accede con usuario y contraseña; la contraseña del administrador es la que traía el equipo.'
+  - Un lunes, un empleado de recepción abre un correo que parece del banco y pulsa un enlace. El miércoles, los ficheros del servidor aparecen **cifrados** y aparece una nota que pide un rescate. Las únicas copias estaban en el propio servidor. Además, el atacante ha copiado antes los historiales de unos **2 000 pacientes**.
+  solution_txt: Es un ejemplo basado en incidentes reales de ransomware con doble extorsión (cifrado y filtración). Las medidas se desarrollan en las unidades siguientes.
+  rounds:
+  - pts: 100
+    type: choice
+    q: El correo del banco que abrió el empleado es un ejemplo de…
+    options:
+    - Ingeniería social (phishing)
+    - Un exploit de día cero
+    - Una denegación de servicio
+    - Un fallo de hardware
+    answer: 0
+    explain: Un correo fraudulento que suplanta a una entidad para que la víctima pulse un enlace es **phishing**, una técnica de ingeniería social.
+    hint: Se ataca a la persona.
+    ref: 7.5 Phishing
+    ref_url: /ud01/ud01-teoria/
+  - pts: 100
+    type: choice
+    q: ¿Qué principio se ve afectado al cifrar los ficheros del servidor?
+    options:
+    - Confidencialidad
+    - Disponibilidad
+    - Trazabilidad
+    - No repudio
+    answer: 1
+    explain: 'El cifrado malicioso impide usar los datos: **disponibilidad**.'
+    ref: 4.3 Disponibilidad
+    ref_url: /ud01/ud01-teoria/
+  - pts: 200
+    type: choice
+    q: Y la copia de los historiales por parte del atacante afecta sobre todo a…
+    options:
+    - La disponibilidad
+    - La integridad
+    - La confidencialidad
+    - La autenticidad
+    answer: 2
+    explain: 'Datos de salud en manos ajenas: **confidencialidad**.'
+    ref: 4.1 Confidencialidad
+    ref_url: /ud01/ud01-teoria/
+  - pts: 200
+    type: choice
+    q: La contraseña de administrador de fábrica es…
+    options:
+    - Una amenaza
+    - Una vulnerabilidad
+    - Un activo
+    - Un incidente
+    answer: 1
+    explain: Es una **debilidad** que una amenaza puede aprovechar.
+    ref: 5.3 Vulnerabilidades
+    ref_url: /ud01/ud01-teoria/
+  - pts: 300
+    type: number
+    q: Tras la brecha, ¿en cuántas horas máximo hay que notificar a la AEPD (art. 33 RGPD)?
+    answer: 72
+    explain: Sin dilación indebida y, si es posible, antes de **72 horas** desde que se tiene constancia.
+    ref: 12.1 RGPD y LOPDGDD
+    ref_url: /ud01/ud01-teoria/
+  - pts: 300
+    type: choice
+    q: ¿Qué medida habría reducido más el daño del ransomware?
+    options:
+    - Una contraseña de 6 caracteres
+    - Copias de seguridad desconectadas o inmutables fuera del servidor
+    - Un antivirus gratuito
+    - Apagar el servidor por la noche
+    answer: 1
+    explain: Con copias fuera del servidor y no modificables se puede restaurar sin pagar. (Se verá en la UD02.)
+    ref: 9. Gestión de incidentes
+    ref_url: /ud01/ud01-teoria/
+  - pts: 400
+    type: choice
+    q: ¿Qué ley es la norma básica de protección de datos en la UE?
+    options:
+    - LSSI-CE
+    - RGPD
+    - ENS
+    - Código Penal
+    answer: 1
+    explain: El **RGPD** (con la LOPDGDD en España) regula el tratamiento de datos personales.
+    ref: 12.1 RGPD y LOPDGDD
+    ref_url: /ud01/ud01-teoria/
+  - pts: 500
+    type: open
+    q: Proponed **tres medidas** (físicas, técnicas u organizativas) para que esto no vuelva a ocurrir y clasificadlas.
+    model: 'Por ejemplo: formación y simulacros de phishing (**organizativa**); MFA y contraseñas únicas (**técnica**); copias inmutables fuera del servidor (**técnica**); control de acceso a la sala del servidor (**física**); plan de respuesta a incidentes (**organizativa**).'
+    explain: ''
+    ref: 6.3 Medidas físicas, técnicas y organizativas
+    ref_url: /ud01/ud01-teoria/

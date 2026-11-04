@@ -1,0 +1,72 @@
+es:
+  title: Caza de errores · Plan de copias y almacenamiento
+  img: caza-ud02
+  intro: Este plan de copias de la clínica tiene **cinco errores**. Haz clic en las líneas que creas incorrectas. Pulsar algo correcto cuenta como fallo.
+  errors:
+  - x: 0
+    y: 61
+    w: 900
+    h: 30
+    label: Línea 2 · RAID 5
+    title: Capacidad mal calculada
+    explain: 'RAID 5 pierde un disco de paridad: con tres discos de 2 TB quedan **4 TB útiles**, no 6.'
+    ref: 5.3 Niveles RAID
+    ref_url: /ud02/ud02-teoria/
+  - x: 0
+    y: 91
+    w: 900
+    h: 30
+    label: Línea 3 · RAID y copias
+    title: RAID no es una copia de seguridad
+    explain: El RAID protege frente al fallo de un disco, pero replica también borrados, errores y cifrado por ransomware.
+    ref: 5.6 RAID no es una copia
+    ref_url: /ud02/ud02-teoria/
+  - x: 0
+    y: 121
+    w: 900
+    h: 30
+    label: Línea 4 · NAS conectado
+    title: Una copia accesible también se cifra
+    explain: 'Hace falta una copia **desconectada o inmutable**: el ransomware con credenciales de escritura podría cifrarla.'
+    ref: 7.4 Copias y ransomware
+    ref_url: /ud02/ud02-teoria/
+  - x: 0
+    y: 151
+    w: 900
+    h: 30
+    label: Línea 5 · RPO
+    title: Incoherente con la copia semanal
+    explain: Una copia semanal implica perder hasta **una semana** de datos. Para un RPO de 24 h hacen falta copias diarias como mínimo.
+    ref: 7.5 RPO y RTO
+    ref_url: /ud02/ud02-teoria/
+  - x: 0
+    y: 181
+    w: 900
+    h: 30
+    label: Línea 6 · Verificación
+    title: Una copia no probada no es fiable
+    explain: El «0» de 3-2-1-1-0 exige **restauraciones de prueba** periódicas; un log «OK» no basta.
+    ref: 8.9 Pruebas de restauración
+    ref_url: /ud02/ud02-teoria/
+  decoys:
+  - x: 0
+    y: 31
+    w: 900
+    h: 30
+    label: Línea 1 · RAID 1
+    title: Correcto
+    explain: 'En un espejo la capacidad es la de un disco: 4 TB.'
+  - x: 0
+    y: 211
+    w: 900
+    h: 30
+    label: Línea 7 · Retención
+    title: Correcto
+    explain: Retención escalonada y copia fuera de las instalaciones.
+  - x: 0
+    y: 241
+    w: 900
+    h: 30
+    label: Línea 8 · SAI
+    title: Correcto
+    explain: 'Es su función principal: tiempo para apagar de forma ordenada.'
