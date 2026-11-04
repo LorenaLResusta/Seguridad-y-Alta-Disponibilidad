@@ -27,7 +27,7 @@ Una empresa tiene un servidor muy bien fortificado (UD04), pero está conectado 
 Esta unidad se ocupa de la **seguridad en la red**: qué puede ir mal en cada capa, cómo **segmentar** y **controlar** el acceso, cómo **cifrar** las comunicaciones y cómo **detectar** lo que no se ha podido prevenir.
 
 > [!NOTE]
-> **Contexto ético y legal.** Para proteger una red hay que entender cómo se ataca. En esta unidad cada ataque se estudia como **amenaza que hay que detectar y mitigar**, con el ciclo amenaza → vulnerabilidad → ataque → detección → mitigación → comprobación, siempre en un **laboratorio aislado** y propio. No se aplican estas técnicas contra redes ajenas: es delito (Código Penal, arts. 197 bis y 264 ss.).
+> **Contexto ético y legal.** Para proteger una red hay que entender cómo se ataca. En esta unidad cada ataque se estudia como **amenaza que hay que detectar y mitigar**, con el ciclo amenaza → vulnerabilidad → ataque → detección → mitigación → comprobación, siempre en un **entorno de prácticas aislado** y propio. No se aplican estas técnicas contra redes ajenas: es delito (Código Penal, arts. 197 bis y 264 ss.).
 
 ## 2. Objetivos
 
@@ -64,7 +64,7 @@ El modelo OSI sirve para ordenar las amenazas: cada capa tiene sus propios punto
 
 <!-- enr:u6a -->
 > [!WARNING]
-> **Solo en tu laboratorio.** Las técnicas de esta sección (ARP spoofing, DHCP falso, MAC flooding) son ataques reales que están penados en una red ajena. Aquí se estudian para aprender a **detectarlos y prevenirlos**; en las prácticas solo se simula el *efecto* sobre tu propia máquina virtual.
+> **Solo en tu entorno de prácticas.** Las técnicas de esta sección (ARP spoofing, DHCP falso, MAC flooding) son ataques reales que están penados en una red ajena. Aquí se estudian para aprender a **detectarlos y prevenirlos**; en las prácticas solo se simula el *efecto* sobre tu propia máquina virtual.
 
 ### 3.2. ARP spoofing (envenenamiento ARP)
 
@@ -83,7 +83,7 @@ sequenceDiagram
 
 **La vulnerabilidad:** ARP **no tiene autenticación**. Un equipo malicioso de la LAN puede enviar respuestas ARP falsas diciendo «la IP del router soy yo»; las víctimas actualizan su caché y le envían el tráfico a él. Es la base de muchos MITM en LAN.
 
-**Cómo se detecta** (en tu laboratorio, sin atacar a nadie):
+**Cómo se detecta** (en tu entorno de prácticas, sin atacar a nadie):
 
 ```bash
 ip neigh show                          # caché ARP/vecinos actual: IP, MAC, estado
@@ -185,7 +185,7 @@ interface GigabitEthernet0/1
  ip arp inspection trust
 ```
 
-En un laboratorio con máquinas virtuales no hay switch gestionable, pero un **puente Linux** (`bridge`) con filtrado permite reproducir parte de estas medidas (ver prácticas).
+En un entorno de prácticas con máquinas virtuales no hay switch gestionable, pero un **puente Linux** (`bridge`) con filtrado permite reproducir parte de estas medidas (ver prácticas).
 
 <!-- enr:u6b -->
 ![Segmentación con VLAN y ACL](/images/ud05/segmentacion-vlan.svg)
@@ -337,7 +337,7 @@ nmcli -f 802-11-wireless-security connection show "MiWiFi"    # parámetros de t
 iw dev wlp2s0 link                                # frecuencia, señal, bitrate de la conexión actual
 ```
 
-Ejemplo de configuración de un AP **WPA3-Personal** con `hostapd` (laboratorio con adaptador compatible):
+Ejemplo de configuración de un AP **WPA3-Personal** con `hostapd` (entorno de prácticas con adaptador compatible):
 
 ```text
 # /etc/hostapd/lab-wpa3.conf
@@ -348,7 +348,7 @@ channel=6
 ieee80211w=2                 # PMF obligatorio
 wpa=2
 wpa_key_mgmt=SAE             # WPA3-Personal
-sae_password=FraseLargaDeLaboratorio2026
+sae_password=FraseLargaDePracticas2026
 rsn_pairwise=CCMP
 sae_pwe=2
 ```
@@ -373,11 +373,11 @@ Cada protocolo antiguo tiene un sustituto cifrado. Usar el inseguro es dejar los
 
 ### 6.1. Comprobar con tus propios ojos qué se ve en la red
 
-Para entender **por qué** importa el cifrado, observa tu propio tráfico en el laboratorio. En `sad-web` instala un servidor web con una carpeta protegida con autenticación básica HTTP y captura tu propia petición:
+Para entender **por qué** importa el cifrado, observa tu propio tráfico en el entorno de prácticas. En `sad-web` instala un servidor web con una carpeta protegida con autenticación básica HTTP y captura tu propia petición:
 
 ```bash
 sudo apt install -y apache2 apache2-utils tcpdump
-sudo htpasswd -bc /etc/apache2/.htpasswd demo ClaveDemo1       # usuario demo / clave de laboratorio
+sudo htpasswd -bc /etc/apache2/.htpasswd demo ClaveDemo1       # usuario demo / clave de prácticas
 sudo mkdir -p /var/www/html/privado && echo "zona privada" | sudo tee /var/www/html/privado/index.html
 sudo tee /etc/apache2/conf-available/privado.conf >/dev/null <<'EOF'
 <Directory /var/www/html/privado>
@@ -456,7 +456,7 @@ vars:
   address-groups:
     HOME_NET: "[192.168.100.0/24]"      # tu red interna
 af-packet:
-  - interface: enp0s3                   # interfaz en la que escucha (la de tu laboratorio)
+  - interface: enp0s3                   # interfaz en la que escucha (la de tu entorno de prácticas)
 ```
 
 **Reglas.** El conjunto de reglas libre **Emerging Threats Open** se actualiza con `suricata-update`:
@@ -498,7 +498,7 @@ sudo systemctl enable --now suricata
 sudo tail -f /var/log/suricata/suricata.log            # espera "engine started"
 ```
 
-**Prueba de detección** (desde `sad-cli` contra `sad-web`, en tu laboratorio):
+**Prueba de detección** (desde `sad-cli` contra `sad-web`, en tu entorno de prácticas):
 
 ```bash
 ping -c 2 192.168.100.30
@@ -540,7 +540,7 @@ sudo suricata -c /etc/suricata/suricata.yaml -q 0       # modo nfqueue; las regl
 Capturar y leer paquetes permite **diagnosticar** problemas de red, **comprobar** que el cifrado funciona, **verificar** reglas del cortafuegos y **investigar** incidentes. Es la herramienta de «ver lo que realmente ocurre».
 
 > [!CAUTION]
-> Captura **solo en tu red de laboratorio o con autorización**. El tráfico de otros puede contener datos personales (RGPD, LOPDGDD) y las comunicaciones están protegidas por el secreto de las comunicaciones.
+> Captura **solo en tu red de prácticas o con autorización**. El tráfico de otros puede contener datos personales (RGPD, LOPDGDD) y las comunicaciones están protegidas por el secreto de las comunicaciones.
 
 ### 8.2. tcpdump (línea de comandos)
 
@@ -593,7 +593,7 @@ Funciones imprescindibles: *Follow → TCP Stream* (reconstruye una conversació
 
 <!-- enr:u6e -->
 > [!NOTE]
-> **Wireshark y tcpdump:** capturar tráfico de otras personas sin autorización puede vulnerar el secreto de las comunicaciones. En el aula, captura solo el tráfico de tus VM del laboratorio.
+> **Wireshark y tcpdump:** capturar tráfico de otras personas sin autorización puede vulnerar el secreto de las comunicaciones. En el aula, captura solo el tráfico de tus VM del entorno de prácticas.
 
 ## 9. Ejemplo integrado: ciclo defensivo completo
 

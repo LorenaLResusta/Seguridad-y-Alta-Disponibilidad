@@ -19,7 +19,7 @@ bookToc: true
 > [!WARNING]
 > **No uses la Orden 36/2012.** La orden anterior fijaba 100 horas (5 semanales) en la Comunitat Valenciana. Para el curso 2026/27 el currículo vigente es el del **Decreto 114/2025**: 133 horas en total. Esta planificación reparte esas 133 horas a **5 horas semanales** (una hora cada día lectivo); el total oficial no cambia.
 
-Estos apuntes cuentan **horas lectivas** (las del horario oficial del grupo). Cada unidad reparte sus horas en tres bloques: **teoría** (explicación y ejemplos), **prácticas** (laboratorio guiado y autónomo) y **evaluación** (prueba teórico-práctica de la unidad). Las prácticas **no se entregan**: sus conceptos básicos entran en esa prueba.
+Estos apuntes cuentan **horas lectivas** (las del horario oficial del grupo). Cada unidad reparte sus horas en tres bloques: **teoría** (explicación y ejemplos), **prácticas** (entorno de prácticas guiado y autónomo) y **evaluación** (prueba teórico-práctica de la unidad). Las prácticas **no se entregan**: sus conceptos básicos entran en esa prueba.
 
 > [!NOTE]
 > **Modalidad semipresencial.** Esta página es la planificación de la modalidad presencial (133 h). El alumnado semipresencial de 2.º, que termina las clases el 15 de febrero de 2027 por la FE, sigue la [guía semipresencial](/guia/semipresencial/): 96 h a 5 h semanales con su propio calendario por semanas.
@@ -37,7 +37,7 @@ Estos apuntes cuentan **horas lectivas** (las del horario oficial del grupo). Ca
 | UD7 | [Alta disponibilidad, virtualización y continuidad de negocio](/ud07/) | 7 h | 9 h | 2 h | **18 h** | 14 % | RA6 |
 | | **Total** | **52 h** | **67 h** | **14 h** | **133 h** | 100 % | RA1 a RA7 |
 > [!NOTE]
-> El **50 %** de las horas son de laboratorio. Esa proporción es intencionada: en seguridad y alta disponibilidad se aprende configurando, atacando en un entorno aislado, comprobando y recuperando.
+> El **50 %** de las horas son de prácticas. Esa proporción es intencionada: en seguridad y alta disponibilidad se aprende configurando, atacando en un entorno aislado, comprobando y recuperando.
 
 ## Calendario escolar de referencia 2026/27
 
@@ -112,7 +112,7 @@ Hasta el 18 de junio hay **174 horas** posibles. Se necesitan 133: el plan termi
 ## Cómo está pensado el ritmo de cada unidad
 
 1. **Primeras sesiones: teoría y demostración.** Se presentan los conceptos con el ciclo *amenaza → vulnerabilidad → ataque → detección → mitigación → comprobación*.
-2. **Sesiones centrales: prácticas guiadas.** Se reproduce el procedimiento paso a paso en el laboratorio y se anota qué ocurre en cada comprobación.
+2. **Sesiones centrales: prácticas guiadas.** Se reproduce el procedimiento paso a paso en el entorno de prácticas y se anota qué ocurre en cada comprobación.
 3. **Sesiones finales: práctica autónoma, tarea del proyecto y evaluación.** La última sesión de cada unidad es la prueba; la tarea del proyecto es de repaso y no se entrega.
 
 > [!TIP]

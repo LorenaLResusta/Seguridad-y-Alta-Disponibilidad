@@ -28,10 +28,10 @@ Perímetro con WAN, LAN y DMZ en un cortafuegos Linux (nftables), NAT y publicac
 | **Total** | | | **14 h** | |
 
 > [!NOTE]
-> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 14 h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.
+> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las 14 h de prácticas oficiales de la unidad. El resto se realiza en el entorno de prácticas, en las horas indicadas.
 
 > [!IMPORTANT]
-> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el laboratorio. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-2**.
+> **Estas prácticas no se entregan.** Sirven para aprender haciendo en el entorno de prácticas. Pero los **conceptos básicos y las órdenes principales** que aparecen en ellas **entran en la prueba teórico-práctica de la unidad**, así que conviene haberlas hecho. Lo único entregable del módulo son las [dos prácticas integradoras](/guia/practicas-integradoras/); esta unidad contribuye a **INT-2**.
 
 ## Qué entra en la prueba de esta unidad
 
@@ -58,9 +58,9 @@ Estos son los contenidos de las prácticas que se preguntan (no hace falta memor
 - Configurar acceso remoto seguro: SSH avanzado, VPN con WireGuard y autenticación centralizada con RADIUS.
 
 > [!IMPORTANT]
-> **Alcance.** Todo el laboratorio es virtual y aislado. Las pruebas de bloqueo se hacen **solo** contra tus máquinas. No uses herramientas de evasión ni de ataque contra destinos ajenos. Antes de tocar el cortafuegos crea una *snapshot* y deja siempre una consola de VirtualBox abierta como acceso de emergencia.
+> **Alcance.** Todo el entorno de prácticas es virtual y aislado. Las pruebas de bloqueo se hacen **solo** contra tus máquinas. No uses herramientas de evasión ni de ataque contra destinos ajenos. Antes de tocar el cortafuegos crea una *snapshot* y deja siempre una consola de VirtualBox abierta como acceso de emergencia.
 
-## Preparación del laboratorio
+## Preparación del entorno de prácticas
 
 #### Topología y direccionamiento
 
@@ -158,7 +158,7 @@ Los nombres de las interfaces pueden variar (`enp0s3`, `enp0s8`, `enp0s9`). Comp
 {{% /details %}}
 
 > [!NOTE]
-> Las prácticas **6.9 a 6.12** (SSH, WireGuard, RADIUS e IPsec) reutilizan las máquinas y redes de laboratorio de la [UD05](/ud05/ud05-practicas/#preparación-del-laboratorio). Si no las tienes, prepáralas primero.
+> Las prácticas **6.9 a 6.12** (SSH, WireGuard, RADIUS e IPsec) reutilizan las máquinas y redes de prácticas de la [UD05](/ud05/ud05-practicas/#preparación-del-entorno-de-prácticas). Si no las tienes, prepáralas primero.
 
 ---
 
@@ -168,7 +168,7 @@ Los nombres de las interfaces pueden variar (`enp0s3`, `enp0s8`, `enp0s9`). Comp
 
 **Objetivo:** planificar antes de configurar (RA1 h, RA3 b, RA4 c).
 
-1. Dibuja el diagrama del laboratorio indicando zonas, interfaces, redes y nivel de confianza.
+1. Dibuja el diagrama del entorno de prácticas indicando zonas, interfaces, redes y nivel de confianza.
 2. Rellena la **matriz de flujos** (usa la de la teoría como modelo). Debe cubrir, al menos:
 
 | # | Origen | Destino | Servicio | Acción | Justificación |
@@ -216,7 +216,7 @@ sudo nft -c -f /etc/nftables.conf && echo "SINTAXIS CORRECTA"
 
 <!-- hint:h3 -->
 > [!WARNING]
-> No mezcles cortafuegos: si dejas `firewalld` o `ufw` activos junto con `nftables`, las reglas se pisan y el comportamiento es impredecible. En este laboratorio el único gestor del cortafuegos es el fichero `/etc/nftables.conf`.
+> No mezcles cortafuegos: si dejas `firewalld` o `ufw` activos junto con `nftables`, las reglas se pisan y el comportamiento es impredecible. En este entorno de prácticas el único gestor del cortafuegos es el fichero `/etc/nftables.conf`.
 
 #### Aplicación con red de seguridad
 
@@ -472,7 +472,7 @@ sudo tail -n 3 /var/log/squid/access.log            # ahora el log muestra el us
 
 <!-- hint:h11 -->
 > [!WARNING]
-> La autenticación **básica** transmite usuario y contraseña en Base64 (codificado, no cifrado). Cualquiera que capture el tráfico entre cliente y proxy puede leerla. En laboratorio es aceptable; en producción, usa Kerberos/NTLM/LDAP o limita el uso de la autenticación al segmento de confianza.
+> La autenticación **básica** transmite usuario y contraseña en Base64 (codificado, no cifrado). Cualquiera que capture el tráfico entre cliente y proxy puede leerla. En el entorno de prácticas es aceptable; en producción, usa Kerberos/NTLM/LDAP o limita el uso de la autenticación al segmento de confianza.
 
 #### Modo transparente
 
@@ -534,7 +534,7 @@ curl -s http://localhost/app-a/ ; curl -s http://localhost/app-b/
 
 #### TLS y cabeceras de seguridad
 
-Usa un certificado de la **PKI de la UD03** (o genera uno de laboratorio) y configura el servidor HTTPS del apartado 12.3 de la teoría. Comprueba:
+Usa un certificado de la **PKI de la UD03** (o genera uno de prácticas) y configura el servidor HTTPS del apartado 12.3 de la teoría. Comprueba:
 
 ```bash
 sudo nginx -t && sudo systemctl reload nginx
@@ -699,7 +699,7 @@ Revisa en `gw-vpn` el registro de la conexión (`sudo journalctl -u ssh --since 
 
 ```bash
 mkdir -m 700 ~/ca-ssh && cd ~/ca-ssh
-ssh-keygen -t ed25519 -f ssh_ca -C "CA SSH laboratorio"
+ssh-keygen -t ed25519 -f ssh_ca -C "CA SSH practicas"
 ```
 
 2. Firma la clave pública de Ana (cópiala antes desde `sad-cli`: `scp ~/.ssh/id_ed25519.pub gw-vpn:~/ca-ssh/ana.pub`):

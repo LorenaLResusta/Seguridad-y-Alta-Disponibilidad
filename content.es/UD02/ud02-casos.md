@@ -12,13 +12,13 @@ La seguridad pasiva entra en juego **cuando el ataque ya ha tenido éxito** (o c
 
 | Caso | Ataque | Caso real | Tipo |
 |---|---|---|---|
-| [2.A](#caso-2a--el-ransomware-que-borra-las-copias) | *Ransomware* que borra las copias desde el equipo comprometido | Campañas contra servidores de copias (2024-2025) | Laboratorio |
+| [2.A](#caso-2a--el-ransomware-que-borra-las-copias) | *Ransomware* que borra las copias desde el equipo comprometido | Campañas contra servidores de copias (2024-2025) | Entorno de prácticas |
 | [2.B](#caso-2b--nas-expuesto-a-internet) | Cifrado masivo de NAS expuestos a Internet | DeadBolt contra QNAP (2022) | Análisis + comprobación |
 | [2.C](#caso-2c--cuando-el-ataque-es-físico-continuidad-sin-sistemas) | Sabotaje que convierte un fallo físico en pérdidas | Supermercados franceses (2026) | Supuesto de continuidad |
 | [Búsqueda](#búsqueda-de-vulnerabilidades-en-software-de-copias-y-almacenamiento) | Vulnerabilidades en software de copias y NAS | — | Autónoma |
 
 > [!IMPORTANT]
-> Recuerda las [normas de laboratorio](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-laboratorio): solo máquinas propias, en redes internas, con instantánea previa. Estos casos **no se entregan**.
+> Recuerda las [normas del entorno de prácticas](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-entorno-de-prácticas): solo máquinas propias, en redes internas, con instantánea previa. Estos casos **no se entregan**.
 
 ---
 
@@ -44,7 +44,7 @@ El problema de fondo es de **diseño**: si el equipo que se copia tiene permiso 
 
 {{< figura src="ud02/append-only.svg" alt="Copias en modo solo-añadir" caption="El modo solo-añadir permite crear copias nuevas pero rechaza borrar las anteriores." >}}
 
-### Laboratorio
+### Entorno de prácticas
 
 | Máquina | Función | IP (red `sad-lan`) |
 |---|---|---|
@@ -95,7 +95,7 @@ sudo ss -tlnp | grep 8000                      # debe escuchar en 192.168.10.30:
 ```
 
 > [!WARNING]
-> En este laboratorio el tráfico va por HTTP en una red interna. En producción `rest-server` debe usar **TLS** (`--tls --tls-cert … --tls-key …`); lo aprenderás en la UD03. Los datos van cifrados por restic igualmente, pero la contraseña HTTP viajaría en claro.
+> En este entorno de prácticas el tráfico va por HTTP en una red interna. En producción `rest-server` debe usar **TLS** (`--tls --tls-cert … --tls-key …`); lo aprenderás en la UD03. Los datos van cifrados por restic igualmente, pero la contraseña HTTP viajaría en claro.
 
 #### 2. Primera copia desde el cliente (`srv-ficheros`)
 
@@ -264,7 +264,7 @@ Muchas pymes usan el NAS **a la vez como almacenamiento y como copia de segurida
 ### Actividad
 
 1. Identifica en el caso: activo, amenaza, vulnerabilidad y por qué el NAS **no** cumple la regla 3-2-1 si es la única copia.
-2. Comprueba desde otra máquina del laboratorio qué servicios ofrece tu servidor de ficheros (o el `srv-copias` del caso anterior). Es lo que vería un atacante:
+2. Comprueba desde otra máquina del entorno de prácticas qué servicios ofrece tu servidor de ficheros (o el `srv-copias` del caso anterior). Es lo que vería un atacante:
 
 ```bash
 sudo apt install -y nmap

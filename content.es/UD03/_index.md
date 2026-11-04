@@ -28,7 +28,7 @@ En el proyecto transversal [Mediterránea Dental](/guia/proyecto-clinica/) esta 
 ## Cómo estudiar esta unidad
 
 1. Lee la [teoría](/ud03/ud03-teoria/) en orden: cada apartado se apoya en el anterior.
-2. Reproduce los ejemplos en tu laboratorio a medida que aparecen.
+2. Reproduce los ejemplos en tu entorno de prácticas a medida que aparecen.
 3. Resuelve los ejercicios antes de abrir las soluciones.
 4. Realiza las [prácticas](/ud03/ud03-practicas/) y haz la **Tarea del proyecto** de [Mediterránea Dental](/guia/proyecto-clinica/) (no se entrega: prepara INT-1).
 

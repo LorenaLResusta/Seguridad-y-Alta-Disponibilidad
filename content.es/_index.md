@@ -13,7 +13,7 @@ Apuntes y prácticas del módulo profesional **0378. Seguridad y alta disponibil
 | **Referencia curricular** | Real Decreto 1629/2009 (modificado por el RD 500/2024) y Decreto 114/2025 del Consell |
 | **Duración oficial** | **133 horas**, planificadas a **5 horas semanales** (1 h cada día lectivo) |
 | **Resultados de aprendizaje** | 7 (RA1 a RA7) |
-| **Entorno de laboratorio** | VirtualBox 7 · Debian 13 (AlmaLinux 10 donde se indica) |
+| **Entorno de prácticas** | VirtualBox 7 · Debian 13 (AlmaLinux 10 donde se indica) |
 | **Proyecto común** | [Mediterránea Dental: protege una clínica unidad a unidad](/guia/proyecto-clinica/) |
 
 > [!NOTE]

@@ -22,7 +22,7 @@ flowchart LR
 
 | Caso | Ataque | Caso real | Tipo |
 |---|---|---|---|
-| [1.A](#caso-1a--ingeniería-social-contra-el-servicio-técnico) | Ingeniería social contra el servicio técnico (*help desk*) | Marks & Spencer y Co-op, 2025 | Supuesto + laboratorio |
+| [1.A](#caso-1a--ingeniería-social-contra-el-servicio-técnico) | Ingeniería social contra el servicio técnico (*help desk*) | Marks & Spencer y Co-op, 2025 | Supuesto + entorno de prácticas |
 | [1.B](#caso-1b--supermercados-sin-frío-dispositivos-expuestos-a-internet) | Toma de control de dispositivos expuestos a Internet | Supermercados franceses, octubre de 2026 | Análisis de riesgos |
 | [1.C](#caso-1c--el-proveedor-como-puerta-de-entrada) | Ataque a través de un proveedor | Target (2013) y Ahold Delhaize (2024) | Análisis de riesgos + legal |
 | [Búsqueda](#búsqueda-de-vulnerabilidades-cómo-se-investiga-un-cve) | Cómo se investiga un CVE: INCIBE-CERT, NVD, KEV, EPSS | — | Autónoma |
@@ -32,7 +32,7 @@ flowchart LR
 
 {{< figura src="ud01/incibe-incidentes.svg" alt="Incidentes gestionados por INCIBE en 2024 y 2025" caption="Los incidentes crecen cada año: conocer los ataques es parte del trabajo." >}}
 
-## Antes de empezar: ética y legalidad del laboratorio
+## Antes de empezar: ética y legalidad del entorno de prácticas
 
 Aprender cómo funciona un ataque es imprescindible para defenderse, pero **atacar un sistema ajeno es delito**, aunque sea «para probar» o «sin hacer daño». El Código Penal español castiga, entre otros:
 
@@ -42,7 +42,7 @@ Aprender cómo funciona un ataque es imprescindible para defenderse, pero **atac
 | 197 ter | Producir, adquirir o facilitar herramientas o contraseñas **con intención** de cometer los delitos anteriores |
 | 264 y 264 bis | Borrar, dañar o hacer inaccesibles datos, u **obstaculizar o interrumpir** el funcionamiento de un sistema (aquí encaja una denegación de servicio) |
 
-Por eso, en todo el módulo se aplican estas **normas de laboratorio**:
+Por eso, en todo el módulo se aplican estas **normas del entorno de prácticas**:
 
 1. Solo se ataca a **máquinas virtuales propias** dentro de las redes internas de VirtualBox (`sad-atk`, `sad-lan`, `sad-dmz`, `SAD-NAT`). Nunca a la red del centro, a la de casa ni a ninguna dirección de Internet.
 2. La máquina atacante (`atacante`, Debian 13 o Kali Linux) **no tiene salida a Internet** mientras se ejecutan las pruebas. Primero se instalan las herramientas y después se desconecta el adaptador NAT.
@@ -88,7 +88,7 @@ Redacta, para la clínica Mediterránea Dental, el procedimiento que debe seguir
 
 ### Actividad 2: detectar cambios de credenciales en Linux
 
-En un servidor Debian 13 del laboratorio, los cambios de contraseña quedan en el registro del sistema (*journal*). Simula el trabajo del servicio técnico y después búscalo como lo haría un analista.
+En un servidor Debian 13 del entorno de prácticas, los cambios de contraseña quedan en el registro del sistema (*journal*). Simula el trabajo del servicio técnico y después búscalo como lo haría un analista.
 
 ```bash
 # 1. Crea un usuario de prueba y cámbiale la contraseña como si fueras el servicio técnico
@@ -229,7 +229,7 @@ Get-NetTCPConnection -State Listen |
   Select-Object LocalAddress, LocalPort, @{n='Proceso';e={(Get-Process -Id $_.OwningProcess).ProcessName}} |
   Sort-Object LocalPort
 
-# ¿Es alcanzable un puerto de OTRO equipo? (p. ej. el «panel» del laboratorio, puerto 8080)
+# ¿Es alcanzable un puerto de OTRO equipo? (p. ej. el «panel» del entorno de prácticas, puerto 8080)
 Test-NetConnection -ComputerName 192.168.100.100 -Port 8080
 ```
 

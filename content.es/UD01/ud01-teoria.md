@@ -448,7 +448,7 @@ rpm -q xz xz-libs
 Las versiones afectadas eran la 5.6.0 y la 5.6.1. Si la versión instalada es otra, el sistema no está afectado por esta CVE.
 
 > [!TIP]
-> La prioridad real de una vulnerabilidad no depende solo del CVSS: una CVE crítica en un equipo aislado del laboratorio puede esperar; una CVE media en un servidor expuesto a Internet y presente en el catálogo KEV debe corregirse ya.
+> La prioridad real de una vulnerabilidad no depende solo del CVSS: una CVE crítica en un equipo aislado del entorno de prácticas puede esperar; una CVE media en un servidor expuesto a Internet y presente en el catálogo KEV debe corregirse ya.
 
 ### 5.4. Riesgo
 
@@ -795,7 +795,7 @@ Received: from mail.servidor-desconocido.ru (203.0.113.50)
 
 <!-- enr:u1d -->
 > [!WARNING]
-> **Ética y legalidad.** Probar las contraseñas de sistemas ajenos, o de los tuyos sin autorización, puede ser un delito (arts. 197 bis y 264 del Código Penal). En este módulo solo se trabaja **en el laboratorio virtual** y con cuentas creadas para la práctica. Aquí estudiamos las técnicas para entender **cómo defenderse**, no para atacar.
+> **Ética y legalidad.** Probar las contraseñas de sistemas ajenos, o de los tuyos sin autorización, puede ser un delito (arts. 197 bis y 264 del Código Penal). En este módulo solo se trabaja **en el entorno de prácticas virtual** y con cuentas creadas para la práctica. Aquí estudiamos las técnicas para entender **cómo defenderse**, no para atacar.
 
 **Explora: inspecciona un correo sospechoso**
 
@@ -1186,7 +1186,7 @@ El **análisis forense informático** consiste en identificar, adquirir, preserv
 ### 11.3. Ejemplo: adquisición de una imagen de disco
 
 > [!WARNING]
-> Ejemplo para laboratorio: se trabaja sobre un **disco virtual secundario** (`/dev/sdb`) de una máquina virtual. Equivocarse de dispositivo en `dd` puede destruir datos.
+> Ejemplo para prácticas: se trabaja sobre un **disco virtual secundario** (`/dev/sdb`) de una máquina virtual. Equivocarse de dispositivo en `dd` puede destruir datos.
 
 ```bash
 # 1. Identificar el dispositivo que se va a copiar
@@ -1356,7 +1356,7 @@ Una academia de idiomas detecta que un portátil robado contenía, sin cifrar, u
 ---
 
 > [!NOTE]
-> **Comentario sobre el examen.** En la prueba de esta unidad se valoran sobre todo cuatro habilidades: **clasificar** (qué propiedad, qué tipo de medida, qué tipo de ataque), **calcular** (riesgo = probabilidad × impacto, riesgo residual), **ordenar** (fases de un incidente o del análisis forense) y **relacionar** (cada hecho con la norma que lo regula). Las prácticas de laboratorio no se entregan, pero entender qué comprobabas en cada una es lo que te permite responder bien.
+> **Comentario sobre el examen.** En la prueba de esta unidad se valoran sobre todo cuatro habilidades: **clasificar** (qué propiedad, qué tipo de medida, qué tipo de ataque), **calcular** (riesgo = probabilidad × impacto, riesgo residual), **ordenar** (fases de un incidente o del análisis forense) y **relacionar** (cada hecho con la norma que lo regula). Las prácticas de prácticas no se entregan, pero entender qué comprobabas en cada una es lo que te permite responder bien.
 
 ## 13. Buenas prácticas de seguridad
 

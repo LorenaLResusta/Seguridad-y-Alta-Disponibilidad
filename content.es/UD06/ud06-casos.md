@@ -8,21 +8,21 @@ bookToc: true
 
 {{< ra "RA3:a,b,d,e" "RA4:c,d,e,g" "RA5:h" >}}
 
-El perímetro es la frontera entre la red interna e Internet, y por eso recibe dos tipos de ataque muy distintos: los que intentan **tumbar** los servicios publicados (denegación de servicio) y los que intentan **entrar** por lo que hemos dejado expuesto (interfaces de administración, VPN y cortafuegos sin actualizar). En esta página reproduces ambos en el laboratorio del cortafuegos `fw`.
+El perímetro es la frontera entre la red interna e Internet, y por eso recibe dos tipos de ataque muy distintos: los que intentan **tumbar** los servicios publicados (denegación de servicio) y los que intentan **entrar** por lo que hemos dejado expuesto (interfaces de administración, VPN y cortafuegos sin actualizar). En esta página reproduces ambos en el entorno de prácticas del cortafuegos `fw`.
 
 | Caso | Ataque | Caso real | Tipo |
 |---|---|---|---|
-| [6.A](#caso-6a--inundación-syn-contra-un-servicio-publicado) | Denegación de servicio por inundación SYN | NoName057(16) contra webs españolas (2023-2025) | Laboratorio |
-| [6.B](#caso-6b--interfaz-de-administración-expuesta-a-internet) | Interfaz de administración expuesta a Internet | Controladores de refrigeración de supermercados (2026) | Laboratorio |
+| [6.A](#caso-6a--inundación-syn-contra-un-servicio-publicado) | Denegación de servicio por inundación SYN | NoName057(16) contra webs españolas (2023-2025) | Entorno de prácticas |
+| [6.B](#caso-6b--interfaz-de-administración-expuesta-a-internet) | Interfaz de administración expuesta a Internet | Controladores de refrigeración de supermercados (2026) | Entorno de prácticas |
 | [6.C](#caso-6c--cuando-el-perímetro-es-el-objetivo) | Explotación de cortafuegos y VPN sin parchear | Vulnerabilidades en KEV de fabricantes de seguridad perimetral | Análisis |
 | [Búsqueda](#búsqueda-de-vulnerabilidades-en-equipos-perimetrales) | Vulnerabilidades de cortafuegos, VPN y *proxies* | — | Autónoma |
 
 > [!IMPORTANT]
-> Las pruebas de inundación se lanzan **solo** desde `sad-cli` contra `fw` y `web-dmz`, dentro de las redes de VirtualBox. Lanzar tráfico de inundación contra un servicio ajeno es un delito de interrupción de sistemas (art. 264 bis del Código Penal), aunque dure segundos. Recuerda las [normas de laboratorio](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-laboratorio). Estos casos **no se entregan**.
+> Las pruebas de inundación se lanzan **solo** desde `sad-cli` contra `fw` y `web-dmz`, dentro de las redes de VirtualBox. Lanzar tráfico de inundación contra un servicio ajeno es un delito de interrupción de sistemas (art. 264 bis del Código Penal), aunque dure segundos. Recuerda las [normas del entorno de prácticas](/ud01/ud01-casos/#antes-de-empezar-ética-y-legalidad-del-entorno-de-prácticas). Estos casos **no se entregan**.
 
-### Laboratorio común
+### Entorno de prácticas común
 
-Es el laboratorio de las prácticas 6.2 y 6.3, con el *ruleset* de tres zonas cargado y la web de la DMZ publicada por DNAT:
+Es el entorno de prácticas de las prácticas 6.2 y 6.3, con el *ruleset* de tres zonas cargado y la web de la DMZ publicada por DNAT:
 
 | VM | IP | Papel en estos casos |
 |---|---|---|
@@ -85,7 +85,7 @@ En `web-dmz`, desactiva **temporalmente** las SYN *cookies* para ver el efecto d
 
 ```bash
 sysctl net.ipv4.tcp_syncookies net.ipv4.tcp_max_syn_backlog
-sudo sysctl -w net.ipv4.tcp_syncookies=0          # SOLO para el laboratorio
+sudo sysctl -w net.ipv4.tcp_syncookies=0          # SOLO para el entorno de prácticas
 ```
 
 En `sad-cli`, añade una segunda IP que hará de **cliente legítimo** y mide el tiempo de carga normal:
@@ -335,7 +335,7 @@ Regla DNAT en `nftables` frente a acceso por VPN con WireGuard.
 Abre **PowerShell** (`Win` + `X` → *Terminal*; para lo que pida administrador, *Terminal (administrador)*).
 
 ```powershell
-# ¿Se ve el panel desde fuera? (equivalente al nmap del laboratorio)
+# ¿Se ve el panel desde fuera? (equivalente al nmap del entorno de prácticas)
 Test-NetConnection -ComputerName 192.168.100.100 -Port 8080
 
 # Cortafuegos de Windows: bloquear un puerto de administración desde fuera de la LAN (administrador)
@@ -375,9 +375,9 @@ Los cortafuegos, concentradores VPN y pasarelas de acceso remoto están **por de
 
 ## Búsqueda de vulnerabilidades en equipos perimetrales
 
-{{< practica etiqueta="Búsqueda" num="6.D" tipo="Autónoma" duracion="1 h · trabajo autónomo" nivel="1" ra="RA4:a;RA5:a" entorno="Navegador · Debian 13" entrega="tabla de vulnerabilidades del perímetro del laboratorio" >}}
+{{< practica etiqueta="Búsqueda" num="6.D" tipo="Autónoma" duracion="1 h · trabajo autónomo" nivel="1" ra="RA4:a;RA5:a" entorno="Navegador · Debian 13" entrega="tabla de vulnerabilidades del perímetro del entorno de prácticas" >}}
 
-Haz el inventario del software perimetral **de tu laboratorio** y busca una vulnerabilidad relevante (o el último aviso de seguridad) de cada uno:
+Haz el inventario del software perimetral **de tu entorno de prácticas** y busca una vulnerabilidad relevante (o el último aviso de seguridad) de cada uno:
 
 | Componente | Versión instalada (orden) | Último CVE o aviso relevante | ¿Te afecta? |
 |---|---|---|---|

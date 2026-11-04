@@ -9,7 +9,7 @@ bookToc: true
 A lo largo del curso construyes, unidad a unidad, la seguridad de **una misma empresa ficticia**. Así cada práctica deja de ser un ejercicio aislado: lo que fortificas en la UD04 se vigila en la UD05, se protege con el perímetro de la UD06 y se hace redundante en la UD07.
 
 > [!IMPORTANT]
-> **Todo es ficticio.** Mediterránea Dental S. L., sus pacientes y sus datos no existen. Nunca uses datos personales reales ni credenciales reales en el laboratorio.
+> **Todo es ficticio.** Mediterránea Dental S. L., sus pacientes y sus datos no existen. Nunca uses datos personales reales ni credenciales reales en el entorno de prácticas.
 
 ## La empresa
 
@@ -25,7 +25,7 @@ A lo largo del curso construyes, unidad a unidad, la seguridad de **una misma em
 
 Tú eres el técnico de sistemas contratado para hacerlo. En cada unidad montas una pieza de la clínica (**no se entrega**); esas piezas se reúnen en dos [prácticas integradoras](/guia/practicas-integradoras/) que sí se entregan.
 
-## Infraestructura de laboratorio
+## Infraestructura de prácticas
 
 Todas las máquinas son virtuales (ver [Entorno de trabajo](/guia/entorno/)). El direccionamiento es común a todas las unidades:
 
@@ -55,7 +55,7 @@ Todas las máquinas son virtuales (ver [Entorno de trabajo](/guia/entorno/)). El
 | `web01`, `web02` | Debian 13 | DMZ `.11`, `.12` | Web de citas (dos nodos) | UD06, UD07 |
 | `lb01`, `lb02` | Debian 13 | DMZ `.21`, `.22` (VIP `.20`) | Balanceo y alta disponibilidad | UD07 |
 | `db01` | Debian 13 | DMZ `.30` | Base de datos con réplica | UD07 |
-| `atacante` | Debian con herramientas de auditoría | Red aislada del laboratorio | Simula amenazas **solo en el laboratorio** | UD04 a UD06 |
+| `atacante` | Debian con herramientas de auditoría | Red aislada del entorno de prácticas | Simula amenazas **solo en el entorno de prácticas** | UD04 a UD06 |
 
 > [!NOTE]
 > No hace falta tener todas las máquinas encendidas a la vez. Cada práctica indica cuáles necesita; el resto permanece apagado y con su instantánea.

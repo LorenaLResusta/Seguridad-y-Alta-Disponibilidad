@@ -473,7 +473,7 @@ ab -n 2000 -c 20 http://172.16.10.20/       # 2000 peticiones, 20 simultáneas, 
 Fíjate en `Requests per second` (rendimiento), `Time per request` (latencia) y `Failed requests` (errores). Lanza la prueba **mientras** provocas el fallo de un nodo: así mides el efecto real de un fallo bajo carga. `ab` es antiguo y simple; herramientas más modernas como `k6` o `wrk` permiten escenarios más realistas, pero el procedimiento es el mismo.
 
 > [!CAUTION]
-> Lanza pruebas de carga **solo contra tus propios servicios** de laboratorio. Una prueba de carga contra un tercero es, a efectos prácticos, un ataque de denegación de servicio.
+> Lanza pruebas de carga **solo contra tus propios servicios** de prácticas. Una prueba de carga contra un tercero es, a efectos prácticos, un ataque de denegación de servicio.
 
 ---
 
@@ -570,7 +570,7 @@ cat /proc/net/bonding/bond0              # la interfaz activa cambia a enp0s9; e
 sudo ip link set enp0s8 up               # restablece el enlace
 ```
 
-`ip link set ... down` desactiva una interfaz sin tocar el cable, y es la forma habitual de simular el fallo en un laboratorio. La redundancia de red se completa con **dos *switches*** (cada tarjeta del *bond* en uno distinto, lo que exige LACP multichasis o `active-backup`), **dos routers** con VRRP (apartado 6.1) y, en entornos críticos, **dos proveedores de acceso** (*multihoming*).
+`ip link set ... down` desactiva una interfaz sin tocar el cable, y es la forma habitual de simular el fallo en un entorno de prácticas. La redundancia de red se completa con **dos *switches*** (cada tarjeta del *bond* en uno distinto, lo que exige LACP multichasis o `active-backup`), **dos routers** con VRRP (apartado 6.1) y, en entornos críticos, **dos proveedores de acceso** (*multihoming*).
 
 ---
 
@@ -595,9 +595,9 @@ Al virtualizar, el «servidor» deja de ser un equipo físico para ser un **conj
 | Tipo | Dónde se ejecuta | Ejemplos | Uso |
 |---|---|---|---|
 | **Tipo 1** (*bare metal*) | Directamente sobre el hardware | Proxmox VE (KVM), VMware ESXi, Hyper-V, Xen | Producción y centros de datos |
-| **Tipo 2** (*hosted*) | Como aplicación sobre un sistema operativo | VirtualBox, VMware Workstation | Escritorio y laboratorio |
+| **Tipo 2** (*hosted*) | Como aplicación sobre un sistema operativo | VirtualBox, VMware Workstation | Escritorio y entorno de prácticas |
 
-**KVM** (*Kernel-based Virtual Machine*) es el módulo del núcleo Linux que convierte el sistema en hipervisor; **QEMU** emula el resto del hardware. Juntos son la base de Proxmox VE y de la mayoría de nubes. Es **software libre**, está muy presente en entornos profesionales y permite construir laboratorios completos en el aula, por lo que es la tecnología de referencia de la unidad.
+**KVM** (*Kernel-based Virtual Machine*) es el módulo del núcleo Linux que convierte el sistema en hipervisor; **QEMU** emula el resto del hardware. Juntos son la base de Proxmox VE y de la mayoría de nubes. Es **software libre**, está muy presente en entornos profesionales y permite construir entornos de prácticas completos en el aula, por lo que es la tecnología de referencia de la unidad.
 
 ### 5.3 Proxmox VE
 
@@ -605,7 +605,7 @@ Al virtualizar, el «servidor» deja de ser un equipo físico para ser un **conj
 
 | Concepto | Descripción |
 |---|---|
-| **Nodo** | Servidor físico (o virtual, en laboratorio) con Proxmox VE |
+| **Nodo** | Servidor físico (o virtual, en el entorno de prácticas) con Proxmox VE |
 | **Clúster** | Conjunto de nodos que se administran juntos; necesita **quórum** |
 | **HA Manager** | Servicio que reinicia en otro nodo los recursos HA si su nodo falla |
 | **Reglas de afinidad de HA** | Indican en qué nodos prefiere ejecutarse un recurso (afinidad de nodo) o qué recursos deben estar juntos o separados (afinidad de recursos). En Proxmox VE 9 sustituyen a los antiguos *grupos HA* |
@@ -645,7 +645,7 @@ qm migrate 100 pve2 --online             # migración en vivo de la VM 100 al no
 > [!WARNING]
 > Con **dos nodos**, un clúster Proxmox pierde el quórum cuando cae uno (queda 1 voto de 2: no hay mayoría) y los recursos HA no se recuperan. Se usan **tres nodos** o un dispositivo de quórum externo (*QDevice*) como tercer voto. El quórum se explica en el apartado 6.4.
 
-**Prueba de fallo de un nodo** (en laboratorio): con la máquina 100 en HA ejecutándose en `pve2`, apaga bruscamente `pve2` (desde VirtualBox, «Apagar la máquina»). Pasados unos minutos, `ha-manager status` mostrará que la máquina se ha reiniciado en `pve1` o `pve3`. El tiempo transcurrido hasta que responde de nuevo es tu **RTO real**; no es instantáneo porque el clúster debe asegurarse de que el nodo ha caído (*fencing*) antes de arrancar la máquina en otro sitio. A diferencia de la migración en vivo (sin corte), esto es un **reinicio** de la máquina en otro nodo.
+**Prueba de fallo de un nodo** (en el entorno de prácticas): con la máquina 100 en HA ejecutándose en `pve2`, apaga bruscamente `pve2` (desde VirtualBox, «Apagar la máquina»). Pasados unos minutos, `ha-manager status` mostrará que la máquina se ha reiniciado en `pve1` o `pve3`. El tiempo transcurrido hasta que responde de nuevo es tu **RTO real**; no es instantáneo porque el clúster debe asegurarse de que el nodo ha caído (*fencing*) antes de arrancar la máquina en otro sitio. A diferencia de la migración en vivo (sin corte), esto es un **reinicio** de la máquina en otro nodo.
 
 ### 5.4 Contenedores frente a máquinas virtuales
 

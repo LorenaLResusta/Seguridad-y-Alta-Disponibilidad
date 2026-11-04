@@ -36,7 +36,7 @@ TITULO = {
 G, A, RT, P = "Guiada", "Autónoma", "Reto", "Proyecto"
 # unidad -> lista de (origen, nº antiguo de la práctica o "T" para la tarea evaluable, tipo, horas, nivel, CE, entrega)
 PLAN = {
- "UD1": [("UD1", 0, G, 1, 1, "RA1: a, b", "capturas del laboratorio operativo"),
+ "UD1": [("UD1", 0, G, 1, 1, "RA1: a, b", "capturas del entorno de prácticas operativo"),
          ("UD1", 1, G, 1, 1, "RA1: c; RA2: h", "inventario en la carpeta de evidencias"),
          ("UD1", 2, G, 1, 2, "RA1: a, g", "línea base y registro de la detección"),
          ("UD1", 3, G, 1, 2, "RA1: e", "política de contraseñas y registro del ataque"),
@@ -156,7 +156,7 @@ def ra_attr(s):
 def hs(h): return f"{h} h" if h else "0 h · trabajo autónomo"
 
 INTRO = {
- "UD5": "Observación y detección de amenazas de capa 2 y 3, segmentación con VLAN y ACL, detección de intrusiones con Suricata y captura y análisis de tráfico en un laboratorio aislado.",
+ "UD5": "Observación y detección de amenazas de capa 2 y 3, segmentación con VLAN y ACL, detección de intrusiones con Suricata y captura y análisis de tráfico en un entorno de prácticas aislado.",
  "UD6": "Perímetro con WAN, LAN y DMZ en un cortafuegos Linux (nftables), NAT y publicación, proxy directo e inverso, y acceso remoto seguro con SSH, WireGuard y RADIUS, con prueba de fallo del perímetro.",
 }
 OBJ = {
@@ -204,7 +204,7 @@ def build(ud):
         niv_s = "●" * niv + "○" * (3 - niv)
         out.append(f"| [{num}.{k} {tit}](#{slug(head)}) | {tipo} | {niv_s} | {h if h else '—'} | {ra.replace(';', ' ·')} |")
     out.append(f"| **Total** | | | **{horasP} h** | |\n")
-    out.append(f"> [!NOTE]\n> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las {horasP} h de prácticas oficiales de la unidad. El resto se realiza en el laboratorio, en las horas indicadas.\n")
+    out.append(f"> [!NOTE]\n> Las prácticas con **—** horas son **trabajo autónomo** (fuera del horario) u opcionales: amplían la unidad, pero no restan tiempo a las {horasP} h de prácticas oficiales de la unidad. El resto se realiza en el entorno de prácticas, en las horas indicadas.\n")
     # objetivos / normas / preparación (del documento principal)
     for key in ("Objetivos", "Normas", "Preparación"):
         b = next((v for k2, v in sect.items() if k2.startswith(key)), None)
@@ -214,7 +214,7 @@ def build(ud):
             if key == "Objetivos" and ud == "UD6": cuerpo = cuerpo.replace("\n\n> [!", "\n- Configurar acceso remoto seguro: SSH avanzado, VPN con WireGuard y autenticación centralizada con RADIUS.\n\n> [!", 1)
             out.append(f"## {t}\n\n{cuerpo}\n")
     if ud == "UD6":
-        out.append("> [!NOTE]\n> Las prácticas **6.9 a 6.12** (SSH, WireGuard, RADIUS e IPsec) reutilizan las máquinas y redes de laboratorio de la [UD5](/ud05/ud05-practicas/#preparación-del-laboratorio). Si no las tienes, prepáralas primero.\n")
+        out.append("> [!NOTE]\n> Las prácticas **6.9 a 6.12** (SSH, WireGuard, RADIUS e IPsec) reutilizan las máquinas y redes de prácticas de la [UD5](/ud05/ud05-practicas/#preparación-del-entorno-de-prácticas). Si no las tienes, prepáralas primero.\n")
     # prácticas
     for src, n, tipo, h, niv, ra, ent, b, tit, head, k in rows:
         mapa = {}

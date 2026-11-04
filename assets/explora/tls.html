@@ -15,6 +15,6 @@ var P=[
 {w:'Ambos (cifrado)',m:'Datos de aplicación (HTTP, etc.)',c:'Cifrado simétrico autenticado (AES-GCM o ChaCha20-Poly1305) con claves de sesión.',v:'Solo se ve que hay tráfico cifrado entre dos IP.',g:'<strong>Confidencialidad e integridad</strong> con criptografía simétrica (rápida). Como el DH es efímero, hay <strong>secreto perfecto hacia adelante</strong>: robar la clave privada del servidor después no permite descifrar sesiones antiguas.'}];
 var i=0;
 function go(){var p=P[i];q('n').textContent='Paso '+(i+1)+' de '+P.length;
- q('o').innerHTML='<p><strong>'+p.w+':</strong> <code>'+p.m+'</code></p><p>'+p.c+'</p><p><em>¿Qué ve un espía?</em> '+p.v+'</p><p><em>¿Qué se consigue?</em> '+p.g+'</p>'+(i===P.length-1?'<p>Compruébalo en el laboratorio: <code>openssl s_client -connect servidor:443 -tls1_3</code> y busca «Protocol: TLSv1.3», la suite elegida y «Verification: OK».</p>':'');
+ q('o').innerHTML='<p><strong>'+p.w+':</strong> <code>'+p.m+'</code></p><p>'+p.c+'</p><p><em>¿Qué ve un espía?</em> '+p.v+'</p><p><em>¿Qué se consigue?</em> '+p.g+'</p>'+(i===P.length-1?'<p>Compruébalo en el entorno de prácticas: <code>openssl s_client -connect servidor:443 -tls1_3</code> y busca «Protocol: TLSv1.3», la suite elegida y «Verification: OK».</p>':'');
  q('a').disabled=i===0;q('s').disabled=i===P.length-1}
 q('a').onclick=function(){if(i>0){i--;go()}};q('s').onclick=function(){if(i<P.length-1){i++;go()}};go()})();</script>

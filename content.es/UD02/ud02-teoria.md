@@ -297,7 +297,7 @@ flowchart LR
     MON1 -->|batería baja| SD[Apagado ordenado]
 ```
 
-- **Driver**: habla con el SAI (por USB, serie o red). Para SAI USB se usa `usbhid-ups`; para un SAI simulado en laboratorio, `dummy-ups`.
+- **Driver**: habla con el SAI (por USB, serie o red). Para SAI USB se usa `usbhid-ups`; para un SAI simulado en el entorno de prácticas, `dummy-ups`.
 - **`upsd`**: servidor que publica el estado del SAI en el puerto TCP **3493**.
 - **`upsmon`**: vigila el estado y ejecuta el apagado cuando el SAI está en batería (`OB`) y con batería baja (`LB`).
 
@@ -1425,7 +1425,7 @@ La guía de referencia es **NIST SP 800-88** (*Guidelines for Media Sanitization
 | Nivel | Descripción | Ejemplos |
 |---|---|---|
 | **Limpiar** (*Clear*) | Sobrescribir con técnicas lógicas; protege frente a recuperación con herramientas normales | Sobrescribir un HDD con ceros |
-| **Purgar** (*Purge*) | Técnicas que impiden la recuperación incluso en laboratorio | *Secure Erase* / *Sanitize* del firmware, borrado criptográfico, desmagnetizado |
+| **Purgar** (*Purge*) | Técnicas que impiden la recuperación incluso en el entorno de prácticas | *Secure Erase* / *Sanitize* del firmware, borrado criptográfico, desmagnetizado |
 | **Destruir** (*Destroy*) | El soporte queda inutilizable | Trituración, desintegración, incineración |
 
 El método depende del tipo de soporte:
@@ -1462,7 +1462,7 @@ sudo cryptsetup erase /dev/sdX
 - `cryptsetup erase`: elimina las ranuras de clave de una cabecera LUKS; sin ellas, el contenido es irrecuperable.
 
 > [!CAUTION]
-> Estos comandos son **irreversibles**. En el laboratorio se practican solo sobre ficheros de imagen o discos virtuales dedicados. Comprueba siempre el dispositivo con `lsblk` antes de ejecutarlos.
+> Estos comandos son **irreversibles**. En el entorno de prácticas se practican solo sobre ficheros de imagen o discos virtuales dedicados. Comprueba siempre el dispositivo con `lsblk` antes de ejecutarlos.
 
 `shred` sobre **ficheros** individuales no es fiable en sistemas de ficheros con *journaling*, copia en escritura (Btrfs, ZFS) o en SSD. La mejor estrategia para soportes que contienen información sensible es **cifrarlos desde el principio** ([UD03](/ud03/ud03-teoria/) y [UD04](/ud04/ud04-teoria/)): así, al final de su vida, basta con destruir la clave.
 
